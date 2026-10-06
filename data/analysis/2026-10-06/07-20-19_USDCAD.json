@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-10-06T07:20:19.011568+00:00",
+  "symbol": "USDCAD",
+  "analysis": {
+    "symbol": "EURUSD",
+    "decision": "NO_TRADE",
+    "market_regime": "TREND",
+    "bias": "BULLISH",
+    "confidence": 0.95,
+    "setup_quality": 0,
+    "primary_timeframe": "M15",
+    "higher_timeframe_alignment": "CONFLICT",
+    "m5_context": "BULLISH",
+    "m15_context": "BULLISH",
+    "h1_context": "BULLISH",
+    "h4_context": "BULLISH",
+    "d1_context": "BULLISH",
+    "bullish_factors": [
+      "price_above_ema20",
+      "price_above_ema50",
+      "rsi14_above_50",
+      "volume_sma20_above_ema20",
+      "candle_range_above_atr14"
+    ],
+    "bearish_factors": [
+      "no_bearish_indicators"
+    ],
+    "risks": [
+      "high_volatility",
+      "low_volume"
+    ],
+    "news_required_before_trade": false,
+    "reasoning_summary": "Price is above both EMA20 and EMA50, RSI14 is above 50, volume is above average, but current candle shows a small body and low volume. High volatility and low volume indicate potential for quick reversal. No bearish indicators detected, but the market is in a bullish regime with strong alignment across timeframes. However, the current candle's low volume and small body suggest a potential short-term correction. Given the high volatility and low volume, the trade is not recommended at this moment."
+  },
+  "performance": {
+    "elapsed_seconds": 19.53482579998672,
+    "eval_count": 395,
+    "eval_duration": 10126563000,
+    "tokens_per_second": 39.0063242582898
+  }
+}

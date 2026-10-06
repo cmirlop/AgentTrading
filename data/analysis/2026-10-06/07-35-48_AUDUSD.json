@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-10-06T07:35:48.107538+00:00",
+  "symbol": "AUDUSD",
+  "analysis": {
+    "symbol": "AUDUSD",
+    "decision": "NO_TRADE",
+    "market_regime": "BREAKOUT",
+    "bias": "BULLISH",
+    "higher_timeframe_alignment": "CONFLICT",
+    "setup_quality": 0,
+    "decision_confidence": 0.75,
+    "supporting_evidence": [
+      "H4_PRICE_ABOVE_EMA20",
+      "H4_PRICE_BELOW_EMA50",
+      "H4_PRICE_BELOW_EMA200",
+      "H4_EMA_STRUCTURE_BEARISH",
+      "H4_RSI_NEUTRAL",
+      "H4_RANGE_UPPER",
+      "H4_VOLUME_LOW",
+      "H4_RETURN5_POSITIVE"
+    ],
+    "conflicting_evidence": [
+      "D1_PRICE_BELOW_EMA20",
+      "D1_PRICE_BELOW_EMA50",
+      "D1_PRICE_UNKNOWN_EMA200",
+      "D1_EMA_STRUCTURE_PARTIAL_BEARISH",
+      "D1_RSI_WEAK",
+      "D1_RANGE_LOWER",
+      "D1_VOLUME_NORMAL",
+      "D1_RETURN5_NEGATIVE"
+    ],
+    "summary": "The H4 timeframe shows a bearish structure with the price below EMA200, but the recent 5-period return is positive. The D1 timeframe shows a partial bearish structure with the price below EMA20 and EMA50, and a weak RSI. The conflicting evidence suggests a potential breakout opportunity but with low confidence due to the D1 timeframe's bearish signals.",
+    "validation_ok": true,
+    "validation_errors": [],
+    "news_check_required": false
+  },
+  "performance": {
+    "elapsed_seconds": 17.025321900029667,
+    "prompt_eval_count": 2050,
+    "eval_count": 335,
+    "eval_duration": 7804845000,
+    "tokens_per_second": 42.92205674808404
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-10-06T07:20:37.570529+00:00",
+  "symbol": "AUDUSD",
+  "analysis": {
+    "symbol": "EURUSD",
+    "decision": "NO_TRADE",
+    "market_regime": "TREND",
+    "bias": "BULLISH",
+    "confidence": 0.95,
+    "setup_quality": 0,
+    "primary_timeframe": "M15",
+    "higher_timeframe_alignment": "CONFLICT",
+    "m5_context": "BULLISH",
+    "m15_context": "BULLISH",
+    "h1_context": "BULLISH",
+    "h4_context": "BULLISH",
+    "d1_context": "BULLISH",
+    "bullish_factors": [
+      "EMA20 crosses above EMA50",
+      "RSI14 above 50",
+      "Volume increasing"
+    ],
+    "bearish_factors": [
+      "No clear bearish signals"
+    ],
+    "risks": [
+      "High volatility",
+      "Market gap"
+    ],
+    "news_required_before_trade": false,
+    "reasoning_summary": "The market is in a bullish trend with strong alignment across multiple timeframes. EMA20 crosses above EMA50, RSI14 is above 50, and volume is increasing. However, the market has high volatility and a recent gap, which could lead to a reversal. Given the high confidence (0.95) and the absence of bearish signals, the decision is NO_TRADE to avoid potential reversals in high volatility conditions."
+  },
+  "performance": {
+    "elapsed_seconds": 18.524870799999917,
+    "eval_count": 356,
+    "eval_duration": 9163896000,
+    "tokens_per_second": 38.84810565287952
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-10-06T07:35:07.972645+00:00",
+  "symbol": "EURUSD",
+  "analysis": {
+    "symbol": "EURUSD",
+    "decision": "NO_TRADE",
+    "market_regime": "BREAKOUT",
+    "bias": "BULLISH",
+    "higher_timeframe_alignment": "ALIGNED",
+    "setup_quality": 0,
+    "decision_confidence": 0.85,
+    "supporting_evidence": [
+      "D1_PRICE_BELOW_EMA20",
+      "D1_PRICE_BELOW_EMA50",
+      "D1_PRICE_UNKNOWN_EMA200",
+      "D1_EMA_STRUCTURE_PARTIAL_BEARISH",
+      "D1_RSI_OVERSOLD",
+      "D1_RANGE_LOWER",
+      "D1_VOLUME_HIGH",
+      "D1_RETURN5_NEGATIVE"
+    ],
+    "conflicting_evidence": [
+      "M5_PRICE_BELOW_EMA20",
+      "M5_PRICE_BELOW_EMA50",
+      "M5_PRICE_ABOVE_EMA200",
+      "M5_EMA_STRUCTURE_BULLISH",
+      "M5_RSI_NEUTRAL",
+      "M5_RANGE_MIDDLE",
+      "M5_VOLUME_NORMAL",
+      "M5_RETURN5_NEGATIVE"
+    ],
+    "summary": "The market is in a breakout regime with a bullish bias. The higher timeframe alignment is strong, but there is a mix of supporting and conflicting evidence. The D1 timeframe shows strong bearish signals with oversold RSI and high volume, while the M5 timeframe shows mixed signals with some bearish indicators. The decision confidence is 85%.",
+    "validation_ok": true,
+    "validation_errors": [],
+    "news_check_required": false
+  },
+  "performance": {
+    "elapsed_seconds": 8.043333099980373,
+    "prompt_eval_count": 2050,
+    "eval_count": 328,
+    "eval_duration": 7774747000,
+    "tokens_per_second": 42.187867978212026
+  }
+}

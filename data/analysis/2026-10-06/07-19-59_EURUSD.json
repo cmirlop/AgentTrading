@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-10-06T07:19:59.433525+00:00",
+  "symbol": "EURUSD",
+  "analysis": {
+    "symbol": "EURUSD",
+    "decision": "NO_TRADE",
+    "market_regime": "TREND",
+    "bias": "BULLISH",
+    "confidence": 0.95,
+    "setup_quality": 0,
+    "primary_timeframe": "M15",
+    "higher_timeframe_alignment": "CONFLICT",
+    "m5_context": "BULLISH",
+    "m15_context": "BULLISH",
+    "h1_context": "BULLISH",
+    "h4_context": "BULLISH",
+    "d1_context": "BULLISH",
+    "bullish_factors": [
+      "price_above_ema20",
+      "price_above_ema50",
+      "price_above_ema200",
+      "rsi14_below_70",
+      "atr14_below_0.005",
+      "high20_above_low20",
+      "volume_sma20_above_49722.65",
+      "volume_ratio_above_1.22988",
+      "return_1_above_0",
+      "return_5_above_0",
+      "candle_range_below_0.01",
+      "candle_body_above_0.00368",
+      "range_atr_ratio_below_1.71053"
+    ],
+    "bearish_factors": [
+      "price_below_ema20",
+      "price_below_ema50",
+      "price_below_ema200",
+      "rsi14_above_70",
+      "atr14_above_0.005",
+      "high20_below_low20",
+      "volume_sma20_below_49722.65",
+      "volume_ratio_below_1.22988",
+      "return_1_below_0",
+      "return_5_below_0",
+      "candle_range_above_0.01",
+      "candle_body_below_0.00368",
+      "range_atr_ratio_above_1.71053"
+    ],
+    "risks": [
+      "price_below_ema20",
+      "price_below_ema50",
+      "price_below_ema200",
+      "rsi14_above_70",
+      "atr14_above_0.005",
+      "high20_below_low20",
+      "volume_sma20_below_49722.65",
+      "volume_ratio_below_1.22988",
+      "return_1_below_0",
+      "return_5_below_0",
+      "candle_range_above_0.01",
+      "candle_body_below_0.00368",
+      "range_atr_ratio_above_1.71053"
+    ],
+    "news_required_before_trade": false,
+    "reasoning_summary": "The current market regime is bullish with strong alignment across all timeframes. Price is above all EMA indicators, RSI is below 70 (indicating no overbought conditions), ATR is low (indicating low volatility), and volume is healthy. However, the price is currently below the 200-day EMA, which creates a slight conflict in the higher timeframe alignment. Despite this, the bullish factors outweigh the bearish factors, leading to a high confidence bullish signal with a 95% confidence level. No news is required before trading."
+  },
+  "performance": {
+    "elapsed_seconds": 32.58022030000575,
+    "eval_count": 796,
+    "eval_duration": 19051043000,
+    "tokens_per_second": 41.782489284182496
+  }
+}
