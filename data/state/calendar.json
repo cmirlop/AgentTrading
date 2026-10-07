@@ -1,0 +1,149 @@
+{
+  "generated_at": "2026-10-07T07:41:10.044887+00:00",
+  "calendar_generated_utc": "2026-10-07T07:41:02+00:00",
+  "calendar_age_seconds": 8.0,
+  "calendar_fresh": true,
+  "symbols": {
+    "EURUSD": {
+      "currencies": [
+        "EUR",
+        "USD"
+      ],
+      "macro_risk": "NORMAL",
+      "new_trades_blocked": false,
+      "blocking_reasons": [],
+      "blocking_events": [],
+      "upcoming_high_events": [
+        {
+          "currency": "USD",
+          "event_id": 840200001,
+          "event_code": "eia-crude-oil-stocks-change",
+          "event_name": "AIE Cambio en las Reservas de Crudo",
+          "importance": "HIGH",
+          "event_time_utc": "2026-10-07T14:30:00+00:00",
+          "minutes_until_event": 408.8,
+          "actual": null,
+          "forecast": 1.07,
+          "previous": 0.922,
+          "revised": null,
+          "impact": null,
+          "unit": "CALENDAR_UNIT_BARREL",
+          "multiplier": "CALENDAR_MULTIPLIER_MILLIONS",
+          "source_url": "https://www.eia.gov/"
+        },
+        {
+          "currency": "USD",
+          "event_id": 840220014,
+          "event_code": "10-year-note-auction",
+          "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+          "importance": "HIGH",
+          "event_time_utc": "2026-10-07T17:00:00+00:00",
+          "minutes_until_event": 558.8,
+          "actual": null,
+          "forecast": null,
+          "previous": 4.834,
+          "revised": null,
+          "impact": null,
+          "unit": "CALENDAR_UNIT_PERCENT",
+          "multiplier": "CALENDAR_MULTIPLIER_NONE",
+          "source_url": "https://home.treasury.gov/"
+        }
+      ],
+      "moderate_warnings": []
+    },
+    "USDCAD": {
+      "currencies": [
+        "USD",
+        "CAD"
+      ],
+      "macro_risk": "NORMAL",
+      "new_trades_blocked": false,
+      "blocking_reasons": [],
+      "blocking_events": [],
+      "upcoming_high_events": [
+        {
+          "currency": "USD",
+          "event_id": 840200001,
+          "event_code": "eia-crude-oil-stocks-change",
+          "event_name": "AIE Cambio en las Reservas de Crudo",
+          "importance": "HIGH",
+          "event_time_utc": "2026-10-07T14:30:00+00:00",
+          "minutes_until_event": 408.8,
+          "actual": null,
+          "forecast": 1.07,
+          "previous": 0.922,
+          "revised": null,
+          "impact": null,
+          "unit": "CALENDAR_UNIT_BARREL",
+          "multiplier": "CALENDAR_MULTIPLIER_MILLIONS",
+          "source_url": "https://www.eia.gov/"
+        },
+        {
+          "currency": "USD",
+          "event_id": 840220014,
+          "event_code": "10-year-note-auction",
+          "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+          "importance": "HIGH",
+          "event_time_utc": "2026-10-07T17:00:00+00:00",
+          "minutes_until_event": 558.8,
+          "actual": null,
+          "forecast": null,
+          "previous": 4.834,
+          "revised": null,
+          "impact": null,
+          "unit": "CALENDAR_UNIT_PERCENT",
+          "multiplier": "CALENDAR_MULTIPLIER_NONE",
+          "source_url": "https://home.treasury.gov/"
+        }
+      ],
+      "moderate_warnings": []
+    },
+    "AUDUSD": {
+      "currencies": [
+        "AUD",
+        "USD"
+      ],
+      "macro_risk": "NORMAL",
+      "new_trades_blocked": false,
+      "blocking_reasons": [],
+      "blocking_events": [],
+      "upcoming_high_events": [
+        {
+          "currency": "USD",
+          "event_id": 840200001,
+          "event_code": "eia-crude-oil-stocks-change",
+          "event_name": "AIE Cambio en las Reservas de Crudo",
+          "importance": "HIGH",
+          "event_time_utc": "2026-10-07T14:30:00+00:00",
+          "minutes_until_event": 408.8,
+          "actual": null,
+          "forecast": 1.07,
+          "previous": 0.922,
+          "revised": null,
+          "impact": null,
+          "unit": "CALENDAR_UNIT_BARREL",
+          "multiplier": "CALENDAR_MULTIPLIER_MILLIONS",
+          "source_url": "https://www.eia.gov/"
+        },
+        {
+          "currency": "USD",
+          "event_id": 840220014,
+          "event_code": "10-year-note-auction",
+          "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+          "importance": "HIGH",
+          "event_time_utc": "2026-10-07T17:00:00+00:00",
+          "minutes_until_event": 558.8,
+          "actual": null,
+          "forecast": null,
+          "previous": 4.834,
+          "revised": null,
+          "impact": null,
+          "unit": "CALENDAR_UNIT_PERCENT",
+          "multiplier": "CALENDAR_MULTIPLIER_NONE",
+          "source_url": "https://home.treasury.gov/"
+        }
+      ],
+      "moderate_warnings": []
+    }
+  }
+}

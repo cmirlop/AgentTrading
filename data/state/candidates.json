@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-10-07T07:41:10.605714+00:00",
+  "session": {
+    "generated_at": "2026-10-07T07:41:10.562069+00:00",
+    "london": {
+      "local_time": "2026-10-07T08:41:10.562069+01:00",
+      "is_open": true
+    },
+    "new_york": {
+      "local_time": "2026-10-07T03:41:10.562069-04:00",
+      "is_open": false
+    },
+    "sessions_open": [
+      "LONDON"
+    ],
+    "trading_session_allowed": true
+  },
+  "symbols": {}
+}

@@ -255,6 +255,7 @@ Devuelve exclusivamente el JSON requerido.
             },
 
             think=False,
+            keep_alive="30m",
         )
 
         elapsed = (
@@ -437,13 +438,19 @@ Devuelve exclusivamente el JSON requerido.
                     .evidence_used
                 ),
 
-                caution_flags=(
-                    assessment
-                    .caution_flags
+                caution_flags=list(
+                    dict.fromkeys(
+                        assessment.caution_flags
+                    )
                 ),
 
                 summary=(
-                    assessment.summary
+                    f"Bias tecnico={technical['bias']}; "
+                    f"score={technical['overall_score']}; "
+                    f"alineacion={technical['alignment']}; "
+                    f"setup_quality={technical['setup_quality']}; "
+                    f"estrategia propuesta={assessment.strategy}; "
+                    f"regimen propuesto={assessment.market_regime}."
                 ),
 
                 validation_ok=(

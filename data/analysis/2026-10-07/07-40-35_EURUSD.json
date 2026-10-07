@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-10-07T07:40:35.600164+00:00",
+  "symbol": "EURUSD",
+  "analysis": {
+    "symbol": "EURUSD",
+    "decision": "NO_TRADE",
+    "strategy": "TREND_CONTINUATION",
+    "market_regime": "BREAKOUT",
+    "bias": "BEARISH",
+    "overall_score": -64.64,
+    "timeframe_scores": {
+      "M5": -92.86,
+      "M15": -64.29,
+      "H1": -57.14,
+      "H4": -57.14,
+      "D1": -75.0
+    },
+    "higher_timeframe_alignment": "ALIGNED",
+    "setup_quality": 56,
+    "decision_confidence": 0.56,
+    "supporting_evidence": [
+      "M5_PRICE_BELOW_EMA20",
+      "M5_PRICE_BELOW_EMA50",
+      "M5_PRICE_BELOW_EMA200",
+      "M5_EMA_STRUCTURE_BEARISH",
+      "M5_RSI_OVERSOLD",
+      "M5_RETURN5_NEGATIVE",
+      "M15_PRICE_BELOW_EMA20",
+      "M15_PRICE_BELOW_EMA50",
+      "M15_PRICE_BELOW_EMA200",
+      "M15_RSI_OVERSOLD",
+      "M15_RETURN5_NEGATIVE",
+      "H1_PRICE_BELOW_EMA20",
+      "H1_PRICE_BELOW_EMA50",
+      "H1_PRICE_BELOW_EMA200",
+      "H1_RETURN5_NEGATIVE",
+      "H4_PRICE_BELOW_EMA20",
+      "H4_PRICE_BELOW_EMA50",
+      "H4_PRICE_BELOW_EMA200",
+      "H4_EMA_STRUCTURE_BEARISH",
+      "D1_PRICE_BELOW_EMA20",
+      "D1_PRICE_BELOW_EMA50",
+      "D1_EMA_STRUCTURE_PARTIAL_BEARISH",
+      "D1_RSI_OVERSOLD",
+      "D1_RETURN5_NEGATIVE"
+    ],
+    "conflicting_evidence": [
+      "H4_RETURN5_POSITIVE"
+    ],
+    "evidence_used": [
+      "H4_PRICE_BELOW_EMA20",
+      "H4_PRICE_BELOW_EMA50",
+      "H4_PRICE_BELOW_EMA200",
+      "H4_EMA_STRUCTURE_BEARISH",
+      "H4_RSI_NEUTRAL",
+      "H4_RANGE_UPPER",
+      "H4_VOLUME_LOW",
+      "H4_RETURN5_POSITIVE"
+    ],
+    "caution_flags": [
+      "HIGH_VOLATILITY",
+      "LOW_VOLUME"
+    ],
+    "summary": "Bias tecnico=BEARISH; score=-64.64; alineacion=ALIGNED; setup_quality=56; estrategia propuesta=TREND_CONTINUATION; regimen propuesto=BREAKOUT.",
+    "validation_ok": true,
+    "validation_errors": [],
+    "news_check_required": false
+  },
+  "performance": {
+    "elapsed_seconds": 18.715849500033073,
+    "prompt_eval_count": 2050,
+    "eval_count": 274,
+    "eval_duration": 6618357000,
+    "tokens_per_second": 41.400003052117015
+  }
+}

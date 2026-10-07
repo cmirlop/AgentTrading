@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-10-07T07:41:09.306217+00:00",
+  "account": {
+    "server": "ICMarketsSC-MT5",
+    "currency": "EUR",
+    "balance": 137.98,
+    "equity": 137.98,
+    "profit": 0.0,
+    "margin": 0.0,
+    "margin_free": 137.98,
+    "margin_level": null,
+    "leverage": 50,
+    "margin_mode": 2,
+    "account_mode": "HEDGING",
+    "terminal_connected": true,
+    "terminal_trade_allowed": false,
+    "python_trading_disabled": true
+  },
+  "positions": [],
+  "pending_orders": [],
+  "positions_by_symbol": {
+    "EURUSD": [],
+    "USDCAD": [],
+    "AUDUSD": []
+  },
+  "risk_config": {
+    "lot_size": 0.01,
+    "max_loss_per_trade_eur": 5.0,
+    "max_open_positions": 2,
+    "require_stop_loss": true,
+    "require_take_profit": true,
+    "break_even_enabled": true
+  },
+  "risk_status": {
+    "open_positions": 0,
+    "available_position_slots": 2,
+    "positions_without_sl": [],
+    "positions_without_tp": [],
+    "can_open_more_positions": true
+  }
+}

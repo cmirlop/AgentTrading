@@ -1,0 +1,84 @@
+{
+  "generated_at": "2026-10-07T07:40:52.967533+00:00",
+  "symbol": "USDCAD",
+  "analysis": {
+    "symbol": "USDCAD",
+    "decision": "NO_TRADE",
+    "strategy": "TREND_CONTINUATION",
+    "market_regime": "BREAKOUT",
+    "bias": "BULLISH",
+    "overall_score": 18.33,
+    "timeframe_scores": {
+      "M5": 42.86,
+      "M15": 14.29,
+      "H1": -14.29,
+      "H4": 28.57,
+      "D1": 83.33
+    },
+    "higher_timeframe_alignment": "PARTIAL",
+    "setup_quality": 21,
+    "decision_confidence": 0.21,
+    "supporting_evidence": [
+      "M5_PRICE_ABOVE_EMA20",
+      "M5_PRICE_ABOVE_EMA50",
+      "M5_RSI_STRONG",
+      "M5_RETURN5_POSITIVE",
+      "M15_PRICE_ABOVE_EMA20",
+      "M15_PRICE_ABOVE_EMA50",
+      "M15_RSI_STRONG",
+      "M15_RETURN5_POSITIVE",
+      "H1_PRICE_ABOVE_EMA200",
+      "H1_RETURN5_POSITIVE",
+      "H4_PRICE_ABOVE_EMA50",
+      "H4_PRICE_ABOVE_EMA200",
+      "H4_EMA_STRUCTURE_BULLISH",
+      "D1_PRICE_ABOVE_EMA20",
+      "D1_PRICE_ABOVE_EMA50",
+      "D1_EMA_STRUCTURE_PARTIAL_BULLISH",
+      "D1_RSI_STRONG",
+      "D1_RETURN5_POSITIVE"
+    ],
+    "conflicting_evidence": [
+      "M5_PRICE_BELOW_EMA200",
+      "M15_PRICE_BELOW_EMA200",
+      "M15_EMA_STRUCTURE_BEARISH",
+      "H1_PRICE_BELOW_EMA20",
+      "H1_PRICE_BELOW_EMA50",
+      "H1_RSI_WEAK",
+      "H4_PRICE_BELOW_EMA20",
+      "H4_RETURN5_NEGATIVE"
+    ],
+    "evidence_used": [
+      "H4_PRICE_ABOVE_EMA50",
+      "H4_PRICE_ABOVE_EMA200",
+      "H4_EMA_STRUCTURE_BULLISH",
+      "H4_RSI_NEUTRAL",
+      "H4_RANGE_LOWER",
+      "H4_VOLUME_LOW",
+      "H4_RETURN5_NEGATIVE",
+      "D1_PRICE_ABOVE_EMA20",
+      "D1_PRICE_ABOVE_EMA50",
+      "D1_EMA_STRUCTURE_PARTIAL_BULLISH",
+      "D1_RSI_STRONG",
+      "D1_RANGE_UPPER",
+      "D1_VOLUME_NORMAL",
+      "D1_RETURN5_POSITIVE"
+    ],
+    "caution_flags": [
+      "HIGH_VOLATILITY",
+      "LOW_VOLUME",
+      "WEAK_MOMENTUM"
+    ],
+    "summary": "Bias tecnico=BULLISH; score=18.33; alineacion=PARTIAL; setup_quality=21; estrategia propuesta=TREND_CONTINUATION; regimen propuesto=BREAKOUT.",
+    "validation_ok": true,
+    "validation_errors": [],
+    "news_check_required": false
+  },
+  "performance": {
+    "elapsed_seconds": 17.31959359999746,
+    "prompt_eval_count": 2050,
+    "eval_count": 335,
+    "eval_duration": 8045416000,
+    "tokens_per_second": 41.63861756806609
+  }
+}
