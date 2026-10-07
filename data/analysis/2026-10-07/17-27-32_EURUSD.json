@@ -1,0 +1,88 @@
+{
+  "generated_at": "2026-10-07T17:27:32.981514+00:00",
+  "symbol": "EURUSD",
+  "analysis": {
+    "symbol": "EURUSD",
+    "decision": "WATCH_SHORT",
+    "strategy": "TREND_CONTINUATION",
+    "market_regime": "BREAKOUT",
+    "bias": "BEARISH",
+    "overall_score": -78.93,
+    "timeframe_scores": {
+      "M5": 0.0,
+      "M15": -71.43,
+      "H1": -100.0,
+      "H4": -100.0,
+      "D1": -75.0
+    },
+    "higher_timeframe_alignment": "ALIGNED",
+    "setup_quality": 85,
+    "decision_confidence": 0.85,
+    "supporting_evidence": [
+      "M5_PRICE_BELOW_EMA200",
+      "M5_EMA_STRUCTURE_BEARISH",
+      "M15_PRICE_BELOW_EMA20",
+      "M15_PRICE_BELOW_EMA50",
+      "M15_PRICE_BELOW_EMA200",
+      "M15_EMA_STRUCTURE_BEARISH",
+      "M15_RSI_WEAK",
+      "H1_PRICE_BELOW_EMA20",
+      "H1_PRICE_BELOW_EMA50",
+      "H1_PRICE_BELOW_EMA200",
+      "H1_EMA_STRUCTURE_BEARISH",
+      "H1_RSI_WEAK",
+      "H1_RETURN5_NEGATIVE",
+      "H4_PRICE_BELOW_EMA20",
+      "H4_PRICE_BELOW_EMA50",
+      "H4_PRICE_BELOW_EMA200",
+      "H4_EMA_STRUCTURE_BEARISH",
+      "H4_RSI_WEAK",
+      "H4_RETURN5_NEGATIVE",
+      "D1_PRICE_BELOW_EMA20",
+      "D1_PRICE_BELOW_EMA50",
+      "D1_EMA_STRUCTURE_PARTIAL_BEARISH",
+      "D1_RSI_OVERSOLD",
+      "D1_RETURN5_NEGATIVE"
+    ],
+    "conflicting_evidence": [
+      "M5_PRICE_ABOVE_EMA20",
+      "M5_PRICE_ABOVE_EMA50",
+      "M5_RSI_STRONG",
+      "M15_RETURN5_POSITIVE"
+    ],
+    "evidence_used": [
+      "H4_PRICE_BELOW_EMA20",
+      "H4_PRICE_BELOW_EMA50",
+      "H4_PRICE_BELOW_EMA200",
+      "H4_EMA_STRUCTURE_BEARISH",
+      "H4_RSI_WEAK",
+      "H4_RANGE_LOWER",
+      "H4_VOLUME_HIGH",
+      "H4_RETURN5_NEGATIVE",
+      "D1_PRICE_BELOW_EMA20",
+      "D1_PRICE_BELOW_EMA50",
+      "D1_PRICE_UNKNOWN_EMA200",
+      "D1_EMA_STRUCTURE_PARTIAL_BEARISH",
+      "D1_RSI_OVERSOLD",
+      "D1_RANGE_LOWER",
+      "D1_VOLUME_NORMAL",
+      "D1_RETURN5_NEGATIVE"
+    ],
+    "caution_flags": [
+      "HIGH_VOLATILITY",
+      "LOW_VOLUME",
+      "WEAK_MOMENTUM"
+    ],
+    "summary": "Bias tecnico=BEARISH; score=-78.93; alineacion=ALIGNED; setup_quality=85; estrategia propuesta=TREND_CONTINUATION; regimen propuesto=BREAKOUT.",
+    "validation_ok": true,
+    "validation_errors": [],
+    "news_check_required": true
+  },
+  "performance": {
+    "elapsed_seconds": 109.97708059998695,
+    "prompt_eval_count": 2050,
+    "eval_count": 321,
+    "eval_duration": 7605335000,
+    "tokens_per_second": 42.20721375192546
+  }
+}

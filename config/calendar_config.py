@@ -56,3 +56,23 @@ EVENT_LOOKBACK_HOURS = 2
 # pero sí los incluiremos como advertencia.
 
 MODERATE_WARNING_MINUTES = 60
+
+# ==========================================================
+# EVENTOS CRITICOS
+# ==========================================================
+#
+# Estos eventos bloquean nuevas operaciones aunque MT5
+# los clasifique como MODERATE.
+#
+# Añadiremos códigos nuevos únicamente cuando aparezcan
+# realmente en nuestro feed y los validemos.
+
+CRITICAL_EVENT_CODES = {
+    "fomc-minutes",
+}
+
+
+# Usamos la misma ventana conservadora de los eventos HIGH.
+
+CRITICAL_BLOCK_BEFORE_MINUTES = 30
+CRITICAL_BLOCK_AFTER_MINUTES = 15

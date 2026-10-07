@@ -1,0 +1,444 @@
+
+####################################################################################################
+TRADING AGENT - FULL CYCLE
+Cycle UTC: 2026-10-07T17:25:33.466648+00:00
+####################################################################################################
+
+====================================================================================================
+STAGE: SYNC_MARKET_DATA
+SCRIPT: sync_market_data.py
+====================================================================================================
+====================================================================================================
+TRADING AGENT - SINCRONIZACION INCREMENTAL DE MERCADO
+====================================================================================================
+[OK] Conexion con MetaTrader 5
+
+--- SEGURIDAD ---
+Trading terminal permitido: False
+Python trading deshabilitado: True
+
+--- SINCRONIZACION ---
+
+[OK] EURUSD  M5  | total=38,653  | nuevas=10   | ultima=2026-10-07 17:20:00+00:00
+[OK] EURUSD  M15 | total=12,884  | nuevas=3    | ultima=2026-10-07 17:00:00+00:00
+[OK] EURUSD  H1  | total=3,220   | nuevas=1    | ultima=2026-10-07 16:00:00+00:00
+[OK] EURUSD  H4  | total=804     | nuevas=0    | ultima=2026-10-07 12:00:00+00:00
+[OK] EURUSD  D1  | total=133     | nuevas=0    | ultima=2026-10-06 00:00:00+00:00
+[OK] USDCAD  M5  | total=38,653  | nuevas=10   | ultima=2026-10-07 17:20:00+00:00
+[OK] USDCAD  M15 | total=12,884  | nuevas=3    | ultima=2026-10-07 17:00:00+00:00
+[OK] USDCAD  H1  | total=3,220   | nuevas=1    | ultima=2026-10-07 16:00:00+00:00
+[OK] USDCAD  H4  | total=804     | nuevas=0    | ultima=2026-10-07 12:00:00+00:00
+[OK] USDCAD  D1  | total=133     | nuevas=0    | ultima=2026-10-06 00:00:00+00:00
+[OK] AUDUSD  M5  | total=38,647  | nuevas=10   | ultima=2026-10-07 17:20:00+00:00
+[OK] AUDUSD  M15 | total=12,883  | nuevas=3    | ultima=2026-10-07 17:00:00+00:00
+[OK] AUDUSD  H1  | total=3,220   | nuevas=1    | ultima=2026-10-07 16:00:00+00:00
+[OK] AUDUSD  H4  | total=804     | nuevas=0    | ultima=2026-10-07 12:00:00+00:00
+[OK] AUDUSD  D1  | total=133     | nuevas=0    | ultima=2026-10-06 00:00:00+00:00
+
+[OK] Conexion MT5 cerrada
+====================================================================================================
+
+[STAGE RESULT] SYNC_MARKET_DATA | return_code=0 | elapsed=3.65s
+
+====================================================================================================
+STAGE: BUILD_MARKET_STATE
+SCRIPT: build_market_state.py
+====================================================================================================
+===========================================================================
+TRADING AGENT - MARKET STATE MULTI-TIMEFRAME
+===========================================================================
+
+===========================================================================
+EURUSD
+===========================================================================
+Analysis time: 2026-10-07T17:15:00+00:00
+Data quality: OK
+
+M5  | close: 1.11868 | RSI: 57.79 | ATR: 0.000539 | EMA20: 1.118056 | EMA50: 1.118343 | EMA200: 1.120943
+
+M15 | close: 1.11785 | RSI: 40.01 | ATR: 0.000879 | EMA20: 1.118527 | EMA50: 1.120295 | EMA200: 1.122701
+
+H1  | close: 1.11868 | RSI: 33.27 | ATR: 0.001449 | EMA20: 1.121446 | EMA50: 1.122763 | EMA200: 1.12898
+
+H4  | close: 1.11734 | RSI: 31.08 | ATR: 0.003024 | EMA20: 1.123714 | EMA50: 1.12893 | EMA200: 1.143598
+
+D1  | close: 1.12598 | RSI: 26.52 | ATR: 0.005956 | EMA20: 1.139007 | EMA50: 1.146959 | EMA200: None
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\state\EURUSD.json
+
+===========================================================================
+USDCAD
+===========================================================================
+Analysis time: 2026-10-07T17:15:00+00:00
+Data quality: OK
+
+M5  | close: 1.42456 | RSI: 38.09 | ATR: 0.000513 | EMA20: 1.42563 | EMA50: 1.425003 | EMA200: 1.423433
+
+M15 | close: 1.42562 | RSI: 62.54 | ATR: 0.000733 | EMA20: 1.424765 | EMA50: 1.423611 | EMA200: 1.423737
+
+H1  | close: 1.42552 | RSI: 60.29 | ATR: 0.001251 | EMA20: 1.423395 | EMA50: 1.423737 | EMA200: 1.420153
+
+H4  | close: 1.42712 | RSI: 60.19 | ATR: 0.002542 | EMA20: 1.423795 | EMA50: 1.420215 | EMA200: 1.405335
+
+D1  | close: 1.42083 | RSI: 68.26 | ATR: 0.005726 | EMA20: 1.410209 | EMA50: 1.402104 | EMA200: None
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\state\USDCAD.json
+
+===========================================================================
+AUDUSD
+===========================================================================
+Analysis time: 2026-10-07T17:15:00+00:00
+Data quality: OK
+
+M5  | close: 0.69581 | RSI: 64.17 | ATR: 0.000304 | EMA20: 0.69524 | EMA50: 0.695473 | EMA200: 0.696563
+
+M15 | close: 0.69526 | RSI: 41.54 | ATR: 0.000483 | EMA20: 0.69557 | EMA50: 0.696326 | EMA200: 0.696781
+
+H1  | close: 0.69527 | RSI: 33.02 | ATR: 0.000797 | EMA20: 0.69671 | EMA50: 0.696786 | EMA200: 0.698428
+
+H4  | close: 0.69503 | RSI: 42.13 | ATR: 0.001853 | EMA20: 0.69671 | EMA50: 0.698479 | EMA200: 0.705913
+
+D1  | close: 0.69833 | RSI: 37.78 | ATR: 0.004593 | EMA20: 0.703785 | EMA50: 0.706601 | EMA200: None
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\state\AUDUSD.json
+
+[STAGE RESULT] BUILD_MARKET_STATE | return_code=0 | elapsed=1.99s
+
+====================================================================================================
+STAGE: RUN_MARKET_AGENTS
+SCRIPT: run_market_agents.py
+====================================================================================================
+================================================================================
+TRADING AGENT - MARKET ANALYST
+================================================================================
+
+Analizando EURUSD...
+
+================================================================================
+EURUSD
+================================================================================
+Decision: WATCH_SHORT
+Estrategia: TREND_CONTINUATION
+Score global: -78.93
+Scores TF: {'M5': 0.0, 'M15': -71.43, 'H1': -100.0, 'H4': -100.0, 'D1': -75.0}
+Bias: BEARISH
+Regimen: BREAKOUT
+Confianza decision: 0.85
+Validacion LLM: OK
+Noticias necesarias: True
+Setup quality: 85 / 100
+Alineacion HTF: ALIGNED
+
+Resumen: Bias tecnico=BEARISH; score=-78.93; alineacion=ALIGNED; setup_quality=85; estrategia propuesta=TREND_CONTINUATION; regimen propuesto=BREAKOUT.
+
+Caution flags: ['HIGH_VOLATILITY', 'LOW_VOLUME', 'WEAK_MOMENTUM']
+
+Evidencia a favor:
+ + M5_PRICE_BELOW_EMA200
+ + M5_EMA_STRUCTURE_BEARISH
+ + M15_PRICE_BELOW_EMA20
+ + M15_PRICE_BELOW_EMA50
+ + M15_PRICE_BELOW_EMA200
+ + M15_EMA_STRUCTURE_BEARISH
+ + M15_RSI_WEAK
+ + H1_PRICE_BELOW_EMA20
+ + H1_PRICE_BELOW_EMA50
+ + H1_PRICE_BELOW_EMA200
+ + H1_EMA_STRUCTURE_BEARISH
+ + H1_RSI_WEAK
+ + H1_RETURN5_NEGATIVE
+ + H4_PRICE_BELOW_EMA20
+ + H4_PRICE_BELOW_EMA50
+ + H4_PRICE_BELOW_EMA200
+ + H4_EMA_STRUCTURE_BEARISH
+ + H4_RSI_WEAK
+ + H4_RETURN5_NEGATIVE
+ + D1_PRICE_BELOW_EMA20
+ + D1_PRICE_BELOW_EMA50
+ + D1_EMA_STRUCTURE_PARTIAL_BEARISH
+ + D1_RSI_OVERSOLD
+ + D1_RETURN5_NEGATIVE
+
+Evidencia en conflicto:
+ - M5_PRICE_ABOVE_EMA20
+ - M5_PRICE_ABOVE_EMA50
+ - M5_RSI_STRONG
+ - M15_RETURN5_POSITIVE
+
+Tiempo: 109.98 segundos
+Velocidad: 42.21 tokens/s
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\analysis\2026-10-07\17-27-32_EURUSD.json
+
+Analizando USDCAD...
+
+================================================================================
+USDCAD
+================================================================================
+Decision: WATCH_LONG
+Estrategia: TREND_CONTINUATION
+Score global: 61.19
+Scores TF: {'M5': -14.29, 'M15': 42.86, 'H1': 71.43, 'H4': 100.0, 'D1': 83.33}
+Bias: BULLISH
+Regimen: BREAKOUT
+Confianza decision: 0.71
+Validacion LLM: OK
+Noticias necesarias: True
+Setup quality: 71 / 100
+Alineacion HTF: ALIGNED
+
+Resumen: Bias tecnico=BULLISH; score=61.19; alineacion=ALIGNED; setup_quality=71; estrategia propuesta=TREND_CONTINUATION; regimen propuesto=BREAKOUT.
+
+Caution flags: ['MIXED_TIMEFRAMES', 'WEAK_MOMENTUM']
+
+Evidencia a favor:
+ + M5_PRICE_ABOVE_EMA200
+ + M5_EMA_STRUCTURE_BULLISH
+ + M15_PRICE_ABOVE_EMA20
+ + M15_PRICE_ABOVE_EMA50
+ + M15_PRICE_ABOVE_EMA200
+ + M15_RSI_STRONG
+ + H1_PRICE_ABOVE_EMA20
+ + H1_PRICE_ABOVE_EMA50
+ + H1_PRICE_ABOVE_EMA200
+ + H1_RSI_STRONG
+ + H1_RETURN5_POSITIVE
+ + H4_PRICE_ABOVE_EMA20
+ + H4_PRICE_ABOVE_EMA50
+ + H4_PRICE_ABOVE_EMA200
+ + H4_EMA_STRUCTURE_BULLISH
+ + H4_RSI_STRONG
+ + H4_RETURN5_POSITIVE
+ + D1_PRICE_ABOVE_EMA20
+ + D1_PRICE_ABOVE_EMA50
+ + D1_EMA_STRUCTURE_PARTIAL_BULLISH
+ + D1_RSI_STRONG
+ + D1_RETURN5_POSITIVE
+
+Evidencia en conflicto:
+ - M5_PRICE_BELOW_EMA20
+ - M5_PRICE_BELOW_EMA50
+ - M5_RSI_WEAK
+ - M5_RETURN5_NEGATIVE
+ - M15_RETURN5_NEGATIVE
+
+Tiempo: 16.43 segundos
+Velocidad: 42.76 tokens/s
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\analysis\2026-10-07\17-27-49_USDCAD.json
+
+Analizando AUDUSD...
+
+================================================================================
+AUDUSD
+================================================================================
+Decision: WATCH_SHORT
+Estrategia: TREND_CONTINUATION
+Score global: -78.33
+Scores TF: {'M5': 14.29, 'M15': -71.43, 'H1': -100.0, 'H4': -100.0, 'D1': -83.33}
+Bias: BEARISH
+Regimen: BREAKOUT
+Confianza decision: 0.9
+Validacion LLM: OK
+Noticias necesarias: True
+Setup quality: 90 / 100
+Alineacion HTF: ALIGNED
+
+Resumen: Bias tecnico=BEARISH; score=-78.33; alineacion=ALIGNED; setup_quality=90; estrategia propuesta=TREND_CONTINUATION; regimen propuesto=BREAKOUT.
+
+Caution flags: ['MIXED_TIMEFRAMES', 'LOW_VOLUME', 'HIGH_VOLATILITY', 'WEAK_MOMENTUM']
+
+Evidencia a favor:
+ + M5_PRICE_BELOW_EMA200
+ + M5_EMA_STRUCTURE_BEARISH
+ + M15_PRICE_BELOW_EMA20
+ + M15_PRICE_BELOW_EMA50
+ + M15_PRICE_BELOW_EMA200
+ + M15_EMA_STRUCTURE_BEARISH
+ + M15_RSI_WEAK
+ + H1_PRICE_BELOW_EMA20
+ + H1_PRICE_BELOW_EMA50
+ + H1_PRICE_BELOW_EMA200
+ + H1_EMA_STRUCTURE_BEARISH
+ + H1_RSI_WEAK
+ + H1_RETURN5_NEGATIVE
+ + H4_PRICE_BELOW_EMA20
+ + H4_PRICE_BELOW_EMA50
+ + H4_PRICE_BELOW_EMA200
+ + H4_EMA_STRUCTURE_BEARISH
+ + H4_RSI_WEAK
+ + H4_RETURN5_NEGATIVE
+ + D1_PRICE_BELOW_EMA20
+ + D1_PRICE_BELOW_EMA50
+ + D1_EMA_STRUCTURE_PARTIAL_BEARISH
+ + D1_RSI_WEAK
+ + D1_RETURN5_NEGATIVE
+
+Evidencia en conflicto:
+ - M5_PRICE_ABOVE_EMA20
+ - M5_PRICE_ABOVE_EMA50
+ - M5_RSI_STRONG
+ - M5_RETURN5_POSITIVE
+ - M15_RETURN5_POSITIVE
+
+Tiempo: 24.35 segundos
+Velocidad: 43.43 tokens/s
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\analysis\2026-10-07\17-28-13_AUDUSD.json
+
+[STAGE RESULT] RUN_MARKET_AGENTS | return_code=0 | elapsed=154.76s
+
+====================================================================================================
+STAGE: BUILD_RUNTIME_STATE
+SCRIPT: build_runtime_state.py
+====================================================================================================
+===========================================================================
+TRADING AGENT - RUNTIME STATE
+===========================================================================
+
+--- CUENTA ---
+Servidor: ICMarketsSC-MT5
+Moneda: EUR
+Balance: 137.98
+Equity: 137.98
+Profit: 0.0
+Margen libre: 137.98
+Modo: HEDGING
+
+--- SEGURIDAD ---
+MT5 conectado: True
+Trading terminal permitido: False
+Python trading deshabilitado: True
+
+--- RIESGO ---
+Posiciones abiertas: 0
+Slots disponibles: 2
+Puede abrir mas: True
+Posiciones sin SL: []
+Posiciones sin TP: []
+
+--- POSICIONES ---
+No hay posiciones en simbolos monitorizados.
+
+--- ORDENES PENDIENTES ---
+No hay ordenes pendientes.
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\state\runtime.json
+
+[STAGE RESULT] BUILD_RUNTIME_STATE | return_code=0 | elapsed=0.91s
+
+====================================================================================================
+STAGE: BUILD_CALENDAR_STATE
+SCRIPT: build_calendar_state.py
+====================================================================================================
+==========================================================================================
+TRADING AGENT - ECONOMIC CALENDAR STATE
+==========================================================================================
+
+CSV: C:\Users\carlo\AppData\Roaming\MetaQuotes\Terminal\Common\Files\AgentTrading\economic_calendar.csv
+
+Calendar fresh: True
+Age: 13.4 seconds
+
+======================================================================
+EURUSD
+======================================================================
+Currencies: ['EUR', 'USD']
+Macro risk: CAUTION
+New trades blocked: False
+Blocking reasons: []
+
+Blocking events:
+  Ninguno
+
+Proximos HIGH:
+ USD | 2026-10-08T12:30:00+00:00 | HIGH | initial-jobless-claims | en 1141.7 min
+ USD | 2026-10-08T17:00:00+00:00 | HIGH | 30-year-bond-auction | en 1411.7 min
+
+Avisos MODERATE:
+ USD | 2026-10-07T18:00:00+00:00 | MODERATE | fomc-minutes | en 31.7 min
+
+======================================================================
+USDCAD
+======================================================================
+Currencies: ['USD', 'CAD']
+Macro risk: CAUTION
+New trades blocked: False
+Blocking reasons: []
+
+Blocking events:
+  Ninguno
+
+Proximos HIGH:
+ USD | 2026-10-08T12:30:00+00:00 | HIGH | initial-jobless-claims | en 1141.7 min
+ USD | 2026-10-08T17:00:00+00:00 | HIGH | 30-year-bond-auction | en 1411.7 min
+
+Avisos MODERATE:
+ USD | 2026-10-07T18:00:00+00:00 | MODERATE | fomc-minutes | en 31.7 min
+
+======================================================================
+AUDUSD
+======================================================================
+Currencies: ['AUD', 'USD']
+Macro risk: CAUTION
+New trades blocked: False
+Blocking reasons: []
+
+Blocking events:
+  Ninguno
+
+Proximos HIGH:
+ USD | 2026-10-08T12:30:00+00:00 | HIGH | initial-jobless-claims | en 1141.7 min
+ USD | 2026-10-08T17:00:00+00:00 | HIGH | 30-year-bond-auction | en 1411.7 min
+
+Avisos MODERATE:
+ USD | 2026-10-07T18:00:00+00:00 | MODERATE | fomc-minutes | en 31.7 min
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\state\calendar.json
+
+[STAGE RESULT] BUILD_CALENDAR_STATE | return_code=0 | elapsed=0.75s
+
+====================================================================================================
+STAGE: FULL_DRY_PIPELINE
+SCRIPT: run_dry_pipeline.py
+====================================================================================================
+==========================================================================================
+TRADING AGENT - FULL DRY RUN PIPELINE
+==========================================================================================
+
+======================================================================
+EURUSD
+======================================================================
+Candidate: CANDIDATE_SHORT
+Candidate reasons: []
+Trade plan: REJECTED
+Final: REJECTED
+
+======================================================================
+USDCAD
+======================================================================
+Candidate: CANDIDATE_LONG
+Candidate reasons: []
+Trade plan: REJECTED
+Final: REJECTED
+
+======================================================================
+AUDUSD
+======================================================================
+Candidate: CANDIDATE_SHORT
+Candidate reasons: []
+Trade plan: REJECTED
+Final: REJECTED
+
+Guardado: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\data\dry_run\2026-10-07\17-28-16_pipeline.json
+
+NO se ha llamado a mt5.order_send().
+
+[STAGE RESULT] FULL_DRY_PIPELINE | return_code=0 | elapsed=1.14s
+
+####################################################################################################
+[CYCLE COMPLETED]
+Total elapsed: 163.22s
+Stages: {'SYNC_MARKET_DATA': 3.65, 'BUILD_MARKET_STATE': 1.99, 'RUN_MARKET_AGENTS': 154.76, 'BUILD_RUNTIME_STATE': 0.91, 'BUILD_CALENDAR_STATE': 0.75, 'FULL_DRY_PIPELINE': 1.14}
+Log: C:\Users\carlo\Desktop\Sistema Agentes Bolsa\AgentTrading\logs\cycles\2026-10-07.log
+####################################################################################################

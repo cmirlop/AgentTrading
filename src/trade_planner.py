@@ -1,16 +1,30 @@
 import MetaTrader5 as mt5
 
+from config.operational_config import (
+    MAX_TECHNICAL_AGE_SECONDS,
+)
+
 from config.risk_config import (
     LOT_SIZE,
     MAX_LOSS_PER_TRADE_EUR,
+    MAX_SPREAD_POINTS_BY_SYMBOL,
 )
 
 from config.trade_planner_config import (
     MIN_RISK_REWARD,
+    TARGET_RISK_REWARD,
     ATR_STOP_MULTIPLIER,
     ENTRY_BUFFER_ATR_MULTIPLIER,
     SWING_LOOKBACK_BARS,
     MIN_BUFFER_POINTS,
+    MAX_TICK_AGE_SECONDS,
+    MAX_LIVE_DRIFT_ATR,
+)
+
+from datetime import (
+    datetime,
+    timezone,
+    timedelta,
 )
 
 
@@ -70,6 +84,106 @@ def validate_volume(
     return errors
 
 
+def normalize_tick_time(
+    tick_timestamp,
+    now_utc,
+    server_utc_offset_seconds,
+):
+    """
+    Algunos terminales/brokers entregan tick.time como UTC.
+    Otros pueden entregar un epoch desplazado con la hora
+    del servidor.
+
+    Detectamos ambos casos sin asumir uno de ellos.
+    """
+
+    raw_time = datetime.fromtimestamp(
+        tick_timestamp,
+        tz=timezone.utc,
+    )
+
+    raw_delta = (
+        raw_time
+        - now_utc
+    ).total_seconds()
+
+    # Caso normal:
+    # tick ya expresado correctamente en UTC.
+    if abs(raw_delta) <= 300:
+
+        return (
+            raw_time,
+            "UTC",
+        )
+
+    # Caso observado en IC Markets:
+    # timestamp desplazado exactamente por el
+    # offset horario del servidor.
+    if (
+        server_utc_offset_seconds
+        is not None
+    ):
+
+        offset_difference = (
+            raw_delta
+            - server_utc_offset_seconds
+        )
+
+        # Permitimos hasta 15 minutos porque
+        # un tick realmente antiguo debe seguir
+        # detectándose como antiguo después.
+        if abs(
+            offset_difference
+        ) <= 900:
+
+            normalized = (
+                raw_time
+                -
+                timedelta(
+                    seconds=
+                        server_utc_offset_seconds
+                )
+            )
+
+            return (
+                normalized,
+                "BROKER_SERVER_OFFSET",
+            )
+
+    # Si no reconocemos la convención temporal,
+    # no maquillamos el dato.
+    return (
+        raw_time,
+        "UNNORMALIZED",
+    )
+
+
+def parse_utc_datetime(
+    value,
+):
+
+    if not value:
+        return None
+
+    value = value.replace(
+        "Z",
+        "+00:00",
+    )
+
+    dt = datetime.fromisoformat(
+        value
+    )
+
+    if dt.tzinfo is None:
+
+        dt = dt.replace(
+            tzinfo=timezone.utc
+        )
+
+    return dt.astimezone(
+        timezone.utc
+    )
+
 # ==========================================================
 # PLAN
 # ==========================================================
@@ -79,6 +193,7 @@ def build_trade_plan(
     direction,
     strategy,
     market_state,
+    server_utc_offset_seconds=None,
 ):
 
     errors = []
@@ -129,6 +244,8 @@ def build_trade_plan(
 
     account = mt5.account_info()
 
+
+
     if account is None:
 
         return {
@@ -136,6 +253,213 @@ def build_trade_plan(
             "errors": [
                 "ACCOUNT_INFO_UNAVAILABLE"
             ],
+        }
+
+
+    # ======================================================
+    # FRESHNESS / CONSISTENCIA DEL MARKET STATE
+    # ======================================================
+
+    now_utc = datetime.now(
+        timezone.utc
+    )
+
+    if (
+        market_state.get("symbol")
+        != symbol
+    ):
+
+        errors.append(
+            "MARKET_STATE_SYMBOL_MISMATCH"
+        )
+
+    data_quality = (
+        market_state.get(
+            "data_quality"
+        )
+    )
+
+    if isinstance(
+        data_quality,
+        dict,
+    ):
+
+        quality_status = (
+            data_quality.get(
+                "status"
+            )
+        )
+
+    else:
+
+        quality_status = (
+            data_quality
+        )
+
+    if quality_status != "OK":
+
+        errors.append(
+            "MARKET_DATA_NOT_OK"
+        )
+
+    analysis_time = (
+        parse_utc_datetime(
+            market_state.get(
+                "analysis_time"
+            )
+        )
+    )
+
+    state_age_seconds = None
+
+    if analysis_time is None:
+
+        errors.append(
+            "MARKET_STATE_TIME_MISSING"
+        )
+
+    else:
+
+        state_age_seconds = (
+            now_utc
+            - analysis_time
+        ).total_seconds()
+
+        if state_age_seconds < -60:
+
+            errors.append(
+                "MARKET_STATE_FROM_FUTURE"
+            )
+
+        elif (
+            state_age_seconds
+            >
+            MAX_TECHNICAL_AGE_SECONDS
+        ):
+
+            errors.append(
+                "MARKET_STATE_STALE"
+            )
+
+    # ======================================================
+    # FRESHNESS DEL TICK
+    # ======================================================
+
+    tick_timestamp = (
+        tick.time_msc / 1000
+        if getattr(
+            tick,
+            "time_msc",
+            0,
+        )
+        else tick.time
+    )
+
+
+    tick_timestamp = (
+        tick.time_msc / 1000
+        if getattr(
+            tick,
+            "time_msc",
+            0,
+        )
+        else tick.time
+    )
+
+    (
+        tick_time,
+        tick_time_mode,
+    ) = normalize_tick_time(
+        tick_timestamp=
+            tick_timestamp,
+
+        now_utc=
+            now_utc,
+
+        server_utc_offset_seconds=
+            server_utc_offset_seconds,
+    )
+
+    tick_age_seconds = (
+        now_utc
+        - tick_time
+    ).total_seconds()
+
+    if tick_age_seconds < -5:
+        pass
+
+        # errors.append(
+        #     "TICK_FROM_FUTURE"
+        # )
+
+    elif (
+        tick_age_seconds
+        > MAX_TICK_AGE_SECONDS
+    ):
+
+        errors.append(
+            "TICK_STALE"
+        )
+
+    tick_age_seconds = (
+        now_utc
+        - tick_time
+    ).total_seconds()
+
+    if tick_age_seconds < -5:
+
+        errors.append(
+            "TICK_FROM_FUTURE"
+        )
+
+    elif (
+        tick_age_seconds
+        > MAX_TICK_AGE_SECONDS
+    ):
+
+        errors.append(
+            "TICK_STALE"
+        )
+
+    if errors:
+
+        return {
+            "symbol":
+                symbol,
+
+            "status":
+                "REJECTED",
+
+            "errors":
+                errors,
+
+            "diagnostics": {
+                "market_state_age_seconds":
+                    (
+                        round(
+                            state_age_seconds,
+                            1,
+                        )
+                        if state_age_seconds
+                        is not None
+                        else None
+                    ),
+
+                "tick_age_seconds":
+                    round(
+                        tick_age_seconds,
+                        1,
+                    ),
+
+                "tick_time_mode":
+                    tick_time_mode,
+
+                "server_utc_offset_seconds":
+                    server_utc_offset_seconds,
+            },
+
+            "dry_run":
+                True,
         }
 
     # ======================================================
@@ -206,6 +530,84 @@ def build_trade_plan(
             "symbol": symbol,
             "status": "REJECTED",
             "errors": errors,
+        }
+
+
+    # ======================================================
+    # DESPLAZAMIENTO DESDE EL ESTADO ANALIZADO
+    # ======================================================
+
+    if not candles:
+
+        return {
+            "symbol": symbol,
+            "status": "REJECTED",
+            "errors": [
+                "NO_M15_CANDLES"
+            ],
+            "dry_run": True,
+        }
+
+    last_m15_close = float(
+        candles[-1]["close"]
+    )
+
+    live_mid = (
+        float(tick.bid)
+        +
+        float(tick.ask)
+    ) / 2
+
+    live_drift_atr = (
+        abs(
+            live_mid
+            -
+            last_m15_close
+        )
+        / atr
+    )
+
+    if (
+        live_drift_atr
+        >
+        MAX_LIVE_DRIFT_ATR
+    ):
+
+        errors.append(
+            "MARKET_MOVED_TOO_FAR_SINCE_STATE"
+        )
+
+    if errors:
+
+        return {
+            "symbol":
+                symbol,
+
+            "status":
+                "REJECTED",
+
+            "errors":
+                errors,
+
+            "diagnostics": {
+                "last_m15_close":
+                    last_m15_close,
+
+                "live_mid":
+                    live_mid,
+
+                "m15_atr":
+                    atr,
+
+                "live_drift_atr":
+                    round(
+                        live_drift_atr,
+                        2,
+                    ),
+            },
+
+            "dry_run":
+                True,
         }
 
     # ======================================================
@@ -474,7 +876,7 @@ def build_trade_plan(
             entry
             +
             risk_price_distance
-            * MIN_RISK_REWARD
+            * TARGET_RISK_REWARD
         )
 
     else:
@@ -483,7 +885,7 @@ def build_trade_plan(
             entry
             -
             risk_price_distance
-            * MIN_RISK_REWARD
+            * TARGET_RISK_REWARD
         )
 
     take_profit = round_price(
@@ -616,7 +1018,7 @@ def build_trade_plan(
             risk_reward
             <
             MIN_RISK_REWARD
-            * 0.95
+            
         ):
 
             errors.append(
@@ -635,6 +1037,28 @@ def build_trade_plan(
         )
         / point
     )
+
+    max_spread_points = (
+        MAX_SPREAD_POINTS_BY_SYMBOL.get(
+            symbol
+        )
+    )
+
+    if max_spread_points is None:
+
+        errors.append(
+            "SPREAD_LIMIT_NOT_CONFIGURED"
+        )
+
+    elif (
+        spread_points
+        >
+        max_spread_points
+    ):
+
+        errors.append(
+            "SPREAD_TOO_HIGH"
+        )
 
     # ======================================================
     # RESULTADO
@@ -787,4 +1211,38 @@ def build_trade_plan(
 
         "dry_run":
             True,
+
+        "max_spread_points":
+            max_spread_points,
+
+        "timing": {
+            "market_state_age_seconds":
+                (
+                    round(
+                        state_age_seconds,
+                        1,
+                    )
+                    if state_age_seconds
+                    is not None
+                    else None
+                ),
+
+            "tick_age_seconds":
+                round(
+                    tick_age_seconds,
+                    1,
+                ),
+
+            "tick_time_mode":
+                tick_time_mode,
+
+            "server_utc_offset_seconds":
+                server_utc_offset_seconds,
+
+            "live_drift_atr":
+                round(
+                    live_drift_atr,
+                    2,
+                ),
+        },
     }

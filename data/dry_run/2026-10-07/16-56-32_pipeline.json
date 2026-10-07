@@ -1,0 +1,412 @@
+{
+  "generated_at": "2026-10-07T16:56:32.252446+00:00",
+  "mode": "DRY_RUN",
+  "python_trading_disabled": true,
+  "session": {
+    "generated_at": "2026-10-07T16:56:32.252405+00:00",
+    "london": {
+      "local_time": "2026-10-07T17:56:32.252405+01:00",
+      "is_open": false
+    },
+    "new_york": {
+      "local_time": "2026-10-07T12:56:32.252405-04:00",
+      "is_open": true
+    },
+    "sessions_open": [
+      "NEW_YORK"
+    ],
+    "trading_session_allowed": true
+  },
+  "symbols": {
+    "EURUSD": {
+      "technical_source": "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\data\\analysis\\2026-10-07\\07-40-35_EURUSD.json",
+      "candidate": {
+        "symbol": "EURUSD",
+        "status": "REJECTED",
+        "direction": null,
+        "allowed": false,
+        "rejection_reasons": [
+          "TECHNICAL_ANALYSIS_STALE",
+          "RUNTIME_STATE_STALE",
+          "CALENDAR_STATE_STALE",
+          "NO_TECHNICAL_SETUP",
+          "SETUP_QUALITY_TOO_LOW",
+          "HIGH_IMPACT_EVENT_WINDOW",
+          "PENDING_ORDER_COULD_OVERLAP_HIGH_IMPACT_WINDOW"
+        ],
+        "freshness": {
+          "technical_age_seconds": 33356.7,
+          "runtime_age_seconds": 33323.0,
+          "calendar_state_age_seconds": 468.3
+        },
+        "session": {
+          "generated_at": "2026-10-07T16:56:32.252405+00:00",
+          "london": {
+            "local_time": "2026-10-07T17:56:32.252405+01:00",
+            "is_open": false
+          },
+          "new_york": {
+            "local_time": "2026-10-07T12:56:32.252405-04:00",
+            "is_open": true
+          },
+          "sessions_open": [
+            "NEW_YORK"
+          ],
+          "trading_session_allowed": true
+        },
+        "technical": {
+          "decision": "NO_TRADE",
+          "strategy": "TREND_CONTINUATION",
+          "bias": "BEARISH",
+          "setup_quality": 56,
+          "overall_score": -64.64,
+          "alignment": "ALIGNED"
+        },
+        "macro": {
+          "currencies": [
+            "EUR",
+            "USD"
+          ],
+          "macro_risk": "BLOCKED",
+          "new_trades_blocked": true,
+          "blocking_reasons": [
+            "HIGH_IMPACT_EVENT_WINDOW"
+          ],
+          "blocking_events": [
+            {
+              "currency": "USD",
+              "event_id": 840220014,
+              "event_code": "10-year-note-auction",
+              "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-07T17:00:00+00:00",
+              "minutes_until_event": 11.3,
+              "actual": null,
+              "forecast": null,
+              "previous": 4.834,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            }
+          ],
+          "upcoming_high_events": [
+            {
+              "currency": "USD",
+              "event_id": 840220014,
+              "event_code": "10-year-note-auction",
+              "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-07T17:00:00+00:00",
+              "minutes_until_event": 11.3,
+              "actual": null,
+              "forecast": null,
+              "previous": 4.834,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            },
+            {
+              "currency": "USD",
+              "event_id": 840140001,
+              "event_code": "initial-jobless-claims",
+              "event_name": "Peticiones Iniciales del Subsidio de Desempleo",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T12:30:00+00:00",
+              "minutes_until_event": 1181.3,
+              "actual": null,
+              "forecast": 190.0,
+              "previous": 197.0,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_THOUSANDS",
+              "source_url": "https://www.dol.gov"
+            }
+          ],
+          "moderate_warnings": [],
+          "server_utc_offset_seconds": 10800
+        }
+      },
+      "trade_plan": null,
+      "mt5_request": null,
+      "order_check": null,
+      "final_validation": {
+        "status": "REJECTED",
+        "approved": false,
+        "errors": [
+          "TECHNICAL_ANALYSIS_STALE",
+          "RUNTIME_STATE_STALE",
+          "CALENDAR_STATE_STALE",
+          "NO_TECHNICAL_SETUP",
+          "SETUP_QUALITY_TOO_LOW",
+          "HIGH_IMPACT_EVENT_WINDOW",
+          "PENDING_ORDER_COULD_OVERLAP_HIGH_IMPACT_WINDOW"
+        ]
+      }
+    },
+    "USDCAD": {
+      "technical_source": "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\data\\analysis\\2026-10-07\\07-40-52_USDCAD.json",
+      "candidate": {
+        "symbol": "USDCAD",
+        "status": "REJECTED",
+        "direction": null,
+        "allowed": false,
+        "rejection_reasons": [
+          "TECHNICAL_ANALYSIS_STALE",
+          "RUNTIME_STATE_STALE",
+          "CALENDAR_STATE_STALE",
+          "NO_TECHNICAL_SETUP",
+          "SETUP_QUALITY_TOO_LOW",
+          "HIGH_IMPACT_EVENT_WINDOW",
+          "PENDING_ORDER_COULD_OVERLAP_HIGH_IMPACT_WINDOW"
+        ],
+        "freshness": {
+          "technical_age_seconds": 33339.3,
+          "runtime_age_seconds": 33323.0,
+          "calendar_state_age_seconds": 468.4
+        },
+        "session": {
+          "generated_at": "2026-10-07T16:56:32.252405+00:00",
+          "london": {
+            "local_time": "2026-10-07T17:56:32.252405+01:00",
+            "is_open": false
+          },
+          "new_york": {
+            "local_time": "2026-10-07T12:56:32.252405-04:00",
+            "is_open": true
+          },
+          "sessions_open": [
+            "NEW_YORK"
+          ],
+          "trading_session_allowed": true
+        },
+        "technical": {
+          "decision": "NO_TRADE",
+          "strategy": "TREND_CONTINUATION",
+          "bias": "BULLISH",
+          "setup_quality": 21,
+          "overall_score": 18.33,
+          "alignment": "PARTIAL"
+        },
+        "macro": {
+          "currencies": [
+            "USD",
+            "CAD"
+          ],
+          "macro_risk": "BLOCKED",
+          "new_trades_blocked": true,
+          "blocking_reasons": [
+            "HIGH_IMPACT_EVENT_WINDOW"
+          ],
+          "blocking_events": [
+            {
+              "currency": "USD",
+              "event_id": 840220014,
+              "event_code": "10-year-note-auction",
+              "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-07T17:00:00+00:00",
+              "minutes_until_event": 11.3,
+              "actual": null,
+              "forecast": null,
+              "previous": 4.834,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            }
+          ],
+          "upcoming_high_events": [
+            {
+              "currency": "USD",
+              "event_id": 840220014,
+              "event_code": "10-year-note-auction",
+              "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-07T17:00:00+00:00",
+              "minutes_until_event": 11.3,
+              "actual": null,
+              "forecast": null,
+              "previous": 4.834,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            },
+            {
+              "currency": "USD",
+              "event_id": 840140001,
+              "event_code": "initial-jobless-claims",
+              "event_name": "Peticiones Iniciales del Subsidio de Desempleo",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T12:30:00+00:00",
+              "minutes_until_event": 1181.3,
+              "actual": null,
+              "forecast": 190.0,
+              "previous": 197.0,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_THOUSANDS",
+              "source_url": "https://www.dol.gov"
+            }
+          ],
+          "moderate_warnings": [],
+          "server_utc_offset_seconds": 10800
+        }
+      },
+      "trade_plan": null,
+      "mt5_request": null,
+      "order_check": null,
+      "final_validation": {
+        "status": "REJECTED",
+        "approved": false,
+        "errors": [
+          "TECHNICAL_ANALYSIS_STALE",
+          "RUNTIME_STATE_STALE",
+          "CALENDAR_STATE_STALE",
+          "NO_TECHNICAL_SETUP",
+          "SETUP_QUALITY_TOO_LOW",
+          "HIGH_IMPACT_EVENT_WINDOW",
+          "PENDING_ORDER_COULD_OVERLAP_HIGH_IMPACT_WINDOW"
+        ]
+      }
+    },
+    "AUDUSD": {
+      "technical_source": "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\data\\analysis\\2026-10-07\\07-41-07_AUDUSD.json",
+      "candidate": {
+        "symbol": "AUDUSD",
+        "status": "REJECTED",
+        "direction": null,
+        "allowed": false,
+        "rejection_reasons": [
+          "TECHNICAL_ANALYSIS_STALE",
+          "RUNTIME_STATE_STALE",
+          "CALENDAR_STATE_STALE",
+          "NO_TECHNICAL_SETUP",
+          "SETUP_QUALITY_TOO_LOW",
+          "HIGH_IMPACT_EVENT_WINDOW",
+          "PENDING_ORDER_COULD_OVERLAP_HIGH_IMPACT_WINDOW"
+        ],
+        "freshness": {
+          "technical_age_seconds": 33324.4,
+          "runtime_age_seconds": 33323.0,
+          "calendar_state_age_seconds": 468.4
+        },
+        "session": {
+          "generated_at": "2026-10-07T16:56:32.252405+00:00",
+          "london": {
+            "local_time": "2026-10-07T17:56:32.252405+01:00",
+            "is_open": false
+          },
+          "new_york": {
+            "local_time": "2026-10-07T12:56:32.252405-04:00",
+            "is_open": true
+          },
+          "sessions_open": [
+            "NEW_YORK"
+          ],
+          "trading_session_allowed": true
+        },
+        "technical": {
+          "decision": "NO_TRADE",
+          "strategy": "TREND_CONTINUATION",
+          "bias": "BEARISH",
+          "setup_quality": 50,
+          "overall_score": -44.05,
+          "alignment": "ALIGNED"
+        },
+        "macro": {
+          "currencies": [
+            "AUD",
+            "USD"
+          ],
+          "macro_risk": "BLOCKED",
+          "new_trades_blocked": true,
+          "blocking_reasons": [
+            "HIGH_IMPACT_EVENT_WINDOW"
+          ],
+          "blocking_events": [
+            {
+              "currency": "USD",
+              "event_id": 840220014,
+              "event_code": "10-year-note-auction",
+              "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-07T17:00:00+00:00",
+              "minutes_until_event": 11.3,
+              "actual": null,
+              "forecast": null,
+              "previous": 4.834,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            }
+          ],
+          "upcoming_high_events": [
+            {
+              "currency": "USD",
+              "event_id": 840220014,
+              "event_code": "10-year-note-auction",
+              "event_name": "Subasta de Obligaciones del Estado a 10 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-07T17:00:00+00:00",
+              "minutes_until_event": 11.3,
+              "actual": null,
+              "forecast": null,
+              "previous": 4.834,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            },
+            {
+              "currency": "USD",
+              "event_id": 840140001,
+              "event_code": "initial-jobless-claims",
+              "event_name": "Peticiones Iniciales del Subsidio de Desempleo",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T12:30:00+00:00",
+              "minutes_until_event": 1181.3,
+              "actual": null,
+              "forecast": 190.0,
+              "previous": 197.0,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_THOUSANDS",
+              "source_url": "https://www.dol.gov"
+            }
+          ],
+          "moderate_warnings": [],
+          "server_utc_offset_seconds": 10800
+        }
+      },
+      "trade_plan": null,
+      "mt5_request": null,
+      "order_check": null,
+      "final_validation": {
+        "status": "REJECTED",
+        "approved": false,
+        "errors": [
+          "TECHNICAL_ANALYSIS_STALE",
+          "RUNTIME_STATE_STALE",
+          "CALENDAR_STATE_STALE",
+          "NO_TECHNICAL_SETUP",
+          "SETUP_QUALITY_TOO_LOW",
+          "HIGH_IMPACT_EVENT_WINDOW",
+          "PENDING_ORDER_COULD_OVERLAP_HIGH_IMPACT_WINDOW"
+        ]
+      }
+    }
+  }
+}

@@ -160,6 +160,14 @@ def main():
     )
 
     print(
+        "Broker UTC offset:",
+        state[
+            "server_utc_offset_seconds"
+        ],
+        "seconds",
+    )
+
+    print(
         "Age:",
         state[
             "calendar_age_seconds"
@@ -242,6 +250,36 @@ def main():
 
         print()
         print(
+            "Critical events:"
+        )
+
+        if not data[
+            "critical_blocking_events"
+        ]:
+
+            print(
+                "  Ninguno"
+            )
+
+        else:
+
+            for event in (
+                data[
+                    "critical_blocking_events"
+                ]
+            ):
+
+                print(
+                    " ",
+                    end="",
+                )
+
+                print_event(
+                    event
+                )
+
+        print()
+        print(
             "Proximos HIGH:"
         )
 
@@ -258,6 +296,37 @@ def main():
             for event in (
                 data[
                     "upcoming_high_events"
+                ][:5]
+            ):
+
+                print(
+                    " ",
+                    end="",
+                )
+
+                print_event(
+                    event
+                )
+
+
+        print()
+        print(
+            "Proximos CRITICAL:"
+        )
+
+        if not data[
+            "upcoming_critical_events"
+        ]:
+
+            print(
+                "  Ninguno"
+            )
+
+        else:
+
+            for event in (
+                data[
+                    "upcoming_critical_events"
                 ][:5]
             ):
 

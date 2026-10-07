@@ -1,0 +1,108 @@
+{
+  "generated_at": "2026-10-07T18:37:50.334027+00:00",
+  "mode": "TECHNICAL_ONLY",
+  "macro_history_included": false,
+  "llm_included": false,
+  "evaluation_days": 183,
+  "current_live_threshold": 65,
+  "rows_in_sessions": 22011,
+  "thresholds": {
+    "50": {
+      "total": 12900,
+      "bullish": 6937,
+      "bearish": 5963,
+      "by_symbol": {
+        "EURUSD": 4184,
+        "USDCAD": 4485,
+        "AUDUSD": 4231
+      }
+    },
+    "55": {
+      "total": 11920,
+      "bullish": 6453,
+      "bearish": 5467,
+      "by_symbol": {
+        "EURUSD": 3851,
+        "USDCAD": 4186,
+        "AUDUSD": 3883
+      }
+    },
+    "60": {
+      "total": 11108,
+      "bullish": 6012,
+      "bearish": 5096,
+      "by_symbol": {
+        "EURUSD": 3548,
+        "USDCAD": 3935,
+        "AUDUSD": 3625
+      }
+    },
+    "65": {
+      "total": 10284,
+      "bullish": 5611,
+      "bearish": 4673,
+      "by_symbol": {
+        "EURUSD": 3271,
+        "USDCAD": 3651,
+        "AUDUSD": 3362
+      }
+    },
+    "70": {
+      "total": 9240,
+      "bullish": 5065,
+      "bearish": 4175,
+      "by_symbol": {
+        "EURUSD": 2910,
+        "USDCAD": 3312,
+        "AUDUSD": 3018
+      }
+    },
+    "75": {
+      "total": 8153,
+      "bullish": 4473,
+      "bearish": 3680,
+      "by_symbol": {
+        "EURUSD": 2542,
+        "USDCAD": 3010,
+        "AUDUSD": 2601
+      }
+    },
+    "80": {
+      "total": 7045,
+      "bullish": 3919,
+      "bearish": 3126,
+      "by_symbol": {
+        "EURUSD": 2203,
+        "USDCAD": 2613,
+        "AUDUSD": 2229
+      }
+    },
+    "85": {
+      "total": 5716,
+      "bullish": 3238,
+      "bearish": 2478,
+      "by_symbol": {
+        "EURUSD": 1823,
+        "USDCAD": 2049,
+        "AUDUSD": 1844
+      }
+    },
+    "90": {
+      "total": 4084,
+      "bullish": 2379,
+      "bearish": 1705,
+      "by_symbol": {
+        "EURUSD": 1247,
+        "USDCAD": 1487,
+        "AUDUSD": 1350
+      }
+    }
+  },
+  "setup_quality_distribution": {
+    "mean": 56.51,
+    "median": 60.0,
+    "p75": 85.0,
+    "p90": 96.0,
+    "max": 100
+  }
+}

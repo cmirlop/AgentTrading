@@ -21,3 +21,13 @@ MAX_DAILY_LOSS_EUR = None
 MAX_SPREAD_POINTS = None
 
 MIN_RISK_REWARD = None
+
+# ==========================================================
+# SPREAD MAXIMO PROVISIONAL
+# ==========================================================
+
+MAX_SPREAD_POINTS_BY_SYMBOL = {
+    "EURUSD": 20.0,
+    "USDCAD": 25.0,
+    "AUDUSD": 20.0,
+}

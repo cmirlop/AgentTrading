@@ -1,0 +1,409 @@
+{
+  "generated_at": "2026-10-07T17:28:16.587894+00:00",
+  "mode": "DRY_RUN",
+  "python_trading_disabled": true,
+  "session": {
+    "generated_at": "2026-10-07T17:28:16.587854+00:00",
+    "london": {
+      "local_time": "2026-10-07T18:28:16.587854+01:00",
+      "is_open": false
+    },
+    "new_york": {
+      "local_time": "2026-10-07T13:28:16.587854-04:00",
+      "is_open": true
+    },
+    "sessions_open": [
+      "NEW_YORK"
+    ],
+    "trading_session_allowed": true
+  },
+  "symbols": {
+    "EURUSD": {
+      "technical_source": "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\data\\analysis\\2026-10-07\\17-27-32_EURUSD.json",
+      "candidate": {
+        "symbol": "EURUSD",
+        "status": "CANDIDATE_SHORT",
+        "direction": "SELL",
+        "allowed": true,
+        "rejection_reasons": [],
+        "freshness": {
+          "technical_age_seconds": 43.7,
+          "runtime_age_seconds": 1.9,
+          "calendar_state_age_seconds": 1.2
+        },
+        "session": {
+          "generated_at": "2026-10-07T17:28:16.587854+00:00",
+          "london": {
+            "local_time": "2026-10-07T18:28:16.587854+01:00",
+            "is_open": false
+          },
+          "new_york": {
+            "local_time": "2026-10-07T13:28:16.587854-04:00",
+            "is_open": true
+          },
+          "sessions_open": [
+            "NEW_YORK"
+          ],
+          "trading_session_allowed": true
+        },
+        "technical": {
+          "decision": "WATCH_SHORT",
+          "strategy": "TREND_CONTINUATION",
+          "bias": "BEARISH",
+          "setup_quality": 85,
+          "overall_score": -78.93,
+          "alignment": "ALIGNED"
+        },
+        "macro": {
+          "currencies": [
+            "EUR",
+            "USD"
+          ],
+          "macro_risk": "CAUTION",
+          "new_trades_blocked": false,
+          "blocking_reasons": [],
+          "blocking_events": [],
+          "upcoming_high_events": [
+            {
+              "currency": "USD",
+              "event_id": 840140001,
+              "event_code": "initial-jobless-claims",
+              "event_name": "Peticiones Iniciales del Subsidio de Desempleo",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T12:30:00+00:00",
+              "minutes_until_event": 1141.7,
+              "actual": null,
+              "forecast": 190.0,
+              "previous": 197.0,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_THOUSANDS",
+              "source_url": "https://www.dol.gov"
+            },
+            {
+              "currency": "USD",
+              "event_id": 840220015,
+              "event_code": "30-year-bond-auction",
+              "event_name": "Subasta de Bonos del Estado a 30 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T17:00:00+00:00",
+              "minutes_until_event": 1411.7,
+              "actual": null,
+              "forecast": null,
+              "previous": 5.308,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            }
+          ],
+          "moderate_warnings": [
+            {
+              "currency": "USD",
+              "event_id": 840050004,
+              "event_code": "fomc-minutes",
+              "event_name": "Minutas del CFMA",
+              "importance": "MODERATE",
+              "event_time_utc": "2026-10-07T18:00:00+00:00",
+              "minutes_until_event": 31.7,
+              "actual": null,
+              "forecast": null,
+              "previous": null,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://www.federalreserve.gov"
+            }
+          ],
+          "server_utc_offset_seconds": 10800
+        }
+      },
+      "trade_plan": {
+        "symbol": "EURUSD",
+        "status": "REJECTED",
+        "errors": [
+          "TICK_FROM_FUTURE",
+          "TICK_FROM_FUTURE"
+        ],
+        "diagnostics": {
+          "market_state_age_seconds": 796.6,
+          "tick_age_seconds": -10798.5,
+          "tick_time_mode": "UNNORMALIZED",
+          "server_utc_offset_seconds": null
+        },
+        "dry_run": true
+      },
+      "mt5_request": null,
+      "order_check": null,
+      "final_validation": {
+        "status": "REJECTED",
+        "approved": false,
+        "errors": [
+          "TICK_FROM_FUTURE",
+          "TICK_FROM_FUTURE"
+        ]
+      }
+    },
+    "USDCAD": {
+      "technical_source": "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\data\\analysis\\2026-10-07\\17-27-49_USDCAD.json",
+      "candidate": {
+        "symbol": "USDCAD",
+        "status": "CANDIDATE_LONG",
+        "direction": "BUY",
+        "allowed": true,
+        "rejection_reasons": [],
+        "freshness": {
+          "technical_age_seconds": 27.2,
+          "runtime_age_seconds": 1.9,
+          "calendar_state_age_seconds": 1.2
+        },
+        "session": {
+          "generated_at": "2026-10-07T17:28:16.587854+00:00",
+          "london": {
+            "local_time": "2026-10-07T18:28:16.587854+01:00",
+            "is_open": false
+          },
+          "new_york": {
+            "local_time": "2026-10-07T13:28:16.587854-04:00",
+            "is_open": true
+          },
+          "sessions_open": [
+            "NEW_YORK"
+          ],
+          "trading_session_allowed": true
+        },
+        "technical": {
+          "decision": "WATCH_LONG",
+          "strategy": "TREND_CONTINUATION",
+          "bias": "BULLISH",
+          "setup_quality": 71,
+          "overall_score": 61.19,
+          "alignment": "ALIGNED"
+        },
+        "macro": {
+          "currencies": [
+            "USD",
+            "CAD"
+          ],
+          "macro_risk": "CAUTION",
+          "new_trades_blocked": false,
+          "blocking_reasons": [],
+          "blocking_events": [],
+          "upcoming_high_events": [
+            {
+              "currency": "USD",
+              "event_id": 840140001,
+              "event_code": "initial-jobless-claims",
+              "event_name": "Peticiones Iniciales del Subsidio de Desempleo",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T12:30:00+00:00",
+              "minutes_until_event": 1141.7,
+              "actual": null,
+              "forecast": 190.0,
+              "previous": 197.0,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_THOUSANDS",
+              "source_url": "https://www.dol.gov"
+            },
+            {
+              "currency": "USD",
+              "event_id": 840220015,
+              "event_code": "30-year-bond-auction",
+              "event_name": "Subasta de Bonos del Estado a 30 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T17:00:00+00:00",
+              "minutes_until_event": 1411.7,
+              "actual": null,
+              "forecast": null,
+              "previous": 5.308,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            }
+          ],
+          "moderate_warnings": [
+            {
+              "currency": "USD",
+              "event_id": 840050004,
+              "event_code": "fomc-minutes",
+              "event_name": "Minutas del CFMA",
+              "importance": "MODERATE",
+              "event_time_utc": "2026-10-07T18:00:00+00:00",
+              "minutes_until_event": 31.7,
+              "actual": null,
+              "forecast": null,
+              "previous": null,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://www.federalreserve.gov"
+            }
+          ],
+          "server_utc_offset_seconds": 10800
+        }
+      },
+      "trade_plan": {
+        "symbol": "USDCAD",
+        "status": "REJECTED",
+        "errors": [
+          "TICK_FROM_FUTURE",
+          "TICK_FROM_FUTURE"
+        ],
+        "diagnostics": {
+          "market_state_age_seconds": 796.6,
+          "tick_age_seconds": -10798.5,
+          "tick_time_mode": "UNNORMALIZED",
+          "server_utc_offset_seconds": null
+        },
+        "dry_run": true
+      },
+      "mt5_request": null,
+      "order_check": null,
+      "final_validation": {
+        "status": "REJECTED",
+        "approved": false,
+        "errors": [
+          "TICK_FROM_FUTURE",
+          "TICK_FROM_FUTURE"
+        ]
+      }
+    },
+    "AUDUSD": {
+      "technical_source": "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\data\\analysis\\2026-10-07\\17-28-13_AUDUSD.json",
+      "candidate": {
+        "symbol": "AUDUSD",
+        "status": "CANDIDATE_SHORT",
+        "direction": "SELL",
+        "allowed": true,
+        "rejection_reasons": [],
+        "freshness": {
+          "technical_age_seconds": 2.9,
+          "runtime_age_seconds": 1.9,
+          "calendar_state_age_seconds": 1.2
+        },
+        "session": {
+          "generated_at": "2026-10-07T17:28:16.587854+00:00",
+          "london": {
+            "local_time": "2026-10-07T18:28:16.587854+01:00",
+            "is_open": false
+          },
+          "new_york": {
+            "local_time": "2026-10-07T13:28:16.587854-04:00",
+            "is_open": true
+          },
+          "sessions_open": [
+            "NEW_YORK"
+          ],
+          "trading_session_allowed": true
+        },
+        "technical": {
+          "decision": "WATCH_SHORT",
+          "strategy": "TREND_CONTINUATION",
+          "bias": "BEARISH",
+          "setup_quality": 90,
+          "overall_score": -78.33,
+          "alignment": "ALIGNED"
+        },
+        "macro": {
+          "currencies": [
+            "AUD",
+            "USD"
+          ],
+          "macro_risk": "CAUTION",
+          "new_trades_blocked": false,
+          "blocking_reasons": [],
+          "blocking_events": [],
+          "upcoming_high_events": [
+            {
+              "currency": "USD",
+              "event_id": 840140001,
+              "event_code": "initial-jobless-claims",
+              "event_name": "Peticiones Iniciales del Subsidio de Desempleo",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T12:30:00+00:00",
+              "minutes_until_event": 1141.7,
+              "actual": null,
+              "forecast": 190.0,
+              "previous": 197.0,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_THOUSANDS",
+              "source_url": "https://www.dol.gov"
+            },
+            {
+              "currency": "USD",
+              "event_id": 840220015,
+              "event_code": "30-year-bond-auction",
+              "event_name": "Subasta de Bonos del Estado a 30 Años",
+              "importance": "HIGH",
+              "event_time_utc": "2026-10-08T17:00:00+00:00",
+              "minutes_until_event": 1411.7,
+              "actual": null,
+              "forecast": null,
+              "previous": 5.308,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_PERCENT",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://home.treasury.gov/"
+            }
+          ],
+          "moderate_warnings": [
+            {
+              "currency": "USD",
+              "event_id": 840050004,
+              "event_code": "fomc-minutes",
+              "event_name": "Minutas del CFMA",
+              "importance": "MODERATE",
+              "event_time_utc": "2026-10-07T18:00:00+00:00",
+              "minutes_until_event": 31.7,
+              "actual": null,
+              "forecast": null,
+              "previous": null,
+              "revised": null,
+              "impact": null,
+              "unit": "CALENDAR_UNIT_NONE",
+              "multiplier": "CALENDAR_MULTIPLIER_NONE",
+              "source_url": "https://www.federalreserve.gov"
+            }
+          ],
+          "server_utc_offset_seconds": 10800
+        }
+      },
+      "trade_plan": {
+        "symbol": "AUDUSD",
+        "status": "REJECTED",
+        "errors": [
+          "TICK_FROM_FUTURE",
+          "TICK_FROM_FUTURE"
+        ],
+        "diagnostics": {
+          "market_state_age_seconds": 796.7,
+          "tick_age_seconds": -10798.9,
+          "tick_time_mode": "UNNORMALIZED",
+          "server_utc_offset_seconds": null
+        },
+        "dry_run": true
+      },
+      "mt5_request": null,
+      "order_check": null,
+      "final_validation": {
+        "status": "REJECTED",
+        "approved": false,
+        "errors": [
+          "TICK_FROM_FUTURE",
+          "TICK_FROM_FUTURE"
+        ]
+      }
+    }
+  }
+}

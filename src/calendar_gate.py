@@ -8,6 +8,9 @@ from config.calendar_config import (
     EVENT_LOOKAHEAD_HOURS,
     EVENT_LOOKBACK_HOURS,
     MODERATE_WARNING_MINUTES,
+    CRITICAL_EVENT_CODES,
+    CRITICAL_BLOCK_BEFORE_MINUTES,
+    CRITICAL_BLOCK_AFTER_MINUTES,
 )
 
 from src.calendar_reader import (
@@ -31,6 +34,35 @@ def build_calendar_state(
         df[
             "generated_utc"
         ].max()
+    )
+
+    latest_rows = df[
+        df["generated_utc"]
+        == generated_utc
+    ]
+
+    if latest_rows.empty:
+
+        raise RuntimeError(
+            "No se pudo determinar "
+            "el offset horario del broker"
+        )
+
+    offset_value = (
+        latest_rows.iloc[0][
+            "server_utc_offset_seconds"
+        ]
+    )
+
+    if pd.isna(offset_value):
+
+        raise RuntimeError(
+            "server_utc_offset_seconds "
+            "esta vacio en el calendario"
+        )
+
+    server_utc_offset_seconds = int(
+        offset_value
     )
 
     age_seconds = (
@@ -58,6 +90,9 @@ def build_calendar_state(
 
         "calendar_fresh":
             calendar_fresh,
+
+        "server_utc_offset_seconds":
+            server_utc_offset_seconds,
 
         "symbols": {},
     }
@@ -133,11 +168,27 @@ def build_calendar_state(
             == "MODERATE"
         ].copy()
 
+
+        # --------------------------------------------------
+        # EVENTOS CRITICOS INDEPENDIENTES DE IMPORTANCE
+        # --------------------------------------------------
+
+        critical_events = relevant[
+            relevant[
+                "event_code"
+            ].isin(
+                CRITICAL_EVENT_CODES
+            )
+        ].copy()
+
         blocking_events = []
 
         upcoming_high = []
 
         moderate_warnings = []
+
+        critical_blocking_events = []
+        upcoming_critical = []
 
         # --------------------------------------------------
         # BLOQUEO HIGH
@@ -217,6 +268,48 @@ def build_calendar_state(
                     )
                 )
 
+
+        # --------------------------------------------------
+        # BLOQUEO CRITICAL
+        # --------------------------------------------------
+
+        for _, row in (
+            critical_events.iterrows()
+        ):
+
+            event_time = (
+                row[
+                    "event_time_utc"
+                ]
+            )
+
+            minutes_until = (
+                event_time
+                - now_utc
+            ).total_seconds() / 60
+
+            if (
+                -CRITICAL_BLOCK_AFTER_MINUTES
+                <= minutes_until
+                <= CRITICAL_BLOCK_BEFORE_MINUTES
+            ):
+
+                critical_blocking_events.append(
+                    event_to_dict(
+                        row,
+                        now_utc,
+                    )
+                )
+
+            if minutes_until >= 0:
+
+                upcoming_critical.append(
+                    event_to_dict(
+                        row,
+                        now_utc,
+                    )
+                )
+
         # --------------------------------------------------
         # DECISION MACRO
         # --------------------------------------------------
@@ -235,21 +328,42 @@ def build_calendar_state(
                 "HIGH_IMPACT_EVENT_WINDOW"
             )
 
+        if critical_blocking_events:
+
+            reasons.append(
+                "CRITICAL_EVENT_WINDOW"
+            )
+
         new_trades_blocked = (
             len(reasons) > 0
         )
 
         # --------------------------------------------------
-        # RIESGO
+        # RIESGO MACRO
         # --------------------------------------------------
 
         if not calendar_fresh:
 
             macro_risk = "UNKNOWN"
 
-        elif blocking_events:
+        elif (
+            blocking_events
+            or
+            critical_blocking_events
+        ):
 
             macro_risk = "BLOCKED"
+
+        elif (
+            upcoming_critical
+            and
+            upcoming_critical[0][
+                "minutes_until_event"
+            ]
+            <= 120
+        ):
+
+            macro_risk = "ELEVATED"
 
         elif (
             upcoming_high
@@ -293,6 +407,15 @@ def build_calendar_state(
 
             "moderate_warnings":
                 moderate_warnings,
+
+            "server_utc_offset_seconds":
+                server_utc_offset_seconds,
+
+            "critical_blocking_events":
+                critical_blocking_events,
+
+            "upcoming_critical_events":
+                upcoming_critical,
         }
 
     return result

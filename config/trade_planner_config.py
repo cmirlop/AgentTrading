@@ -28,3 +28,20 @@ SWING_LOOKBACK_BARS = 6
 # Buffer mínimo absoluto en puntos.
 
 MIN_BUFFER_POINTS = 2
+
+
+TARGET_RISK_REWARD = 2.10
+
+
+# ==========================================================
+# FRESHNESS / LIVE DRIFT
+# ==========================================================
+
+# Un tick más antiguo que esto no se utiliza
+# para diseñar una nueva operación.
+MAX_TICK_AGE_SECONDS = 30
+
+# Si desde el MarketState hasta el precio live
+# el mercado se ha desplazado demasiado,
+# el plan queda invalidado.
+MAX_LIVE_DRIFT_ATR = 1.50

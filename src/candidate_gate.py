@@ -10,6 +10,15 @@ from config.operational_config import (
     REQUIRE_ALLOWED_SESSION,
 )
 
+from config.execution_config import (
+    PENDING_ORDER_EXPIRATION_MINUTES,
+)
+
+from config.calendar_config import (
+    HIGH_IMPACT_BLOCK_BEFORE_MINUTES,
+    CRITICAL_BLOCK_BEFORE_MINUTES,
+)
+
 
 # ==========================================================
 # TIME
@@ -329,7 +338,84 @@ def evaluate_candidate(
                     "blocking_reasons"
                 ]
             )
+    # ==================================================
+    # ORDEN PENDIENTE VS PROXIMA NOTICIA HIGH
+    # ==================================================
 
+    high_overlap_horizon = (
+        PENDING_ORDER_EXPIRATION_MINUTES
+        +
+        HIGH_IMPACT_BLOCK_BEFORE_MINUTES
+    )
+
+    if not symbol_calendar[
+        "new_trades_blocked"
+    ]:
+
+        for event in (
+            symbol_calendar.get(
+                "upcoming_high_events",
+                [],
+            )
+        ):
+
+            minutes_until = (
+                event.get(
+                    "minutes_until_event"
+                )
+            )
+
+            if minutes_until is None:
+                continue
+
+            if (
+                0
+                <= minutes_until
+                <= high_overlap_horizon
+            ):
+
+                reasons.append(
+                    "PENDING_ORDER_COULD_OVERLAP_HIGH_IMPACT_WINDOW"
+                )
+
+                break
+        critical_overlap_horizon = (
+            PENDING_ORDER_EXPIRATION_MINUTES
+            +
+            CRITICAL_BLOCK_BEFORE_MINUTES
+        )
+
+        if not symbol_calendar[
+            "new_trades_blocked"
+        ]:
+
+            for event in (
+                symbol_calendar.get(
+                    "upcoming_critical_events",
+                    [],
+                )
+            ):
+
+                minutes_until = (
+                    event.get(
+                        "minutes_until_event"
+                    )
+                )
+
+                if minutes_until is None:
+                    continue
+
+                if (
+                    0
+                    <= minutes_until
+                    <= critical_overlap_horizon
+                ):
+
+                    reasons.append(
+                        "PENDING_ORDER_COULD_OVERLAP_CRITICAL_EVENT"
+                    )
+
+                    break
     # ======================================================
     # RESULTADO
     # ======================================================
