@@ -1,0 +1,611 @@
+{
+  "architecture_version": "MULTI_AGENT_V1",
+  "symbol": "USDCAD",
+  "analysis_time": "2026-10-08T16:30:00+00:00",
+  "created_at": "2026-10-08T16:42:51.272084+00:00",
+  "snapshot": {
+    "symbol": "USDCAD",
+    "analysis_time": "2026-10-08T16:30:00+00:00",
+    "data_quality": {
+      "status": "OK",
+      "timeframes_with_warnings": []
+    },
+    "timeframes": {
+      "M5": {
+        "close": 1.42568,
+        "ema20": 1.4263017024958706,
+        "ema50": 1.4262730539465602,
+        "ema200": 1.4258914198524635,
+        "price_vs_ema20": "BELOW",
+        "price_vs_ema50": "BELOW",
+        "price_vs_ema200": "BELOW",
+        "ema_structure": "BULLISH",
+        "rsi14": 41.201840979908866,
+        "rsi_zone": "WEAK",
+        "atr14": 0.0004799452180721192,
+        "range_position_20": 0.18781725888323672,
+        "range_zone": "LOWER",
+        "volume_ratio": 1.193863319386332,
+        "volume_zone": "NORMAL",
+        "return_1": -0.00021739282884170041,
+        "return_5": -0.0005327949300355517,
+        "return5_direction": "NEGATIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-08T16:20:00+00:00",
+            "open": 1.42669,
+            "high": 1.42683,
+            "low": 1.42634,
+            "close": 1.42639,
+            "tick_volume": 375.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T16:25:00+00:00",
+            "open": 1.42638,
+            "high": 1.42664,
+            "low": 1.42619,
+            "close": 1.42646,
+            "tick_volume": 321.0,
+            "spread": 1
+          },
+          {
+            "time": "2026-10-08T16:30:00+00:00",
+            "open": 1.42645,
+            "high": 1.42645,
+            "low": 1.42586,
+            "close": 1.42599,
+            "tick_volume": 435.0,
+            "spread": 1
+          },
+          {
+            "time": "2026-10-08T16:35:00+00:00",
+            "open": 1.42598,
+            "high": 1.42606,
+            "low": 1.42553,
+            "close": 1.42568,
+            "tick_volume": 428.0,
+            "spread": 0
+          }
+        ]
+      },
+      "M15": {
+        "close": 1.42646,
+        "ema20": 1.4262735977131105,
+        "ema50": 1.4260370810062601,
+        "ema200": 1.4250698149802747,
+        "price_vs_ema20": "ABOVE",
+        "price_vs_ema50": "ABOVE",
+        "price_vs_ema200": "ABOVE",
+        "ema_structure": "BULLISH",
+        "rsi14": 52.42275798323773,
+        "rsi_zone": "NEUTRAL",
+        "atr14": 0.0007293581799480719,
+        "range_position_20": 0.5969230769230978,
+        "range_zone": "MIDDLE",
+        "volume_ratio": 1.1546229802513464,
+        "volume_zone": "NORMAL",
+        "return_1": 1.4020919211654714e-05,
+        "return_5": 0.00029452189279410845,
+        "return5_direction": "POSITIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-08T15:30:00+00:00",
+            "open": 1.42537,
+            "high": 1.42636,
+            "low": 1.42532,
+            "close": 1.42629,
+            "tick_volume": 1115.0,
+            "spread": 1
+          },
+          {
+            "time": "2026-10-08T15:45:00+00:00",
+            "open": 1.4263,
+            "high": 1.42671,
+            "low": 1.42614,
+            "close": 1.42654,
+            "tick_volume": 998.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T16:00:00+00:00",
+            "open": 1.42653,
+            "high": 1.427,
+            "low": 1.42594,
+            "close": 1.42644,
+            "tick_volume": 1118.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T16:15:00+00:00",
+            "open": 1.42645,
+            "high": 1.42684,
+            "low": 1.42619,
+            "close": 1.42646,
+            "tick_volume": 1029.0,
+            "spread": 0
+          }
+        ]
+      },
+      "H1": {
+        "close": 1.42654,
+        "ema20": 1.4258215085964663,
+        "ema50": 1.4250852098830957,
+        "ema200": 1.4213369328395458,
+        "price_vs_ema20": "ABOVE",
+        "price_vs_ema50": "ABOVE",
+        "price_vs_ema200": "ABOVE",
+        "ema_structure": "BULLISH",
+        "rsi14": 55.58063777341542,
+        "rsi_zone": "STRONG",
+        "atr14": 0.0012214714863969817,
+        "range_position_20": 0.6392961876832564,
+        "range_zone": "MIDDLE",
+        "volume_ratio": 2.0421688225620382,
+        "volume_zone": "HIGH",
+        "return_1": -0.0004904571060229124,
+        "return_5": 0.001221224031442869,
+        "return5_direction": "POSITIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-08T12:00:00+00:00",
+            "open": 1.42581,
+            "high": 1.42655,
+            "low": 1.42556,
+            "close": 1.42636,
+            "tick_volume": 2897.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T13:00:00+00:00",
+            "open": 1.42638,
+            "high": 1.4268,
+            "low": 1.42543,
+            "close": 1.42571,
+            "tick_volume": 3195.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T14:00:00+00:00",
+            "open": 1.42571,
+            "high": 1.42777,
+            "low": 1.42571,
+            "close": 1.42724,
+            "tick_volume": 3707.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T15:00:00+00:00",
+            "open": 1.42725,
+            "high": 1.42728,
+            "low": 1.42531,
+            "close": 1.42654,
+            "tick_volume": 4160.0,
+            "spread": 0
+          }
+        ]
+      },
+      "H4": {
+        "close": 1.42654,
+        "ema20": 1.4248301700342314,
+        "ema50": 1.4214636069953848,
+        "ema200": 1.4065361677534907,
+        "price_vs_ema20": "ABOVE",
+        "price_vs_ema50": "ABOVE",
+        "price_vs_ema200": "ABOVE",
+        "ema_structure": "BULLISH",
+        "rsi14": 57.63643400288406,
+        "rsi_zone": "STRONG",
+        "atr14": 0.002401577633330504,
+        "range_position_20": 0.7432432432432263,
+        "range_zone": "UPPER",
+        "volume_ratio": 1.523800167018716,
+        "volume_zone": "HIGH",
+        "return_1": 0.0005119896760437115,
+        "return_5": 0.0006593714927047856,
+        "return5_direction": "POSITIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-08T00:00:00+00:00",
+            "open": 1.42559,
+            "high": 1.42651,
+            "low": 1.42499,
+            "close": 1.42638,
+            "tick_volume": 4433.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T04:00:00+00:00",
+            "open": 1.42638,
+            "high": 1.4268,
+            "low": 1.42517,
+            "close": 1.42624,
+            "tick_volume": 6061.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T08:00:00+00:00",
+            "open": 1.42624,
+            "high": 1.42704,
+            "low": 1.42436,
+            "close": 1.42581,
+            "tick_volume": 9918.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T12:00:00+00:00",
+            "open": 1.42581,
+            "high": 1.42777,
+            "low": 1.42531,
+            "close": 1.42654,
+            "tick_volume": 13959.0,
+            "spread": 0
+          }
+        ]
+      },
+      "D1": {
+        "close": 1.42572,
+        "ema20": 1.4116859896659515,
+        "ema50": 1.402940731262548,
+        "ema200": 1.3927497961889526,
+        "price_vs_ema20": "ABOVE",
+        "price_vs_ema50": "ABOVE",
+        "price_vs_ema200": "ABOVE",
+        "ema_structure": "BULLISH",
+        "rsi14": 71.8678037352964,
+        "rsi_zone": "OVERBOUGHT",
+        "atr14": 0.005860009365344767,
+        "range_position_20": 0.9270000000000015,
+        "range_zone": "UPPER",
+        "volume_ratio": 1.0113198722035086,
+        "volume_zone": "NORMAL",
+        "return_1": 0.0034416503029919276,
+        "return_5": 0.0017565801492391842,
+        "return5_direction": "POSITIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-02T00:00:00+00:00",
+            "open": 1.422,
+            "high": 1.42615,
+            "low": 1.42036,
+            "close": 1.42525,
+            "tick_volume": 64086.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-05T00:00:00+00:00",
+            "open": 1.42511,
+            "high": 1.42937,
+            "low": 1.42376,
+            "close": 1.42598,
+            "tick_volume": 58533.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-06T00:00:00+00:00",
+            "open": 1.42565,
+            "high": 1.42854,
+            "low": 1.42065,
+            "close": 1.42083,
+            "tick_volume": 51152.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-07T00:00:00+00:00",
+            "open": 1.42068,
+            "high": 1.42809,
+            "low": 1.42049,
+            "close": 1.42572,
+            "tick_volume": 53622.0,
+            "spread": 0
+          }
+        ]
+      }
+    },
+    "available_evidence_ids": [
+      "M5_PRICE_BELOW_EMA20",
+      "M5_PRICE_BELOW_EMA50",
+      "M5_PRICE_BELOW_EMA200",
+      "M5_EMA_STRUCTURE_BULLISH",
+      "M5_RSI_WEAK",
+      "M5_RANGE_LOWER",
+      "M5_VOLUME_NORMAL",
+      "M5_RETURN5_NEGATIVE",
+      "M15_PRICE_ABOVE_EMA20",
+      "M15_PRICE_ABOVE_EMA50",
+      "M15_PRICE_ABOVE_EMA200",
+      "M15_EMA_STRUCTURE_BULLISH",
+      "M15_RSI_NEUTRAL",
+      "M15_RANGE_MIDDLE",
+      "M15_VOLUME_NORMAL",
+      "M15_RETURN5_POSITIVE",
+      "H1_PRICE_ABOVE_EMA20",
+      "H1_PRICE_ABOVE_EMA50",
+      "H1_PRICE_ABOVE_EMA200",
+      "H1_EMA_STRUCTURE_BULLISH",
+      "H1_RSI_STRONG",
+      "H1_RANGE_MIDDLE",
+      "H1_VOLUME_HIGH",
+      "H1_RETURN5_POSITIVE",
+      "H4_PRICE_ABOVE_EMA20",
+      "H4_PRICE_ABOVE_EMA50",
+      "H4_PRICE_ABOVE_EMA200",
+      "H4_EMA_STRUCTURE_BULLISH",
+      "H4_RSI_STRONG",
+      "H4_RANGE_UPPER",
+      "H4_VOLUME_HIGH",
+      "H4_RETURN5_POSITIVE",
+      "D1_PRICE_ABOVE_EMA20",
+      "D1_PRICE_ABOVE_EMA50",
+      "D1_PRICE_ABOVE_EMA200",
+      "D1_EMA_STRUCTURE_BULLISH",
+      "D1_RSI_OVERBOUGHT",
+      "D1_RANGE_UPPER",
+      "D1_VOLUME_NORMAL",
+      "D1_RETURN5_POSITIVE"
+    ]
+  },
+  "messages": [
+    {
+      "sequence": 1,
+      "timestamp": "2026-10-08T16:42:51.272111+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_STARTED",
+      "symbol": "USDCAD",
+      "payload": {
+        "agent": "technical_agent"
+      }
+    },
+    {
+      "sequence": 2,
+      "timestamp": "2026-10-08T16:42:51.272183+00:00",
+      "agent": "technical_agent",
+      "type": "TECHNICAL_ASSESSMENT",
+      "symbol": "USDCAD",
+      "payload": {
+        "bias": "BULLISH",
+        "overall_score": 80.71,
+        "timeframe_scores": {
+          "M5": -42.86,
+          "M15": 85.71,
+          "H1": 100.0,
+          "H4": 100.0,
+          "D1": 92.86
+        },
+        "alignment": "ALIGNED",
+        "setup_quality": 90,
+        "supporting_evidence": [
+          "M5_EMA_STRUCTURE_BULLISH",
+          "M15_PRICE_ABOVE_EMA20",
+          "M15_PRICE_ABOVE_EMA50",
+          "M15_PRICE_ABOVE_EMA200",
+          "M15_EMA_STRUCTURE_BULLISH",
+          "M15_RETURN5_POSITIVE",
+          "H1_PRICE_ABOVE_EMA20",
+          "H1_PRICE_ABOVE_EMA50",
+          "H1_PRICE_ABOVE_EMA200",
+          "H1_EMA_STRUCTURE_BULLISH",
+          "H1_RSI_STRONG",
+          "H1_RETURN5_POSITIVE",
+          "H4_PRICE_ABOVE_EMA20",
+          "H4_PRICE_ABOVE_EMA50",
+          "H4_PRICE_ABOVE_EMA200",
+          "H4_EMA_STRUCTURE_BULLISH",
+          "H4_RSI_STRONG",
+          "H4_RETURN5_POSITIVE",
+          "D1_PRICE_ABOVE_EMA20",
+          "D1_PRICE_ABOVE_EMA50",
+          "D1_PRICE_ABOVE_EMA200",
+          "D1_EMA_STRUCTURE_BULLISH",
+          "D1_RSI_OVERBOUGHT",
+          "D1_RETURN5_POSITIVE"
+        ],
+        "conflicting_evidence": [
+          "M5_PRICE_BELOW_EMA20",
+          "M5_PRICE_BELOW_EMA50",
+          "M5_PRICE_BELOW_EMA200",
+          "M5_RSI_WEAK",
+          "M5_RETURN5_NEGATIVE"
+        ],
+        "source": "DETERMINISTIC_PYTHON"
+      }
+    },
+    {
+      "sequence": 3,
+      "timestamp": "2026-10-08T16:42:51.272189+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_COMPLETED",
+      "symbol": "USDCAD",
+      "payload": {
+        "agent": "technical_agent"
+      }
+    },
+    {
+      "sequence": 4,
+      "timestamp": "2026-10-08T16:42:51.272195+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_STARTED",
+      "symbol": "USDCAD",
+      "payload": {
+        "agent": "regime_agent"
+      }
+    },
+    {
+      "sequence": 5,
+      "timestamp": "2026-10-08T16:43:13.458811+00:00",
+      "agent": "regime_agent",
+      "type": "REGIME_ASSESSMENT",
+      "symbol": "USDCAD",
+      "payload": {
+        "regime": "BREAKOUT",
+        "confidence": 0.85,
+        "evidence_used": [
+          "M5_PRICE_BELOW_EMA20",
+          "M5_PRICE_BELOW_EMA50",
+          "M5_PRICE_BELOW_EMA200",
+          "M5_EMA_STRUCTURE_BULLISH",
+          "M5_RSI_WEAK",
+          "M5_RANGE_LOWER",
+          "M5_VOLUME_NORMAL",
+          "M5_RETURN5_NEGATIVE",
+          "M15_PRICE_ABOVE_EMA20",
+          "M15_PRICE_ABOVE_EMA50",
+          "M15_PRICE_ABOVE_EMA200",
+          "M15_EMA_STRUCTURE_BULLISH",
+          "M15_RSI_NEUTRAL",
+          "M15_RANGE_MIDDLE",
+          "M15_VOLUME_NORMAL",
+          "M15_RETURN5_POSITIVE",
+          "H1_PRICE_ABOVE_EMA20",
+          "H1_PRICE_ABOVE_EMA50",
+          "H1_PRICE_ABOVE_EMA200",
+          "H1_EMA_STRUCTURE_BULLISH",
+          "H1_RSI_STRONG",
+          "H1_RANGE_MIDDLE",
+          "H1_VOLUME_HIGH",
+          "H1_RETURN5_POSITIVE",
+          "H4_PRICE_ABOVE_EMA20",
+          "H4_PRICE_ABOVE_EMA50",
+          "H4_PRICE_ABOVE_EMA200",
+          "H4_EMA_STRUCTURE_BULLISH",
+          "H4_RSI_STRONG",
+          "H4_RANGE_UPPER",
+          "H4_VOLUME_HIGH",
+          "H4_RETURN5_POSITIVE",
+          "D1_PRICE_ABOVE_EMA20",
+          "D1_PRICE_ABOVE_EMA50",
+          "D1_PRICE_ABOVE_EMA200",
+          "D1_EMA_STRUCTURE_BULLISH",
+          "D1_RSI_OVERBOUGHT",
+          "D1_RANGE_UPPER",
+          "D1_VOLUME_NORMAL",
+          "D1_RETURN5_POSITIVE"
+        ],
+        "caution_flags": [
+          "MIXED_TIMEFRAMES",
+          "MIXED_TIMEFRAMES",
+          "MIXED_TIMEFRAMES",
+          "MIXED_TIMEFRAMES"
+        ],
+        "reason_codes": [
+          "MOMENTUM_CONFLICT",
+          "VOLUME_CONFIRMATION",
+          "RANGE_CHARACTERISTICS",
+          "REVERSAL_CHARACTERISTICS"
+        ],
+        "valid": true,
+        "validation_errors": []
+      }
+    },
+    {
+      "sequence": 6,
+      "timestamp": "2026-10-08T16:43:13.458850+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_COMPLETED",
+      "symbol": "USDCAD",
+      "payload": {
+        "agent": "regime_agent"
+      }
+    },
+    {
+      "sequence": 7,
+      "timestamp": "2026-10-08T16:43:13.458856+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_STARTED",
+      "symbol": "USDCAD",
+      "payload": {
+        "agent": "strategy_agent"
+      }
+    },
+    {
+      "sequence": 8,
+      "timestamp": "2026-10-08T16:43:30.536402+00:00",
+      "agent": "strategy_agent",
+      "type": "STRATEGY_PROPOSAL",
+      "symbol": "USDCAD",
+      "payload": {
+        "action": "WAIT",
+        "strategy": "NONE",
+        "confidence": 0.0,
+        "evidence_used": [
+          "M5_PRICE_BELOW_EMA20",
+          "M5_PRICE_BELOW_EMA50",
+          "M5_PRICE_BELOW_EMA200",
+          "M5_EMA_STRUCTURE_BULLISH",
+          "M5_RSI_WEAK",
+          "M5_RANGE_LOWER",
+          "M5_VOLUME_NORMAL",
+          "M5_RETURN5_NEGATIVE",
+          "M15_PRICE_ABOVE_EMA20",
+          "M15_PRICE_ABOVE_EMA50",
+          "M15_PRICE_ABOVE_EMA200",
+          "M15_EMA_STRUCTURE_BULLISH",
+          "M15_RSI_NEUTRAL",
+          "M15_RANGE_MIDDLE",
+          "M15_VOLUME_NORMAL",
+          "M15_RETURN5_POSITIVE",
+          "H1_PRICE_ABOVE_EMA20",
+          "H1_PRICE_ABOVE_EMA50",
+          "H1_PRICE_ABOVE_EMA200",
+          "H1_EMA_STRUCTURE_BULLISH",
+          "H1_RSI_STRONG",
+          "H1_RANGE_MIDDLE",
+          "H1_VOLUME_HIGH",
+          "H1_RETURN5_POSITIVE",
+          "H4_PRICE_ABOVE_EMA20",
+          "H4_PRICE_ABOVE_EMA50",
+          "H4_PRICE_ABOVE_EMA200",
+          "H4_EMA_STRUCTURE_BULLISH",
+          "H4_RSI_STRONG",
+          "H4_RANGE_UPPER",
+          "H4_VOLUME_HIGH",
+          "H4_RETURN5_POSITIVE",
+          "D1_PRICE_ABOVE_EMA20",
+          "D1_PRICE_ABOVE_EMA50",
+          "D1_PRICE_ABOVE_EMA200",
+          "D1_EMA_STRUCTURE_BULLISH",
+          "D1_RSI_OVERBOUGHT",
+          "D1_RANGE_UPPER",
+          "D1_VOLUME_NORMAL",
+          "D1_RETURN5_POSITIVE"
+        ],
+        "reason_codes": [
+          "MOMENTUM_CONFLICT",
+          "MOMENTUM_CONFLICT",
+          "MOMENTUM_CONFLICT",
+          "MOMENTUM_CONFLICT"
+        ],
+        "direction": "BUY",
+        "valid": true,
+        "validation_errors": [],
+        "source": "LLM"
+      }
+    },
+    {
+      "sequence": 9,
+      "timestamp": "2026-10-08T16:43:30.536416+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_COMPLETED",
+      "symbol": "USDCAD",
+      "payload": {
+        "agent": "strategy_agent"
+      }
+    },
+    {
+      "sequence": 10,
+      "timestamp": "2026-10-08T16:43:30.536427+00:00",
+      "agent": "orchestrator",
+      "type": "ORCHESTRATION_RESULT",
+      "symbol": "USDCAD",
+      "payload": {
+        "status": "WAIT",
+        "technical_bias": "BULLISH",
+        "setup_quality": 90,
+        "regime": "BREAKOUT",
+        "strategy": "NONE",
+        "direction": "BUY",
+        "trade_authorized": false
+      }
+    }
+  ]
+}

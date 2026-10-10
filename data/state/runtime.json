@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-07T17:28:14.761527+00:00",
+  "generated_at": "2026-10-10T06:03:41.637636+00:00",
   "account": {
     "server": "ICMarketsSC-MT5",
     "currency": "EUR",
-    "balance": 137.98,
-    "equity": 137.98,
+    "balance": 137.94,
+    "equity": 137.94,
     "profit": 0.0,
     "margin": 0.0,
-    "margin_free": 137.98,
+    "margin_free": 137.94,
     "margin_level": null,
     "leverage": 50,
     "margin_mode": 2,

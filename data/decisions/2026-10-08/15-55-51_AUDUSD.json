@@ -1,0 +1,557 @@
+{
+  "architecture_version": "MULTI_AGENT_V1",
+  "symbol": "AUDUSD",
+  "analysis_time": "2026-10-08T15:45:00+00:00",
+  "created_at": "2026-10-08T15:55:07.243482+00:00",
+  "snapshot": {
+    "symbol": "AUDUSD",
+    "analysis_time": "2026-10-08T15:45:00+00:00",
+    "data_quality": {
+      "status": "OK",
+      "timeframes_with_warnings": []
+    },
+    "timeframes": {
+      "M5": {
+        "close": 0.69427,
+        "ema20": 0.6943450350133492,
+        "ema50": 0.6946254124594177,
+        "ema200": 0.6953999279812358,
+        "price_vs_ema20": "BELOW",
+        "price_vs_ema50": "BELOW",
+        "price_vs_ema200": "BELOW",
+        "ema_structure": "BEARISH",
+        "rsi14": 46.71791446468009,
+        "rsi_zone": "NEUTRAL",
+        "atr14": 0.0002947706696732418,
+        "range_position_20": 0.6305732484076888,
+        "range_zone": "MIDDLE",
+        "volume_ratio": 0.6831395348837209,
+        "volume_zone": "LOW",
+        "return_1": -0.00011521566933103689,
+        "return_5": -0.000345567378439382,
+        "return5_direction": "NEGATIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-08T15:25:00+00:00",
+            "open": 0.69458,
+            "high": 0.69485,
+            "low": 0.69454,
+            "close": 0.69481,
+            "tick_volume": 165.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T15:30:00+00:00",
+            "open": 0.69474,
+            "high": 0.69483,
+            "low": 0.69441,
+            "close": 0.69446,
+            "tick_volume": 249.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T15:35:00+00:00",
+            "open": 0.69446,
+            "high": 0.69458,
+            "low": 0.69432,
+            "close": 0.69435,
+            "tick_volume": 261.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T15:40:00+00:00",
+            "open": 0.69435,
+            "high": 0.69438,
+            "low": 0.69419,
+            "close": 0.69427,
+            "tick_volume": 188.0,
+            "spread": 0
+          }
+        ]
+      },
+      "M15": {
+        "close": 0.69427,
+        "ema20": 0.6947098463473073,
+        "ema50": 0.6952136862891043,
+        "ema200": 0.6960842424825222,
+        "price_vs_ema20": "BELOW",
+        "price_vs_ema50": "BELOW",
+        "price_vs_ema200": "BELOW",
+        "ema_structure": "BEARISH",
+        "rsi14": 41.77722584724942,
+        "rsi_zone": "WEAK",
+        "atr14": 0.0005000751380710746,
+        "range_position_20": 0.3378839590443858,
+        "range_zone": "MIDDLE",
+        "volume_ratio": 0.9430520840370196,
+        "volume_zone": "NORMAL",
+        "return_1": -0.0007771908867172383,
+        "return_5": 0.0005187992679165365,
+        "return5_direction": "POSITIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-08T14:45:00+00:00",
+            "open": 0.6939,
+            "high": 0.69413,
+            "low": 0.69368,
+            "close": 0.69374,
+            "tick_volume": 866.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T15:00:00+00:00",
+            "open": 0.69374,
+            "high": 0.6945,
+            "low": 0.69368,
+            "close": 0.69438,
+            "tick_volume": 951.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T15:15:00+00:00",
+            "open": 0.69438,
+            "high": 0.69485,
+            "low": 0.69415,
+            "close": 0.69481,
+            "tick_volume": 854.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T15:30:00+00:00",
+            "open": 0.69474,
+            "high": 0.69483,
+            "low": 0.69419,
+            "close": 0.69427,
+            "tick_volume": 698.0,
+            "spread": 0
+          }
+        ]
+      },
+      "H1": {
+        "close": 0.69374,
+        "ema20": 0.6954825690197872,
+        "ema50": 0.6960731572920983,
+        "ema200": 0.6978867658334139,
+        "price_vs_ema20": "BELOW",
+        "price_vs_ema50": "BELOW",
+        "price_vs_ema200": "BELOW",
+        "ema_structure": "BEARISH",
+        "rsi14": 30.27306329461031,
+        "rsi_zone": "WEAK",
+        "atr14": 0.0008186103883579592,
+        "range_position_20": 0.1260273972602769,
+        "range_zone": "LOWER",
+        "volume_ratio": 1.8333902355752816,
+        "volume_zone": "HIGH",
+        "return_1": -0.0012237435033617405,
+        "return_5": -0.0018416736209029283,
+        "return5_direction": "NEGATIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-08T11:00:00+00:00",
+            "open": 0.69524,
+            "high": 0.69621,
+            "low": 0.69505,
+            "close": 0.69535,
+            "tick_volume": 3199.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T12:00:00+00:00",
+            "open": 0.69535,
+            "high": 0.69581,
+            "low": 0.69511,
+            "close": 0.69516,
+            "tick_volume": 2872.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T13:00:00+00:00",
+            "open": 0.69516,
+            "high": 0.69519,
+            "low": 0.69447,
+            "close": 0.69459,
+            "tick_volume": 2520.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T14:00:00+00:00",
+            "open": 0.69459,
+            "high": 0.6946,
+            "low": 0.69328,
+            "close": 0.69374,
+            "tick_volume": 3222.0,
+            "spread": 0
+          }
+        ]
+      },
+      "H4": {
+        "close": 0.69535,
+        "ema20": 0.6963305794519463,
+        "ema50": 0.6979886469260196,
+        "ema200": 0.7054216187707041,
+        "price_vs_ema20": "BELOW",
+        "price_vs_ema50": "BELOW",
+        "price_vs_ema200": "BELOW",
+        "ema_structure": "BEARISH",
+        "rsi14": 43.84127544259356,
+        "rsi_zone": "WEAK",
+        "atr14": 0.001705085344297803,
+        "range_position_20": 0.36805555555555824,
+        "range_zone": "MIDDLE",
+        "volume_ratio": 1.138563899375771,
+        "volume_zone": "NORMAL",
+        "return_1": -0.0003450308371311106,
+        "return_5": 0.0004604117807864849,
+        "return5_direction": "POSITIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-07T20:00:00+00:00",
+            "open": 0.69614,
+            "high": 0.69693,
+            "low": 0.69603,
+            "close": 0.69615,
+            "tick_volume": 6261.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T00:00:00+00:00",
+            "open": 0.69616,
+            "high": 0.69646,
+            "low": 0.69548,
+            "close": 0.6957,
+            "tick_volume": 3969.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T04:00:00+00:00",
+            "open": 0.6957,
+            "high": 0.69683,
+            "low": 0.69545,
+            "close": 0.69559,
+            "tick_volume": 5271.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-08T08:00:00+00:00",
+            "open": 0.69559,
+            "high": 0.69621,
+            "low": 0.69451,
+            "close": 0.69535,
+            "tick_volume": 9138.0,
+            "spread": 0
+          }
+        ]
+      },
+      "D1": {
+        "close": 0.69615,
+        "ema20": 0.7030579282530139,
+        "ema50": 0.7062287338880051,
+        "ema200": 0.6983232189924184,
+        "price_vs_ema20": "BELOW",
+        "price_vs_ema50": "BELOW",
+        "price_vs_ema200": "BELOW",
+        "ema_structure": "MIXED",
+        "rsi14": 35.089282800927535,
+        "rsi_zone": "WEAK",
+        "atr14": 0.004562737835197821,
+        "range_position_20": 0.18050767784393856,
+        "range_zone": "LOWER",
+        "volume_ratio": 0.7778214185152703,
+        "volume_zone": "LOW",
+        "return_1": -0.003121733277963057,
+        "return_5": 0.002505724283924593,
+        "return5_direction": "POSITIVE",
+        "recent_candles": [
+          {
+            "time": "2026-10-02T00:00:00+00:00",
+            "open": 0.69282,
+            "high": 0.69756,
+            "low": 0.6913,
+            "close": 0.69545,
+            "tick_volume": 65464.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-05T00:00:00+00:00",
+            "open": 0.69396,
+            "high": 0.69737,
+            "low": 0.69323,
+            "close": 0.69724,
+            "tick_volume": 59639.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-06T00:00:00+00:00",
+            "open": 0.69703,
+            "high": 0.69899,
+            "low": 0.69595,
+            "close": 0.69833,
+            "tick_volume": 44850.0,
+            "spread": 0
+          },
+          {
+            "time": "2026-10-07T00:00:00+00:00",
+            "open": 0.69797,
+            "high": 0.69844,
+            "low": 0.69427,
+            "close": 0.69615,
+            "tick_volume": 43370.0,
+            "spread": 0
+          }
+        ]
+      }
+    },
+    "available_evidence_ids": [
+      "M5_PRICE_BELOW_EMA20",
+      "M5_PRICE_BELOW_EMA50",
+      "M5_PRICE_BELOW_EMA200",
+      "M5_EMA_STRUCTURE_BEARISH",
+      "M5_RSI_NEUTRAL",
+      "M5_RANGE_MIDDLE",
+      "M5_VOLUME_LOW",
+      "M5_RETURN5_NEGATIVE",
+      "M15_PRICE_BELOW_EMA20",
+      "M15_PRICE_BELOW_EMA50",
+      "M15_PRICE_BELOW_EMA200",
+      "M15_EMA_STRUCTURE_BEARISH",
+      "M15_RSI_WEAK",
+      "M15_RANGE_MIDDLE",
+      "M15_VOLUME_NORMAL",
+      "M15_RETURN5_POSITIVE",
+      "H1_PRICE_BELOW_EMA20",
+      "H1_PRICE_BELOW_EMA50",
+      "H1_PRICE_BELOW_EMA200",
+      "H1_EMA_STRUCTURE_BEARISH",
+      "H1_RSI_WEAK",
+      "H1_RANGE_LOWER",
+      "H1_VOLUME_HIGH",
+      "H1_RETURN5_NEGATIVE",
+      "H4_PRICE_BELOW_EMA20",
+      "H4_PRICE_BELOW_EMA50",
+      "H4_PRICE_BELOW_EMA200",
+      "H4_EMA_STRUCTURE_BEARISH",
+      "H4_RSI_WEAK",
+      "H4_RANGE_MIDDLE",
+      "H4_VOLUME_NORMAL",
+      "H4_RETURN5_POSITIVE",
+      "D1_PRICE_BELOW_EMA20",
+      "D1_PRICE_BELOW_EMA50",
+      "D1_PRICE_BELOW_EMA200",
+      "D1_EMA_STRUCTURE_MIXED",
+      "D1_RSI_WEAK",
+      "D1_RANGE_LOWER",
+      "D1_VOLUME_LOW",
+      "D1_RETURN5_POSITIVE"
+    ]
+  },
+  "messages": [
+    {
+      "sequence": 1,
+      "timestamp": "2026-10-08T15:55:07.243502+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_STARTED",
+      "symbol": "AUDUSD",
+      "payload": {
+        "agent": "technical_agent"
+      }
+    },
+    {
+      "sequence": 2,
+      "timestamp": "2026-10-08T15:55:07.243566+00:00",
+      "agent": "technical_agent",
+      "type": "TECHNICAL_ASSESSMENT",
+      "symbol": "AUDUSD",
+      "payload": {
+        "bias": "BEARISH",
+        "overall_score": -78.57,
+        "timeframe_scores": {
+          "M5": -85.71,
+          "M15": -71.43,
+          "H1": -100.0,
+          "H4": -71.43,
+          "D1": -42.86
+        },
+        "alignment": "ALIGNED",
+        "setup_quality": 88,
+        "supporting_evidence": [
+          "M5_PRICE_BELOW_EMA20",
+          "M5_PRICE_BELOW_EMA50",
+          "M5_PRICE_BELOW_EMA200",
+          "M5_EMA_STRUCTURE_BEARISH",
+          "M5_RETURN5_NEGATIVE",
+          "M15_PRICE_BELOW_EMA20",
+          "M15_PRICE_BELOW_EMA50",
+          "M15_PRICE_BELOW_EMA200",
+          "M15_EMA_STRUCTURE_BEARISH",
+          "M15_RSI_WEAK",
+          "H1_PRICE_BELOW_EMA20",
+          "H1_PRICE_BELOW_EMA50",
+          "H1_PRICE_BELOW_EMA200",
+          "H1_EMA_STRUCTURE_BEARISH",
+          "H1_RSI_WEAK",
+          "H1_RETURN5_NEGATIVE",
+          "H4_PRICE_BELOW_EMA20",
+          "H4_PRICE_BELOW_EMA50",
+          "H4_PRICE_BELOW_EMA200",
+          "H4_EMA_STRUCTURE_BEARISH",
+          "H4_RSI_WEAK",
+          "D1_PRICE_BELOW_EMA20",
+          "D1_PRICE_BELOW_EMA50",
+          "D1_PRICE_BELOW_EMA200",
+          "D1_RSI_WEAK"
+        ],
+        "conflicting_evidence": [
+          "M15_RETURN5_POSITIVE",
+          "H4_RETURN5_POSITIVE",
+          "D1_RETURN5_POSITIVE"
+        ],
+        "source": "DETERMINISTIC_PYTHON"
+      }
+    },
+    {
+      "sequence": 3,
+      "timestamp": "2026-10-08T15:55:07.243572+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_COMPLETED",
+      "symbol": "AUDUSD",
+      "payload": {
+        "agent": "technical_agent"
+      }
+    },
+    {
+      "sequence": 4,
+      "timestamp": "2026-10-08T15:55:07.243576+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_STARTED",
+      "symbol": "AUDUSD",
+      "payload": {
+        "agent": "regime_agent"
+      }
+    },
+    {
+      "sequence": 5,
+      "timestamp": "2026-10-08T15:55:29.581796+00:00",
+      "agent": "regime_agent",
+      "type": "REGIME_ASSESSMENT",
+      "symbol": "AUDUSD",
+      "payload": {
+        "regime": "BREAKOUT",
+        "confidence": 0.85,
+        "evidence_used": [
+          "M5_PRICE_BELOW_EMA20",
+          "M5_PRICE_BELOW_EMA50",
+          "M5_PRICE_BELOW_EMA200",
+          "M5_EMA_STRUCTURE_BEARISH",
+          "M5_RSI_NEUTRAL",
+          "M5_RANGE_MIDDLE",
+          "M5_VOLUME_LOW",
+          "M5_RETURN5_NEGATIVE",
+          "M15_PRICE_BELOW_EMA20",
+          "M15_PRICE_BELOW_EMA50",
+          "M15_PRICE_BELOW_EMA200",
+          "M15_EMA_STRUCTURE_BEARISH",
+          "M15_RSI_WEAK",
+          "M15_RANGE_MIDDLE",
+          "M15_VOLUME_NORMAL",
+          "M15_RETURN5_POSITIVE",
+          "H1_PRICE_BELOW_EMA20",
+          "H1_PRICE_BELOW_EMA50",
+          "H1_PRICE_BELOW_EMA200",
+          "H1_EMA_STRUCTURE_BEARISH",
+          "H1_RSI_WEAK",
+          "H1_RANGE_LOWER",
+          "H1_VOLUME_HIGH",
+          "H1_RETURN5_NEGATIVE",
+          "H4_PRICE_BELOW_EMA20",
+          "H4_PRICE_BELOW_EMA50",
+          "H4_PRICE_BELOW_EMA200",
+          "H4_EMA_STRUCTURE_BEARISH",
+          "H4_RSI_WEAK",
+          "H4_RANGE_MIDDLE",
+          "H4_VOLUME_NORMAL",
+          "H4_RETURN5_POSITIVE",
+          "D1_PRICE_BELOW_EMA20",
+          "D1_PRICE_BELOW_EMA50",
+          "D1_PRICE_BELOW_EMA200",
+          "D1_EMA_STRUCTURE_MIXED",
+          "D1_RSI_WEAK",
+          "D1_RANGE_LOWER",
+          "D1_VOLUME_LOW",
+          "D1_RETURN5_POSITIVE"
+        ],
+        "caution_flags": [
+          "M5_RETURN5_NEGATIVE",
+          "D1_RETURN5_POSITIVE"
+        ],
+        "rationale": "The price is currently below all major moving averages (M5, M15, H1, H4, D1) indicating a strong bearish trend. The RSI is weak across all timeframes, suggesting low momentum. The volume is low on M5 and D1 but normal on M15 and H4, which could indicate a potential breakout after a period of consolidation. The recent candle patterns show a mix of bearish and bullish signals, but the overall trend is bearish. The return5 is positive on all timeframes, which might indicate a short-term reversal potential.",
+        "valid": true,
+        "validation_errors": []
+      }
+    },
+    {
+      "sequence": 6,
+      "timestamp": "2026-10-08T15:55:29.581810+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_COMPLETED",
+      "symbol": "AUDUSD",
+      "payload": {
+        "agent": "regime_agent"
+      }
+    },
+    {
+      "sequence": 7,
+      "timestamp": "2026-10-08T15:55:29.581816+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_STARTED",
+      "symbol": "AUDUSD",
+      "payload": {
+        "agent": "strategy_agent"
+      }
+    },
+    {
+      "sequence": 8,
+      "timestamp": "2026-10-08T15:55:51.915071+00:00",
+      "agent": "strategy_agent",
+      "type": "STRATEGY_PROPOSAL",
+      "symbol": "AUDUSD",
+      "payload": {
+        "action": "WAIT",
+        "strategy": "NONE",
+        "confidence": 0.85,
+        "evidence_used": [],
+        "rationale": "The technical analysis shows a strong bearish trend across all timeframes with price below all major moving averages and weak RSI. However, the regime analysis indicates a 'BREAKOUT' regime with positive return5 on all timeframes, suggesting potential short-term reversal. The conflicting evidence (M15_RETURN5_POSITIVE, H4_RETURN5_POSITIVE, D1_RETURN5_POSITIVE) and caution flags (M5_RETURN5_NEGATIVE, D1_RETURN5_POSITIVE) indicate inconsistency in the trend. Since the direction is fixed to SELL, but the evidence shows mixed signals (breakout potential vs. strong bearish trend), there is not enough coherence to choose a specific strategy. Therefore, the appropriate action is to wait.",
+        "direction": "SELL",
+        "valid": true,
+        "validation_errors": [],
+        "source": "LLM"
+      }
+    },
+    {
+      "sequence": 9,
+      "timestamp": "2026-10-08T15:55:51.915107+00:00",
+      "agent": "orchestrator",
+      "type": "AGENT_COMPLETED",
+      "symbol": "AUDUSD",
+      "payload": {
+        "agent": "strategy_agent"
+      }
+    },
+    {
+      "sequence": 10,
+      "timestamp": "2026-10-08T15:55:51.915118+00:00",
+      "agent": "orchestrator",
+      "type": "ORCHESTRATION_RESULT",
+      "symbol": "AUDUSD",
+      "payload": {
+        "status": "WAIT",
+        "technical_bias": "BEARISH",
+        "setup_quality": 88,
+        "regime": "BREAKOUT",
+        "strategy": "NONE",
+        "direction": "SELL",
+        "trade_authorized": false
+      }
+    }
+  ]
+}

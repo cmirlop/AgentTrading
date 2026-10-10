@@ -356,16 +356,6 @@ def build_trade_plan(
     )
 
 
-    tick_timestamp = (
-        tick.time_msc / 1000
-        if getattr(
-            tick,
-            "time_msc",
-            0,
-        )
-        else tick.time
-    )
-
     (
         tick_time,
         tick_time_mode,
@@ -380,26 +370,7 @@ def build_trade_plan(
             server_utc_offset_seconds,
     )
 
-    tick_age_seconds = (
-        now_utc
-        - tick_time
-    ).total_seconds()
-
-    if tick_age_seconds < -5:
-        pass
-
-        # errors.append(
-        #     "TICK_FROM_FUTURE"
-        # )
-
-    elif (
-        tick_age_seconds
-        > MAX_TICK_AGE_SECONDS
-    ):
-
-        errors.append(
-            "TICK_STALE"
-        )
+    
 
     tick_age_seconds = (
         now_utc

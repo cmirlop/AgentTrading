@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-10-08T07:25:45.464907+00:00",
+  "max_global_slots": 2,
+  "pending_orders_reserve_slot": true,
+  "one_active_reservation_per_symbol": true,
+  "simultaneous_signal_priority": [
+    "setup_quality_desc",
+    "abs_overall_score_desc",
+    "symbol_asc"
+  ],
+  "macro_history_included": false,
+  "llm_included": false,
+  "commission_included": false,
+  "slippage_included": false,
+  "period_start": "2025-06-10T07:00:00+00:00",
+  "period_end": "2026-04-07T18:00:00+00:00",
+  "execution_capped_at_period_end": true,
+  "source_scan": "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\data\\backtest\\validation_candidate_scan.csv"
+}

@@ -1,0 +1,9 @@
+{
+  "generated_at": "2026-10-08T06:28:13.609647+00:00",
+  "technical_only": true,
+  "llm_included": false,
+  "macro_history_included": false,
+  "portfolio_constraints_included": false,
+  "account_currency_pnl_included": false,
+  "ambiguous_intrabar_excluded": true
+}

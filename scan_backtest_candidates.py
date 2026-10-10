@@ -5,6 +5,8 @@ import time
 
 import pandas as pd
 
+import argparse
+
 from config.market_config import SYMBOLS
 
 from config.backtest_config import (
@@ -44,6 +46,28 @@ OUTPUT_DIR = (
 )
 
 
+def parse_utc(
+    value,
+):
+
+    ts = pd.Timestamp(
+        value
+    )
+
+    if ts.tzinfo is None:
+
+        ts = ts.tz_localize(
+            "UTC"
+        )
+
+    else:
+
+        ts = ts.tz_convert(
+            "UTC"
+        )
+
+    return ts
+
 def technical_candidate(
     technical,
 ):
@@ -68,6 +92,25 @@ def technical_candidate(
 
 
 def main():
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--start",
+        default=None,
+    )
+
+    parser.add_argument(
+        "--end",
+        default=None,
+    )
+
+    parser.add_argument(
+        "--name",
+        default="technical",
+    )
+
+    args = parser.parse_args()
 
     print("=" * 90)
     print(
@@ -130,20 +173,40 @@ def main():
             "M15"
         ]
 
-        evaluation_end = (
-            m15[
-                "bar_close"
-            ].iloc[-1]
-        )
+        if args.end:
 
-        evaluation_start = (
-            evaluation_end
-            -
-            pd.Timedelta(
-                days=
-                    BACKTEST_EVALUATION_DAYS
+            evaluation_end = (
+                parse_utc(
+                    args.end
+                )
             )
-        )
+
+        else:
+
+            evaluation_end = (
+                m15[
+                    "bar_close"
+                ].iloc[-1]
+            )
+
+        if args.start:
+
+            evaluation_start = (
+                parse_utc(
+                    args.start
+                )
+            )
+
+        else:
+
+            evaluation_start = (
+                evaluation_end
+                -
+                pd.Timedelta(
+                    days=
+                        BACKTEST_EVALUATION_DAYS
+                )
+            )
 
         evaluation_bars = m15[
             (
@@ -430,7 +493,10 @@ def main():
 
     csv_path = (
         OUTPUT_DIR
-        / "technical_candidate_scan.csv"
+        / (
+            f"{args.name}"
+            "_candidate_scan.csv"
+        )
     )
 
     df.to_csv(
@@ -608,7 +674,10 @@ def main():
 
     json_path = (
         OUTPUT_DIR
-        / "technical_candidate_summary.json"
+        / (
+            f"{args.name}"
+            "_candidate_summary.json"
+        )
     )
 
     with open(

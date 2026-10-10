@@ -1,0 +1,39 @@
+{
+  "architecture_version": "MULTI_AGENT_V1",
+  "symbol": "USDCAD",
+  "analysis_time": "2026-10-10T00:00:00+00:00",
+  "created_at": "2026-10-10T06:50:01.985080+00:00",
+  "snapshot": {},
+  "messages": [
+    {
+      "sequence": 1,
+      "timestamp": "2026-10-10T06:50:01.985128+00:00",
+      "agent": "orchestrator",
+      "type": "MARKET_AVAILABILITY",
+      "symbol": "USDCAD",
+      "payload": {
+        "status": "CLOSED",
+        "reason": "WEEKEND",
+        "weekday": "Saturday",
+        "checked_at": "2026-10-10T06:50:01.985102+00:00",
+        "last_analysis_time": "2026-10-10T00:00:00+00:00",
+        "trade_allowed": false
+      }
+    },
+    {
+      "sequence": 2,
+      "timestamp": "2026-10-10T06:50:01.985134+00:00",
+      "agent": "orchestrator",
+      "type": "ORCHESTRATION_RESULT",
+      "symbol": "USDCAD",
+      "payload": {
+        "status": "MARKET_CLOSED",
+        "reason": "WEEKEND",
+        "regime": "NOT_EVALUATED",
+        "strategy": "NONE",
+        "direction": "NONE",
+        "trade_authorized": false
+      }
+    }
+  ]
+}

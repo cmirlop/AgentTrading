@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-10-08T06:37:24.163224+00:00",
+  "max_global_slots": 2,
+  "pending_orders_reserve_slot": true,
+  "one_active_reservation_per_symbol": true,
+  "simultaneous_signal_priority": [
+    "setup_quality_desc",
+    "abs_overall_score_desc",
+    "symbol_asc"
+  ],
+  "macro_history_included": false,
+  "llm_included": false,
+  "commission_included": false,
+  "slippage_included": false
+}

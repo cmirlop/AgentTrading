@@ -14,7 +14,7 @@ from config.market_config import (
 )
 
 from config.backtest_config import (
-    BACKTEST_EVALUATION_DAYS,
+    BACKTEST_HISTORY_DAYS,
     BACKTEST_WARMUP_DAYS,
 )
 
@@ -49,6 +49,14 @@ TF_MINUTES = {
     "D1": 1440,
 }
 
+CHUNK_DAYS = {
+    "M5": 30,
+    "M15": 90,
+    "H1": 180,
+    "H4": 365,
+    "D1": 730,
+}
+
 
 def load_existing(
     path,
@@ -79,7 +87,7 @@ def download_history(
     )
 
     total_days = (
-        BACKTEST_EVALUATION_DAYS
+        BACKTEST_HISTORY_DAYS
         +
         BACKTEST_WARMUP_DAYS[
             timeframe
@@ -94,34 +102,150 @@ def download_history(
         )
     )
 
-    rates = mt5.copy_rates_range(
-        symbol,
-        TF_MAP[timeframe],
-        date_from,
-        now,
+    chunk_days = (
+        CHUNK_DAYS[
+            timeframe
+        ]
     )
 
-    if rates is None:
+    frames = []
 
-        raise RuntimeError(
-            f"{symbol} {timeframe}: "
-            f"{mt5.last_error()}"
+    cursor = date_from
+
+    while cursor < now:
+
+        chunk_end = min(
+            cursor
+            +
+            timedelta(
+                days=chunk_days
+            ),
+            now,
         )
 
-    df = pd.DataFrame(
-        rates
+        rates = mt5.copy_rates_range(
+            symbol,
+            TF_MAP[
+                timeframe
+            ],
+            cursor,
+            chunk_end,
+        )
+
+        if rates is None:
+
+            raise RuntimeError(
+                f"{symbol} {timeframe}: "
+                f"{mt5.last_error()} "
+                f"| rango "
+                f"{cursor.isoformat()} "
+                f"-> "
+                f"{chunk_end.isoformat()}"
+            )
+
+        chunk_df = pd.DataFrame(
+            rates
+        )
+
+        if not chunk_df.empty:
+
+            chunk_df[
+                "time"
+            ] = pd.to_datetime(
+                chunk_df[
+                    "time"
+                ],
+                unit="s",
+                utc=True,
+            )
+
+            # MT5 puede devolver una barra residual
+            # fuera del rango cuando no tiene histórico
+            # suficiente. Nunca la aceptamos.
+
+            range_start = pd.Timestamp(
+                cursor
+            )
+
+            range_end = pd.Timestamp(
+                chunk_end
+            )
+
+            chunk_df = chunk_df[
+                (
+                    chunk_df[
+                        "time"
+                    ]
+                    >= range_start
+                )
+                &
+                (
+                    chunk_df[
+                        "time"
+                    ]
+                    <= range_end
+                )
+            ].copy()
+
+            frames.append(
+                chunk_df
+            )
+
+        print(
+            f"  {timeframe} "
+            f"| "
+            f"{cursor.date()} "
+            f"-> "
+            f"{chunk_end.date()} "
+            f"| bars="
+            f"{len(chunk_df):,}"
+        )
+
+        if chunk_end >= now:
+            break
+
+        cursor = (
+            chunk_end
+            -
+            timedelta(
+                minutes=
+                    TF_MINUTES[
+                        timeframe
+                    ]
+            )
+        )
+
+        
+
+    if not frames:
+
+        return pd.DataFrame()
+
+    df = pd.concat(
+        frames,
+        ignore_index=True,
     )
 
-    if df.empty:
-        return df
-
-    df["time"] = pd.to_datetime(
-        df["time"],
-        unit="s",
-        utc=True,
+    df = (
+        df
+        .drop_duplicates(
+            subset=[
+                "time"
+            ],
+            keep="last",
+        )
+        .sort_values(
+            "time"
+        )
+        .reset_index(
+            drop=True
+        )
     )
 
-    # Eliminar vela todavía abierta.
+    # ==============================================
+    # QUITAR VELA ABIERTA
+    # ==============================================
+
     duration = pd.Timedelta(
         minutes=
             TF_MINUTES[
@@ -135,7 +259,9 @@ def download_history(
 
     df = df[
         (
-            df["time"]
+            df[
+                "time"
+            ]
             + duration
         )
         <= now_ts
