@@ -1,0 +1,38 @@
+{
+  "scope": "MULTIAGENT_TECHNICAL_ONLY",
+  "start": "2026-04-08T00:00:00+00:00",
+  "end": "2026-04-09T00:00:00+00:00",
+  "symbols": [
+    "USDCAD"
+  ],
+  "llm_model": "qwen3:4b",
+  "cache_version": "MULTIAGENT_REPLAY_V3_2026_10_10",
+  "funnel": {
+    "m15_evaluated": 97,
+    "outside_session": 41,
+    "inside_session": 56,
+    "technical_hard_gate_rejected": 45,
+    "hard_gate_pass": 11,
+    "regime_valid": 11,
+    "strategy_wait": 11
+  },
+  "results": {
+    "executed": 0,
+    "resolved_win_loss": 0,
+    "wins": 0,
+    "losses": 0,
+    "win_rate": null,
+    "pnl_eur_approx": 0.0,
+    "profit_factor_approx": null
+  },
+  "limitations": [
+    "NO_HISTORICAL_MACRO",
+    "NO_HISTORICAL_MARGIN_MODEL",
+    "NO_COMMISSION",
+    "NO_SLIPPAGE",
+    "NO_SWAP",
+    "M5_INTRABAR_AMBIGUITY_EXCLUDED",
+    "STOP_GAP_FILL_MODEL_NOT_HARDENED",
+    "APRIL_OCTOBER_PERIOD_IS_EXPLORATORY"
+  ]
+}

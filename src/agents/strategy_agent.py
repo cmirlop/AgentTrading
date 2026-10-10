@@ -324,11 +324,11 @@ Return structured output only.
                 )
             )
 
-            assessment.caution_flags = (
-                unique_list(
-                    assessment.caution_flags,
-                )
-            )
+            # assessment.caution_flags = (
+            #     unique_list(
+            #         assessment.caution_flags,
+            #     )
+            # )
 
             assessment.reason_codes = (
                 unique_list(

@@ -219,13 +219,39 @@ Return only:
 
 Every factual conclusion must be grounded in evidence_used.
 """ 
+        def normalize_assessment(
+            item,
+        ):
+
+            item.evidence_used = (
+                unique_list(
+                    item.evidence_used,
+                    max_items=12,
+                )
+            )
+
+            item.caution_flags = (
+                unique_list(
+                    item.caution_flags,
+                )
+            )
+
+            item.reason_codes = (
+                unique_list(
+                    item.reason_codes,
+                )
+            )
+
+            return item
+
+
         def validate_assessment(
             item,
         ):
 
             errors = []
 
-            invalid = [
+            invalid_evidence = [
                 evidence
 
                 for evidence
@@ -235,17 +261,14 @@ Every factual conclusion must be grounded in evidence_used.
                 not in available_evidence
             ]
 
-            errors.extend(
-                [
+            for evidence in invalid_evidence:
+
+                errors.append(
                     (
                         "INVALID_EVIDENCE: "
                         + evidence
                     )
-
-                    for evidence
-                    in invalid
-                ]
-            )
+                )
 
             if (
                 item.regime
@@ -273,7 +296,16 @@ Every factual conclusion must be grounded in evidence_used.
                     "UNCLEAR_WITH_HIGH_CONFIDENCE"
                 )
 
-            return errors
+            return list(
+                dict.fromkeys(
+                    errors
+                )
+            )
+
+
+        # ==================================================
+        # FIRST LLM ATTEMPT
+        # ==================================================
 
         try:
 
@@ -290,47 +322,90 @@ Every factual conclusion must be grounded in evidence_used.
                 )
             )
 
-
-            assessment.evidence_used = (
-                unique_list(
-                    assessment.evidence_used,
-                    max_items=20,
+            assessment = (
+                normalize_assessment(
+                    assessment
                 )
             )
 
-            assessment.caution_flags = (
-                unique_list(
-                    assessment.caution_flags,
+            validation_errors = (
+                validate_assessment(
+                    assessment
                 )
             )
 
-            assessment.reason_codes = (
-                unique_list(
-                    assessment.reason_codes,
-                )
+        except Exception as exc:
+
+            return bus.publish(
+                agent=
+                    self.name,
+
+                message_type=
+                    "REGIME_ASSESSMENT",
+
+                payload={
+                    "regime":
+                        "UNCLEAR",
+
+                    "confidence":
+                        0.0,
+
+                    "evidence_used":
+                        [],
+
+                    "caution_flags":
+                        [],
+
+                    "reason_codes":
+                        [
+                            "INSUFFICIENT_EVIDENCE"
+                        ],
+
+                    "valid":
+                        False,
+
+                    "validation_errors":
+                        [
+                            (
+                                "LLM_ERROR: "
+                                + str(exc)
+                            )
+                        ],
+
+                    "source":
+                        "LLM",
+                },
             )
 
 
-            if validation_errors:
+        # ==================================================
+        # ONE CORRECTION ATTEMPT
+        # ==================================================
 
-                retry_payload = {
-                    **payload,
+        if validation_errors:
 
-                    "previous_invalid_output":
-                        assessment.model_dump(),
+            retry_payload = {
+                **payload,
 
-                    "previous_validation_errors":
-                        validation_errors,
+                "previous_invalid_output":
+                    assessment.model_dump(),
 
-                    "correction_instruction":
-                        (
-                            "Correct the previous output. "
-                            "Use ONLY exact IDs from "
-                            "allowed_evidence_ids. "
-                            "A non-UNCLEAR regime requires "
-                            "at least 3 valid evidence IDs."
-                        ),
-                }
+                "previous_validation_errors":
+                    validation_errors,
+
+                "correction_instruction":
+                    (
+                        "Correct the previous output. "
+                        "Use ONLY exact evidence IDs "
+                        "from allowed_evidence_ids. "
+                        "A non-UNCLEAR regime requires "
+                        "at least 3 valid evidence IDs. "
+                        "If that is not possible, "
+                        "return UNCLEAR."
+                    ),
+            }
+
+            try:
 
                 assessment = (
                     structured_chat(
@@ -345,22 +420,9 @@ Every factual conclusion must be grounded in evidence_used.
                     )
                 )
 
-                assessment.evidence_used = (
-                    unique_list(
-                        assessment.evidence_used,
-                        max_items=12,
-                    )
-                )
-
-                assessment.caution_flags = (
-                    unique_list(
-                        assessment.caution_flags,
-                    )
-                )
-
-                assessment.reason_codes = (
-                    unique_list(
-                        assessment.reason_codes,
+                assessment = (
+                    normalize_assessment(
+                        assessment
                     )
                 )
 
@@ -369,7 +431,8 @@ Every factual conclusion must be grounded in evidence_used.
                         assessment
                     )
                 )
-            if validation_errors:
+
+            except Exception as exc:
 
                 return bus.publish(
                     agent=
@@ -400,138 +463,65 @@ Every factual conclusion must be grounded in evidence_used.
                             False,
 
                         "validation_errors":
-                            validation_errors,
-                    },
-                )
-        except Exception as exc:
-
-            return bus.publish(
-                agent=
-                    self.name,
-
-                message_type=
-                    "REGIME_ASSESSMENT",
-
-                payload={
-                    "regime":
-                        "UNCLEAR",
-                        
-                    "confidence":
-                        0.0,
-
-                    "evidence_used":
-                        [],
-
-                    "caution_flags":
-                        [],
-
-                    "reason_codes":
-                        [
-                            "INSUFFICIENT_EVIDENCE"
-                        ],
-
-                    "valid":
-                        False,
-
-                    "validation_errors":
-                        [
-                            (
-                                "LLM_ERROR: "
-                                + str(exc)
-                            )
-                        ],
-                },
-            )
-
-        invalid_evidence = [
-            evidence
-
-            for evidence
-            in assessment.evidence_used
-
-            if evidence
-            not in available_evidence
-        ]
-
-
-        semantic_errors = []
-
-        if (
-            assessment.regime
-            != "UNCLEAR"
-            and
-            len(
-                assessment.evidence_used
-            )
-            < 3
-        ):
-
-            semantic_errors.append(
-                "REGIME_INSUFFICIENT_EVIDENCE"
-            )
-
-        if (
-            assessment.regime
-            == "UNCLEAR"
-            and
-            assessment.confidence
-            > 0.50
-        ):
-
-            semantic_errors.append(
-                "UNCLEAR_WITH_HIGH_CONFIDENCE"
-            )
-
-        if (
-            invalid_evidence
-            or
-            semantic_errors
-        ):
-
-            return bus.publish(
-                agent=
-                    self.name,
-
-                message_type=
-                    "REGIME_ASSESSMENT",
-
-                payload={
-                    "regime":
-                        "UNCLEAR",
-
-                    "confidence":
-                        0.0,
-
-                    "evidence_used":
-                        [],
-
-                    "caution_flags":
-                        [],
-
-                    "reason_codes":
-                        [
-                            "INSUFFICIENT_EVIDENCE"
-                        ],
-
-                    "valid":
-                        False,
-
-                    "validation_errors":
-                        (
                             [
                                 (
-                                    "INVALID_EVIDENCE: "
-                                    + evidence
+                                    "LLM_RETRY_ERROR: "
+                                    + str(exc)
                                 )
+                            ],
 
-                                for evidence
-                                in invalid_evidence
-                            ]
-                            +
-                            semantic_errors
-                        ),
+                        "source":
+                            "LLM",
+                    },
+                )
+
+
+        # ==================================================
+        # FAIL CLOSED AFTER RETRY
+        # ==================================================
+
+        if validation_errors:
+
+            return bus.publish(
+                agent=
+                    self.name,
+
+                message_type=
+                    "REGIME_ASSESSMENT",
+
+                payload={
+                    "regime":
+                        "UNCLEAR",
+
+                    "confidence":
+                        0.0,
+
+                    "evidence_used":
+                        [],
+
+                    "caution_flags":
+                        [],
+
+                    "reason_codes":
+                        [
+                            "INSUFFICIENT_EVIDENCE"
+                        ],
+
+                    "valid":
+                        False,
+
+                    "validation_errors":
+                        validation_errors,
+
+                    "source":
+                        "LLM",
                 },
             )
+
+
+        # ==================================================
+        # VALID RESULT
+        # ==================================================
 
         return bus.publish(
             agent=
@@ -548,5 +538,8 @@ Every factual conclusion must be grounded in evidence_used.
 
                 "validation_errors":
                     [],
+
+                "source":
+                    "LLM",
             },
         )
