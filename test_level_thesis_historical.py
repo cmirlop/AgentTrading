@@ -38,6 +38,8 @@ from src.orchestration.agent_bus import (
 )
 
 
+
+
 SYMBOL = "USDCAD"
 
 ANALYSIS_TIME = (
@@ -295,4 +297,43 @@ print(
 
 pprint.pp(
     thesis
+)
+
+from src.historical_level_outcome import (
+    evaluate_level_thesis,
+)
+
+
+outcome = (
+    evaluate_level_thesis(
+        thesis=
+            thesis,
+
+        levels=
+            levels,
+
+        prepared_history=
+            history,
+
+        horizon_minutes=
+            180,
+    )
+)
+
+
+print(
+    "\n"
+    + "=" * 80
+)
+
+print(
+    "LEVEL OUTCOME"
+)
+
+print(
+    "=" * 80
+)
+
+pprint.pp(
+    outcome
 )

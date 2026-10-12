@@ -1,0 +1,29 @@
+{
+  "symbol": "USDCAD",
+  "start": "2026-04-08T00:00:00+00:00",
+  "end": "2026-04-09T00:00:00+00:00",
+  "scope": "LEVEL_THESIS_TECHNICAL_ONLY",
+  "horizon_minutes": 180,
+  "funnel": {
+    "m15_evaluated": 96,
+    "outside_session": 40,
+    "open_space": 27,
+    "level_candidates": 29,
+    "regime_invalid": 0,
+    "thesis_invalid": 3,
+    "thesis_unclear": 0,
+    "thesis_operational": 26,
+    "correct": 16,
+    "wrong": 10,
+    "ambiguous": 0,
+    "unresolved": 0
+  },
+  "resolved": 26,
+  "accuracy_resolved": 0.6154,
+  "limitations": [
+    "NO_HISTORICAL_NEWS",
+    "NO_HISTORICAL_MACRO",
+    "DIAGNOSTIC_NOT_PROFITABILITY_BACKTEST",
+    "OVERLAPPING_SIGNALS_NOT_DEDUPLICATED"
+  ]
+}

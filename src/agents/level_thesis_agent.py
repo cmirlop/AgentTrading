@@ -45,22 +45,22 @@ class LevelThesisAssessment(
 
     evidence_used: list[str] = []
 
-    reason_codes: list[
-        Literal[
-            "LEVEL_STRUCTURE_SUPPORTS_HOLD",
-            "LEVEL_STRUCTURE_SUPPORTS_BREAK",
-            "TREND_SUPPORTS_HOLD",
-            "TREND_SUPPORTS_BREAK",
-            "MOMENTUM_SUPPORTS_HOLD",
-            "MOMENTUM_SUPPORTS_BREAK",
-            "REGIME_SUPPORTS_HOLD",
-            "REGIME_SUPPORTS_BREAK",
-            "MACRO_SUPPORTS_HOLD",
-            "MACRO_SUPPORTS_BREAK",
-            "CONFLICTING_SIGNALS",
-            "INSUFFICIENT_EVIDENCE",
-        ]
-    ]
+    # reason_codes: list[
+    #     Literal[
+    #         "LEVEL_STRUCTURE_SUPPORTS_HOLD",
+    #         "LEVEL_STRUCTURE_SUPPORTS_BREAK",
+    #         "TREND_SUPPORTS_HOLD",
+    #         "TREND_SUPPORTS_BREAK",
+    #         "MOMENTUM_SUPPORTS_HOLD",
+    #         "MOMENTUM_SUPPORTS_BREAK",
+    #         "REGIME_SUPPORTS_HOLD",
+    #         "REGIME_SUPPORTS_BREAK",
+    #         "MACRO_SUPPORTS_HOLD",
+    #         "MACRO_SUPPORTS_BREAK",
+    #         "CONFLICTING_SIGNALS",
+    #         "INSUFFICIENT_EVIDENCE",
+    #     ]
+    # ]
 
 
 THESIS_OPERATION = {
@@ -326,6 +326,21 @@ UNCLEAR
 - operation must be NONE
 - target_level must be NONE
 
+You must evaluate the level price is currently interacting with.
+
+If market_structure = AT_SUPPORT:
+you may choose only SUPPORT_HOLD, SUPPORT_BREAK or UNCLEAR.
+
+If market_structure = AT_RESISTANCE:
+you may choose only RESISTANCE_HOLD, RESISTANCE_BREAK or UNCLEAR.
+
+If market_structure = COMPRESSED_BETWEEN_LEVELS:
+you may evaluate either the support or resistance.
+
+Do not choose a support thesis when price is currently
+testing resistance, and do not choose a resistance thesis
+when price is currently testing support.
+
 Use the supplied:
 - support/resistance structure
 - level strength
@@ -357,8 +372,46 @@ about what news existed at that historical time.
 evidence_used may contain ONLY exact IDs from
 allowed_evidence_ids.
 
-A non-UNCLEAR thesis should use evidence from the
-level structure AND technical/regime context.
+For every non-UNCLEAR thesis:
+
+- evidence_used MUST contain at least one LEVEL evidence ID.
+- evidence_used MUST contain at least one TECHNICAL evidence ID.
+- Technical evidence may SUPPORT or CONFLICT with the thesis.
+- Do not omit conflicting technical evidence just because the
+  level structure is strong.
+
+Examples of TECHNICAL evidence IDs include:
+- *_PRICE_ABOVE_EMA*
+- *_PRICE_BELOW_EMA*
+- *_EMA_STRUCTURE_BULLISH
+- *_EMA_STRUCTURE_BEARISH
+- *_RSI_STRONG
+- *_RSI_WEAK
+- *_RETURN5_POSITIVE
+- *_RETURN5_NEGATIVE
+
+If you cannot cite both level evidence and technical evidence,
+return UNCLEAR.
+
+Technical evidence can SUPPORT or CONFLICT with the thesis.
+
+Never claim that bearish trend or bearish momentum supports
+a bullish thesis.
+
+Never claim that bullish trend or bullish momentum supports
+a bearish thesis.
+
+Bullish theses are:
+- SUPPORT_HOLD
+- RESISTANCE_BREAK
+
+Bearish theses are:
+- RESISTANCE_HOLD
+- SUPPORT_BREAK
+
+Conflicting technical evidence does not automatically require
+UNCLEAR. It may be used as conflicting evidence while the
+level structure supports the final thesis.
 
 Do not choose WAIT merely because some conflicting
 evidence exists. Markets normally contain conflicting
@@ -367,13 +420,44 @@ genuinely insufficient to distinguish a hold from a break.
 
 Return structured output only.
 """
+        market_structure = (
+            level_evidence.get(
+                "market_structure"
+            )
+        )
+
+        if (
+            market_structure
+            == "AT_SUPPORT"
+        ):
+
+            assessment_schema = (
+                SupportLevelThesisAssessment
+            )
+
+        elif (
+            market_structure
+            == "AT_RESISTANCE"
+        ):
+
+            assessment_schema = (
+                ResistanceLevelThesisAssessment
+            )
+
+        else:
+
+            # COMPRESSED_BETWEEN_LEVELS:
+            # puede razonar sobre cualquiera de los dos.
+            assessment_schema = (
+                LevelThesisAssessment
+            )
 
         try:
 
             assessment = (
                 structured_chat(
                     schema=
-                        LevelThesisAssessment,
+                        assessment_schema,
 
                     system_prompt=
                         system_prompt,
@@ -390,11 +474,11 @@ Return structured output only.
                 )
             )
 
-            assessment.reason_codes = (
-                unique_list(
-                    assessment.reason_codes,
-                )
-            )
+            # assessment.reason_codes = (
+            #     unique_list(
+            #         assessment.reason_codes,
+            #     )
+            # )
 
         except Exception as exc:
 
@@ -467,6 +551,45 @@ Return structured output only.
                 "THESIS_LEVEL_MISMATCH"
             )
 
+        # ==================================================
+        # LA TESIS DEBE REFERIRSE AL NIVEL QUE EL PRECIO
+        # ESTA TESTEANDO AHORA
+        # ==================================================
+
+        market_structure = (
+            level_evidence.get(
+                "market_structure"
+            )
+        )
+
+        if (
+            assessment.thesis
+            != "UNCLEAR"
+        ):
+
+            if (
+                market_structure
+                == "AT_SUPPORT"
+                and
+                assessment.target_level
+                != "SUPPORT"
+            ):
+
+                errors.append(
+                    "THESIS_NOT_AT_ACTIVE_LEVEL"
+                )
+
+            elif (
+                market_structure
+                == "AT_RESISTANCE"
+                and
+                assessment.target_level
+                != "RESISTANCE"
+            ):
+
+                errors.append(
+                    "THESIS_NOT_AT_ACTIVE_LEVEL"
+                )
         # ==================================================
         # EXISTENCIA DEL NIVEL
         # ==================================================
@@ -585,26 +708,191 @@ Return structured output only.
         # NO PERMITIR MACRO INVENTADO EN HISTORICO
         # ==================================================
 
-        if not historical_macro_available:
+        # if not historical_macro_available:
 
-            forbidden_macro_reasons = {
-                "MACRO_SUPPORTS_HOLD",
-                "MACRO_SUPPORTS_BREAK",
-            }
+        #     forbidden_macro_reasons = {
+        #         "MACRO_SUPPORTS_HOLD",
+        #         "MACRO_SUPPORTS_BREAK",
+        #     }
 
-            if any(
-                item
-                in forbidden_macro_reasons
+        #     if any(
+        #         item
+        #         in forbidden_macro_reasons
 
-                for item
-                in assessment.reason_codes
-            ):
+        #         # for item
+        #         # in assessment.reason_codes
+        #     ):
 
-                errors.append(
-                    "MACRO_REASON_WITHOUT_HISTORICAL_DATA"
-                )
+        #         errors.append(
+        #             "MACRO_REASON_WITHOUT_HISTORICAL_DATA"
+        #         )
+        # # ==================================================
+        # # COHERENCIA SEMANTICA DEL RAZONAMIENTO TECNICO
+        # # ==================================================
+
+        # bullish_technical = {
+        #     item
+        #     for item
+        #     in assessment.evidence_used
+        #     if (
+        #         "_ABOVE_EMA" in item
+        #         or
+        #         "_STRUCTURE_BULLISH" in item
+        #         or
+        #         "_PARTIAL_BULLISH" in item
+        #         or
+        #         "_RSI_STRONG" in item
+        #         or
+        #         "_RETURN5_POSITIVE" in item
+        #     )
+        # }
+
+        # bearish_technical = {
+        #     item
+        #     for item
+        #     in assessment.evidence_used
+        #     if (
+        #         "_BELOW_EMA" in item
+        #         or
+        #         "_STRUCTURE_BEARISH" in item
+        #         or
+        #         "_PARTIAL_BEARISH" in item
+        #         or
+        #         "_RSI_WEAK" in item
+        #         or
+        #         "_RETURN5_NEGATIVE" in item
+        #     )
+        # }
+
+        # bullish_thesis = (
+        #     assessment.thesis
+        #     in {
+        #         "SUPPORT_HOLD",
+        #         "RESISTANCE_BREAK",
+        #     }
+        # )
+
+        # bearish_thesis = (
+        #     assessment.thesis
+        #     in {
+        #         "RESISTANCE_HOLD",
+        #         "SUPPORT_BREAK",
+        #     }
+        # )
+
+        # if (
+        #     "TREND_SUPPORTS_HOLD"
+        #     in assessment.reason_codes
+        #     or
+        #     "TREND_SUPPORTS_BREAK"
+        #     in assessment.reason_codes
+        # ):
+
+        #     if (
+        #         bullish_thesis
+        #         and
+        #         not bullish_technical
+        #     ):
+
+        #         errors.append(
+        #             "TECHNICAL_REASON_DIRECTION_MISMATCH"
+        #         )
+
+        #     if (
+        #         bearish_thesis
+        #         and
+        #         not bearish_technical
+        #     ):
+
+        #         errors.append(
+        #             "TECHNICAL_REASON_DIRECTION_MISMATCH"
+        #         )
+
+        # if (
+        #     "MOMENTUM_SUPPORTS_HOLD"
+        #     in assessment.reason_codes
+        #     or
+        #     "MOMENTUM_SUPPORTS_BREAK"
+        #     in assessment.reason_codes
+        # ):
+
+        #     bullish_momentum = {
+        #         item
+        #         for item
+        #         in assessment.evidence_used
+        #         if (
+        #             "_RSI_STRONG"
+        #             in item
+        #             or
+        #             "_RETURN5_POSITIVE"
+        #             in item
+        #         )
+        #     }
+
+        #     bearish_momentum = {
+        #         item
+        #         for item
+        #         in assessment.evidence_used
+        #         if (
+        #             "_RSI_WEAK"
+        #             in item
+        #             or
+        #             "_RETURN5_NEGATIVE"
+        #             in item
+        #         )
+        #     }
+
+        #     if (
+        #         bullish_thesis
+        #         and
+        #         not bullish_momentum
+        #     ):
+
+        #         errors.append(
+        #             "MOMENTUM_REASON_DIRECTION_MISMATCH"
+        #         )
+
+        #     if (
+        #         bearish_thesis
+        #         and
+        #         not bearish_momentum
+        #     ):
+
+        #         errors.append(
+        #             "MOMENTUM_REASON_DIRECTION_MISMATCH"
+        #         )
 
         if errors:
+
+            print(
+                "\n[LEVEL THESIS INVALID RAW]"
+            )
+
+            print(
+                "Time:",
+                context.analysis_time,
+            )
+
+            print(
+                "Market structure:",
+                level_evidence.get(
+                    "market_structure"
+                ),
+            )
+
+            print(
+                "Raw assessment:",
+                assessment.model_dump(),
+            )
+
+            print(
+                "Validation errors:",
+                list(
+                    dict.fromkeys(
+                        errors
+                    )
+                ),
+            )
 
             return self._invalid(
                 bus,
@@ -614,6 +902,101 @@ Return structured output only.
                     )
                 ),
             )
+        # ==================================================
+        # CLASIFICACION DETERMINISTA DE LA EVIDENCIA
+        # ==================================================
+
+        bullish_thesis = (
+            assessment.thesis
+            in {
+                "SUPPORT_HOLD",
+                "RESISTANCE_BREAK",
+            }
+        )
+
+        bearish_thesis = (
+            assessment.thesis
+            in {
+                "RESISTANCE_HOLD",
+                "SUPPORT_BREAK",
+            }
+        )
+
+        bullish_technical = [
+            item
+            for item
+            in assessment.evidence_used
+            if (
+                "_ABOVE_EMA" in item
+                or
+                "_STRUCTURE_BULLISH" in item
+                or
+                "_PARTIAL_BULLISH" in item
+                or
+                "_RSI_STRONG" in item
+                or
+                "_RETURN5_POSITIVE" in item
+            )
+        ]
+
+        bearish_technical = [
+            item
+            for item
+            in assessment.evidence_used
+            if (
+                "_BELOW_EMA" in item
+                or
+                "_STRUCTURE_BEARISH" in item
+                or
+                "_PARTIAL_BEARISH" in item
+                or
+                "_RSI_WEAK" in item
+                or
+                "_RETURN5_NEGATIVE" in item
+            )
+        ]
+
+        reason_codes = []
+
+        if assessment.thesis == "UNCLEAR":
+
+            reason_codes.append(
+                "INSUFFICIENT_EVIDENCE"
+            )
+
+        else:
+
+            reason_codes.append(
+                "LEVEL_STRUCTURE_SUPPORTS_THESIS"
+            )
+
+            if bullish_thesis:
+
+                if bullish_technical:
+
+                    reason_codes.append(
+                        "TECHNICAL_SUPPORTS_THESIS"
+                    )
+
+                if bearish_technical:
+
+                    reason_codes.append(
+                        "TECHNICAL_CONFLICTS_WITH_THESIS"
+                    )
+
+            elif bearish_thesis:
+
+                if bearish_technical:
+
+                    reason_codes.append(
+                        "TECHNICAL_SUPPORTS_THESIS"
+                    )
+
+                if bullish_technical:
+
+                    reason_codes.append(
+                        "TECHNICAL_CONFLICTS_WITH_THESIS"
+                    )
 
         return bus.publish(
             agent=
@@ -625,6 +1008,9 @@ Return structured output only.
             payload={
                 **assessment.model_dump(),
 
+                "reason_codes":
+                    reason_codes,
+
                 "valid":
                     True,
 
@@ -635,3 +1021,38 @@ Return structured output only.
                     "LLM",
             },
         )
+
+
+class SupportLevelThesisAssessment(
+    LevelThesisAssessment
+):
+
+    thesis: Literal[
+        "SUPPORT_HOLD",
+        "SUPPORT_BREAK",
+        "UNCLEAR",
+    ]
+
+    target_level: Literal[
+        "SUPPORT",
+        "NONE",
+    ]
+
+
+class ResistanceLevelThesisAssessment(
+    LevelThesisAssessment
+):
+
+    thesis: Literal[
+        "RESISTANCE_HOLD",
+        "RESISTANCE_BREAK",
+        "UNCLEAR",
+    ]
+
+    target_level: Literal[
+        "RESISTANCE",
+        "NONE",
+    ]
+
+
+
