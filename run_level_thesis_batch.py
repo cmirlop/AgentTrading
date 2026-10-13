@@ -24,6 +24,11 @@ from src.level_evidence import (
     build_level_evidence,
 )
 
+from src.level_price_action import (
+    build_level_price_action,
+    build_level_price_action_evidence,
+)
+
 from src.historical_level_outcome import (
     evaluate_level_thesis,
 )
@@ -258,6 +263,74 @@ for analysis_time in decision_times:
     market_structure = (
         level_evidence.get(
             "market_structure"
+        )
+    )
+
+    if market_structure == "AT_SUPPORT":
+
+        active_level = "SUPPORT"
+
+    elif market_structure == "AT_RESISTANCE":
+
+        active_level = "RESISTANCE"
+
+    else:
+
+        active_level = None
+
+
+    if active_level is not None:
+
+        price_action = (
+            build_level_price_action(
+                prepared_history=
+                    history,
+
+                analysis_time=
+                    analysis_time,
+
+                level_facts=
+                    level_evidence.get(
+                        "facts",
+                        {},
+                    ),
+
+                active_level=
+                    active_level,
+            )
+        )
+
+        price_action_evidence = (
+            build_level_price_action_evidence(
+                price_action
+            )
+        )
+
+    else:
+
+        price_action = {}
+
+        price_action_evidence = []
+
+
+    level_evidence[
+        "price_action"
+    ] = price_action
+
+    level_evidence[
+        "price_action_evidence"
+    ] = price_action_evidence
+
+    level_evidence[
+        "available_evidence_ids"
+    ] = list(
+        dict.fromkeys(
+            level_evidence.get(
+                "available_evidence_ids",
+                [],
+            )
+            +
+            price_action_evidence
         )
     )
 
@@ -736,6 +809,59 @@ resolved = (
     stats["wrong"]
 )
 
+actual_hold = 0
+actual_break = 0
+
+if not df.empty:
+
+    actual_hold = int(
+        (
+            df["actual_outcome"]
+            == "HOLD"
+        ).sum()
+    )
+
+    actual_break = int(
+        (
+            df["actual_outcome"]
+            == "BREAK"
+        ).sum()
+    )
+
+
+always_hold_accuracy = (
+    actual_hold
+    /
+    (
+        actual_hold
+        +
+        actual_break
+    )
+    if (
+        actual_hold
+        +
+        actual_break
+    )
+    else None
+)
+
+
+always_break_accuracy = (
+    actual_break
+    /
+    (
+        actual_hold
+        +
+        actual_break
+    )
+    if (
+        actual_hold
+        +
+        actual_break
+    )
+    else None
+)
+
 
 accuracy = (
     stats["correct"]
@@ -767,6 +893,54 @@ summary = {
 
     "resolved":
         resolved,
+
+    "actual_outcomes": {
+        "hold":
+            actual_hold,
+
+        "break":
+            actual_break,
+    },
+
+    "baseline_always_hold_accuracy":
+        (
+            round(
+                always_hold_accuracy,
+                4,
+            )
+            if always_hold_accuracy
+            is not None
+            else None
+        ),
+
+    "baseline_always_break_accuracy":
+        (
+            round(
+                always_break_accuracy,
+                4,
+            )
+            if always_break_accuracy
+            is not None
+            else None
+        ),
+
+    "model_edge_over_always_hold":
+        (
+            round(
+                accuracy
+                -
+                always_hold_accuracy,
+                4,
+            )
+            if (
+                accuracy
+                is not None
+                and
+                always_hold_accuracy
+                is not None
+            )
+            else None
+        ),
 
     "accuracy_resolved":
         (

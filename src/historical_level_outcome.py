@@ -7,6 +7,7 @@ BREAK_BUFFER_ATR = 0.10
 
 HOLD_CONFIRMATION_ATR = 0.50
 
+TOUCH_LOOKBACK_MINUTES = 15
 
 def _utc(
     value,
@@ -160,6 +161,29 @@ def evaluate_level_thesis(
                 "NO_FUTURE_M5_DATA",
         }
 
+    lookback_start = (
+        analysis_time
+        -
+        pd.Timedelta(
+            minutes=
+                TOUCH_LOOKBACK_MINUTES
+        )
+    )
+
+    recent = m5[
+        (
+            m5["bar_close"]
+            >
+            lookback_start
+        )
+        &
+        (
+            m5["bar_close"]
+            <=
+            analysis_time
+        )
+    ].copy()
+
     break_buffer = (
         atr
         *
@@ -229,6 +253,271 @@ def evaluate_level_thesis(
             == "RESISTANCE_HOLD"
             else "BREAK"
         )
+
+    level_low = float(
+        level["low"]
+    )
+
+    level_high = float(
+        level["high"]
+    )
+
+    level_touched_before_future = False
+
+    touch_time = None
+
+    for _, recent_row in (
+        recent.iterrows()
+    ):
+
+        recent_low = float(
+            recent_row["low"]
+        )
+
+        recent_high = float(
+            recent_row["high"]
+        )
+
+        recent_touch = (
+            recent_low
+            <=
+            level_high
+            and
+            recent_high
+            >=
+            level_low
+        )
+
+        if recent_touch:
+
+            level_touched_before_future = True
+
+            touch_time = (
+                _utc(
+                    recent_row["time"]
+                )
+                .isoformat()
+            )
+
+    level_touched = (
+        level_touched_before_future
+    )
+
+    for _, row in (
+        future.iterrows()
+    ):
+
+        bar_open = float(
+            row["open"]
+        )
+
+        low = float(
+            row["low"]
+        )
+
+        high = float(
+            row["high"]
+        )
+
+        touch_hit = (
+            low
+            <=
+            level_high
+            and
+            high
+            >=
+            level_low
+        )
+
+        touch_at_open = (
+            level_low
+            <=
+            bar_open
+            <=
+            level_high
+        )
+
+        touched_before_event = (
+            level_touched
+            or
+            touch_at_open
+        )
+
+        if level_type == "SUPPORT":
+
+            break_hit = (
+                low
+                <=
+                break_threshold
+            )
+
+            hold_hit = (
+                high
+                >=
+                hold_threshold
+            )
+
+        else:
+
+            break_hit = (
+                high
+                >=
+                break_threshold
+            )
+
+            hold_hit = (
+                low
+                <=
+                hold_threshold
+            )
+
+        if (
+            break_hit
+            and
+            hold_hit
+        ):
+
+            actual_outcome = (
+                "AMBIGUOUS"
+            )
+
+            event_time = (
+                _utc(
+                    row["time"]
+                )
+                .isoformat()
+            )
+
+            event_bar = {
+                "open":
+                    bar_open,
+
+                "high":
+                    high,
+
+                "low":
+                    low,
+
+                "close":
+                    float(
+                        row["close"]
+                    ),
+            }
+
+            break
+
+        if break_hit:
+
+            actual_outcome = (
+                "BREAK"
+            )
+
+            event_time = (
+                _utc(
+                    row["time"]
+                )
+                .isoformat()
+            )
+
+            event_bar = {
+                "open":
+                    bar_open,
+
+                "high":
+                    high,
+
+                "low":
+                    low,
+
+                "close":
+                    float(
+                        row["close"]
+                    ),
+            }
+
+            break
+
+        if hold_hit:
+
+            if touched_before_event:
+
+                actual_outcome = (
+                    "HOLD"
+                )
+
+                event_time = (
+                    _utc(
+                        row["time"]
+                    )
+                    .isoformat()
+                )
+
+                event_bar = {
+                    "open":
+                        bar_open,
+
+                    "high":
+                        high,
+
+                    "low":
+                        low,
+
+                    "close":
+                        float(
+                            row["close"]
+                        ),
+                }
+
+                break
+
+            elif touch_hit:
+
+                # La misma vela toca la zona y alcanza
+                # confirmación de HOLD. Con OHLC no sabemos
+                # qué ocurrió primero intrabar.
+                actual_outcome = (
+                    "AMBIGUOUS"
+                )
+
+                event_time = (
+                    _utc(
+                        row["time"]
+                    )
+                    .isoformat()
+                )
+
+                event_bar = {
+                    "open":
+                        bar_open,
+
+                    "high":
+                        high,
+
+                    "low":
+                        low,
+
+                    "close":
+                        float(
+                            row["close"]
+                        ),
+                }
+
+                break
+
+        if (
+            touch_hit
+            and
+            not level_touched
+        ):
+
+            level_touched = True
+
+            touch_time = (
+                _utc(
+                    row["time"]
+                )
+                .isoformat()
+            )
 
     actual_outcome = (
         "UNRESOLVED"
@@ -466,6 +755,18 @@ def evaluate_level_thesis(
 
         "hold_confirmation_atr":
             HOLD_CONFIRMATION_ATR,
+
+        "touch_required_for_hold":
+            True,
+
+        "touch_lookback_minutes":
+            TOUCH_LOOKBACK_MINUTES,
+
+        "level_touched_before_future":
+            level_touched_before_future,
+
+        "touch_time":
+            touch_time,
 
         "level_low":
             level[

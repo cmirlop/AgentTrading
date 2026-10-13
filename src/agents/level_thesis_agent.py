@@ -63,6 +63,37 @@ class LevelThesisAssessment(
     # ]
 
 
+
+class LevelHypothesisComparison(
+    BaseModel
+):
+
+    hold_score: float = Field(
+        ge=0.0,
+        le=1.0,
+    )
+
+    break_score: float = Field(
+        ge=0.0,
+        le=1.0,
+    )
+
+    hold_evidence_used: list[
+        str
+    ] = Field(
+        default_factory=list
+    )
+
+    break_evidence_used: list[
+        str
+    ] = Field(
+        default_factory=list
+    )
+
+    confidence: float = Field(
+        ge=0.0,
+        le=1.0,
+    )
 THESIS_OPERATION = {
     "SUPPORT_HOLD":
         "BUY",
@@ -431,8 +462,8 @@ Return structured output only.
             == "AT_SUPPORT"
         ):
 
-            assessment_schema = (
-                SupportLevelThesisAssessment
+            active_level = (
+                "SUPPORT"
             )
 
         elif (
@@ -440,45 +471,419 @@ Return structured output only.
             == "AT_RESISTANCE"
         ):
 
-            assessment_schema = (
-                ResistanceLevelThesisAssessment
+            active_level = (
+                "RESISTANCE"
             )
 
         else:
 
-            # COMPRESSED_BETWEEN_LEVELS:
-            # puede razonar sobre cualquiera de los dos.
-            assessment_schema = (
-                LevelThesisAssessment
-            )
+            # COMPRESSED_BETWEEN_LEVELS se evaluará
+            # más adelante comparando ambos niveles.
+            # Por ahora: fail closed.
+            active_level = None
+
+
+        comparison_prompt = """
+You are the Level Hypothesis Comparison Agent
+inside a Forex trading system.
+
+Python has already selected the active support or
+resistance level.
+
+You do NOT choose:
+- trade direction
+- BUY or SELL
+- final thesis
+- entry
+- stop loss
+- take profit
+- risk
+- execution
+
+Your ONLY task is to compare two competing hypotheses:
+
+1. HOLD
+2. BREAK
+
+The active level is supplied as active_level.
+
+If active_level = SUPPORT:
+
+HOLD means:
+price rejects support and moves upward.
+
+BREAK means:
+price breaks downward through support.
+
+If active_level = RESISTANCE:
+
+HOLD means:
+price rejects resistance and moves downward.
+
+BREAK means:
+price breaks upward through resistance.
+
+
+IMPORTANT:
+
+Do NOT assume that a support or resistance will hold
+just because the level exists.
+
+HOLD and BREAK must be evaluated as competing hypotheses.
+
+Consider:
+- level strength
+- number of touches
+- multi-timeframe presence
+- distance to level
+- trend
+- momentum
+- EMA structure
+- RSI
+- recent returns
+- regime
+- macro information only when actually available
+
+A strong level may support HOLD.
+
+Strong directional momentum INTO a level may support BREAK.
+
+Technical evidence may disagree with level structure.
+That conflict must be represented instead of ignored.
+
+
+SCORING:
+
+hold_score:
+0.0 = no support for HOLD
+1.0 = extremely strong support for HOLD
+
+break_score:
+0.0 = no support for BREAK
+1.0 = extremely strong support for BREAK
+
+Score HOLD and BREAK independently.
+
+Do not force the two scores to sum to 1.0.
+
+
+EVIDENCE:
+
+hold_evidence_used must contain only evidence that
+actually supports HOLD.
+
+break_evidence_used must contain only evidence that
+actually supports BREAK.
+
+Do not put the same evidence ID into both lists.
+
+Use ONLY evidence IDs explicitly available in the payload.
+
+Do not invent indicators, news, macro events or evidence IDs.
+
+If historical macro data is unavailable, macro must not
+influence either hypothesis.
+
+
+CONFIDENCE:
+
+confidence measures how reliable you believe the
+comparison itself is.
+
+Low confidence is appropriate when evidence is sparse,
+mixed or contradictory.
+
+Return structured output only.
+"""
+
 
         try:
 
-            assessment = (
-                structured_chat(
-                    schema=
-                        assessment_schema,
+            if active_level is None:
 
-                    system_prompt=
-                        system_prompt,
+                assessment = (
+                    LevelThesisAssessment(
+                        thesis=
+                            "UNCLEAR",
 
-                    payload=
-                        payload,
+                        target_level=
+                            "NONE",
+
+                        operation=
+                            "NONE",
+
+                        confidence=
+                            0.0,
+
+                        evidence_used=
+                            [],
+                    )
                 )
-            )
 
-            assessment.evidence_used = (
-                unique_list(
-                    assessment.evidence_used,
-                    max_items=16,
+            else:
+
+                comparison_payload = {
+                    **payload,
+
+                    "active_level":
+                        active_level,
+                }
+
+                if (
+                    context.analysis_time
+                    in {
+                        "2026-04-08T09:45:00+00:00",
+                        "2026-04-08T15:00:00+00:00",
+                    }
+                ):
+
+                    import pprint
+
+                    print(
+                        "\n"
+                        + "=" * 100
+                    )
+
+                    print(
+                        "PAYLOAD ENVIADO A QWEN"
+                    )
+
+                    print(
+                        "=" * 100
+                    )
+
+                    pprint.pp(
+                        comparison_payload,
+                        width=120,
+                    )
+
+
+                comparison = (
+                    structured_chat(
+                        schema=
+                            LevelHypothesisComparison,
+
+                        system_prompt=
+                            comparison_prompt,
+
+                        payload=
+                            comparison_payload,
+                    )
                 )
-            )
 
-            # assessment.reason_codes = (
-            #     unique_list(
-            #         assessment.reason_codes,
-            #     )
-            # )
+
+                comparison.hold_evidence_used = (
+                    unique_list(
+                        comparison.hold_evidence_used,
+                        max_items=12,
+                    )
+                )
+
+
+                comparison.break_evidence_used = (
+                    unique_list(
+                        comparison.break_evidence_used,
+                        max_items=12,
+                    )
+                )
+
+
+                evidence_used = (
+                    unique_list(
+                        (
+                            comparison.hold_evidence_used
+                            +
+                            comparison.break_evidence_used
+                        ),
+                        max_items=16,
+                    )
+                )
+
+
+                hold_score = float(
+                    comparison.hold_score
+                )
+
+                break_score = float(
+                    comparison.break_score
+                )
+
+                comparison_confidence = float(
+                    comparison.confidence
+                )
+
+                print(
+                    "\n[LEVEL HYPOTHESIS COMPARISON]"
+                )
+
+                print(
+                    "Time:",
+                    context.analysis_time,
+                )
+
+                print(
+                    "Active level:",
+                    active_level,
+                )
+
+                print(
+                    "HOLD score:",
+                    comparison.hold_score,
+                )
+
+                print(
+                    "BREAK score:",
+                    comparison.break_score,
+                )
+
+                print(
+                    "Confidence:",
+                    comparison.confidence,
+                )
+
+                print(
+                    "HOLD evidence:",
+                    comparison.hold_evidence_used,
+                )
+
+                print(
+                    "BREAK evidence:",
+                    comparison.break_evidence_used,
+                )
+
+
+                score_margin = abs(
+                    hold_score
+                    -
+                    break_score
+                )
+
+                max_score = max(
+                    hold_score,
+                    break_score,
+                )
+
+
+                # Valores iniciales congelados.
+                # No optimizarlos con este único día.
+                minimum_score = 0.60
+                minimum_margin = 0.15
+                minimum_confidence = 0.60
+
+
+                if (
+                    max_score
+                    < minimum_score
+                    or
+                    score_margin
+                    < minimum_margin
+                    or
+                    comparison_confidence
+                    < minimum_confidence
+                ):
+
+                    assessment = (
+                        LevelThesisAssessment(
+                            thesis=
+                                "UNCLEAR",
+
+                            target_level=
+                                "NONE",
+
+                            operation=
+                                "NONE",
+
+                            confidence=
+                                0.0,
+
+                            evidence_used=
+                                evidence_used,
+                        )
+                    )
+
+                else:
+
+                    hypothesis = (
+                        "HOLD"
+                        if hold_score
+                        >
+                        break_score
+                        else "BREAK"
+                    )
+
+
+                    if (
+                        active_level
+                        == "SUPPORT"
+                    ):
+
+                        if hypothesis == "HOLD":
+
+                            thesis = (
+                                "SUPPORT_HOLD"
+                            )
+
+                            operation = (
+                                "BUY"
+                            )
+
+                        else:
+
+                            thesis = (
+                                "SUPPORT_BREAK"
+                            )
+
+                            operation = (
+                                "SELL"
+                            )
+
+                    else:
+
+                        if hypothesis == "HOLD":
+
+                            thesis = (
+                                "RESISTANCE_HOLD"
+                            )
+
+                            operation = (
+                                "SELL"
+                            )
+
+                        else:
+
+                            thesis = (
+                                "RESISTANCE_BREAK"
+                            )
+
+                            operation = (
+                                "BUY"
+                            )
+
+
+                    final_confidence = min(
+                        max_score,
+                        comparison_confidence,
+                    )
+
+
+                    assessment = (
+                        LevelThesisAssessment(
+                            thesis=
+                                thesis,
+
+                            target_level=
+                                active_level,
+
+                            operation=
+                                operation,
+
+                            confidence=
+                                final_confidence,
+
+                            evidence_used=
+                                evidence_used,
+                        )
+                    )
 
         except Exception as exc:
 
