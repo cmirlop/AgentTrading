@@ -456,6 +456,51 @@ def build_level_price_action_evidence(
             )
         )
 
+        # ==================================================
+        # ESTADO COMPUESTO DE INTERACCION CON EL NIVEL
+        # ==================================================
+
+        # Presion hacia un nivel que ya ha sido testeado.
+        # No significa que vaya a romper; describe el ataque.
+        if (
+            approach >= 0.75
+            and
+            touches >= 2
+        ):
+
+            evidence.append(
+                prefix
+                + "APPROACH_WITH_REPEATED_TESTS"
+            )
+
+
+        # El precio se acerca, pero esta ventana todavia
+        # no contiene contacto con la zona.
+        if (
+            approach >= 0.25
+            and
+            touches == 0
+        ):
+
+            evidence.append(
+                prefix
+                + "APPROACH_UNTESTED"
+            )
+
+
+        # Hubo interaccion con el nivel, pero actualmente
+        # la trayectoria neta se aleja de el.
+        if (
+            approach <= -0.25
+            and
+            touches > 0
+        ):
+
+            evidence.append(
+                prefix
+                + "MOVING_AWAY_AFTER_INTERACTION"
+            )
+
         closes_inside = int(
             metrics.get(
                 "closes_inside_zone",

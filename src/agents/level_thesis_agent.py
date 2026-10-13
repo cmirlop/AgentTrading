@@ -272,6 +272,21 @@ class LevelThesisAgent:
             {},
         )
 
+
+        price_action = (
+            level_evidence.get(
+                "price_action",
+                {},
+            )
+        )
+
+        price_action_evidence = (
+            level_evidence.get(
+                "price_action_evidence",
+                [],
+            )
+        )
+
         support = facts.get(
             "support"
         )
@@ -307,6 +322,12 @@ class LevelThesisAgent:
 
             "level_facts":
                 facts,
+
+            "level_price_action":
+                price_action,
+
+            "price_action_evidence":
+                price_action_evidence,
 
             "allowed_evidence_ids":
                 allowed_evidence,
@@ -547,6 +568,74 @@ Consider:
 A strong level may support HOLD.
 
 Strong directional momentum INTO a level may support BREAK.
+
+LEVEL PRICE ACTION:
+
+The payload may include:
+- level_price_action
+- price_action_evidence
+
+These describe recent interaction with the ACTIVE level.
+
+Interpret them as follows:
+
+APPROACH_STRONG or APPROACH_MODERATE:
+- price has moved materially toward the active level.
+- this alone does NOT imply BREAK.
+
+APPROACH_WITH_REPEATED_TESTS:
+- price is pressing toward a level that has already been tested repeatedly.
+- this may support BREAK pressure.
+- it is stronger evidence when both M5 and M15 agree.
+- it is NOT automatic proof of BREAK.
+
+APPROACH_UNTESTED:
+- price is approaching the level, but the recent window has not yet tested the zone.
+- do not treat this as established rejection or established breakout pressure.
+
+REPEATED_TESTS:
+- the level has been interacted with multiple times.
+- repeated tests can mean persistent pressure OR repeated rejection.
+- use current trajectory and other price-action evidence to disambiguate.
+
+CLOSE_INSIDE_ZONE:
+- price has closed inside the level zone.
+- this indicates interaction, not confirmed BREAK.
+
+CLOSE_THROUGH_LEVEL and MULTIPLE_CLOSES_THROUGH_LEVEL:
+- historical closes have occurred beyond the level.
+- these do NOT automatically mean the current hypothesis is BREAK.
+- if current price action is moving back toward the pre-break side or moving away from the level,
+  prior closes through the level may instead describe a failed breakout or rejection.
+
+MEANINGFUL_BREACH:
+- price previously penetrated materially beyond the level.
+- this is historical interaction evidence, not automatic proof that BREAK is currently favored.
+
+MOVING_AWAY:
+- recent net trajectory is away from the active level.
+
+MOVING_AWAY_AFTER_INTERACTION:
+- price interacted with the level and is now moving away from it.
+- this may support HOLD or failed-break behavior.
+- give this substantial weight when it conflicts with older breach evidence.
+
+CURRENTLY_PRE_BREAK_SIDE:
+- current price is on the non-break side of the active level.
+- for SUPPORT, this means price is currently above the support zone.
+- for RESISTANCE, this means price is currently below the resistance zone.
+- do not interpret historical closes through the level as an active breakout if price has returned to the pre-break side.
+
+When level_price_action numeric fields are available:
+- approach_move_atr > 0 means net movement toward the active level.
+- approach_move_atr < 0 means net movement away from the active level.
+- zone_touches counts recent interactions with the zone.
+- closes_through_level counts historical closes beyond the level.
+- max_breach_atr measures the largest historical penetration beyond the level.
+- recent evidence and current trajectory should generally be weighted more than older interaction counts.
+
+Do not infer HOLD or BREAK from one price-action feature alone.
+Evaluate the complete interaction sequence.
 
 Technical evidence may disagree with level structure.
 That conflict must be represented instead of ignored.

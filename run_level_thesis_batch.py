@@ -130,6 +130,21 @@ decision_times = (
     .tolist()
 )
 
+decision_times = [
+    pd.Timestamp(
+        "2026-04-08T07:30:00+00:00"
+    ),
+    pd.Timestamp(
+        "2026-04-08T08:00:00+00:00"
+    ),
+    pd.Timestamp(
+        "2026-04-08T09:45:00+00:00"
+    ),
+    pd.Timestamp(
+        "2026-04-08T15:00:00+00:00"
+    ),
+]
+
 
 stats = {
     "m15_evaluated":

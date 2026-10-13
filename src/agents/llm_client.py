@@ -73,7 +73,7 @@ def structured_chat(
                 OLLAMA_CONTEXT,
         },
 
-        think=False,
+        think=True,
 
         keep_alive=
             OLLAMA_KEEP_ALIVE,
