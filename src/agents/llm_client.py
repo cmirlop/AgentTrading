@@ -73,10 +73,50 @@ def structured_chat(
                 OLLAMA_CONTEXT,
         },
 
-        think=True,
+        think=False,
 
         keep_alive=
             OLLAMA_KEEP_ALIVE,
+    )
+
+    if isinstance(
+        response,
+        dict,
+    ):
+
+        prompt_eval_count = (
+            response.get(
+                "prompt_eval_count"
+            )
+        )
+
+        eval_count = (
+            response.get(
+                "eval_count"
+            )
+        )
+
+    else:
+
+        prompt_eval_count = getattr(
+            response,
+            "prompt_eval_count",
+            None,
+        )
+
+        eval_count = getattr(
+            response,
+            "eval_count",
+            None,
+        )
+
+
+    print(
+        "[LLM USAGE]",
+        f"schema={schema.__name__}",
+        f"prompt_eval_count={prompt_eval_count}",
+        f"eval_count={eval_count}",
+        f"num_ctx={OLLAMA_CONTEXT}",
     )
 
     content = (

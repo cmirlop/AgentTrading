@@ -712,10 +712,37 @@ Return structured output only.
             else:
 
                 comparison_payload = {
-                    **payload,
+                    "symbol": context.symbol,
+                    "analysis_time": context.analysis_time,
+                    "active_level": active_level,
+                    "market_structure": market_structure,
 
-                    "active_level":
-                        active_level,
+                    "technical": {
+                        "bias": technical.get("bias"),
+                        "overall_score": technical.get(
+                            "overall_score"
+                        ),
+                        "timeframe_scores": technical.get(
+                            "timeframe_scores"
+                        ),
+                        "alignment": technical.get("alignment"),
+                        "setup_quality": technical.get(
+                            "setup_quality"
+                        ),
+                    },
+
+                    "regime": {
+                        "regime": regime.get("regime"),
+                        "confidence": regime.get("confidence"),
+                    },
+
+                    "level_facts": facts,
+
+                    "level_price_action": price_action,
+
+                    "allowed_evidence_ids": allowed_evidence,
+
+                    "macro": payload["macro"],
                 }
 
                 if (
