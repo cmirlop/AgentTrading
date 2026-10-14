@@ -685,6 +685,54 @@ mixed or contradictory.
 Return structured output only.
 """
 
+        # DIAGNOSTICO TEMPORAL: prompt reducido
+        comparison_prompt = """
+You compare HOLD versus BREAK at the active Forex level.
+
+For SUPPORT:
+HOLD = price bounces upward.
+BREAK = price breaks downward.
+
+For RESISTANCE:
+HOLD = price rejects downward.
+BREAK = price breaks upward.
+
+Evaluate BOTH hypotheses using level_facts,
+level_price_action, technical and regime.
+
+In level_price_action:
+- Positive approach_move_atr means approaching the level.
+- Negative approach_move_atr means moving away.
+- Repeated approaches and tests may support BREAK.
+- Moving away after interaction may support HOLD.
+- Historical breaches do not prove an ongoing breakout.
+- Consider M5 and M15 together.
+
+Give independent hold_score and break_score from 0 to 1.
+A score of 0 means there is no supporting evidence
+for that hypothesis. It does NOT mean uncertainty.
+
+For SUPPORT, bearish momentum moving toward the level
+may support BREAK even before a confirmed breakdown.
+Observed rejection or movement away from support
+may support HOLD.
+
+For RESISTANCE, bullish momentum moving toward the level
+may support BREAK even before a confirmed breakout.
+Observed rejection or movement away from resistance
+may support HOLD.
+
+Repeated touches alone do not prove HOLD or BREAK.
+
+When evidence supports both competing hypotheses,
+score each independently and reduce comparison confidence.
+Do not convert uncertainty into two zero scores.
+
+Use only IDs from allowed_evidence_ids.
+Do not invent market information or historical news.
+Do not use future outcomes.
+Return the structured JSON fields required by the schema.
+"""
 
         try:
 
@@ -711,45 +759,86 @@ Return structured output only.
 
             else:
 
+                active_facts = (
+                    facts.get(
+                        active_level.lower()
+                    )
+                    or {}
+                )
+
                 comparison_payload = {
-                    "symbol": context.symbol,
-                    "analysis_time": context.analysis_time,
                     "active_level": active_level,
-                    "market_structure": market_structure,
 
                     "technical": {
                         "bias": technical.get("bias"),
-                        "overall_score": technical.get(
-                            "overall_score"
-                        ),
                         "timeframe_scores": technical.get(
                             "timeframe_scores"
-                        ),
-                        "alignment": technical.get("alignment"),
-                        "setup_quality": technical.get(
-                            "setup_quality"
                         ),
                     },
 
                     "regime": {
                         "regime": regime.get("regime"),
-                        "confidence": regime.get("confidence"),
                     },
 
-                    "level_facts": facts,
+                    "level_facts": {
+                        "strength": active_facts.get("strength"),
+                        "touches": active_facts.get("touches"),
+                        "timeframes": active_facts.get("timeframes"),
+                        "distance_atr": active_facts.get("distance_atr"),
+                    },
 
-                    "level_price_action": price_action,
+                    "level_price_action": {
+                        timeframe: {
+                            key: price_action.get(
+                                timeframe, {}
+                            ).get(key)
+                            for key in (
+                                "approach_move_atr",
+                                "zone_touches",
+                                "closes_through_level",
+                                "max_breach_atr",
+                                "last_close_distance_from_zone_atr",
+                            )
+                        }
+                        for timeframe in ("M5", "M15")
+                    },
 
-                    "allowed_evidence_ids": allowed_evidence,
+                    "allowed_evidence_ids": [
+                        item
+                        for item in allowed_evidence
+                        if (
+                            item.startswith((
+                                "M5_LEVEL_",
+                                "M15_LEVEL_",
+                                active_level + "_",
+                                "PRICE_AT_",
+                            ))
+                            or (
+                                item.startswith((
+                                    "M5_", "M15_", "H1_",
+                                    "H4_", "D1_",
+                                ))
+                                and any(
+                                    marker in item
+                                    for marker in (
+                                        "_EMA_STRUCTURE_",
+                                        "_RETURN5_",
+                                        "_RSI_",
+                                    )
+                                )
+                            )
+                        )
+                    ],
 
-                    "macro": payload["macro"],
+                    "historical_macro_available":
+                        historical_macro_available,
                 }
 
                 if (
                     context.analysis_time
                     in {
-                        "2026-04-08T09:45:00+00:00",
-                        "2026-04-08T15:00:00+00:00",
+                        "2026-04-08T07:30:00+00:00",
+                        "2026-04-08T08:00:00+00:00"
                     }
                 ):
 
@@ -772,6 +861,23 @@ Return structured output only.
                         comparison_payload,
                         width=120,
                     )
+
+                comparison_prompt += """
+Use a short, focused thinking process.
+
+Compare the strongest evidence for HOLD and BREAK.
+Consider the most important conflicting evidence.
+Avoid repeating the input or reconsidering the same facts.
+
+Complete your reasoning in no more than 6 short steps.
+Then immediately produce the final structured JSON.
+
+Include all five fields:
+hold_score, break_score, confidence,
+hold_evidence_used, break_evidence_used.
+
+Every evidence ID must exist in allowed_evidence_ids.
+"""
 
 
                 comparison = (

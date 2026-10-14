@@ -73,7 +73,11 @@ def structured_chat(
                 OLLAMA_CONTEXT,
         },
 
-        think=False,
+        #think=True,
+        think=(
+            schema.__name__
+            == "LevelHypothesisComparison"
+        ),
 
         keep_alive=
             OLLAMA_KEEP_ALIVE,
@@ -124,6 +128,11 @@ def structured_chat(
             response
         )
     )
+    if schema.__name__ == "LevelHypothesisComparison":
+        print(
+            "\n[LLM RAW JSON]",
+            content,
+        )
 
     return (
         schema
