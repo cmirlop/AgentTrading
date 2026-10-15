@@ -78,16 +78,12 @@ class LevelHypothesisComparison(
         le=1.0,
     )
 
-    hold_evidence_used: list[
-        str
-    ] = Field(
-        default_factory=list
+    hold_evidence_used: list[str] = Field(
+        ...
     )
 
-    break_evidence_used: list[
-        str
-    ] = Field(
-        default_factory=list
+    break_evidence_used: list[str] = Field(
+        ...
     )
 
     confidence: float = Field(
@@ -685,53 +681,90 @@ mixed or contradictory.
 Return structured output only.
 """
 
-        # DIAGNOSTICO TEMPORAL: prompt reducido
+        
+        # DIAGNOSTICO: comparacion semantica v2
         comparison_prompt = """
-You compare HOLD versus BREAK at the active Forex level.
+You are a Forex level hypothesis comparison agent.
 
-For SUPPORT:
-HOLD = price bounces upward.
-BREAK = price breaks downward.
+Analyze only the supplied active_level.
+Do not propose trades, entries, stops or execution.
 
-For RESISTANCE:
-HOLD = price rejects downward.
-BREAK = price breaks upward.
+DEFINITIONS:
 
-Evaluate BOTH hypotheses using level_facts,
-level_price_action, technical and regime.
+SUPPORT:
+HOLD = upward rejection or rebound.
+BREAK = downward breakout.
 
-In level_price_action:
-- Positive approach_move_atr means approaching the level.
-- Negative approach_move_atr means moving away.
-- Repeated approaches and tests may support BREAK.
-- Moving away after interaction may support HOLD.
-- Historical breaches do not prove an ongoing breakout.
-- Consider M5 and M15 together.
+RESISTANCE:
+HOLD = downward rejection or reversal.
+BREAK = upward breakout.
 
-Give independent hold_score and break_score from 0 to 1.
-A score of 0 means there is no supporting evidence
-for that hypothesis. It does NOT mean uncertainty.
+INTERPRETATION:
 
-For SUPPORT, bearish momentum moving toward the level
-may support BREAK even before a confirmed breakdown.
-Observed rejection or movement away from support
-may support HOLD.
+Use technical, regime, level_facts and
+level_price_action together.
 
-For RESISTANCE, bullish momentum moving toward the level
-may support BREAK even before a confirmed breakout.
-Observed rejection or movement away from resistance
-may support HOLD.
+Positive approach_move_atr means movement toward
+the active level.
+Negative approach_move_atr means movement away.
 
-Repeated touches alone do not prove HOLD or BREAK.
+zone_touches measures historical interaction.
+Repeated touches alone prove neither HOLD nor BREAK.
 
-When evidence supports both competing hypotheses,
-score each independently and reduce comparison confidence.
-Do not convert uncertainty into two zero scores.
+closes_through_level and max_breach_atr describe
+past interaction, not necessarily a current breakout.
 
-Use only IDs from allowed_evidence_ids.
-Do not invent market information or historical news.
-Do not use future outcomes.
-Return the structured JSON fields required by the schema.
+last_close_distance_from_zone_atr:
+positive = current close on the pre-break side.
+negative = current close beyond the break-side boundary.
+
+Movement away after interaction may support HOLD.
+Sustained momentum toward the level may support
+BREAK pressure, without confirming a breakout.
+
+Strong or multi-timeframe levels may support HOLD,
+but their existence does not prove rejection.
+
+Weak levels may be vulnerable to BREAK,
+but weakness alone does not prove breakout pressure.
+
+TREND describes the market regime, not its direction.
+Use technical scores and evidence for direction.
+
+Compare M5 and M15 and consider conflicting
+higher-timeframe evidence.
+
+EVIDENCE RULES:
+
+Score HOLD and BREAK independently from 0 to 1.
+Scores measure evidence support, not calibrated probabilities.
+
+For each hypothesis with nonzero score,
+select 1 to 4 genuinely supporting evidence IDs.
+
+Use exact IDs from allowed_evidence_ids.
+Never invent, modify or pad evidence IDs.
+
+Do not treat PRICE_AT_SUPPORT,
+PRICE_AT_RESISTANCE, or CURRENTLY_PRE_BREAK_SIDE
+as directional confirmation by themselves.
+
+Do not treat historical breaches as proof
+that BREAK remains favored now.
+
+If evidence is contradictory or insufficient,
+reduce confidence rather than inventing certainty.
+
+OUTPUT:
+
+Always return all five JSON fields:
+hold_score
+break_score
+confidence
+hold_evidence_used
+break_evidence_used
+
+Return only valid structured JSON.
 """
 
         try:
@@ -910,6 +943,31 @@ Every evidence ID must exist in allowed_evidence_ids.
                 )
 
 
+                # Validar ambas listas antes de elegir
+                # la hipotesis ganadora.
+                reported_evidence = (
+                    comparison.hold_evidence_used
+                    + comparison.break_evidence_used
+                )
+
+                invalid_reported_ids = [
+                    item
+                    for item in reported_evidence
+                    if item not in comparison_payload[
+                        "allowed_evidence_ids"
+                    ]
+                ]
+
+                if invalid_reported_ids:
+                    return self._invalid(
+                        bus,
+                        [
+                            "INVALID_EVIDENCE: " + item
+                            for item in invalid_reported_ids
+                        ],
+                    )
+
+
                 evidence_used = (
                     unique_list(
                         (
@@ -1018,8 +1076,7 @@ Every evidence ID must exist in allowed_evidence_ids.
                             confidence=
                                 0.0,
 
-                            evidence_used=
-                                evidence_used,
+                            evidence_used=[],
                         )
                     )
 
@@ -1102,8 +1159,11 @@ Every evidence ID must exist in allowed_evidence_ids.
                             confidence=
                                 final_confidence,
 
-                            evidence_used=
-                                evidence_used,
+                            evidence_used=(
+                                comparison.hold_evidence_used
+                                if hypothesis == "HOLD"
+                                else comparison.break_evidence_used
+                            ),
                         )
                     )
 
@@ -1252,29 +1312,12 @@ Every evidence ID must exist in allowed_evidence_ids.
             != "UNCLEAR"
         ):
 
+            # Evidencias de nivel realmente generadas
+            # por el sistema determinista de Python.
             level_ids_used = [
                 item
-
-                for item
-                in assessment.evidence_used
-
-                if (
-                    item.startswith(
-                        "SUPPORT_"
-                    )
-                    or
-                    item.startswith(
-                        "RESISTANCE_"
-                    )
-                    or
-                    item.startswith(
-                        "PRICE_"
-                    )
-                    or
-                    item.startswith(
-                        "NEAREST_"
-                    )
-                )
+                for item in assessment.evidence_used
+                if item in level_evidence_ids
             ]
 
             technical_ids_used = [

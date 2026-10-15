@@ -1,6 +1,8 @@
 from pathlib import Path
 import json
 
+from time import perf_counter
+
 import pandas as pd
 
 from src.historical_state import (
@@ -368,6 +370,8 @@ for analysis_time in decision_times:
         "level_candidates"
     ] += 1
 
+    level_started_at = perf_counter()
+
 
     # ------------------------------------------------------
     # SNAPSHOT
@@ -500,9 +504,27 @@ for analysis_time in decision_times:
     # LEVEL THESIS
     # ------------------------------------------------------
 
+    thesis_started_at = perf_counter()
+
     LevelThesisAgent().run(
         context,
         bus,
+    )
+
+    thesis_seconds = (
+        perf_counter() - thesis_started_at
+    )
+
+    total_seconds = (
+        perf_counter() - level_started_at
+    )
+
+    print(
+        "\n[LEVEL TIMING]",
+        f"time={analysis_time.isoformat()}",
+        f"level={active_level}",
+        f"total_seconds={total_seconds:.2f}",
+        f"thesis_seconds={thesis_seconds:.2f}",
     )
 
 
