@@ -38,6 +38,31 @@ def structured_chat(
     payload,
 ):
 
+    
+    output_schema = schema.model_json_schema()
+
+    if schema.__name__ == "LevelHypothesisComparison":
+
+        allowed_ids = list(
+            dict.fromkeys(
+                payload.get("allowed_evidence_ids", [])
+            )
+        )
+
+        if not allowed_ids:
+            raise ValueError(
+                "NO_ALLOWED_EVIDENCE_IDS"
+            )
+
+        for field_name in (
+            "hold_evidence_used",
+            "break_evidence_used",
+        ):
+            output_schema["properties"][field_name]["items"] = {
+                "type": "string",
+                "enum": allowed_ids,
+            }
+
     response = ollama.chat(
         model=
             OLLAMA_MODEL,
@@ -62,8 +87,7 @@ def structured_chat(
             },
         ],
 
-        format=
-            schema.model_json_schema(),
+        format=output_schema,
 
         options={
             "temperature":

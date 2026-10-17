@@ -2,27 +2,30 @@ import pandas as pd
 
 
 TIMEFRAMES = (
-    "M15",
     "H1",
     "H4",
+    "D1",
 )
 
 LOOKBACK_BARS = {
     "M15": 160,
     "H1": 120,
     "H4": 90,
+    "D1": 90,
 }
 
 PIVOT_RADIUS = {
     "M15": 2,
     "H1": 2,
     "H4": 2,
+    "D1": 2,
 }
 
 TIMEFRAME_SCORE = {
     "M15": 8,
     "H1": 14,
     "H4": 20,
+    "D1": 25,
 }
 
 POINT_BY_SYMBOL = {
@@ -375,6 +378,40 @@ def _strength(
     )
 
 
+def _independent_touch_times_m15(
+    dataframe,
+    zone_low,
+    zone_high,
+    separation_bars=4,
+):
+    touch_times = []
+    bars_outside = 0
+
+    for row in dataframe.itertuples(index=False):
+
+        intersects_zone = (
+            float(row.high) >= zone_low
+            and float(row.low) <= zone_high
+        )
+
+        if intersects_zone:
+
+            if bars_outside >= separation_bars:
+                touch_times.append(
+                    _utc(row.bar_close).isoformat()
+                )
+
+            bars_outside = 0
+
+        else:
+            bars_outside = min(
+                separation_bars,
+                bars_outside + 1,
+            )
+
+    return touch_times
+
+
 def detect_support_resistance(
     symbol,
     analysis_time,
@@ -525,9 +562,8 @@ def detect_support_resistance(
         # Evitamos zonas débiles de un único pivot pequeño.
         if (
             len(points) < 2
-            and
-            "H4"
-            not in timeframes
+            and "H4" not in timeframes
+            and "D1" not in timeframes
         ):
 
             continue
@@ -585,6 +621,12 @@ def detect_support_resistance(
             )
             for item in points
         )
+        
+        touch_times_m15 = _independent_touch_times_m15(
+            m15,
+            zone_low,
+            zone_high,
+        )
 
         zones.append(
             {
@@ -614,6 +656,14 @@ def detect_support_resistance(
                         points
                     ),
 
+                "pivot_count": len(points),
+
+                "recent_independent_touches_m15": len(
+                    touch_times_m15
+                ),
+
+                "recent_touch_times_m15": touch_times_m15,
+
                 "timeframes":
                     timeframes,
 
@@ -630,6 +680,8 @@ def detect_support_resistance(
 
                 "last_touch":
                     last_touch.isoformat(),
+
+                "last_pivot_time": last_touch.isoformat(),
 
                 "strength":
                     _strength(

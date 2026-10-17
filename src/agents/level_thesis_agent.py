@@ -755,6 +755,38 @@ that BREAK remains favored now.
 If evidence is contradictory or insufficient,
 reduce confidence rather than inventing certainty.
 
+DIRECTIONAL EVIDENCE RULES:
+
+For SUPPORT:
+- Bearish EMA structure, negative returns and
+  weak bearish momentum may favor BREAK.
+- Bullish momentum may favor HOLD.
+- An important support is not proof of a bounce.
+
+For RESISTANCE:
+- Bullish EMA structure and positive returns
+  may favor BREAK.
+- Bearish momentum may favor HOLD.
+- An important resistance is not proof of rejection.
+
+Oversold or overbought RSI alone does not
+confirm a reversal.
+
+Higher-timeframe evidence provides context,
+not automatic confirmation on M5 or M15.
+
+Never include contradictory evidence as
+supporting evidence for a hypothesis.
+
+If technical evidence opposes the favored
+hypothesis, reflect that conflict in the scores
+and confidence.
+
+Do not invent supporting technical evidence
+to satisfy validation requirements.
+
+Keep HOLD and BREAK evidence lists separate.
+
 OUTPUT:
 
 Always return all five JSON fields:
@@ -1320,14 +1352,43 @@ Every evidence ID must exist in allowed_evidence_ids.
                 if item in level_evidence_ids
             ]
 
+            bullish_thesis = assessment.thesis in {
+                "SUPPORT_HOLD",
+                "RESISTANCE_BREAK",
+            }
+
+            bullish_markers = (
+                "_ABOVE_EMA",
+                "_STRUCTURE_BULLISH",
+                "_PARTIAL_BULLISH",
+                "_RSI_STRONG",
+                "_RETURN5_POSITIVE",
+            )
+
+            bearish_markers = (
+                "_BELOW_EMA",
+                "_STRUCTURE_BEARISH",
+                "_PARTIAL_BEARISH",
+                "_RSI_WEAK",
+                "_RETURN5_NEGATIVE",
+            )
+
+            direction_markers = (
+                bullish_markers
+                if bullish_thesis
+                else bearish_markers
+            )
+
             technical_ids_used = [
                 item
-
-                for item
-                in assessment.evidence_used
-
-                if item
-                in technical_evidence
+                for item in assessment.evidence_used
+                if (
+                    item in technical_evidence
+                    and any(
+                        marker in item
+                        for marker in direction_markers
+                    )
+                )
             ]
 
             if len(
