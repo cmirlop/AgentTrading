@@ -55,6 +55,12 @@ from src.orchestration.agent_bus import (
     AgentBus,
 )
 
+from tempfile import TemporaryDirectory
+
+from src.level_history_bridge import (
+    HistoricalLevelMemory,
+)
+
 
 SYMBOL = "USDCAD"
 
@@ -115,6 +121,23 @@ m15 = history[
     "M15"
 ]
 
+# Registro temporal exclusivo de este replay.
+# Nunca reutilizar uno creado con datos futuros.
+
+memory_directory = TemporaryDirectory(
+    prefix="level_history_replay_"
+)
+
+level_memory = HistoricalLevelMemory(
+    symbol=SYMBOL,
+    prepared_history=history,
+    registry_path=(
+        Path(memory_directory.name)
+        / "registry.json"
+    ),
+    replay_start=START,
+)
+
 
 decision_times = (
     m15.loc[
@@ -133,15 +156,6 @@ decision_times = (
 )
 
 decision_times = [
-    pd.Timestamp(
-        "2026-04-08T07:30:00+00:00"
-    ),
-    pd.Timestamp(
-        "2026-04-08T08:00:00+00:00"
-    ),
-    pd.Timestamp(
-        "2026-04-08T09:45:00+00:00"
-    ),
     pd.Timestamp(
         "2026-04-08T15:00:00+00:00"
     ),
@@ -246,17 +260,8 @@ for analysis_time in decision_times:
     # SUPPORT / RESISTANCE
     # ------------------------------------------------------
 
-    levels = (
-        detect_support_resistance(
-            symbol=
-                SYMBOL,
-
-            analysis_time=
-                analysis_time,
-
-            prepared_history=
-                history,
-        )
+    levels = level_memory.get_registered_levels(
+        analysis_time
     )
 
 
@@ -371,6 +376,25 @@ for analysis_time in decision_times:
     ] += 1
 
     level_started_at = perf_counter()
+
+    level_evidence = level_memory.attach_history(
+        level_evidence,
+        analysis_time,
+    )
+
+    if "level_history_llm" in level_evidence:
+
+        historical_report = level_evidence[
+            "level_history_llm"
+        ]
+
+        print(
+            "[LEVEL HISTORY]",
+            f"time={analysis_time.isoformat()}",
+            f"zone={historical_report['zone_id']}",
+            f"role={historical_report['current_role']}",
+            f"as_of={historical_report['as_of']}",
+        )
 
 
     # ------------------------------------------------------

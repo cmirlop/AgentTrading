@@ -158,6 +158,26 @@ def structured_chat(
             content,
         )
 
+
+    if schema.__name__ == "LevelHypothesisComparison":
+        if isinstance(response, dict):
+            message = response.get("message") or {}
+            thinking = message.get("thinking") or ""
+            done_reason = response.get("done_reason")
+            eval_duration = response.get("eval_duration")
+        else:
+            message = getattr(response, "message", None)
+            thinking = getattr(message, "thinking", None) or ""
+            done_reason = getattr(response, "done_reason", None)
+            eval_duration = getattr(response, "eval_duration", None)
+
+        print(
+            "[LLM THINKING DIAG]",
+            f"thinking_chars={len(thinking)}",
+            f"done_reason={done_reason}",
+            f"eval_seconds={(eval_duration or 0) / 1e9:.2f}",
+        )
+
     return (
         schema
         .model_validate_json(

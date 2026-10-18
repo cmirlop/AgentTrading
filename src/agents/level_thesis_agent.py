@@ -899,6 +899,50 @@ Return only valid structured JSON.
                         historical_macro_available,
                 }
 
+                # Memoria historica del nivel activo.
+                # Solo se incorpora si esta disponible
+                # y corresponde exactamente al nivel analizado.
+
+                level_history = level_evidence.get(
+                    "level_history_llm"
+                )
+
+                if level_history is not None:
+
+                    if not isinstance(level_history, dict):
+                        raise ValueError(
+                            "INVALID_LEVEL_HISTORY"
+                        )
+
+                    if (
+                        level_history.get("as_of")
+                        != context.analysis_time
+                    ):
+                        raise ValueError(
+                            "LEVEL_HISTORY_WRONG_TIME"
+                        )
+
+                    if (
+                        level_history.get("current_role")
+                        != active_level
+                    ):
+                        raise ValueError(
+                            "LEVEL_HISTORY_WRONG_ROLE"
+                        )
+
+                    if (
+                        not active_facts.get("zone_id")
+                        or level_history.get("zone_id")
+                        != active_facts.get("zone_id")
+                    ):
+                        raise ValueError(
+                            "LEVEL_HISTORY_WRONG_ZONE"
+                        )
+
+                    comparison_payload["level_history"] = (
+                        level_history
+                    )
+
                 if (
                     context.analysis_time
                     in {
@@ -926,6 +970,83 @@ Return only valid structured JSON.
                         comparison_payload,
                         width=120,
                     )
+
+
+                comparison_prompt += """
+HISTORICAL LEVEL MEMORY:
+
+If level_history is provided, use it as
+additional context for HOLD versus BREAK.
+
+The history describes the same price zone,
+but its historical role may have changed.
+
+INTERPRETATION:
+
+- retrospective_before_detection contains
+  past interactions found using the current
+  zone boundaries. The zone was not
+  necessarily known to the system then.
+
+- observed_since_detection contains events
+  recorded since the registry first identified
+  the zone in this replay.
+
+- Historical REJECTION and BREAK outcomes
+  describe completed past events. They do
+  not predict the current outcome.
+
+- Separate historical SUPPORT behavior from
+  historical RESISTANCE behavior.
+
+- Prefer comparisons with episodes where
+  historical_role matches active_level.
+
+HISTORICAL BREAK EXAMPLES:
+
+- market_at_first_contact describes conditions
+  observable when the level was first touched.
+
+- market_at_break_confirmation describes
+  conditions observed later, when the
+  historical breakout was confirmed.
+
+- Never treat confirmation indicators as
+  information available at first contact.
+
+Compare current trend, momentum, EMA and
+volatility with historical first-contact
+conditions when those data are available.
+
+Do not assume similar conditions guarantee
+the same outcome.
+
+SCORING:
+
+Historical counts are descriptive, not
+calibrated HOLD or BREAK probabilities.
+
+Do not calculate trading probabilities by
+dividing historical rejections or breaks
+by total contacts.
+
+Use historical behavior to contextualize
+current evidence, not replace it.
+
+If historical and current evidence disagree,
+reflect the conflict in scores and confidence.
+
+EVIDENCE:
+
+The history provides context, not new
+authorized evidence IDs.
+
+Use only allowed_evidence_ids for
+hold_evidence_used and break_evidence_used.
+
+Never invent evidence IDs from historical
+statistics or past episodes.
+"""
 
                 comparison_prompt += """
 Use a short, focused thinking process.

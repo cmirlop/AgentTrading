@@ -1,8 +1,8 @@
 """Contexto técnico de las rupturas históricas de una zona de precio.
 
 Paso 3.3, diagnóstico sin Ollama ni órdenes. Solo enriquece episodios BREAK
-ya confirmados por `analyze_zone_events` con indicadores conocidos AL CIERRE
-DE CONFIRMACIÓN de cada ruptura. Las franjas de precio históricas siguen
+ya confirmados por `analyze_zone_events` con dos instantáneas de indicadores:
+primer CONTACTO y cierre de CONFIRMACIÓN de la ruptura. Las franjas de precio históricas siguen
 siendo retrospectivas y no prueban que el nivel fuese conocido entonces.
 
 Uso futuro::
@@ -111,11 +111,12 @@ def _snapshot(view: pd.DataFrame, at: pd.Timestamp) -> dict:
 
 
 def add_break_contexts(report: dict, prepared_history: dict) -> dict:
-    """Añade contexto a BREAK al instante exacto de su confirmación.
+    """Añade contexto de BREAK al primer contacto y a su confirmación.
 
     No altera el reporte original ni rellena eventos sin ruptura confirmada.
-    En H1/H4/D1 toma la última vela CERRADA cuando ocurrió el evento;
-    nunca la vela que todavía estaba abierta.
+    En cada instante/TF toma la última vela CERRADA, nunca la abierta.
+    El contexto del primer contacto es observable después del cierre M15
+    de la vela de contacto; no es una señal predictiva antes de ese cierre.
     """
     cutoff = _utc(report["analysis_time"])
     views = {
@@ -130,16 +131,25 @@ def add_break_contexts(report: dict, prepared_history: dict) -> dict:
         if not when_raw:
             raise ValueError("BREAK_WITHOUT_RESOLUTION_TIMESTAMP")
         when = _utc(when_raw)
-        if when > cutoff or when < _utc(event["contact_at"]):
+        contact_at = _utc(event["contact_at"])
+        if when > cutoff or when < contact_at:
             raise ValueError("INVALID_BREAK_RESOLUTION_TIME")
+        event["context_at_first_contact"] = {
+            "observed_at": contact_at.isoformat(),
+            "timeframes": {
+                tf: _snapshot(views[tf], contact_at) for tf in TIMEFRAMES
+            },
+            "interpretation": "CONTEXT_OBSERVABLE_AFTER_CONTACT_BAR_CLOSED",
+        }
         event["context_at_break_confirmation"] = {
             "confirmed_at": when.isoformat(),
             "timeframes": {tf: _snapshot(views[tf], when) for tf in TIMEFRAMES},
             "interpretation": "TECHNICAL_CONTEXT_ONLY_NOT_CAUSAL_PROOF",
         }
-    enriched.setdefault("limitations", []).append(
-        "BREAK_CONTEXT_USES_CAUSAL_CLOSED_BARS_AT_CONFIRMATION"
-    )
+    enriched.setdefault("limitations", []).extend([
+        "BREAK_CONTEXT_USES_CAUSAL_CLOSED_BARS_AT_FIRST_CONTACT_AND_CONFIRMATION",
+        "CONTACT_CONTEXT_AVAILABLE_ONLY_AT_CONTACT_BAR_CLOSE",
+    ])
     return enriched
 
 
@@ -177,12 +187,17 @@ def _self_test():
     result = add_break_contexts(report, history)
     event = result["events"][0]
     snapshots = event["context_at_break_confirmation"]["timeframes"]
+    before = event["context_at_first_contact"]["timeframes"]
+    assert before["M15"]["bar_close"] == "2026-04-08T00:15:00+00:00"
+    assert before["H1"]["bar_close"] == "2026-04-08T00:00:00+00:00"
     assert snapshots["M15"]["bar_close"] == "2026-04-08T00:45:00+00:00"
     assert snapshots["H1"]["bar_close"] == "2026-04-08T00:00:00+00:00"
     assert snapshots["H4"]["bar_close"] == "2026-04-08T00:00:00+00:00"
     assert snapshots["D1"]["bar_close"] == "2026-04-08T00:00:00+00:00"
     assert "context_at_break_confirmation" not in result["events"][1]
+    assert "context_at_first_contact" not in result["events"][1]
     assert "context_at_break_confirmation" not in report["events"][0]
+    assert "context_at_first_contact" not in report["events"][0]
 
     # Eliminar explícitamente las velas posteriores no cambia el informe.
     trimmed = {
@@ -197,7 +212,8 @@ def _self_test():
     latest = add_break_contexts(report_2, history)["events"][0]
     assert latest["context_at_break_confirmation"]["timeframes"]["H1"]["bar_close"] == "2026-04-08T01:00:00+00:00"
 
-    print("OK: contexto de ruptura sin velas futuras ni temporalidades abiertas")
+    print("OK: contexto en contacto y ruptura, sin velas futuras ni TF abiertos")
+    print("M15 primer contacto:", before["M15"]["bar_close"])
     print("M15 ruptura:", snapshots["M15"]["bar_close"])
     print("H1 disponible:", snapshots["H1"]["bar_close"])
     print("H4 disponible:", snapshots["H4"]["bar_close"])
