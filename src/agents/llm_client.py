@@ -9,6 +9,13 @@ from config.agent_config import (
     OLLAMA_TEMPERATURE,
 )
 
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(
+    Path(__file__).resolve().parents[2] / ".env",
+    override=True,
+)
 
 def _extract_content(
     response,
@@ -37,6 +44,15 @@ def structured_chat(
     system_prompt,
     payload,
 ):
+    # DEEPSEEK_PROVIDER_SWITCH_V1
+    import os
+    _provider = os.environ.get("LLM_PROVIDER", "ollama").strip().lower()
+    if _provider == "deepseek":
+        from src.agents.deepseek_client import deepseek_structured_chat
+        return deepseek_structured_chat(schema, system_prompt, payload)
+    if _provider != "ollama":
+        raise ValueError("LLM_PROVIDER debe ser ollama o deepseek")
+
 
     
     output_schema = schema.model_json_schema()

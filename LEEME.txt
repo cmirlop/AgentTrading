@@ -1,0 +1,34 @@
+INTEGRACIÓN OPCIONAL DEEPSEEK FLASH PARA AGENTTRADING
+==================================================
+
+Esta integración no cambia los agentes, validadores ni las reglas de trading.
+Mantiene Ollama como predeterminado y usa DeepSeek solo con LLM_PROVIDER=deepseek.
+
+1. Extraer los archivos del ZIP EN LA RAÍZ del proyecto AgentTrading.
+2. Instalar la librería en el entorno virtual: python -m pip install -U openai
+3. Instalar el puente: python integrar_deepseek.py
+4. Prueba sin red: python test_deepseek_integration.py
+
+Para usar la API en la sesión de PowerShell, introducir la clave sin escribirla en
+la línea de comandos (evita guardarla en el historial):
+
+$clave = Read-Host "Clave de DeepSeek" -AsSecureString
+$ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($clave)
+try { $env:DEEPSEEK_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) } finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
+Remove-Variable clave,ptr -ErrorAction SilentlyContinue
+$env:LLM_PROVIDER = "deepseek"
+$env:DEEPSEEK_REASONING_EFFORT = "low"
+
+La clave nunca se guarda en los archivos del proyecto.
+Ejecutar python run_level_thesis_batch.py con un único decision_time
+para la primera prueba real. Esa llamada sí es facturable.
+
+Volver a Ollama: $env:LLM_PROVIDER = "ollama"
+
+Notas:
+- Usa Chat Completions, modelo deepseek-flash, JSON mode y validación Pydantic.
+- En LevelHypothesisComparison activa thinking 'low'; en los demás lo desactiva.
+- Falla cerrado si el modelo no produce JSON completo, válido o IDs permitidos.
+- No registra el texto del razonamiento, ni la clave ni los datos completos enviados.
+- Registra uso de tokens, tiempo y JSON final del comparador.
+- No se realizan operaciones reales.
