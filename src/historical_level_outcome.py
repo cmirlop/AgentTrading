@@ -303,6 +303,14 @@ def evaluate_level_thesis(
         level_touched_before_future
     )
 
+    actual_outcome = (
+        "UNRESOLVED"
+    )
+
+    event_time = None
+
+    event_bar = None
+
     for _, row in (
         future.iterrows()
     ):
@@ -519,14 +527,6 @@ def evaluate_level_thesis(
                 .isoformat()
             )
 
-    actual_outcome = (
-        "UNRESOLVED"
-    )
-
-    event_time = None
-
-    event_bar = None
-
     min_low = float(
         future[
             "low"
@@ -538,171 +538,6 @@ def evaluate_level_thesis(
             "high"
         ].max()
     )
-
-    for _, row in (
-        future.iterrows()
-    ):
-
-        low = float(
-            row[
-                "low"
-            ]
-        )
-
-        high = float(
-            row[
-                "high"
-            ]
-        )
-
-        if level_type == "SUPPORT":
-
-            break_hit = (
-                low
-                <=
-                break_threshold
-            )
-
-            hold_hit = (
-                high
-                >=
-                hold_threshold
-            )
-
-        else:
-
-            break_hit = (
-                high
-                >=
-                break_threshold
-            )
-
-            hold_hit = (
-                low
-                <=
-                hold_threshold
-            )
-
-        if (
-            break_hit
-            and
-            hold_hit
-        ):
-
-            actual_outcome = (
-                "AMBIGUOUS"
-            )
-
-            event_time = (
-                _utc(
-                    row[
-                        "time"
-                    ]
-                )
-                .isoformat()
-            )
-
-            event_bar = {
-                "open":
-                    float(
-                        row[
-                            "open"
-                        ]
-                    ),
-
-                "high":
-                    high,
-
-                "low":
-                    low,
-
-                "close":
-                    float(
-                        row[
-                            "close"
-                        ]
-                    ),
-            }
-
-            break
-
-        if break_hit:
-
-            actual_outcome = (
-                "BREAK"
-            )
-
-            event_time = (
-                _utc(
-                    row[
-                        "time"
-                    ]
-                )
-                .isoformat()
-            )
-
-            event_bar = {
-                "open":
-                    float(
-                        row[
-                            "open"
-                        ]
-                    ),
-
-                "high":
-                    high,
-
-                "low":
-                    low,
-
-                "close":
-                    float(
-                        row[
-                            "close"
-                        ]
-                    ),
-            }
-
-            break
-
-        if hold_hit:
-
-            actual_outcome = (
-                "HOLD"
-            )
-
-            event_time = (
-                _utc(
-                    row[
-                        "time"
-                    ]
-                )
-                .isoformat()
-            )
-
-            event_bar = {
-                "open":
-                    float(
-                        row[
-                            "open"
-                        ]
-                    ),
-
-                "high":
-                    high,
-
-                "low":
-                    low,
-
-                "close":
-                    float(
-                        row[
-                            "close"
-                        ]
-                    ),
-            }
-
-            break
 
     if actual_outcome in {
         "HOLD",
