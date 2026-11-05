@@ -160,7 +160,13 @@ class PortfolioExposureTests(unittest.TestCase):
             self.assertTrue(first["approved"], first["errors"])
             self.assertFalse(second["approved"])
             self.assertIn("DUPLICATE_PROPOSAL", second["errors"])
-            self.assertTrue(release_plan_risk_reservation(plan, state_path=state_path))
+            self.assertFalse(release_plan_risk_reservation(plan, state_path=state_path))
+            self.assertFalse(release_plan_risk_reservation(
+                plan, state_path=state_path, reservation_token="wrong-owner"
+            ))
+            self.assertTrue(release_plan_risk_reservation(
+                plan, state_path=state_path, reservation_token=first["reservation_token"]
+            ))
             self.assertTrue(evaluate_plan_risk(plan, runtime, state_path=state_path)["approved"])
 
     def test_preflight_rejects_unavailable_runtime_snapshot(self):

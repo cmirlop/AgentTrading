@@ -7,7 +7,10 @@ import logging
 import os
 from time import perf_counter
 
-from openai import OpenAI
+try:
+    from openai import OpenAI
+except ImportError:  # Offline validation can import this adapter without the SDK.
+    OpenAI = None
 
 
 LOGGER = logging.getLogger("agenttrading.llm")
@@ -41,6 +44,34 @@ def _schema_with_allowed_evidence(schema, payload):
     return output_schema, ids, fields
 
 
+def _api_failure_code(exc):
+    """Classify API failures without exposing provider text or credentials."""
+    name = type(exc).__name__
+    raw_status = getattr(exc, "status_code", None)
+    try:
+        status = int(raw_status) if raw_status is not None else None
+    except (TypeError, ValueError):
+        status = None
+
+    if status == 401 or name == "AuthenticationError":
+        return "LLM_AUTHENTICATION_REJECTED"
+    if status == 403 or name == "PermissionDeniedError":
+        return "LLM_PROVIDER_PERMISSION_DENIED"
+    if status == 404 or name == "NotFoundError":
+        return "LLM_PROVIDER_MODEL_OR_ENDPOINT_NOT_FOUND"
+    if status == 429 or name == "RateLimitError":
+        return "LLM_PROVIDER_RATE_LIMITED"
+    if name == "APITimeoutError":
+        return "LLM_TIMEOUT"
+    if name == "APIConnectionError":
+        return "LLM_PROVIDER_CONNECTION_FAILED"
+    if status is not None and 400 <= status < 500:
+        return "LLM_PROVIDER_REQUEST_REJECTED"
+    if status is not None and status >= 500:
+        return "LLM_PROVIDER_SERVER_ERROR"
+    return "LLM_API_ERROR"
+
+
 def deepseek_structured_chat(
     schema,
     system_prompt,
@@ -49,6 +80,7 @@ def deepseek_structured_chat(
     model=None,
     timeout_seconds=None,
     max_tokens=None,
+    return_metadata=False,
 ):
     """Generate and validate one structured response; retries remain disabled."""
     api_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
@@ -81,6 +113,8 @@ def deepseek_structured_chat(
         + "Follow this JSON Schema exactly, including all required fields:\n"
         + json.dumps(output_schema, ensure_ascii=False, separators=(",", ":"))
     )
+    if OpenAI is None:
+        raise RuntimeError("LLM_PROVIDER_DEPENDENCY_MISSING")
     client = OpenAI(
         api_key=api_key,
         base_url="https://api.deepseek.com",
@@ -105,7 +139,21 @@ def deepseek_structured_chat(
         kwargs["temperature"] = 0.0
 
     started = perf_counter()
-    response = client.chat.completions.create(**kwargs)
+    try:
+        response = client.chat.completions.create(**kwargs)
+    except Exception as exc:
+        error_code = _api_failure_code(exc)
+        status = getattr(exc, "status_code", None)
+        try:
+            status = int(status) if status is not None else None
+        except (TypeError, ValueError):
+            status = None
+        LOGGER.warning(
+            "DeepSeek provider request failed error=%s http_status=%s",
+            error_code,
+            status,
+        )
+        raise RuntimeError(error_code) from None
     if not response.choices:
         raise RuntimeError("LLM_EMPTY_RESPONSE")
     choice = response.choices[0]
@@ -129,6 +177,12 @@ def deepseek_structured_chat(
     result = schema.model_validate_json(content)
     usage = getattr(response, "usage", None)
     details = getattr(usage, "completion_tokens_details", None)
+    metadata = {
+        "provider_reported_model": getattr(response, "model", None),
+        "prompt_tokens": getattr(usage, "prompt_tokens", None),
+        "completion_tokens": getattr(usage, "completion_tokens", None),
+        "reasoning_tokens": getattr(details, "reasoning_tokens", None),
+    }
     LOGGER.info(
         "DeepSeek response model=%s schema=%s prompt_tokens=%s completion_tokens=%s "
         "reasoning_tokens=%s elapsed_seconds=%.3f",
@@ -139,4 +193,4 @@ def deepseek_structured_chat(
         getattr(details, "reasoning_tokens", None),
         perf_counter() - started,
     )
-    return result
+    return (result, metadata) if return_metadata else result

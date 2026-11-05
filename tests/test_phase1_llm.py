@@ -91,6 +91,16 @@ class LLMProviderTests(unittest.TestCase):
                 deepseek_structured_chat(Answer, "system", self.payload)
         self.assertEqual(str(raised.exception), "LLM_API_KEY_MISSING")
 
+    def test_missing_deepseek_sdk_fails_closed(self):
+        with patch.dict(os.environ, {
+            "LLM_PROVIDER": "deepseek",
+            "DEEPSEEK_API_KEY": "unit-test-only",
+        }):
+            with patch.object(llm_client.deepseek_client, "OpenAI", None):
+                with self.assertRaises(LLMProviderError) as raised:
+                    structured_chat(Answer, "system", self.payload)
+        self.assertEqual(raised.exception.code, "LLM_PROVIDER_DEPENDENCY_MISSING")
+
     def test_invalid_json_is_rejected(self):
         client = FakeOllama(_response("not-json"))
         with patch.dict(os.environ, {"LLM_PROVIDER": "ollama"}):

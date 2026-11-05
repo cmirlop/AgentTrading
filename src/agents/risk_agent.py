@@ -395,7 +395,10 @@ class RiskAgent:
             ] = "REJECTED"
 
         if not validation.get("approved") and portfolio_risk.get("reservation_id"):
-            release_plan_risk_reservation(plan)
+            release_plan_risk_reservation(
+                plan,
+                reservation_token=portfolio_risk.get("reservation_token"),
+            )
 
         return bus.publish(
             agent=

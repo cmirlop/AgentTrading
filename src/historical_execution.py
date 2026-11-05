@@ -16,10 +16,12 @@ from config.risk_config import LOT_SIZE
 def _settlement(result, gross_r, fill_time, exit_time, release_time, *,
                 plan, point, scenario, risk_amount_eur, filled):
     costs = COST_SCENARIOS[scenario]
-    closed = result in {"WIN", "LOSS"}
-    sides = 2 if closed else 1 if filled else 0
+    round_turn = result in {
+        "WIN", "LOSS", "AMBIGUOUS_ENTRY_BAR", "AMBIGUOUS_BOTH", "AMBIGUOUS_EXPIRY_BAR",
+    }
+    sides = 2 if round_turn else 1 if filled else 0
     volume = float(plan.get("volume", LOT_SIZE))
-    commission_factor = 1.0 if closed else 0.5 if filled else 0.0
+    commission_factor = 1.0 if round_turn else 0.5 if filled else 0.0
     commission_eur = costs["commission_eur_per_lot_round_turn"] * volume * commission_factor
     slippage_price = costs["slippage_points_per_side"] * point * sides
     risk_distance = abs(float(plan["entry"]) - float(plan["stop_loss"]))
@@ -27,14 +29,19 @@ def _settlement(result, gross_r, fill_time, exit_time, release_time, *,
     commission_r = commission_eur / float(risk_amount_eur) if risk_amount_eur and float(risk_amount_eur) > 0 else (0.0 if commission_eur == 0 else None)
     cost_r = None if slippage_r is None or commission_r is None else slippage_r + commission_r
     net_r = gross_r - cost_r if gross_r is not None and cost_r is not None else None
-    cost_eur = commission_eur + (slippage_r * float(risk_amount_eur) if slippage_r is not None and risk_amount_eur else 0.0)
+    slippage_eur = (
+        slippage_r * float(risk_amount_eur)
+        if slippage_r is not None and risk_amount_eur is not None and float(risk_amount_eur) > 0
+        else 0.0 if slippage_r == 0 else None
+    )
+    cost_eur = commission_eur + slippage_eur if slippage_eur is not None else None
     return {
         "result": result,
         "r": gross_r,
         "gross_r": gross_r,
         "net_r": net_r,
         "transaction_cost_r": cost_r,
-        "transaction_cost_eur": round(cost_eur, 8) if risk_amount_eur is not None or cost_eur == 0 else None,
+        "transaction_cost_eur": round(cost_eur, 8) if cost_eur is not None else None,
         "commission_eur": round(commission_eur, 8),
         "slippage_points": costs["slippage_points_per_side"] * sides,
         "spread_model": "HISTORICAL_BID_ASK_EMBEDDED",
@@ -85,6 +92,33 @@ def simulate_trade(
     point = SYMBOL_POINT[
         symbol
     ]
+
+    if "spread" not in m5_history.columns:
+        raise ValueError("HISTORICAL_SPREAD_UNAVAILABLE")
+    required_columns = {"time", "bar_close", "high", "low"}
+    missing_columns = sorted(required_columns - set(m5_history.columns))
+    if missing_columns:
+        raise ValueError("HISTORICAL_EXECUTION_COLUMNS_MISSING")
+    if not m5_history["time"].is_monotonic_increasing or m5_history["time"].duplicated().any():
+        raise ValueError("HISTORICAL_BARS_NOT_STRICTLY_CHRONOLOGICAL")
+    if m5_history[["time", "bar_close"]].isna().any().any():
+        raise ValueError("HISTORICAL_BAR_TIME_INVALID")
+    if (m5_history["bar_close"] < m5_history["time"]).any():
+        raise ValueError("HISTORICAL_BAR_CLOSE_BEFORE_OPEN")
+    if direction not in {"BUY", "SELL"}:
+        raise ValueError("DIRECTION_INVALID")
+    if order_type not in {"BUY_LIMIT", "BUY_STOP", "SELL_LIMIT", "SELL_STOP"}:
+        raise ValueError("ORDER_TYPE_INVALID")
+    try:
+        numeric_plan = [float(entry), float(sl), float(tp), float(plan.get("volume", LOT_SIZE))]
+    except (TypeError, ValueError):
+        raise ValueError("TRADE_PLAN_NUMERIC_DATA_INVALID") from None
+    if not all(isfinite(value) for value in numeric_plan) or numeric_plan[3] <= 0:
+        raise ValueError("TRADE_PLAN_NUMERIC_DATA_INVALID")
+    if (direction == "BUY" and not (float(sl) < float(entry) < float(tp))) or (
+        direction == "SELL" and not (float(tp) < float(entry) < float(sl))
+    ):
+        raise ValueError("TRADE_PLAN_PRICE_ORDER_INVALID")
 
     if "spread" not in m5_history.columns:
         raise ValueError("HISTORICAL_SPREAD_UNAVAILABLE")
@@ -232,7 +266,20 @@ def simulate_trade(
                 )
 
             if not trigger:
+                if bar_close_time >= expiration:
+                    return _settlement(
+                        "EXPIRED", 0.0, None, expiration, expiration,
+                        plan=plan, point=point, scenario=cost_scenario,
+                        risk_amount_eur=risk_amount_eur, filled=False,
+                    )
                 continue
+
+            if bar_close_time >= expiration:
+                return _settlement(
+                    "AMBIGUOUS_EXPIRY_BAR", None, bar_open_time, bar_close_time, bar_close_time,
+                    plan=plan, point=point, scenario=cost_scenario, risk_amount_eur=risk_amount_eur,
+                    filled=True,
+                )
 
             filled = True
 
@@ -332,8 +379,14 @@ def simulate_trade(
 
     # Final del histórico.
     final_time = m5_history["bar_close"].iloc[-1]
+    if not filled and final_time >= expiration:
+        return _settlement(
+            "EXPIRED", 0.0, None, expiration, expiration,
+            plan=plan, point=point, scenario=cost_scenario,
+            risk_amount_eur=risk_amount_eur, filled=False,
+        )
     return _settlement(
-        "OPEN_AT_END" if filled else "EXPIRED_AT_END", None, fill_time, final_time, final_time,
+        "OPEN_AT_END" if filled else "PENDING_AT_END", None, fill_time, final_time, final_time,
         plan=plan, point=point, scenario=cost_scenario,
         risk_amount_eur=risk_amount_eur, filled=filled,
     )

@@ -212,7 +212,10 @@ class DecisionAgent:
 
         reservation_id = (risk.get("portfolio_risk") or {}).get("reservation_id")
         if not approved and reservation_id and plan.get("status") == "VALID":
-            release_plan_risk_reservation(plan)
+            release_plan_risk_reservation(
+                plan,
+                reservation_token=(risk.get("portfolio_risk") or {}).get("reservation_token"),
+            )
 
         return bus.publish(
             agent=
