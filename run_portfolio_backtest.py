@@ -36,6 +36,7 @@ from src.historical_execution import (
 from src.historical_risk import (
     estimate_loss_eur,
 )
+from config.backtest_cost_config import COST_SCENARIOS
 
 
 BASE_DIR = (
@@ -81,6 +82,29 @@ def max_drawdown(
     return max_dd
 
 
+def _group_performance(df, column):
+    if df.empty or column not in df:
+        return {}
+    result = {}
+    for key, group in df.groupby(column, dropna=False):
+        closed = group[group["result"].isin(["WIN", "LOSS"])]
+        net = closed["net_pnl_eur"].dropna() if "net_pnl_eur" in closed else pd.Series(dtype=float)
+        positive = float(net[net > 0].sum()) if len(net) else 0.0
+        negative = abs(float(net[net < 0].sum())) if len(net) else 0.0
+        result[str(key)] = {
+            "proposed": int(len(group)),
+            "executed": int(group["fill_time"].notna().sum()) if "fill_time" in group else 0,
+            "closed": int(len(closed)),
+            "gross_pnl_eur": round(float(closed["gross_pnl_eur"].sum()), 2) if "gross_pnl_eur" in closed else 0.0,
+            "costs_eur": round(float(closed["transaction_cost_eur"].fillna(0).sum()), 2) if "transaction_cost_eur" in closed else 0.0,
+            "costs_incurred_eur": round(float(group["transaction_cost_eur"].fillna(0).sum()), 2) if "transaction_cost_eur" in group else 0.0,
+            "net_pnl_eur": round(float(net.sum()), 2) if len(net) else 0.0,
+            "net_win_rate": round(float((net > 0).sum()) / len(net), 4) if len(net) else None,
+            "net_profit_factor": round(positive / negative, 3) if negative else None,
+        }
+    return result
+
+
 def summarize(
     trades,
 ):
@@ -95,6 +119,7 @@ def summarize(
             "signals_taken": 0,
             "resolved": 0,
             "gross_pnl_eur": 0.0,
+            "net_pnl_eur": 0.0,
         }
 
     resolved = df[
@@ -140,11 +165,25 @@ def summarize(
         ].sum()
     )
 
+    net_pnl = float(resolved["net_pnl_eur"].sum()) if "net_pnl_eur" in resolved else gross_pnl
+    costs = float(resolved["transaction_cost_eur"].fillna(0).sum()) if "transaction_cost_eur" in resolved else 0.0
+    costs_incurred = float(df["transaction_cost_eur"].fillna(0).sum()) if "transaction_cost_eur" in df else 0.0
+    net_wins = resolved[resolved["net_pnl_eur"] > 0] if "net_pnl_eur" in resolved else wins
+    net_losses = resolved[resolved["net_pnl_eur"] < 0] if "net_pnl_eur" in resolved else losses
+    net_gross_profit = float(net_wins["net_pnl_eur"].sum()) if "net_pnl_eur" in resolved else gross_profit
+    net_gross_loss = abs(float(net_losses["net_pnl_eur"].sum())) if "net_pnl_eur" in resolved else gross_loss
+
     return {
         "signals_taken":
             int(
                 len(df)
             ),
+
+        "orders_executed":
+            int(df["fill_time"].notna().sum()) if "fill_time" in df else 0,
+
+        "closed_trades":
+            int(len(resolved)),
 
         "resolved":
             int(
@@ -161,13 +200,13 @@ def summarize(
                 len(losses)
             ),
 
-        "expired":
-            int(
-                (
-                    df["result"]
-                    == "EXPIRED"
-                ).sum()
-            ),
+        "expired": int(df["result"].eq("EXPIRED").sum()),
+
+        "expired_at_end": int(df["result"].eq("EXPIRED_AT_END").sum()),
+
+        "open_at_end": int(df["result"].eq("OPEN_AT_END").sum()),
+
+        "pending_at_end": int(df["result"].eq("PENDING_AT_END").sum()),
 
         "ambiguous":
             int(
@@ -195,6 +234,20 @@ def summarize(
                 gross_pnl,
                 2,
             ),
+
+        "transaction_costs_eur": round(costs, 2),
+
+        "costs_incurred_eur": round(costs_incurred, 2),
+
+        "net_pnl_eur": round(net_pnl, 2),
+
+        "net_win_rate": round(len(net_wins) / len(resolved), 4) if len(resolved) else None,
+
+        "net_expectancy_eur": round(net_pnl / len(resolved), 3) if len(resolved) else None,
+
+        "net_profit_factor": round(net_gross_profit / net_gross_loss, 3) if net_gross_loss > 0 else None,
+
+        "net_max_drawdown_eur": round(max_drawdown(resolved["net_pnl_eur"].tolist()), 2) if len(resolved) and "net_pnl_eur" in resolved else None,
 
         "expectancy_eur":
             (
@@ -231,6 +284,10 @@ def summarize(
                 if len(resolved)
                 else None
             ),
+
+        "by_symbol_metrics": _group_performance(df, "symbol"),
+        "by_session_metrics": _group_performance(df, "session_utc"),
+        "by_setup_metrics": _group_performance(df, "mode"),
     }
 
 
@@ -240,6 +297,7 @@ def run_scenario(
     signals,
     prepared,
     period_end,
+    cost_scenario="BASE",
 ):
 
     eligible = signals[
@@ -332,7 +390,9 @@ def run_scenario(
     skipped_symbol_busy = 0
     skipped_global_slots = 0
     plan_rejections = 0
+    plan_rejection_reasons = {}
     risk_rejections = 0
+    risk_rejection_reasons = {}
 
     for _, signal in (
         eligible.iterrows()
@@ -435,6 +495,8 @@ def run_scenario(
         ):
 
             plan_rejections += 1
+            for reason in (plan.get("errors") or [plan.get("error") or "PLAN_REJECTED"]):
+                plan_rejection_reasons[reason] = plan_rejection_reasons.get(reason, 0) + 1
             continue
 
         # ==============================================
@@ -458,6 +520,7 @@ def run_scenario(
         ):
 
             risk_rejections += 1
+            risk_rejection_reasons["MAX_LOSS_EXCEEDED"] = risk_rejection_reasons.get("MAX_LOSS_EXCEEDED", 0) + 1
             continue
 
         # ==============================================
@@ -472,6 +535,8 @@ def run_scenario(
                     m5_by_symbol[
                         symbol
                     ],
+                cost_scenario=cost_scenario,
+                risk_amount_eur=estimated_loss,
             )
         )
 
@@ -559,6 +624,27 @@ def run_scenario(
                 "gross_pnl_eur":
                     pnl_eur,
 
+                "gross_r":
+                    r_value,
+
+                "net_r":
+                    execution.get("net_r"),
+
+                "transaction_cost_r":
+                    execution.get("transaction_cost_r"),
+
+                "transaction_cost_eur":
+                    execution.get("transaction_cost_eur"),
+
+                "net_pnl_eur":
+                    execution.get("net_r") * estimated_loss if execution.get("net_r") is not None else None,
+
+                "cost_scenario":
+                    execution.get("cost_scenario"),
+
+                "session_utc":
+                    "ASIA" if signal_time.hour < 7 else "EUROPE" if signal_time.hour < 13 else "US" if signal_time.hour < 21 else "ROLLOVER",
+
                 "fill_time":
                     execution[
                         "fill_time"
@@ -589,6 +675,13 @@ def run_scenario(
     summary[
         "plan_rejections"
     ] = plan_rejections
+
+    summary["plan_rejection_reasons"] = plan_rejection_reasons
+    summary["risk_rejection_reasons"] = risk_rejection_reasons
+    summary["opportunities_detected"] = int(len(eligible))
+    summary["accepted_plans"] = len(trades)
+    summary["rejected_plans"] = plan_rejections + risk_rejections
+    summary["cost_scenario"] = cost_scenario
 
     summary[
         "risk_rejections"
@@ -635,6 +728,17 @@ def main():
         default="portfolio",
     )
 
+    parser.add_argument(
+        "--cost-scenario",
+        choices=["BASE", "CONSERVATIVE", "STRESS"],
+        default="BASE",
+    )
+
+    parser.add_argument(
+        "--output-dir",
+        default=str(BACKTEST_DIR),
+    )
+
     args = parser.parse_args()
 
     scan_path = (
@@ -670,9 +774,7 @@ def main():
         "LLM: NO"
     )
 
-    print(
-        "Comision/slippage: NO"
-    )
+    print("Cost scenario:", args.cost_scenario)
 
     signals = pd.read_csv(
         scan_path,
@@ -756,7 +858,10 @@ def main():
                         prepared,
 
                     period_end=
-                        period_end, 
+                        period_end,
+
+                    cost_scenario=
+                        args.cost_scenario,
                 )
             )
 
@@ -828,15 +933,11 @@ def main():
         summaries
     )
 
-    trades_path = (
-        BACKTEST_DIR
-        / f"{args.name}_trades.csv"
-    )
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    trades_path = output_dir / f"{args.name}_trades.csv"
 
-    summary_path = (
-        BACKTEST_DIR
-        / f"{args.name}_summary.csv"
-    )
+    summary_path = output_dir / f"{args.name}_summary.csv"
 
     trades_df.to_csv(
         trades_path,
@@ -876,11 +977,17 @@ def main():
         "llm_included":
             False,
 
+        "cost_scenario":
+            args.cost_scenario,
+
         "commission_included":
-            False,
+            args.cost_scenario != "BASE",
 
         "slippage_included":
-            False,
+            args.cost_scenario != "BASE",
+
+        "cost_assumptions":
+            COST_SCENARIOS[args.cost_scenario],
 
         "period_start":
             period_start.isoformat(),
@@ -895,10 +1002,7 @@ def main():
             str(scan_path),
     }
 
-    metadata_path = (
-        BACKTEST_DIR
-        / f"{args.name}_metadata.json"
-    )
+    metadata_path = output_dir / f"{args.name}_metadata.json"
 
     with open(
         metadata_path,

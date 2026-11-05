@@ -7,7 +7,14 @@ from config.operational_config import (
 from config.risk_config import (
     LOT_SIZE,
     MAX_LOSS_PER_TRADE_EUR,
+    MAX_RISK_PER_TRADE_PERCENT,
     MAX_SPREAD_POINTS_BY_SYMBOL,
+    RISK_REFERENCE,
+)
+from config.market_config import SYMBOLS
+from src.risk_engine import (
+    calculate_position_size,
+    convert_currency,
 )
 
 from config.trade_planner_config import (
@@ -183,6 +190,20 @@ def parse_utc_datetime(
     return dt.astimezone(
         timezone.utc
     )
+
+
+def _conversion_rates():
+    """Read only current symbol mid-rates needed for account-currency math."""
+    rates = {}
+    for fx_symbol in SYMBOLS:
+        fx_tick = mt5.symbol_info_tick(fx_symbol)
+        if fx_tick is None:
+            continue
+        bid = float(getattr(fx_tick, "bid", 0) or 0)
+        ask = float(getattr(fx_tick, "ask", 0) or 0)
+        if bid > 0 and ask >= bid:
+            rates[fx_symbol] = (bid + ask) / 2.0
+    return rates
 
 # ==========================================================
 # PLAN
@@ -436,12 +457,6 @@ def build_trade_plan(
     # ======================================================
     # VOLUMEN
     # ======================================================
-
-    errors.extend(
-        validate_volume(
-            info
-        )
-    )
 
     # ======================================================
     # M15
@@ -874,76 +889,70 @@ def build_trade_plan(
         else mt5.ORDER_TYPE_SELL
     )
 
-    loss_result = (
-        mt5.order_calc_profit(
-            calc_action,
-            symbol,
-            LOT_SIZE,
-            entry,
-            stop_loss,
-        )
+    # Size from the actual stop distance and the symbol's broker metadata.
+    rates = _conversion_rates()
+    metadata = {
+        "trade_tick_size": getattr(info, "trade_tick_size", None),
+        "trade_tick_value_loss": getattr(info, "trade_tick_value_loss", None),
+        "trade_tick_value_loss_currency": account.currency,
+        "trade_contract_size": getattr(info, "trade_contract_size", None),
+        "currency_base": getattr(info, "currency_base", None),
+        "currency_profit": getattr(info, "currency_profit", None),
+        "volume_min": getattr(info, "volume_min", None),
+        "volume_max": getattr(info, "volume_max", None),
+        "volume_step": getattr(info, "volume_step", None),
+    }
+    sizing = calculate_position_size(
+        symbol=symbol,
+        direction=direction,
+        entry=entry,
+        stop_loss=stop_loss,
+        equity=getattr(account, "equity", None),
+        balance=getattr(account, "balance", None),
+        account_currency=getattr(account, "currency", None),
+        symbol_metadata=metadata,
+        conversion_rates=rates,
+        max_risk_percent=MAX_RISK_PER_TRADE_PERCENT,
+        max_loss_absolute=MAX_LOSS_PER_TRADE_EUR,
+        max_loss_currency="EUR",
+        risk_reference=RISK_REFERENCE,
     )
+    if sizing["status"] != "VALID":
+        return {"symbol": symbol, "status": "REJECTED", "errors": sizing["errors"], "risk_sizing": sizing}
+    volume = sizing["volume"]
 
-    profit_result = (
-        mt5.order_calc_profit(
-            calc_action,
-            symbol,
-            LOT_SIZE,
-            entry,
-            take_profit,
-        )
+    loss_result = mt5.order_calc_profit(
+        calc_action, symbol, volume, entry, stop_loss
     )
-
-    margin_required = (
-        mt5.order_calc_margin(
-            calc_action,
-            symbol,
-            LOT_SIZE,
-            entry,
-        )
+    profit_result = mt5.order_calc_profit(
+        calc_action, symbol, volume, entry, take_profit
     )
-
-    # ======================================================
-    # VALIDAR CALCULOS
-    # ======================================================
-
-    if loss_result is None:
-
-        errors.append(
-            "LOSS_CALC_FAILED"
-        )
-
-    if profit_result is None:
-
-        errors.append(
-            "PROFIT_CALC_FAILED"
-        )
-
-    if margin_required is None:
-
-        errors.append(
-            "MARGIN_CALC_FAILED"
-        )
-
-    if errors:
-
+    margin_required = mt5.order_calc_margin(
+        calc_action, symbol, volume, entry
+    )
+    if loss_result is None or profit_result is None or margin_required is None:
         return {
             "symbol": symbol,
             "status": "REJECTED",
-            "errors": errors,
+            "errors": ["MT5_MONETARY_CALCULATION_UNAVAILABLE"],
         }
-
-    estimated_loss_eur = abs(
-        float(loss_result)
-    )
-
-    estimated_profit_eur = abs(
-        float(profit_result)
-    )
-
-    margin_required = float(
-        margin_required
-    )
+    loss_account = abs(float(loss_result))
+    profit_account = abs(float(profit_result))
+    try:
+        estimated_loss_eur = convert_currency(loss_account, account.currency, "EUR", rates)
+        estimated_profit_eur = convert_currency(profit_account, account.currency, "EUR", rates)
+        margin_required_eur = convert_currency(float(margin_required), account.currency, "EUR", rates)
+        free_margin_eur = convert_currency(float(account.margin_free), account.currency, "EUR", rates)
+    except (TypeError, ValueError):
+        return {"symbol": symbol, "status": "REJECTED", "errors": ["ACCOUNT_TO_EUR_CONVERSION_UNAVAILABLE"]}
+    margin_required = float(margin_required)
+    if loss_account > sizing["risk_budget_account"] + max(1e-8, sizing["risk_budget_account"] * 1e-9):
+        return {
+            "symbol": symbol,
+            "status": "REJECTED",
+            "errors": ["MT5_LOSS_EXCEEDS_CALCULATED_RISK_BUDGET"],
+            "risk_sizing": sizing,
+        }
 
     # ======================================================
     # REGLAS RIESGO
@@ -1061,7 +1070,7 @@ def build_trade_plan(
             order_type,
 
         "volume":
-            LOT_SIZE,
+            volume,
 
         "entry":
             entry,
@@ -1097,17 +1106,34 @@ def build_trade_plan(
 
         "margin_required_eur":
             round(
-                margin_required,
+                margin_required_eur,
                 2,
             ),
 
         "free_margin_eur":
             round(
-                float(
-                    account.margin_free
-                ),
+                free_margin_eur,
                 2,
             ),
+
+        "margin_required_account": round(margin_required, 8),
+
+        "free_margin_account": round(float(account.margin_free), 8),
+
+        "estimated_loss_account":
+            round(loss_account, 8),
+
+        "estimated_profit_account":
+            round(profit_account, 8),
+
+        "account_currency":
+            str(account.currency),
+
+        "margin_currency":
+            str(account.currency),
+
+        "risk_sizing":
+            sizing,
 
         "spread_points":
             round(
@@ -1116,6 +1142,10 @@ def build_trade_plan(
             ),
 
         "broker_constraints": {
+            "volume_min": float(info.volume_min),
+            "volume_max": float(info.volume_max),
+            "volume_step": float(info.volume_step),
+
             "digits":
                 int(
                     info.digits

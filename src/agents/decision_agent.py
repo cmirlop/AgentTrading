@@ -1,3 +1,6 @@
+from src.risk_preflight import release_plan_risk_reservation
+
+
 class DecisionAgent:
 
     name = "decision_agent"
@@ -206,6 +209,10 @@ class DecisionAgent:
             len(errors)
             == 0
         )
+
+        reservation_id = (risk.get("portfolio_risk") or {}).get("reservation_id")
+        if not approved and reservation_id and plan.get("status") == "VALID":
+            release_plan_risk_reservation(plan)
 
         return bus.publish(
             agent=

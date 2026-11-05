@@ -232,7 +232,7 @@ publish(
     "CRITIC_ASSESSMENT",
     {
         "verdict":
-            "VETO",
+            "NO_OBJECTION",
 
         "confidence":
             0.90,

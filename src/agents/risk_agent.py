@@ -7,6 +7,7 @@ from src.order_request import (
 from src.risk_validator import (
     validate_dry_run,
 )
+from src.risk_preflight import evaluate_plan_risk, release_plan_risk_reservation
 
 
 def serialize_order_check(
@@ -249,6 +250,31 @@ class RiskAgent:
             },
         }
 
+        if candidate["allowed"]:
+            portfolio_risk = evaluate_plan_risk(
+                plan,
+                context.runtime_state,
+            )
+        else:
+            portfolio_risk = {
+                "approved": False,
+                "errors": ["CANDIDATE_NOT_ALLOWED"],
+            }
+        if not portfolio_risk.get("approved"):
+            return bus.publish(
+                agent=self.name,
+                message_type="RISK_ASSESSMENT",
+                payload={
+                    "status": "REJECTED",
+                    "approved": False,
+                    "errors": portfolio_risk.get("errors", ["PORTFOLIO_RISK_CHECK_REJECTED"]),
+                    "portfolio_risk": portfolio_risk,
+                    "request": None,
+                    "order_check": None,
+                    "source": "DETERMINISTIC_PYTHON",
+                },
+            )
+
         try:
 
             request, expiration = (
@@ -334,6 +360,9 @@ class RiskAgent:
 
                 terminal_info=
                     terminal_info,
+
+                portfolio_risk=
+                    portfolio_risk,
             )
         )
 
@@ -365,6 +394,9 @@ class RiskAgent:
                 "status"
             ] = "REJECTED"
 
+        if not validation.get("approved") and portfolio_risk.get("reservation_id"):
+            release_plan_risk_reservation(plan)
+
         return bus.publish(
             agent=
                 self.name,
@@ -385,6 +417,9 @@ class RiskAgent:
 
                 "candidate":
                     candidate,
+
+                "portfolio_risk":
+                    portfolio_risk,
 
                 "source":
                     "DETERMINISTIC_PYTHON",

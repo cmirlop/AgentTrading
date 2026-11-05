@@ -30,6 +30,7 @@ from src.order_request import (
 from src.risk_validator import (
     validate_dry_run,
 )
+from src.risk_preflight import evaluate_plan_risk, release_plan_risk_reservation
 
 
 BASE_DIR = (
@@ -429,6 +430,21 @@ def main():
 
                 continue
 
+            portfolio_risk = evaluate_plan_risk(
+                plan,
+                runtime,
+            )
+            symbol_result["portfolio_risk"] = portfolio_risk
+            if not portfolio_risk.get("approved"):
+                symbol_result["final_validation"] = {
+                    "status": "REJECTED",
+                    "approved": False,
+                    "errors": portfolio_risk.get("errors", ["PORTFOLIO_RISK_CHECK_REJECTED"]),
+                }
+                output["symbols"][symbol] = symbol_result
+                print("Final: REJECTED by portfolio/daily risk")
+                continue
+
             # ==============================================
             # MT5 REQUEST
             # ==============================================
@@ -487,8 +503,14 @@ def main():
 
                     terminal_info=
                         terminal,
+
+                    portfolio_risk=
+                        portfolio_risk,
                 )
             )
+
+            if not final_validation.get("approved") and portfolio_risk.get("reservation_id"):
+                release_plan_risk_reservation(plan)
 
             symbol_result[
                 "final_validation"

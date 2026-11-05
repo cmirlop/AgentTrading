@@ -15,6 +15,7 @@ from config.risk_config import (
     REQUIRE_STOP_LOSS,
     REQUIRE_TAKE_PROFIT,
     BREAK_EVEN_ENABLED,
+    RISK_REFERENCE,
 )
 
 from src.mt5_runtime import (
@@ -47,6 +48,114 @@ def connect_mt5():
         )
 
 
+def _symbol_metadata(symbols, account_currency):
+    result = {}
+    for symbol in sorted(set(symbols)):
+        try:
+            info = mt5.symbol_info(symbol)
+        except Exception:
+            info = None
+        if info is None:
+            continue
+        result[symbol] = {
+            "trade_tick_size": getattr(info, "trade_tick_size", None),
+            "trade_tick_value_loss": getattr(info, "trade_tick_value_loss", None),
+            "trade_tick_value_loss_currency": account_currency,
+            "trade_contract_size": getattr(info, "trade_contract_size", None),
+            "currency_base": getattr(info, "currency_base", None),
+            "currency_profit": getattr(info, "currency_profit", None),
+            "volume_min": getattr(info, "volume_min", None),
+            "volume_max": getattr(info, "volume_max", None),
+            "volume_step": getattr(info, "volume_step", None),
+        }
+    return result
+
+
+def _risk_for_existing(item, pending=False):
+    try:
+        stop = float(item.get("stop_loss") or 0)
+    except (TypeError, ValueError):
+        return None
+    if stop <= 0:
+        return None
+    symbol = item.get("symbol")
+    volume = item.get("volume_current", item.get("volume")) if pending else item.get("volume")
+    price = item.get("price_open") if pending else item.get("price_current")
+    raw_type = str(item.get("type") or item.get("side") or "").upper()
+    side = "BUY" if raw_type.startswith("BUY") else "SELL" if raw_type.startswith("SELL") else None
+    if not symbol or not side or not volume or not price:
+        return None
+    action = mt5.ORDER_TYPE_BUY if side == "BUY" else mt5.ORDER_TYPE_SELL
+    try:
+        value = mt5.order_calc_profit(action, symbol, float(volume), float(price), stop)
+    except Exception:
+        value = None
+    if value is None:
+        return None
+    # If the stop is already beyond break-even, it does not add downside risk.
+    return max(0.0, -float(value))
+
+
+def _risk_snapshot(account, all_positions, all_orders):
+    now = datetime.now(timezone.utc)
+    midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    try:
+        deals = mt5.history_deals_get(midnight, now)
+    except Exception:
+        return {"available": False, "reason": "DAILY_DEAL_HISTORY_UNAVAILABLE"}
+    if deals is None:
+        return {"available": False, "reason": "DAILY_DEAL_HISTORY_UNAVAILABLE"}
+    realized = 0.0
+    try:
+        for deal in deals:
+            realized += sum(float(getattr(deal, field, 0.0) or 0.0) for field in ("profit", "commission", "swap", "fee"))
+    except (TypeError, ValueError):
+        return {"available": False, "reason": "DAILY_DEAL_DATA_INVALID"}
+
+    symbols = {item["symbol"] for item in all_positions + all_orders}
+    symbols.update(SYMBOLS)
+    metadata = _symbol_metadata(symbols, account.get("currency"))
+    rates = {}
+    for symbol in sorted(symbols):
+        if len(symbol) != 6:
+            continue
+        try:
+            tick = mt5.symbol_info_tick(symbol)
+        except Exception:
+            tick = None
+        if tick is None:
+            continue
+        bid, ask = float(getattr(tick, "bid", 0) or 0), float(getattr(tick, "ask", 0) or 0)
+        if bid > 0 and ask >= bid:
+            rates[symbol] = (bid + ask) / 2.0
+
+    for item in all_positions:
+        item["risk_to_sl_account"] = _risk_for_existing(item, pending=False)
+    for item in all_orders:
+        item["risk_to_sl_account"] = _risk_for_existing(item, pending=True)
+    positions_risk = [item.get("risk_to_sl_account") for item in all_positions]
+    pending_risk = [item.get("risk_to_sl_account") for item in all_orders]
+    available = (
+        set(metadata) >= symbols
+        and all(value is not None for value in positions_risk + pending_risk)
+        and bool(account.get("currency"))
+        and float(account.get("equity") or 0) > 0
+    )
+    return {
+        "available": available,
+        "reason": None if available else "EXISTING_POSITION_OR_SYMBOL_RISK_METADATA_UNAVAILABLE",
+        "realized_net_pnl": round(realized, 8),
+        "open_risk_account": round(sum(positions_risk), 8) if all(v is not None for v in positions_risk) else None,
+        "pending_risk_account": round(sum(pending_risk), 8) if all(v is not None for v in pending_risk) else None,
+        "positions": all_positions,
+        "pending_orders": all_orders,
+        "symbol_metadata": metadata,
+        "conversion_rates": rates,
+        "daily_window_start_utc": midnight.isoformat(),
+        "daily_window_end_utc": now.isoformat(),
+    }
+
+
 def build_runtime_state():
 
     account = (
@@ -60,6 +169,10 @@ def build_runtime_state():
     orders = (
         get_orders_state()
     )
+
+    # Preserve the full account view for aggregate risk. Display/runtime
+    # portfolio counts remain limited to configured symbols below.
+    risk_snapshot = _risk_snapshot(account, positions, orders)
 
     # ======================================================
     # POSICIONES SOBRE NUESTROS SIMBOLOS
@@ -153,6 +266,9 @@ def build_runtime_state():
         "pending_orders":
             tracked_orders,
 
+        "risk_snapshot":
+            risk_snapshot,
+
         "positions_by_symbol":
             positions_by_symbol,
 
@@ -174,6 +290,9 @@ def build_runtime_state():
 
             "break_even_enabled":
                 BREAK_EVEN_ENABLED,
+
+            "risk_reference":
+                RISK_REFERENCE,
         },
 
         "risk_status": {

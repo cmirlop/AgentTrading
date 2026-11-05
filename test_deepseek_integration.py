@@ -27,6 +27,8 @@ class FakeClient:
 
     def __init__(self, *args, **kwargs):
         assert kwargs["base_url"] == "https://api.deepseek.com"
+        assert kwargs["max_retries"] == 0
+        assert kwargs["timeout"] == 180.0
         self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
 
     def create(self, **kwargs):
