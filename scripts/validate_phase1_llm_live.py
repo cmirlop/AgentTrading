@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
+import shutil
 import sys
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -29,10 +30,31 @@ def _write(report, path):
     path.write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
 
 
-def _traceability():
-    from scripts.validate_phase1 import _source_snapshot
+def _traceability(provider):
+    from scripts.validate_phase1 import _external_scope_fingerprint, _external_scope_snapshot, _source_snapshot
 
-    return {"validation_fingerprint": _source_snapshot()}
+    snapshot = _source_snapshot()
+    return {
+        "validation_fingerprint": snapshot,
+        "external_scope": _external_scope_snapshot(provider, snapshot),
+        "external_scope_fingerprint": _external_scope_fingerprint(provider, snapshot),
+    }
+
+
+def _archive_existing_output(path):
+    path = Path(path)
+    if not path.is_file():
+        return None
+    try:
+        path.resolve().relative_to(ROOT.resolve())
+    except ValueError:
+        return None
+    archive_dir = ROOT / "reports" / "private" / "archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    archived = archive_dir / f"{path.stem}_{stamp}{path.suffix}"
+    shutil.copy2(path, archived)
+    return str(archived.relative_to(ROOT)).replace("\\", "/")
 
 
 def _invalid_response_guard_check():
@@ -71,7 +93,7 @@ def validate(provider, *, authorize_deepseek=False):
         "market_order_sent": False,
         "operational_signal_created": False,
         "invalid_response_guard": _invalid_response_guard_check(),
-        "traceability": _traceability(),
+        "traceability": _traceability(provider),
     }
     if report["invalid_response_guard"]["status"] != "PASS":
         report["status"] = "FAIL"
@@ -183,6 +205,7 @@ def main(argv=None):
     if args.output:
         command += ["--output", args.output]
     report["command_executed"] = command
+    report["previous_report_archive"] = _archive_existing_output(output)
     _write(report, output)
     print(json.dumps({
         "report": str(output),

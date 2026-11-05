@@ -1,5 +1,7 @@
 api.txt.txt
 .env
+reports/private/
+reports/*_private.json
 data/state/daily_risk_guard.json
 data/state/daily_risk_guard.json.lock
 data/state/daily_risk_guard.json.*.tmp
