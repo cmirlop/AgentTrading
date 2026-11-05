@@ -1,0 +1,222 @@
+{
+  "symbol": "USDCAD",
+  "period_classification": "CONFIGURED_VALIDATION_WINDOW_SELECTED_SESSIONS",
+  "validation_dates": [
+    "2025-07-15",
+    "2025-10-15",
+    "2026-01-15",
+    "2026-03-16"
+  ],
+  "model": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "reasoning_effort": "high",
+    "max_tokens_override": 16384
+  },
+  "outcome_method": {
+    "basis": "two consecutive M15 closes beyond the zone boundary",
+    "break_buffer_atr": 0.1,
+    "hold_confirmation_atr": 0.1,
+    "hold_requires_recent_or_future_touch": true,
+    "horizon_minutes": 180
+  },
+  "raw_score_results": {
+    "n": 61,
+    "correct": 34,
+    "accuracy": 0.5574,
+    "always_hold_correct": 40,
+    "always_hold_accuracy": 0.6557,
+    "actual_hold": 40,
+    "actual_break": 21,
+    "predicted_hold": 47,
+    "predicted_break": 14,
+    "confusion_rows_prediction_columns_actual": {
+      "BREAK": {
+        "BREAK": 4,
+        "HOLD": 10
+      },
+      "HOLD": {
+        "BREAK": 17,
+        "HOLD": 30
+      }
+    }
+  },
+  "same_zone_3h_deduplicated": {
+    "rule": "keep the first resolved candidate per registered zone in each rolling 180-minute window",
+    "n": 31,
+    "correct": 16,
+    "accuracy": 0.5161,
+    "always_hold_correct": 23,
+    "always_hold_accuracy": 0.7419
+  },
+  "validated_theses": {
+    "n": 13,
+    "correct": 5,
+    "accuracy": 0.3846,
+    "coverage_of_scored_candidates": 0.2131
+  },
+  "threshold_scenarios": [
+    {
+      "name": "current",
+      "n": 13,
+      "correct": 5,
+      "accuracy": 0.3846,
+      "always_hold_correct": 8,
+      "always_hold_accuracy": 0.6154,
+      "thresholds": {
+        "minimum_max_score": 0.6,
+        "minimum_score_margin": 0.15,
+        "minimum_confidence": 0.6
+      }
+    },
+    {
+      "name": "confidence_055",
+      "n": 23,
+      "correct": 11,
+      "accuracy": 0.4783,
+      "always_hold_correct": 15,
+      "always_hold_accuracy": 0.6522,
+      "thresholds": {
+        "minimum_max_score": 0.6,
+        "minimum_score_margin": 0.15,
+        "minimum_confidence": 0.55
+      }
+    },
+    {
+      "name": "score_055_margin_010_conf_055",
+      "n": 34,
+      "correct": 17,
+      "accuracy": 0.5,
+      "always_hold_correct": 22,
+      "always_hold_accuracy": 0.6471,
+      "thresholds": {
+        "minimum_max_score": 0.55,
+        "minimum_score_margin": 0.1,
+        "minimum_confidence": 0.55
+      }
+    },
+    {
+      "name": "score_055_margin_010_conf_050",
+      "n": 38,
+      "correct": 21,
+      "accuracy": 0.5526,
+      "always_hold_correct": 26,
+      "always_hold_accuracy": 0.6842,
+      "thresholds": {
+        "minimum_max_score": 0.55,
+        "minimum_score_margin": 0.1,
+        "minimum_confidence": 0.5
+      }
+    }
+  ],
+  "per_day": [
+    {
+      "date": "20250715",
+      "scored_labeled_candidates": 15,
+      "raw_score_correct": 8,
+      "raw_score_accuracy": 0.5333,
+      "always_hold_correct": 7,
+      "always_hold_accuracy": 0.4667,
+      "operational_theses": 2,
+      "operational_correct": 0,
+      "operational_accuracy": 0.0,
+      "valid_trade_plans": 0,
+      "rejected_trade_plans": 2,
+      "simulated_trade_results": {}
+    },
+    {
+      "date": "20251015",
+      "scored_labeled_candidates": 15,
+      "raw_score_correct": 7,
+      "raw_score_accuracy": 0.4667,
+      "always_hold_correct": 9,
+      "always_hold_accuracy": 0.6,
+      "operational_theses": 2,
+      "operational_correct": 1,
+      "operational_accuracy": 0.5,
+      "valid_trade_plans": 1,
+      "rejected_trade_plans": 1,
+      "simulated_trade_results": {
+        "EXPIRED": 1
+      }
+    },
+    {
+      "date": "20260115",
+      "scored_labeled_candidates": 11,
+      "raw_score_correct": 5,
+      "raw_score_accuracy": 0.4545,
+      "always_hold_correct": 8,
+      "always_hold_accuracy": 0.7273,
+      "operational_theses": 5,
+      "operational_correct": 3,
+      "operational_accuracy": 0.6,
+      "valid_trade_plans": 3,
+      "rejected_trade_plans": 2,
+      "simulated_trade_results": {
+        "OPEN_AT_END": 1,
+        "LOSS": 1
+      }
+    },
+    {
+      "date": "20260316",
+      "scored_labeled_candidates": 20,
+      "raw_score_correct": 14,
+      "raw_score_accuracy": 0.7,
+      "always_hold_correct": 16,
+      "always_hold_accuracy": 0.8,
+      "operational_theses": 4,
+      "operational_correct": 1,
+      "operational_accuracy": 0.25,
+      "valid_trade_plans": 0,
+      "rejected_trade_plans": 4,
+      "simulated_trade_results": {}
+    }
+  ],
+  "simulated_execution": {
+    "valid_plans": 4,
+    "rejected_plans": 9,
+    "rejections_by_reason": {
+      "INSUFFICIENT_RISK_REWARD_TO_NEXT_LEVEL": 6,
+      "HOLD_CONFIRMATION_TOO_FAR_FROM_LEVEL": 3
+    },
+    "attempted_results": {
+      "EXPIRED": 1,
+      "OPEN_AT_END": 1,
+      "LOSS": 1
+    },
+    "overlap_skips": 1,
+    "real_orders_placed": false,
+    "closed_fills": 1,
+    "wins": 0,
+    "losses": 1,
+    "open_at_horizon": 1,
+    "expired_without_fill": 1
+  },
+  "2026_04_08_exploration_diagnostic": {
+    "n": 17,
+    "correct": 7,
+    "accuracy": 0.4118,
+    "always_hold_correct": 9,
+    "always_hold_accuracy": 0.5294,
+    "operational_theses": 0,
+    "included_in_validation_metrics": false
+  },
+  "limitations": [
+    "selected session sample, not a full-period or statistical validation",
+    "candidate outcomes overlap in time and remain correlated",
+    "scores are not calibrated probabilities",
+    "no historical news or macro data",
+    "trade simulation excludes commissions and slippage",
+    "trade execution uses OHLC and cannot recover intrabar tick path",
+    "no real orders were placed"
+  ],
+  "replay_consistency": {
+    "2025-07-15": {
+      "included_result": "previously completed replay",
+      "latest_prompt_rerun": "INTERRUPTED_BEFORE_COMPLETION",
+      "note": "The July aggregate uses the earlier completed run; the latest evidence-citation prompt was not confirmed for that date."
+    },
+    "other_validation_dates": "2025-10-15, 2026-01-15 and 2026-03-16 were run with the current prompt.",
+    "no_real_orders_placed": true
+  }
+}

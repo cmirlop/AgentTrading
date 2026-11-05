@@ -215,6 +215,8 @@ class LevelThesisAgent:
             ]
         )
 
+        comparison_diagnostics = None
+
         if (
             level_evidence.get(
                 "status"
@@ -745,6 +747,13 @@ select 1 to 4 genuinely supporting evidence IDs.
 Use exact IDs from allowed_evidence_ids.
 Never invent, modify or pad evidence IDs.
 
+If a hypothesis reaches score 0.60 or higher, its evidence list
+must include at least one supporting evidence ID for the active
+level and one directionally relevant technical evidence ID.
+If either type of support is absent, keep that hypothesis below
+0.60 so Python does not turn an inadequately supported score into
+an operational thesis.
+
 Do not treat PRICE_AT_SUPPORT,
 PRICE_AT_RESISTANCE, or CURRENTLY_PRE_BREAK_SIDE
 as directional confirmation by themselves.
@@ -1066,8 +1075,8 @@ Every evidence ID must exist in allowed_evidence_ids.
 """
 
 
-                comparison = (
-                    structured_chat(
+                try:
+                    comparison = structured_chat(
                         schema=
                             LevelHypothesisComparison,
 
@@ -1077,7 +1086,17 @@ Every evidence ID must exist in allowed_evidence_ids.
                         payload=
                             comparison_payload,
                     )
-                )
+                except Exception as exc:
+                    # Fallar cerrado y permitir que un replay siga con
+                    # los demas candidatos. No guardar mensajes de API,
+                    # que pueden incluir detalles sensibles.
+                    return self._invalid(
+                        bus,
+                        [
+                            "LLM_ERROR:"
+                            + type(exc).__name__
+                        ],
+                    )
 
 
                 comparison.hold_evidence_used = (
@@ -1144,6 +1163,23 @@ Every evidence ID must exist in allowed_evidence_ids.
                 comparison_confidence = float(
                     comparison.confidence
                 )
+
+                comparison_diagnostics = {
+                    "hold_score":
+                        hold_score,
+
+                    "break_score":
+                        break_score,
+
+                    "confidence":
+                        comparison_confidence,
+
+                    "hold_evidence_used":
+                        list(comparison.hold_evidence_used),
+
+                    "break_evidence_used":
+                        list(comparison.break_evidence_used),
+                }
 
                 print(
                     "\n[LEVEL HYPOTHESIS COMPARISON]"
@@ -1859,6 +1895,9 @@ Every evidence ID must exist in allowed_evidence_ids.
 
             payload={
                 **assessment.model_dump(),
+
+                "comparison_diagnostics":
+                    comparison_diagnostics,
 
                 "reason_codes":
                     reason_codes,
