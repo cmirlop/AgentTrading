@@ -5,7 +5,9 @@ DEFAULT_HORIZON_MINUTES = 180
 
 BREAK_BUFFER_ATR = 0.10
 
-HOLD_CONFIRMATION_ATR = 0.50
+HOLD_CONFIRMATION_ATR = 0.10
+
+CONFIRMATION_CLOSURES = 2
 
 TOUCH_LOOKBACK_MINUTES = 15
 
@@ -34,6 +36,7 @@ def evaluate_level_thesis(
     prepared_history,
     horizon_minutes=
         DEFAULT_HORIZON_MINUTES,
+    active_level=None,
 ):
 
     analysis_time = _utc(
@@ -62,17 +65,15 @@ def evaluate_level_thesis(
         "thesis"
     )
 
-    if thesis_name == "UNCLEAR":
+    is_unclear = thesis_name == "UNCLEAR"
 
+    if is_unclear and active_level not in {"SUPPORT", "RESISTANCE"}:
         return {
-            "status":
-                "NOT_EVALUATED",
-
-            "reason":
-                "UNCLEAR_THESIS",
+            "status": "NOT_EVALUATED",
+            "reason": "NO_ACTIVE_LEVEL_FOR_UNCLEAR_THESIS",
         }
 
-    if thesis_name.startswith(
+    if not is_unclear and thesis_name.startswith(
         "SUPPORT_"
     ):
 
@@ -84,7 +85,7 @@ def evaluate_level_thesis(
             "nearest_support"
         )
 
-    elif thesis_name.startswith(
+    elif not is_unclear and thesis_name.startswith(
         "RESISTANCE_"
     ):
 
@@ -96,6 +97,13 @@ def evaluate_level_thesis(
             "nearest_resistance"
         )
 
+    elif is_unclear and active_level in {"SUPPORT", "RESISTANCE"}:
+        level_type = active_level
+        level = levels.get(
+            "nearest_support"
+            if level_type == "SUPPORT"
+            else "nearest_resistance"
+        )
     else:
 
         return {
@@ -116,12 +124,17 @@ def evaluate_level_thesis(
                 "TARGET_LEVEL_MISSING",
         }
 
-    m5 = prepared_history[
-        "M5"
+    outcome_timeframe = (
+        "M15"
+        if "M15" in prepared_history
+        else "M5"
+    )
+    outcome_bars = prepared_history[
+        outcome_timeframe
     ]
 
     start_index = (
-        m5[
+        outcome_bars[
             "time"
         ].searchsorted(
             analysis_time,
@@ -139,7 +152,7 @@ def evaluate_level_thesis(
     )
 
     end_index = (
-        m5[
+        outcome_bars[
             "time"
         ].searchsorted(
             end_time,
@@ -147,7 +160,7 @@ def evaluate_level_thesis(
         )
     )
 
-    future = m5.iloc[
+    future = outcome_bars.iloc[
         start_index:end_index
     ].copy()
 
@@ -158,7 +171,7 @@ def evaluate_level_thesis(
                 "INVALID",
 
             "error":
-                "NO_FUTURE_M5_DATA",
+                f"NO_FUTURE_{outcome_timeframe}_DATA",
         }
 
     lookback_start = (
@@ -170,15 +183,15 @@ def evaluate_level_thesis(
         )
     )
 
-    recent = m5[
+    recent = outcome_bars[
         (
-            m5["bar_close"]
+            outcome_bars["bar_close"]
             >
             lookback_start
         )
         &
         (
-            m5["bar_close"]
+            outcome_bars["bar_close"]
             <=
             analysis_time
         )
@@ -219,10 +232,13 @@ def evaluate_level_thesis(
         )
 
         expected_outcome = (
-            "HOLD"
-            if thesis_name
-            == "SUPPORT_HOLD"
-            else "BREAK"
+            None
+            if is_unclear
+            else (
+                "HOLD"
+                if thesis_name == "SUPPORT_HOLD"
+                else "BREAK"
+            )
         )
 
     else:
@@ -248,10 +264,13 @@ def evaluate_level_thesis(
         )
 
         expected_outcome = (
-            "HOLD"
-            if thesis_name
-            == "RESISTANCE_HOLD"
-            else "BREAK"
+            None
+            if is_unclear
+            else (
+                "HOLD"
+                if thesis_name == "RESISTANCE_HOLD"
+                else "BREAK"
+            )
         )
 
     level_low = float(
@@ -294,7 +313,7 @@ def evaluate_level_thesis(
 
             touch_time = (
                 _utc(
-                    recent_row["time"]
+                    recent_row["bar_close"]
                 )
                 .isoformat()
             )
@@ -311,6 +330,10 @@ def evaluate_level_thesis(
 
     event_bar = None
 
+    break_close_streak = 0
+
+    hold_close_streak = 0
+
     for _, row in (
         future.iterrows()
     ):
@@ -319,12 +342,24 @@ def evaluate_level_thesis(
             row["open"]
         )
 
+        bar_open_time = _utc(
+            row["time"]
+        )
+
+        bar_close_time = _utc(
+            row["bar_close"]
+        )
+
         low = float(
             row["low"]
         )
 
         high = float(
             row["high"]
+        )
+
+        close = float(
+            row["close"]
         )
 
         touch_hit = (
@@ -353,31 +388,53 @@ def evaluate_level_thesis(
 
         if level_type == "SUPPORT":
 
-            break_hit = (
-                low
+            break_close = (
+                close
                 <=
                 break_threshold
             )
 
-            hold_hit = (
-                high
+            hold_close = (
+                close
                 >=
                 hold_threshold
             )
 
         else:
 
-            break_hit = (
-                high
+            break_close = (
+                close
                 >=
                 break_threshold
             )
 
-            hold_hit = (
-                low
+            hold_close = (
+                close
                 <=
                 hold_threshold
             )
+
+        break_close_streak = (
+            break_close_streak + 1
+            if break_close
+            else 0
+        )
+
+        hold_close_streak = (
+            hold_close_streak + 1
+            if hold_close
+            else 0
+        )
+
+        break_hit = (
+            break_close_streak
+            >= CONFIRMATION_CLOSURES
+        )
+
+        hold_hit = (
+            hold_close_streak
+            >= CONFIRMATION_CLOSURES
+        )
 
         if (
             break_hit
@@ -390,13 +447,16 @@ def evaluate_level_thesis(
             )
 
             event_time = (
-                _utc(
-                    row["time"]
-                )
-                .isoformat()
+                bar_close_time.isoformat()
             )
 
             event_bar = {
+                "bar_open_time":
+                    bar_open_time.isoformat(),
+
+                "bar_close_time":
+                    bar_close_time.isoformat(),
+
                 "open":
                     bar_open,
 
@@ -421,13 +481,16 @@ def evaluate_level_thesis(
             )
 
             event_time = (
-                _utc(
-                    row["time"]
-                )
-                .isoformat()
+                bar_close_time.isoformat()
             )
 
             event_bar = {
+                "bar_open_time":
+                    bar_open_time.isoformat(),
+
+                "bar_close_time":
+                    bar_close_time.isoformat(),
+
                 "open":
                     bar_open,
 
@@ -454,13 +517,16 @@ def evaluate_level_thesis(
                 )
 
                 event_time = (
-                    _utc(
-                        row["time"]
-                    )
-                    .isoformat()
+                    bar_close_time.isoformat()
                 )
 
                 event_bar = {
+                    "bar_open_time":
+                        bar_open_time.isoformat(),
+
+                    "bar_close_time":
+                        bar_close_time.isoformat(),
+
                     "open":
                         bar_open,
 
@@ -488,13 +554,16 @@ def evaluate_level_thesis(
                 )
 
                 event_time = (
-                    _utc(
-                        row["time"]
-                    )
-                    .isoformat()
+                    bar_close_time.isoformat()
                 )
 
                 event_bar = {
+                    "bar_open_time":
+                        bar_open_time.isoformat(),
+
+                    "bar_close_time":
+                        bar_close_time.isoformat(),
+
                     "open":
                         bar_open,
 
@@ -522,7 +591,7 @@ def evaluate_level_thesis(
 
             touch_time = (
                 _utc(
-                    row["time"]
+                    row["bar_close"]
                 )
                 .isoformat()
             )
@@ -539,7 +608,11 @@ def evaluate_level_thesis(
         ].max()
     )
 
-    if actual_outcome in {
+    if is_unclear:
+
+        correct = None
+
+    elif actual_outcome in {
         "HOLD",
         "BREAK",
     }:
@@ -590,6 +663,12 @@ def evaluate_level_thesis(
 
         "hold_confirmation_atr":
             HOLD_CONFIRMATION_ATR,
+
+        "confirmation_closures":
+            CONFIRMATION_CLOSURES,
+
+        "outcome_confirmation_basis":
+            f"TWO_CONSECUTIVE_{outcome_timeframe}_CLOSES",
 
         "touch_required_for_hold":
             True,

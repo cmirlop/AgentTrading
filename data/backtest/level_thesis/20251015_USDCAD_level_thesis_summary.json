@@ -1,0 +1,65 @@
+{
+  "symbol": "USDCAD",
+  "start": "2025-10-15T00:00:00+00:00",
+  "end": "2025-10-16T00:00:00+00:00",
+  "scope": "LEVEL_THESIS_WITH_SIMULATED_TRADE_PLANS",
+  "llm_configuration": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "reasoning_effort": "high",
+    "max_tokens_override": 16384
+  },
+  "horizon_minutes": 180,
+  "funnel": {
+    "m15_evaluated": 96,
+    "outside_session": 40,
+    "open_space": 37,
+    "level_candidates": 19,
+    "regime_invalid": 0,
+    "thesis_invalid": 0,
+    "thesis_unclear": 17,
+    "thesis_operational": 2,
+    "correct": 1,
+    "wrong": 1,
+    "ambiguous": 0,
+    "unresolved": 1,
+    "trade_plan_valid": 1,
+    "trade_plan_rejected": 1,
+    "trade_execution_simulated": 1
+  },
+  "resolved": 2,
+  "actual_outcomes": {
+    "hold": 9,
+    "break": 6
+  },
+  "baseline_always_hold_accuracy": 0.6,
+  "baseline_always_break_accuracy": 0.4,
+  "model_edge_over_always_hold": -0.1333,
+  "raw_score_prediction_count": 15,
+  "raw_score_prediction_accuracy": 0.4667,
+  "raw_score_baseline_always_hold_accuracy": 0.6,
+  "validated_thesis_count_with_resolved_outcome": 2,
+  "validated_thesis_accuracy": 0.5,
+  "validated_thesis_coverage": 0.1333,
+  "validated_baseline_always_hold_accuracy": 0.5,
+  "accuracy_resolved": 0.5,
+  "simulated_trade_outcomes": {
+    "EXPIRED": 1
+  },
+  "limitations": [
+    "NO_HISTORICAL_NEWS",
+    "NO_HISTORICAL_MACRO",
+    "DIAGNOSTIC_NOT_PROFITABILITY_BACKTEST",
+    "OVERLAPPING_SIGNALS_NOT_DEDUPLICATED",
+    "TRADE_SIMULATION_EXCLUDES_COMMISSION_AND_SLIPPAGE",
+    "TRADE_EXECUTION_USES_OHLC_AND_DOES_NOT_MODEL_INTRABAR_TICK_PATH"
+  ],
+  "outcome_method": {
+    "confirmation_basis": "TWO_CONSECUTIVE_M15_CLOSES",
+    "confirmation_closures": 2,
+    "break_buffer_atr": 0.1,
+    "hold_confirmation_atr": 0.1,
+    "hold_requires_recent_or_future_touch": true
+  },
+  "execution_scope": "HISTORICAL_SIMULATION_ONLY_NO_ORDERS_PLACED"
+}
