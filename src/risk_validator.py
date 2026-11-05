@@ -2,11 +2,11 @@ from datetime import (
     datetime,
     timezone,
 )
+from math import isfinite
 
 import MetaTrader5 as mt5
 
 from config.risk_config import (
-    LOT_SIZE,
     MAX_LOSS_PER_TRADE_EUR,
     MAX_SPREAD_POINTS_BY_SYMBOL,
 )
@@ -27,6 +27,14 @@ from config.calendar_config import (
 )
 
 
+def _finite_number(value):
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if isfinite(number) else None
+
+
 def validate_dry_run(
     symbol,
     candidate,
@@ -34,9 +42,15 @@ def validate_dry_run(
     request,
     order_check_result,
     terminal_info,
+    portfolio_risk=None,
 ):
 
     errors = []
+
+    if not isinstance(portfolio_risk, dict):
+        errors.append("PORTFOLIO_RISK_CHECK_MISSING")
+    elif not portfolio_risk.get("approved"):
+        errors.extend(portfolio_risk.get("errors") or ["PORTFOLIO_RISK_CHECK_REJECTED"])
 
     # ======================================================
     # CANDIDATE
@@ -86,22 +100,29 @@ def validate_dry_run(
     # VOLUMEN
     # ======================================================
 
-    volume = trade_plan.get(
-        "volume"
-    )
+    volume = trade_plan.get("volume")
+    constraints = trade_plan.get("broker_constraints") or {}
+    volume_value = None
+    try:
+        volume_value = float(volume)
+        volume_min = float(constraints["volume_min"])
+        volume_max = float(constraints["volume_max"])
+        volume_step = float(constraints["volume_step"])
+        if not all(isfinite(v) for v in (volume_value, volume_min, volume_max, volume_step)):
+            raise ValueError("non-finite volume metadata")
+        if volume_min <= 0 or volume_max < volume_min or volume_step <= 0:
+            raise ValueError("invalid volume metadata")
+        if volume_value < volume_min - 1e-9:
+            errors.append("VOLUME_BELOW_MINIMUM")
+        if volume_value > volume_max + 1e-9:
+            errors.append("VOLUME_ABOVE_MAXIMUM")
+        if abs(volume_value / volume_step - round(volume_value / volume_step)) > 1e-8:
+            errors.append("INVALID_VOLUME_STEP")
+    except (TypeError, ValueError, KeyError):
+        errors.append("SYMBOL_VOLUME_METADATA_MISSING")
 
-    if (
-        volume is None
-        or
-        abs(
-            float(volume)
-            - LOT_SIZE
-        ) > 1e-9
-    ):
-
-        errors.append(
-            "INVALID_LOT_SIZE"
-        )
+    if (trade_plan.get("risk_sizing") or {}).get("status") != "VALID":
+        errors.append("POSITION_SIZE_NOT_RISK_VALIDATED")
 
     # ======================================================
     # ENTRY / SL / TP
@@ -118,6 +139,10 @@ def validate_dry_run(
     take_profit = trade_plan.get(
         "take_profit"
     )
+
+    entry = _finite_number(entry)
+    stop_loss = _finite_number(stop_loss)
+    take_profit = _finite_number(take_profit)
 
     if (
         entry is None
@@ -171,11 +196,7 @@ def validate_dry_run(
     # PERDIDA MAXIMA
     # ======================================================
 
-    estimated_loss = (
-        trade_plan.get(
-            "estimated_loss_eur"
-        )
-    )
+    estimated_loss = _finite_number(trade_plan.get("estimated_loss_eur"))
 
     if (
         estimated_loss is None
@@ -196,15 +217,15 @@ def validate_dry_run(
             "MAX_LOSS_EXCEEDED"
         )
 
+    account_risk = _finite_number(trade_plan.get("estimated_loss_account"))
+    if account_risk is None or account_risk <= 0:
+        errors.append("INVALID_ESTIMATED_LOSS_ACCOUNT")
+
     # ======================================================
     # RISK / REWARD
     # ======================================================
 
-    risk_reward = (
-        trade_plan.get(
-            "risk_reward"
-        )
-    )
+    risk_reward = _finite_number(trade_plan.get("risk_reward"))
 
     if (
         risk_reward is None
@@ -221,11 +242,7 @@ def validate_dry_run(
     # SPREAD
     # ======================================================
 
-    spread = (
-        trade_plan.get(
-            "spread_points"
-        )
-    )
+    spread = _finite_number(trade_plan.get("spread_points"))
 
     max_spread = (
         MAX_SPREAD_POINTS_BY_SYMBOL
@@ -251,17 +268,8 @@ def validate_dry_run(
     # MARGEN
     # ======================================================
 
-    margin_required = (
-        trade_plan.get(
-            "margin_required_eur"
-        )
-    )
-
-    free_margin = (
-        trade_plan.get(
-            "free_margin_eur"
-        )
-    )
+    margin_required = _finite_number(trade_plan.get("margin_required_eur"))
+    free_margin = _finite_number(trade_plan.get("free_margin_eur"))
 
     if (
         margin_required is None
@@ -318,17 +326,8 @@ def validate_dry_run(
             "INVALID_ORDER_COMMENT"
         )
 
-    if (
-        abs(
-            float(
-                request.get(
-                    "volume",
-                    0,
-                )
-            )
-            - LOT_SIZE
-        ) > 1e-9
-    ):
+    request_volume = _finite_number(request.get("volume"))
+    if volume_value is None or request_volume is None or abs(request_volume - volume_value) > 1e-9:
 
         errors.append(
             "REQUEST_VOLUME_MISMATCH"

@@ -1,202 +1,272 @@
+"""Single provider boundary for structured LLM calls.
+
+Agents receive validated Pydantic models. Provider failures are translated to
+safe error codes, and no provider response or credential is logged.
+"""
+
+from __future__ import annotations
+
+import copy
 import json
-
-import ollama
-
-from config.agent_config import (
-    OLLAMA_MODEL,
-    OLLAMA_CONTEXT,
-    OLLAMA_KEEP_ALIVE,
-    OLLAMA_TEMPERATURE,
-)
-
+import logging
+from math import isfinite
+import os
+from dataclasses import dataclass, replace
+from functools import lru_cache
 from pathlib import Path
+from time import perf_counter
+from typing import Any
+
 from dotenv import load_dotenv
+from pydantic import ValidationError
 
-load_dotenv(
-    Path(__file__).resolve().parents[2] / ".env",
-    override=True,
-)
+from config.agent_config import OLLAMA_CONTEXT, OLLAMA_KEEP_ALIVE, OLLAMA_MODEL, OLLAMA_TEMPERATURE
 
-def _extract_content(
-    response,
-):
 
-    if isinstance(
-        response,
-        dict,
-    ):
+load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=False)
 
-        return response[
-            "message"
-        ][
-            "content"
-        ]
+LOGGER = logging.getLogger("agenttrading.llm")
+_PROVIDERS = {"ollama", "deepseek"}
+_EVIDENCE_FIELDS = {"evidence_used", "hold_evidence_used", "break_evidence_used"}
 
-    return (
-        response
-        .message
-        .content
+
+class LLMProviderError(RuntimeError):
+    """Provider failure with a non-sensitive, stable error code."""
+
+    def __init__(self, code: str):
+        self.code = code
+        super().__init__(code)
+
+
+@dataclass(frozen=True)
+class LLMConfiguration:
+    provider: str
+    model: str
+    timeout_seconds: float
+    reasoning_effort: str | None = None
+    max_tokens: int | None = None
+    max_retries: int = 0
+    temperature: float | None = None
+    context_window: int | None = None
+    keep_alive: str | int | None = None
+
+    def public_dict(self) -> dict[str, Any]:
+        return {
+            "provider": self.provider,
+            "model": self.model,
+            "timeout_seconds": self.timeout_seconds,
+            "reasoning_effort": self.reasoning_effort,
+            "max_tokens": self.max_tokens,
+            "max_retries": self.max_retries,
+            "temperature": self.temperature,
+            "context_window": self.context_window,
+            "keep_alive": self.keep_alive,
+        }
+
+
+def _positive_float(name: str, default: float) -> float:
+    raw = os.environ.get(name)
+    try:
+        value = default if raw is None else float(raw)
+    except (TypeError, ValueError):
+        raise LLMProviderError("LLM_CONFIGURATION_INVALID") from None
+    if not isfinite(value) or value <= 0 or value > 1800:
+        raise LLMProviderError("LLM_CONFIGURATION_INVALID")
+    return value
+
+
+def get_llm_configuration(schema=None) -> LLMConfiguration:
+    """Read the effective settings; process environment overrides .env."""
+    provider = os.environ.get("LLM_PROVIDER", "ollama").strip().lower()
+    if provider not in _PROVIDERS:
+        raise LLMProviderError("LLM_PROVIDER_UNSUPPORTED")
+
+    if provider == "deepseek":
+        model = os.environ.get("DEEPSEEK_MODEL", "deepseek-flash").strip()
+        effort = os.environ.get("DEEPSEEK_REASONING_EFFORT", "low").strip().lower()
+        if effort not in {"low", "high", "max"} or not model:
+            raise LLMProviderError("LLM_CONFIGURATION_INVALID")
+        is_comparison = getattr(schema, "__name__", "") == "LevelHypothesisComparison"
+        try:
+            max_tokens = int(os.environ.get("DEEPSEEK_MAX_TOKENS", "8192" if is_comparison else "2048"))
+        except (TypeError, ValueError):
+            raise LLMProviderError("LLM_CONFIGURATION_INVALID") from None
+        if not 1 <= max_tokens <= 65536:
+            raise LLMProviderError("LLM_CONFIGURATION_INVALID")
+        return LLMConfiguration(
+            provider=provider,
+            model=model,
+            timeout_seconds=_positive_float("DEEPSEEK_TIMEOUT_SECONDS", 180.0),
+            reasoning_effort=effort,
+            max_tokens=max_tokens,
+            temperature=None if is_comparison else 0.0,
+        )
+
+    model = os.environ.get("OLLAMA_MODEL", OLLAMA_MODEL).strip()
+    if not model:
+        raise LLMProviderError("LLM_CONFIGURATION_INVALID")
+    return LLMConfiguration(
+        provider=provider,
+        model=model,
+        timeout_seconds=_positive_float("OLLAMA_TIMEOUT_SECONDS", 120.0),
+        temperature=OLLAMA_TEMPERATURE,
+        context_window=OLLAMA_CONTEXT,
+        keep_alive=OLLAMA_KEEP_ALIVE,
     )
 
 
-def structured_chat(
-    schema,
-    system_prompt,
-    payload,
-):
-    # DEEPSEEK_PROVIDER_SWITCH_V1
-    import os
-    _provider = os.environ.get("LLM_PROVIDER", "ollama").strip().lower()
-    if _provider == "deepseek":
-        from src.agents.deepseek_client import deepseek_structured_chat
-        return deepseek_structured_chat(schema, system_prompt, payload)
-    if _provider != "ollama":
-        raise ValueError("LLM_PROVIDER debe ser ollama o deepseek")
+@lru_cache(maxsize=8)
+def _ollama_client(host: str | None, timeout_seconds: float):
+    from ollama import Client
+
+    return Client(host=host, timeout=timeout_seconds)
 
 
-    
-    output_schema = schema.model_json_schema()
+def _allowed_evidence(payload: dict[str, Any], schema: type) -> tuple[list[str], list[str]]:
+    properties = schema.model_json_schema().get("properties", {})
+    fields = [field for field in sorted(_EVIDENCE_FIELDS) if field in properties]
+    if not fields:
+        return [], []
 
-    if schema.__name__ == "LevelHypothesisComparison":
+    raw_ids = payload.get("allowed_evidence_ids")
+    if raw_ids is None:
+        raw_ids = payload.get("available_evidence_ids")
+    if not isinstance(raw_ids, list) or not raw_ids:
+        raise LLMProviderError("LLM_ALLOWED_EVIDENCE_MISSING")
+    if any(not isinstance(item, str) or not item for item in raw_ids):
+        raise LLMProviderError("LLM_ALLOWED_EVIDENCE_INVALID")
+    return list(dict.fromkeys(raw_ids)), fields
 
-        allowed_ids = list(
-            dict.fromkeys(
-                payload.get("allowed_evidence_ids", [])
-            )
-        )
 
-        if not allowed_ids:
-            raise ValueError(
-                "NO_ALLOWED_EVIDENCE_IDS"
-            )
+def _schema_with_evidence(schema: type, allowed_ids: list[str], fields: list[str]) -> dict:
+    result = copy.deepcopy(schema.model_json_schema())
+    for field in fields:
+        item_schema = result["properties"][field].setdefault("items", {"type": "string"})
+        item_schema.clear()
+        item_schema.update({"type": "string", "enum": allowed_ids})
+    return result
 
-        for field_name in (
-            "hold_evidence_used",
-            "break_evidence_used",
-        ):
-            output_schema["properties"][field_name]["items"] = {
-                "type": "string",
-                "enum": allowed_ids,
-            }
 
-    response = ollama.chat(
-        model=
-            OLLAMA_MODEL,
+def _response_content(response: Any) -> str:
+    if isinstance(response, dict):
+        message = response.get("message") or {}
+        return str(message.get("content") or "")
+    message = getattr(response, "message", None)
+    return str(getattr(message, "content", None) or "")
 
-        messages=[
-            {
-                "role":
-                    "system",
 
-                "content":
-                    system_prompt,
-            },
-            {
-                "role":
-                    "user",
+def _failure_code(exc: Exception) -> str:
+    if isinstance(exc, LLMProviderError):
+        return exc.code
+    safe_codes = {
+        "LLM_API_KEY_MISSING",
+        "LLM_CONFIGURATION_INVALID",
+        "LLM_ALLOWED_EVIDENCE_MISSING",
+        "LLM_ALLOWED_EVIDENCE_INVALID",
+        "LLM_INVALID_EVIDENCE",
+        "LLM_INCOMPLETE_RESPONSE",
+        "LLM_EMPTY_RESPONSE",
+        "LLM_INVALID_RESPONSE",
+    }
+    if str(exc) in safe_codes:
+        return str(exc)
+    name = type(exc).__name__.lower()
+    if "timeout" in name or "timedout" in name:
+        return "LLM_TIMEOUT"
+    if isinstance(exc, (ValidationError, json.JSONDecodeError)):
+        return "LLM_INVALID_RESPONSE"
+    return "LLM_API_ERROR"
 
-                "content":
-                    json.dumps(
-                        payload,
-                        ensure_ascii=False,
-                    ),
-            },
-        ],
 
-        format=output_schema,
+def _validate_evidence(result: Any, fields: list[str], allowed_ids: list[str]) -> None:
+    allowed = set(allowed_ids)
+    for field in fields:
+        values = getattr(result, field, None)
+        if not isinstance(values, list) or any(value not in allowed for value in values):
+            raise LLMProviderError("LLM_INVALID_EVIDENCE")
 
-        options={
-            "temperature":
-                OLLAMA_TEMPERATURE,
 
-            "num_ctx":
-                OLLAMA_CONTEXT,
-        },
+def structured_chat(schema, system_prompt, payload, *, model_override=None):
+    """Call the selected provider once and return a validated Pydantic model."""
+    config = get_llm_configuration(schema)
+    if model_override is not None:
+        if config.provider != "ollama" or not str(model_override).strip():
+            raise LLMProviderError("LLM_MODEL_OVERRIDE_UNSUPPORTED")
+        config = replace(config, model=str(model_override).strip())
+    if not isinstance(payload, dict):
+        raise LLMProviderError("LLM_PAYLOAD_INVALID")
 
-        #think=True,
-        think=(
-            schema.__name__
-            == "LevelHypothesisComparison"
-        ),
-
-        keep_alive=
-            OLLAMA_KEEP_ALIVE,
+    allowed_ids, evidence_fields = _allowed_evidence(payload, schema)
+    output_schema = _schema_with_evidence(schema, allowed_ids, evidence_fields)
+    started = perf_counter()
+    LOGGER.info(
+        "LLM call provider=%s model=%s schema=%s timeout_seconds=%s "
+        "reasoning_effort=%s max_tokens=%s temperature=%s context_window=%s keep_alive=%s max_retries=0",
+        config.provider,
+        config.model,
+        schema.__name__,
+        config.timeout_seconds,
+        config.reasoning_effort,
+        config.max_tokens,
+        config.temperature,
+        config.context_window,
+        config.keep_alive,
     )
 
-    if isinstance(
-        response,
-        dict,
-    ):
+    try:
+        if config.provider == "deepseek":
+            from src.agents.deepseek_client import deepseek_structured_chat
 
-        prompt_eval_count = (
-            response.get(
-                "prompt_eval_count"
+            result = deepseek_structured_chat(
+                schema,
+                system_prompt,
+                payload,
+                model=config.model,
+                timeout_seconds=config.timeout_seconds,
+                max_tokens=config.max_tokens,
             )
-        )
-
-        eval_count = (
-            response.get(
-                "eval_count"
-            )
-        )
-
-    else:
-
-        prompt_eval_count = getattr(
-            response,
-            "prompt_eval_count",
-            None,
-        )
-
-        eval_count = getattr(
-            response,
-            "eval_count",
-            None,
-        )
-
-
-    print(
-        "[LLM USAGE]",
-        f"schema={schema.__name__}",
-        f"prompt_eval_count={prompt_eval_count}",
-        f"eval_count={eval_count}",
-        f"num_ctx={OLLAMA_CONTEXT}",
-    )
-
-    content = (
-        _extract_content(
-            response
-        )
-    )
-    if schema.__name__ == "LevelHypothesisComparison":
-        print(
-            "\n[LLM RAW JSON]",
-            content,
-        )
-
-
-    if schema.__name__ == "LevelHypothesisComparison":
-        if isinstance(response, dict):
-            message = response.get("message") or {}
-            thinking = message.get("thinking") or ""
-            done_reason = response.get("done_reason")
-            eval_duration = response.get("eval_duration")
         else:
-            message = getattr(response, "message", None)
-            thinking = getattr(message, "thinking", None) or ""
-            done_reason = getattr(response, "done_reason", None)
-            eval_duration = getattr(response, "eval_duration", None)
+            host = os.environ.get("OLLAMA_HOST") or None
+            client = _ollama_client(host, config.timeout_seconds)
+            response = client.chat(
+                model=config.model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
+                ],
+                format=output_schema,
+                options={
+                    "temperature": OLLAMA_TEMPERATURE,
+                    "num_ctx": OLLAMA_CONTEXT,
+                },
+                think=schema.__name__ == "LevelHypothesisComparison",
+                keep_alive=OLLAMA_KEEP_ALIVE,
+            )
+            done_reason = response.get("done_reason") if isinstance(response, dict) else getattr(response, "done_reason", None)
+            if done_reason == "length":
+                raise LLMProviderError("LLM_INCOMPLETE_RESPONSE")
+            content = _response_content(response)
+            if not content.strip():
+                raise LLMProviderError("LLM_EMPTY_RESPONSE")
+            result = schema.model_validate_json(content)
 
-        print(
-            "[LLM THINKING DIAG]",
-            f"thinking_chars={len(thinking)}",
-            f"done_reason={done_reason}",
-            f"eval_seconds={(eval_duration or 0) / 1e9:.2f}",
+        _validate_evidence(result, evidence_fields, allowed_ids)
+    except Exception as exc:
+        code = _failure_code(exc)
+        LOGGER.warning(
+            "LLM call failed provider=%s model=%s schema=%s error=%s",
+            config.provider,
+            config.model,
+            schema.__name__,
+            code,
         )
+        raise LLMProviderError(code) from None
 
-    return (
-        schema
-        .model_validate_json(
-            content
-        )
+    LOGGER.info(
+        "LLM call complete provider=%s model=%s schema=%s elapsed_seconds=%.3f",
+        config.provider,
+        config.model,
+        schema.__name__,
+        perf_counter() - started,
     )
+    return result

@@ -1,4 +1,5 @@
 import json
+import argparse
 from datetime import (
     datetime,
     timezone,
@@ -36,6 +37,7 @@ from config.risk_config import (
 from src.historical_risk import (
     estimate_loss_eur,
 )
+from config.backtest_cost_config import COST_SCENARIOS
 
 
 BASE_DIR = (
@@ -124,6 +126,16 @@ def summarize(
             "gross_pnl_eur"
         ].sum()
     )
+    transaction_costs_eur = float(resolved["transaction_cost_eur"].fillna(0).sum()) if "transaction_cost_eur" in resolved else 0.0
+    costs_incurred_eur = float(df["transaction_cost_eur"].fillna(0).sum()) if "transaction_cost_eur" in df else 0.0
+    net_pnl_eur = float(resolved["net_pnl_eur"].sum()) if "net_pnl_eur" in resolved else gross_pnl_eur
+    net_r_series = resolved["net_r"] if "net_r" in resolved else resolved["r"]
+    net_win_count = int((net_r_series > 0).sum()) if len(net_r_series) else 0
+    net_loss_count = int((net_r_series < 0).sum()) if len(net_r_series) else 0
+    net_profit_factor = (
+        float(net_r_series[net_r_series > 0].sum()) / abs(float(net_r_series[net_r_series < 0].sum()))
+        if net_loss_count else None
+    )
 
     max_drawdown_eur = (
         calculate_max_drawdown_r(
@@ -131,6 +143,11 @@ def summarize(
                 "gross_pnl_eur"
             ].tolist()
         )
+    )
+    net_max_drawdown_eur = (
+        calculate_max_drawdown_r(resolved["net_pnl_eur"].dropna().tolist())
+        if "net_pnl_eur" in resolved and resolved["net_pnl_eur"].notna().any()
+        else 0.0
     )
 
     wins = int(
@@ -216,6 +233,8 @@ def summarize(
                 len(df)
             ),
 
+        "orders_executed": int(df["fill_time"].notna().sum()) if "fill_time" in df else 0,
+
         "wins":
             wins,
 
@@ -253,6 +272,8 @@ def summarize(
                     0,
                 )
             ),
+
+        "pending_at_end": int(counts.get("PENDING_AT_END", 0)),
 
         "resolved_trades":
             total_resolved,
@@ -313,11 +334,24 @@ def summarize(
                 2,
             ),
 
+        "transaction_costs_eur": round(transaction_costs_eur, 2),
+        "costs_incurred_eur": round(costs_incurred_eur, 2),
+        "net_pnl_eur": round(net_pnl_eur, 2),
+        "net_expectancy_eur": round(net_pnl_eur / total_resolved, 3) if total_resolved else None,
+        "net_expectancy_r": round(float(net_r_series.mean()), 4) if len(net_r_series) else None,
+        "net_total_r": round(float(net_r_series.sum()), 2) if len(net_r_series) else 0.0,
+        "net_win_rate": round(net_win_count / len(net_r_series), 4) if len(net_r_series) else None,
+        "net_profit_factor": round(net_profit_factor, 3) if net_profit_factor is not None else None,
+        "ambiguous_total": int(df["result"].astype(str).str.startswith("AMBIGUOUS").sum()),
+        "open_at_end_total": int(df["result"].eq("OPEN_AT_END").sum()),
+
         "max_drawdown_eur":
             round(
                 max_drawdown_eur,
                 2,
             ),
+
+        "net_max_drawdown_eur": round(net_max_drawdown_eur, 2),
     }
 
 
@@ -328,6 +362,7 @@ def run_scenario(
     signal_df,
     prepared,
     prepared_by_symbol,
+    cost_scenario="BASE",
 ):
 
     rows = (
@@ -370,6 +405,7 @@ def run_scenario(
     trades = []
 
     plan_rejections = 0
+    plan_rejection_reasons = {}
 
     m5_history = (
         prepared["M5"]
@@ -427,6 +463,8 @@ def run_scenario(
         ):
 
             plan_rejections += 1
+            reason = plan.get("error") or (plan.get("errors") or ["PLAN_REJECTED"])[0]
+            plan_rejection_reasons[reason] = plan_rejection_reasons.get(reason, 0) + 1
             continue
 
         estimated_loss_eur = (
@@ -459,6 +497,8 @@ def run_scenario(
                     signal_time,
                 m5_history=
                     m5_history,
+                cost_scenario=cost_scenario,
+                risk_amount_eur=estimated_loss_eur,
             )
         )
 
@@ -519,6 +559,14 @@ def run_scenario(
                         "r"
                     ],
 
+                "gross_r": execution.get("gross_r"),
+                "net_r": execution.get("net_r"),
+                "transaction_cost_r": execution.get("transaction_cost_r"),
+                "transaction_cost_eur": execution.get("transaction_cost_eur"),
+                "net_pnl_eur": execution.get("net_r") * estimated_loss_eur if execution.get("net_r") is not None else None,
+                "cost_scenario": execution.get("cost_scenario"),
+                "session_utc": "ASIA" if signal_time.hour < 7 else "EUROPE" if signal_time.hour < 13 else "US" if signal_time.hour < 21 else "ROLLOVER",
+
                 "fill_time":
                     execution[
                         "fill_time"
@@ -557,6 +605,16 @@ def run_scenario(
         "risk_rejections"
     ] = risk_rejections
 
+    summary["opportunities_detected"] = int(len(rows))
+    summary["accepted_plans"] = len(trades)
+    summary["rejected_plans"] = plan_rejections + risk_rejections
+    summary["plan_rejection_reasons"] = plan_rejection_reasons
+    summary["cost_scenario"] = cost_scenario
+    summary["by_session_net_pnl_eur"] = {
+        str(session): round(float(group.loc[group["result"].isin(["WIN", "LOSS"]), "net_pnl_eur"].fillna(0).sum()), 2)
+        for session, group in pd.DataFrame(trades).groupby("session_utc")
+    } if trades else {}
+
     return (
         trades,
         summary,
@@ -564,6 +622,13 @@ def run_scenario(
 
 
 def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--scan", default=str(SCAN_PATH))
+    parser.add_argument("--cost-scenario", choices=list(COST_SCENARIOS), default="BASE")
+    parser.add_argument("--output-dir", default=str(BACKTEST_DIR))
+    parser.add_argument("--name", default="stateful")
+    args = parser.parse_args()
 
     print("=" * 90)
     print(
@@ -585,7 +650,7 @@ def main():
     )
 
     print(
-        "Resultados monetarios: NO"
+        "Cost scenario:", args.cost_scenario
     )
 
     print(
@@ -609,7 +674,7 @@ def main():
     }
 
     signal_df = pd.read_csv(
-        SCAN_PATH,
+        args.scan,
         parse_dates=[
             "analysis_time"
         ],
@@ -648,6 +713,7 @@ def main():
                         signal_df=signal_df,
                         prepared=prepared,
                         prepared_by_symbol=prepared_by_symbol,
+                        cost_scenario=args.cost_scenario,
                     )
                 )
 
@@ -703,15 +769,11 @@ def main():
         summaries
     )
 
-    trades_path = (
-        BACKTEST_DIR
-        / "stateful_trades.csv"
-    )
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    trades_path = output_dir / f"{args.name}_trades.csv"
 
-    summary_path = (
-        BACKTEST_DIR
-        / "stateful_summary.csv"
-    )
+    summary_path = output_dir / f"{args.name}_summary.csv"
 
     trades_df.to_csv(
         trades_path,
@@ -746,12 +808,13 @@ def main():
 
         "ambiguous_intrabar_excluded":
             True,
+
+        "cost_scenario": args.cost_scenario,
+        "cost_assumptions": COST_SCENARIOS[args.cost_scenario],
+        "source_scan": str(args.scan),
     }
 
-    metadata_path = (
-        BACKTEST_DIR
-        / "stateful_metadata.json"
-    )
+    metadata_path = output_dir / f"{args.name}_metadata.json"
 
     with open(
         metadata_path,

@@ -1,9 +1,13 @@
-import json
 import time
 from typing import Literal
 
-from ollama import chat
 from pydantic import BaseModel, Field
+
+from src.agents.llm_client import (
+    LLMProviderError,
+    get_llm_configuration,
+    structured_chat,
+)
 
 from src.market_snapshot import (
     build_compact_snapshot,
@@ -112,12 +116,18 @@ class MarketAnalysis(
 
     news_check_required: bool
 
+    llm_provider: str
+
+    llm_model: str
+
+    llm_timeout_seconds: float
+
 
 class MarketAnalystAgent:
 
     def __init__(
         self,
-        model=MODEL,
+        model=None,
     ):
 
         self.model = model
@@ -210,66 +220,63 @@ strategy = NONE.
 Devuelve exclusivamente el JSON requerido.
 """
 
-        user_prompt = (
-            "Analiza este estado:\n\n"
-            +
-            json.dumps(
-                model_input,
-                indent=2,
-                ensure_ascii=False,
-            )
-        )
-
         start = (
             time.perf_counter()
         )
 
-        response = chat(
-            model=self.model,
-
-            messages=[
-                {
-                    "role":
-                        "system",
-
-                    "content":
-                        system_prompt,
-                },
-                {
-                    "role":
-                        "user",
-
-                    "content":
-                        user_prompt,
-                },
-            ],
-
-            format=(
-                StrategyAssessment
-                .model_json_schema()
-            ),
-
-            options={
-                "temperature": 0,
-                "num_ctx": 4096,
-            },
-
-            think=False,
-            keep_alive="30m",
-        )
-
-        elapsed = (
-            time.perf_counter()
-            -
-            start
-        )
-
-        assessment = (
-            StrategyAssessment
-            .model_validate_json(
-                response.message.content
+        try:
+            llm_config = get_llm_configuration(StrategyAssessment)
+            assessment = structured_chat(
+                StrategyAssessment,
+                system_prompt,
+                model_input,
+                model_override=self.model,
             )
-        )
+            llm_error = None
+        except Exception as exc:
+            elapsed = time.perf_counter() - start
+            try:
+                llm_config = get_llm_configuration(StrategyAssessment)
+            except Exception:
+                llm_config = None
+            llm_error = (
+                exc.code
+                if isinstance(exc, LLMProviderError)
+                else "LLM_CALL_FAILED"
+            )
+            result = MarketAnalysis(
+                symbol=market_state["symbol"],
+                decision="NO_TRADE",
+                strategy="NONE",
+                market_regime="UNCLEAR",
+                bias=technical["bias"],
+                overall_score=technical["overall_score"],
+                timeframe_scores=technical["timeframe_scores"],
+                higher_timeframe_alignment=technical["alignment"],
+                setup_quality=technical["setup_quality"],
+                decision_confidence=0.0,
+                supporting_evidence=technical["supporting_evidence"],
+                conflicting_evidence=technical["conflicting_evidence"],
+                evidence_used=[],
+                caution_flags=[],
+                summary="LLM provider failed; no trade decision was produced.",
+                validation_ok=False,
+                validation_errors=[llm_error],
+                news_check_required=False,
+                llm_provider=(llm_config.provider if llm_config else "unavailable"),
+                llm_model=(llm_config.model if llm_config else "unavailable"),
+                llm_timeout_seconds=(llm_config.timeout_seconds if llm_config else 0.0),
+            )
+            return result, {
+                "elapsed_seconds": elapsed,
+                "provider": result.llm_provider,
+                "model": result.llm_model,
+                "timeout_seconds": result.llm_timeout_seconds,
+                "max_retries": 0,
+                "error": llm_error,
+            }
+
+        elapsed = time.perf_counter() - start
 
         # ==================================================
         # VALIDACION
@@ -465,6 +472,12 @@ Devuelve exclusivamente el JSON requerido.
                     decision
                     != "NO_TRADE"
                 ),
+
+                llm_provider=llm_config.provider,
+
+                llm_model=llm_config.model,
+
+                llm_timeout_seconds=llm_config.timeout_seconds,
             )
         )
 
@@ -472,55 +485,18 @@ Devuelve exclusivamente el JSON requerido.
             "elapsed_seconds":
                 elapsed,
 
-            "prompt_eval_count":
-                getattr(
-                    response,
-                    "prompt_eval_count",
-                    None,
-                ),
+            "provider":
+                llm_config.provider,
 
-            "eval_count":
-                getattr(
-                    response,
-                    "eval_count",
-                    None,
-                ),
+            "model":
+                llm_config.model,
 
-            "eval_duration":
-                getattr(
-                    response,
-                    "eval_duration",
-                    None,
-                ),
+            "timeout_seconds":
+                llm_config.timeout_seconds,
+
+            "max_retries":
+                0,
         }
-
-        if (
-            metrics[
-                "eval_count"
-            ]
-            and
-            metrics[
-                "eval_duration"
-            ]
-        ):
-
-            seconds = (
-                metrics[
-                    "eval_duration"
-                ]
-                / 1_000_000_000
-            )
-
-            if seconds > 0:
-
-                metrics[
-                    "tokens_per_second"
-                ] = (
-                    metrics[
-                        "eval_count"
-                    ]
-                    / seconds
-                )
 
         return (
             result,
