@@ -1,0 +1,66 @@
+{
+  "symbol": "USDCAD",
+  "start": "2026-01-15T00:00:00+00:00",
+  "end": "2026-01-16T00:00:00+00:00",
+  "scope": "LEVEL_THESIS_WITH_SIMULATED_TRADE_PLANS",
+  "execution_scope": "HISTORICAL_SIMULATION_ONLY_NO_ORDERS_PLACED",
+  "llm_configuration": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "reasoning_effort": "high",
+    "max_tokens_override": 16384
+  },
+  "horizon_minutes": 180,
+  "outcome_method": {
+    "confirmation_basis": "TWO_CONSECUTIVE_M15_CLOSES",
+    "confirmation_closures": 2,
+    "break_buffer_atr": 0.1,
+    "hold_confirmation_atr": 0.1,
+    "hold_requires_recent_or_future_touch": true
+  },
+  "funnel": {
+    "m15_evaluated": 96,
+    "outside_session": 40,
+    "open_space": 45,
+    "level_candidates": 11,
+    "regime_invalid": 0,
+    "thesis_invalid": 0,
+    "thesis_unclear": 6,
+    "thesis_operational": 5,
+    "correct": 3,
+    "wrong": 2,
+    "ambiguous": 0,
+    "unresolved": 0,
+    "trade_plan_valid": 3,
+    "trade_plan_rejected": 2,
+    "trade_execution_simulated": 2
+  },
+  "resolved": 5,
+  "actual_outcomes": {
+    "hold": 8,
+    "break": 3
+  },
+  "baseline_always_hold_accuracy": 0.7273,
+  "baseline_always_break_accuracy": 0.2727,
+  "model_edge_over_always_hold": -0.2727,
+  "raw_score_prediction_count": 11,
+  "raw_score_prediction_accuracy": 0.4545,
+  "raw_score_baseline_always_hold_accuracy": 0.7273,
+  "validated_thesis_count_with_resolved_outcome": 5,
+  "validated_thesis_accuracy": 0.6,
+  "validated_thesis_coverage": 0.4545,
+  "validated_baseline_always_hold_accuracy": 0.6,
+  "accuracy_resolved": 0.6,
+  "simulated_trade_outcomes": {
+    "OPEN_AT_END": 1,
+    "LOSS": 1
+  },
+  "limitations": [
+    "NO_HISTORICAL_NEWS",
+    "NO_HISTORICAL_MACRO",
+    "DIAGNOSTIC_NOT_PROFITABILITY_BACKTEST",
+    "OVERLAPPING_SIGNALS_NOT_DEDUPLICATED",
+    "TRADE_SIMULATION_EXCLUDES_COMMISSION_AND_SLIPPAGE",
+    "TRADE_EXECUTION_USES_OHLC_AND_DOES_NOT_MODEL_INTRABAR_TICK_PATH"
+  ]
+}

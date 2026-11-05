@@ -1,5 +1,7 @@
 from pathlib import Path
+from argparse import ArgumentParser
 import json
+import os
 
 from time import perf_counter
 
@@ -35,6 +37,14 @@ from src.historical_level_outcome import (
     evaluate_level_thesis,
 )
 
+from src.historical_level_trade_planner import (
+    build_level_trade_plan,
+)
+
+from src.historical_execution import (
+    simulate_trade,
+)
+
 from src.agents.technical_agent import (
     TechnicalAgent,
 )
@@ -62,15 +72,42 @@ from src.level_history_bridge import (
 )
 
 
-SYMBOL = "USDCAD"
+def _utc_timestamp(value):
+    timestamp = pd.Timestamp(value)
+    if timestamp.tzinfo is None:
+        return timestamp.tz_localize("UTC")
+    return timestamp.tz_convert("UTC")
 
-START = pd.Timestamp(
-    "2026-04-08T00:00:00+00:00"
+
+_argument_parser = ArgumentParser(
+    description="Replay histórico de tesis de niveles para un símbolo y periodo UTC."
+)
+_argument_parser.add_argument(
+    "--symbol",
+    default="USDCAD",
+)
+_argument_parser.add_argument(
+    "--start",
+    default="2026-04-08T00:00:00+00:00",
+    help="Inicio UTC inclusivo; acepta fecha o timestamp ISO-8601.",
+)
+_argument_parser.add_argument(
+    "--end",
+    default=None,
+    help="Fin UTC exclusivo; por defecto, medianoche posterior a --start.",
+)
+_arguments = _argument_parser.parse_args()
+
+SYMBOL = _arguments.symbol
+START = _utc_timestamp(_arguments.start)
+END = (
+    _utc_timestamp(_arguments.end)
+    if _arguments.end
+    else START.normalize() + pd.Timedelta(days=1)
 )
 
-END = pd.Timestamp(
-    "2026-04-09T00:00:00+00:00"
-)
+if START >= END:
+    _argument_parser.error("--start debe ser anterior a --end")
 
 HORIZON_MINUTES = 180
 
@@ -200,10 +237,20 @@ stats = {
 
     "unresolved":
         0,
+
+    "trade_plan_valid":
+        0,
+
+    "trade_plan_rejected":
+        0,
+
+    "trade_execution_simulated":
+        0,
 }
 
 
 rows = []
+execution_busy_until = None
 
 
 # ==========================================================
@@ -617,6 +664,9 @@ for analysis_time in decision_times:
             prepared_history=
                 history,
 
+            active_level=
+                active_level,
+
             horizon_minutes=
                 HORIZON_MINUTES,
         )
@@ -633,6 +683,74 @@ for analysis_time in decision_times:
     correct = outcome.get(
         "correct"
     )
+
+    comparison_diagnostics = (
+        thesis.get(
+            "comparison_diagnostics"
+        )
+        or {}
+    )
+
+    trade_plan = {
+        "status": "NOT_APPLICABLE",
+        "simulation_only": True,
+    }
+    trade_execution = {
+        "result": "NOT_SIMULATED",
+    }
+
+    if thesis.get("valid") and thesis.get("thesis") != "UNCLEAR":
+        trade_plan = build_level_trade_plan(
+            symbol=SYMBOL,
+            thesis=thesis["thesis"],
+            levels=levels,
+            market_state=market_state,
+        )
+
+        if trade_plan.get("status") == "VALID":
+            stats["trade_plan_valid"] += 1
+            signal_time = pd.Timestamp(analysis_time)
+
+            if (
+                execution_busy_until is not None
+                and signal_time < pd.Timestamp(execution_busy_until)
+            ):
+                trade_execution = {
+                    "result": "SKIPPED_OVERLAP",
+                    "r": None,
+                    "fill_time": None,
+                    "exit_time": None,
+                    "release_time": execution_busy_until,
+                }
+            else:
+                trade_end = signal_time + pd.Timedelta(
+                    minutes=HORIZON_MINUTES
+                )
+                m5_future = history["M5"].loc[
+                    (history["M5"]["time"] >= signal_time)
+                    & (history["M5"]["time"] < trade_end)
+                ].copy().reset_index(drop=True)
+
+                if m5_future.empty:
+                    trade_execution = {
+                        "result": "NO_FUTURE_EXECUTION_DATA",
+                        "r": None,
+                        "fill_time": None,
+                        "exit_time": None,
+                        "release_time": None,
+                    }
+                else:
+                    trade_execution = simulate_trade(
+                        plan=trade_plan,
+                        signal_time=signal_time,
+                        m5_history=m5_future,
+                    )
+                    execution_busy_until = trade_execution.get(
+                        "release_time"
+                    )
+                    stats["trade_execution_simulated"] += 1
+        else:
+            stats["trade_plan_rejected"] += 1
 
 
     if correct is True:
@@ -696,6 +814,16 @@ for analysis_time in decision_times:
         or {}
     )
 
+    active_zone = (
+        support
+        if active_level == "SUPPORT"
+        else (
+            resistance
+            if active_level == "RESISTANCE"
+            else {}
+        )
+    )
+
 
     row = {
         "analysis_time":
@@ -738,6 +866,12 @@ for analysis_time in decision_times:
             regime.get(
                 "valid"
             ),
+
+        "regime_reason_codes":
+            "|".join(regime.get("reason_codes", [])),
+
+        "regime_validation_errors":
+            "|".join(regime.get("validation_errors", [])),
 
         "support_strength":
             support.get(
@@ -784,6 +918,77 @@ for analysis_time in decision_times:
                 "confidence"
             ),
 
+        "active_level_zone_id":
+            active_zone.get("zone_id"),
+
+        "active_level_low":
+            active_zone.get("low"),
+
+        "active_level_high":
+            active_zone.get("high"),
+
+        "comparison_hold_score":
+            comparison_diagnostics.get(
+                "hold_score"
+            ),
+
+        "comparison_break_score":
+            comparison_diagnostics.get(
+                "break_score"
+            ),
+
+        "comparison_confidence":
+            comparison_diagnostics.get(
+                "confidence"
+            ),
+
+        "comparison_score_margin":
+            (
+                abs(
+                    comparison_diagnostics["hold_score"]
+                    - comparison_diagnostics["break_score"]
+                )
+                if (
+                    comparison_diagnostics.get("hold_score") is not None
+                    and comparison_diagnostics.get("break_score") is not None
+                )
+                else None
+            ),
+
+        "comparison_score_prediction":
+            (
+                "HOLD"
+                if comparison_diagnostics.get("hold_score")
+                is not None
+                and comparison_diagnostics.get("break_score") is not None
+                and comparison_diagnostics["hold_score"]
+                > comparison_diagnostics["break_score"]
+                else (
+                    "BREAK"
+                    if comparison_diagnostics.get("hold_score") is not None
+                    and comparison_diagnostics.get("break_score") is not None
+                    and comparison_diagnostics["break_score"]
+                    > comparison_diagnostics["hold_score"]
+                    else None
+                )
+            ),
+
+        "comparison_hold_evidence":
+            "|".join(
+                comparison_diagnostics.get(
+                    "hold_evidence_used",
+                    [],
+                )
+            ),
+
+        "comparison_break_evidence":
+            "|".join(
+                comparison_diagnostics.get(
+                    "break_evidence_used",
+                    [],
+                )
+            ),
+
         "thesis_valid":
             thesis.get(
                 "valid"
@@ -812,6 +1017,54 @@ for analysis_time in decision_times:
 
         "actual_outcome":
             actual_outcome,
+
+        "outcome_confirmation_closures":
+            outcome.get("confirmation_closures"),
+
+        "outcome_confirmation_basis":
+            outcome.get("outcome_confirmation_basis"),
+
+        "outcome_break_buffer_atr":
+            outcome.get("break_buffer_atr"),
+
+        "outcome_hold_confirmation_atr":
+            outcome.get("hold_confirmation_atr"),
+
+        "trade_plan_status":
+            trade_plan.get("status"),
+
+        "trade_simulation_only":
+            True,
+
+        "trade_plan_error":
+            trade_plan.get("error"),
+
+        "trade_entry":
+            trade_plan.get("entry"),
+
+        "trade_stop_loss":
+            trade_plan.get("stop_loss"),
+
+        "trade_take_profit":
+            trade_plan.get("take_profit"),
+
+        "trade_target_rr":
+            trade_plan.get("target_rr"),
+
+        "trade_order_type":
+            trade_plan.get("order_type"),
+
+        "trade_execution_result":
+            trade_execution.get("result"),
+
+        "trade_r":
+            trade_execution.get("r"),
+
+        "trade_fill_time":
+            trade_execution.get("fill_time"),
+
+        "trade_exit_time":
+            trade_execution.get("exit_time"),
 
         "correct":
             correct,
@@ -934,6 +1187,45 @@ accuracy = (
     else None
 )
 
+raw_prediction_accuracy = None
+raw_prediction_count = 0
+raw_score_baseline_hold_accuracy = None
+validated_label_count = 0
+validated_baseline_hold_accuracy = None
+
+if not df.empty and "comparison_score_prediction" in df:
+    labeled = df["actual_outcome"].isin({"HOLD", "BREAK"})
+    scored = labeled & df["comparison_score_prediction"].notna()
+    raw_prediction_count = int(scored.sum())
+    if raw_prediction_count:
+        raw_prediction_accuracy = float(
+            (
+                df.loc[scored, "comparison_score_prediction"]
+                == df.loc[scored, "actual_outcome"]
+            ).mean()
+        )
+        raw_score_baseline_hold_accuracy = float(
+            (df.loc[scored, "actual_outcome"] == "HOLD").mean()
+        )
+
+    validated = (
+        labeled
+        & df["thesis_valid"].fillna(False)
+        & df["thesis"].isin(
+            {
+                "SUPPORT_HOLD",
+                "SUPPORT_BREAK",
+                "RESISTANCE_HOLD",
+                "RESISTANCE_BREAK",
+            }
+        )
+    )
+    validated_label_count = int(validated.sum())
+    if validated_label_count:
+        validated_baseline_hold_accuracy = float(
+            (df.loc[validated, "actual_outcome"] == "HOLD").mean()
+        )
+
 
 summary = {
     "symbol":
@@ -946,10 +1238,62 @@ summary = {
         END.isoformat(),
 
     "scope":
-        "LEVEL_THESIS_TECHNICAL_ONLY",
+        "LEVEL_THESIS_WITH_SIMULATED_TRADE_PLANS",
+
+    "execution_scope":
+        "HISTORICAL_SIMULATION_ONLY_NO_ORDERS_PLACED",
+
+    "llm_configuration": {
+        "provider":
+            os.environ.get(
+                "LLM_PROVIDER",
+                "ollama",
+            ).strip().lower(),
+
+        "model":
+            (
+                os.environ.get(
+                    "DEEPSEEK_MODEL",
+                    "deepseek-flash",
+                ).strip()
+                if os.environ.get(
+                    "LLM_PROVIDER",
+                    "ollama",
+                ).strip().lower() == "deepseek"
+                else "qwen3:4b"
+            ),
+
+        "reasoning_effort":
+            (
+                os.environ.get(
+                    "DEEPSEEK_REASONING_EFFORT",
+                    "low",
+                ).strip().lower()
+                if os.environ.get(
+                    "LLM_PROVIDER",
+                    "ollama",
+                ).strip().lower() == "deepseek"
+                else None
+            ),
+
+        "max_tokens_override":
+            (
+                int(os.environ["DEEPSEEK_MAX_TOKENS"])
+                if os.environ.get("DEEPSEEK_MAX_TOKENS")
+                else None
+            ),
+    },
 
     "horizon_minutes":
         HORIZON_MINUTES,
+
+    "outcome_method": {
+        "confirmation_basis": "TWO_CONSECUTIVE_M15_CLOSES",
+        "confirmation_closures": 2,
+        "break_buffer_atr": 0.10,
+        "hold_confirmation_atr": 0.10,
+        "hold_requires_recent_or_future_touch": True,
+    },
 
     "funnel":
         stats,
@@ -990,18 +1334,66 @@ summary = {
     "model_edge_over_always_hold":
         (
             round(
-                accuracy
+                raw_prediction_accuracy
                 -
-                always_hold_accuracy,
+                raw_score_baseline_hold_accuracy,
                 4,
             )
             if (
-                accuracy
+                raw_prediction_accuracy
                 is not None
                 and
-                always_hold_accuracy
+                raw_score_baseline_hold_accuracy
                 is not None
             )
+            else None
+        ),
+
+    "raw_score_prediction_count":
+        raw_prediction_count,
+
+    "raw_score_prediction_accuracy":
+        (
+            round(raw_prediction_accuracy, 4)
+            if raw_prediction_accuracy is not None
+            else None
+        ),
+
+    "raw_score_baseline_always_hold_accuracy":
+        (
+            round(raw_score_baseline_hold_accuracy, 4)
+            if raw_score_baseline_hold_accuracy is not None
+            else None
+        ),
+
+    "validated_thesis_count_with_resolved_outcome":
+        validated_label_count,
+
+    "validated_thesis_accuracy":
+        (
+            round(accuracy, 4)
+            if accuracy is not None
+            else None
+        ),
+
+    "validated_thesis_coverage":
+        (
+            round(
+                validated_label_count
+                / int(df["actual_outcome"].isin({"HOLD", "BREAK"}).sum()),
+                4,
+            )
+            if (
+                not df.empty
+                and int(df["actual_outcome"].isin({"HOLD", "BREAK"}).sum())
+            )
+            else None
+        ),
+
+    "validated_baseline_always_hold_accuracy":
+        (
+            round(validated_baseline_hold_accuracy, 4)
+            if validated_baseline_hold_accuracy is not None
             else None
         ),
 
@@ -1016,26 +1408,66 @@ summary = {
             else None
         ),
 
+    "simulated_trade_outcomes":
+        (
+            df.loc[
+                df["trade_execution_result"].isin(
+                    {
+                        "EXPIRED",
+                        "EXPIRED_AT_END",
+                        "WIN",
+                        "LOSS",
+                        "AMBIGUOUS_ENTRY_BAR",
+                        "AMBIGUOUS_BOTH",
+                        "OPEN_AT_END",
+                    }
+                ),
+                "trade_execution_result",
+            ].value_counts().to_dict()
+            if not df.empty and "trade_execution_result" in df
+            else {}
+        ),
+
     "limitations": [
         "NO_HISTORICAL_NEWS",
         "NO_HISTORICAL_MACRO",
         "DIAGNOSTIC_NOT_PROFITABILITY_BACKTEST",
         "OVERLAPPING_SIGNALS_NOT_DEDUPLICATED",
+        "TRADE_SIMULATION_EXCLUDES_COMMISSION_AND_SLIPPAGE",
+        "TRADE_EXECUTION_USES_OHLC_AND_DOES_NOT_MODEL_INTRABAR_TICK_PATH",
     ],
 }
 
 
+last_included_time = END - pd.Timedelta(nanoseconds=1)
+full_calendar_days = (
+    START == START.normalize()
+    and END == last_included_time.normalize() + pd.Timedelta(days=1)
+)
+if full_calendar_days:
+    period_label = START.strftime("%Y%m%d")
+    if last_included_time.strftime("%Y%m%d") != period_label:
+        period_label += "_" + last_included_time.strftime("%Y%m%d")
+else:
+    period_label = (
+        START.strftime("%Y%m%dT%H%M")
+        + "_"
+        + last_included_time.strftime("%Y%m%dT%H%M")
+    )
+
+output_stem = f"{period_label}_{SYMBOL}_level_thesis"
+
 csv_path = (
     OUTPUT_DIR
     /
-    "20260408_USDCAD_level_thesis.csv"
+    f"{output_stem}.csv"
 )
 
 
 json_path = (
     OUTPUT_DIR
     /
-    "20260408_USDCAD_level_thesis_summary.json"
+    f"{output_stem}_summary.json"
 )
 
 

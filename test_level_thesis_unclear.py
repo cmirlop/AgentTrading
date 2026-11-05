@@ -66,5 +66,26 @@ assert result["operation"] == "NONE", result
 assert result["target_level"] == "NONE", result
 assert result["evidence_used"] == [], result
 assert result["validation_errors"] == [], result
+assert result["comparison_diagnostics"] == {
+    "hold_score": 0.7,
+    "break_score": 0.3,
+    "confidence": 0.3,
+    "hold_evidence_used": ["SUPPORT_MEDIUM"],
+    "break_evidence_used": ["M5_RETURN5_NEGATIVE"],
+}, result
 
 print("OK: UNCLEAR es una abstencion valida, sin operacion ni evidencias de tesis.")
+
+failed_bus = FakeBus()
+with patch(
+    "src.agents.level_thesis_agent.structured_chat",
+    side_effect=RuntimeError("simulated API failure"),
+):
+    failed_result = LevelThesisAgent().run(context, failed_bus)
+
+assert failed_result["thesis"] == "UNCLEAR", failed_result
+assert failed_result["valid"] is False, failed_result
+assert failed_result["operation"] == "NONE", failed_result
+assert failed_result["validation_errors"] == ["LLM_ERROR:RuntimeError"], failed_result
+
+print("OK: error de API registrado por tipo y replay puede continuar sin reintentos.")

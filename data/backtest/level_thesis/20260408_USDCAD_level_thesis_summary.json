@@ -2,7 +2,7 @@
   "symbol": "USDCAD",
   "start": "2026-04-08T00:00:00+00:00",
   "end": "2026-04-09T00:00:00+00:00",
-  "scope": "LEVEL_THESIS_TECHNICAL_ONLY",
+  "scope": "LEVEL_THESIS_WITH_SIMULATED_TRADE_PLANS",
   "horizon_minutes": 180,
   "funnel": {
     "m15_evaluated": 96,
@@ -10,27 +10,53 @@
     "open_space": 37,
     "level_candidates": 19,
     "regime_invalid": 0,
-    "thesis_invalid": 1,
-    "thesis_unclear": 17,
-    "thesis_operational": 1,
+    "thesis_invalid": 0,
+    "thesis_unclear": 19,
+    "thesis_operational": 0,
     "correct": 0,
-    "wrong": 1,
+    "wrong": 0,
     "ambiguous": 0,
-    "unresolved": 0
+    "unresolved": 0,
+    "trade_plan_valid": 0,
+    "trade_plan_rejected": 0,
+    "trade_execution_simulated": 0
   },
-  "resolved": 1,
+  "resolved": 0,
   "actual_outcomes": {
-    "hold": 0,
-    "break": 1
+    "hold": 9,
+    "break": 8
   },
-  "baseline_always_hold_accuracy": 0.0,
-  "baseline_always_break_accuracy": 1.0,
-  "model_edge_over_always_hold": 0.0,
-  "accuracy_resolved": 0.0,
+  "baseline_always_hold_accuracy": 0.5294,
+  "baseline_always_break_accuracy": 0.4706,
+  "model_edge_over_always_hold": -0.1176,
+  "accuracy_resolved": null,
   "limitations": [
     "NO_HISTORICAL_NEWS",
     "NO_HISTORICAL_MACRO",
     "DIAGNOSTIC_NOT_PROFITABILITY_BACKTEST",
-    "OVERLAPPING_SIGNALS_NOT_DEDUPLICATED"
-  ]
+    "OVERLAPPING_SIGNALS_NOT_DEDUPLICATED",
+    "TRADE_SIMULATION_EXCLUDES_COMMISSION_AND_SLIPPAGE",
+    "TRADE_EXECUTION_USES_OHLC_AND_DOES_NOT_MODEL_INTRABAR_TICK_PATH"
+  ],
+  "llm_configuration": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "reasoning_effort": "high",
+    "max_tokens_override": 16384
+  },
+  "outcome_method": {
+    "confirmation_basis": "TWO_CONSECUTIVE_M15_CLOSES",
+    "confirmation_closures": 2,
+    "break_buffer_atr": 0.1,
+    "hold_confirmation_atr": 0.1,
+    "hold_requires_recent_or_future_touch": true
+  },
+  "raw_score_prediction_count": 17,
+  "raw_score_prediction_accuracy": 0.4118,
+  "raw_score_baseline_always_hold_accuracy": 0.5294,
+  "validated_thesis_count_with_resolved_outcome": 0,
+  "validated_thesis_accuracy": null,
+  "validated_thesis_coverage": 0.0,
+  "simulated_trade_outcomes": {},
+  "execution_scope": "HISTORICAL_SIMULATION_ONLY_NO_ORDERS_PLACED"
 }
