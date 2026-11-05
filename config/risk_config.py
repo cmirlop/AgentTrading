@@ -21,6 +21,9 @@ MAX_PORTFOLIO_RISK_PERCENT = 2.0
 MAX_CURRENCY_EXPOSURE_EQUITY_MULTIPLE = 1.0
 DAILY_LOSS_TIMEZONE = "UTC"
 DAILY_RISK_STATE_PATH = "data/state/daily_risk_guard.json"
+# DRY RUN approvals reserve capacity for at most fifteen minutes. Rejected
+# plans release earlier; this expiry recovers capacity after a crashed process.
+DAILY_RISK_RESERVATION_TTL_MINUTES = 15
 
 # No position manager currently moves stops to break-even. Keep the advertised
 # feature disabled until a simulated manager is implemented and tested.

@@ -23,6 +23,7 @@ from src.mt5_runtime import (
     get_positions_state,
     get_orders_state,
 )
+from src.mt5_deal_history import calculate_realized_net_pnl
 
 
 BASE_DIR = (
@@ -105,12 +106,19 @@ def _risk_snapshot(account, all_positions, all_orders):
         return {"available": False, "reason": "DAILY_DEAL_HISTORY_UNAVAILABLE"}
     if deals is None:
         return {"available": False, "reason": "DAILY_DEAL_HISTORY_UNAVAILABLE"}
-    realized = 0.0
-    try:
-        for deal in deals:
-            realized += sum(float(getattr(deal, field, 0.0) or 0.0) for field in ("profit", "commission", "swap", "fee"))
-    except (TypeError, ValueError):
-        return {"available": False, "reason": "DAILY_DEAL_DATA_INVALID"}
+    daily_result = calculate_realized_net_pnl(
+        deals,
+        mt5,
+        window_start_utc=midnight,
+        window_end_utc=now,
+    )
+    if not daily_result.get("available"):
+        return {
+            "available": False,
+            "reason": daily_result.get("reason") or "DAILY_DEAL_DATA_INVALID",
+            "daily_window_start_utc": midnight.isoformat(),
+            "daily_window_end_utc": now.isoformat(),
+        }
 
     symbols = {item["symbol"] for item in all_positions + all_orders}
     symbols.update(SYMBOLS)
@@ -144,7 +152,13 @@ def _risk_snapshot(account, all_positions, all_orders):
     return {
         "available": available,
         "reason": None if available else "EXISTING_POSITION_OR_SYMBOL_RISK_METADATA_UNAVAILABLE",
-        "realized_net_pnl": round(realized, 8),
+        "realized_net_pnl": daily_result["realized_net_pnl"],
+        "daily_deal_counts": {
+            "trading": daily_result["trade_deal_count"],
+            "commission": daily_result["commission_deal_count"],
+            "excluded_non_trade": daily_result["excluded_non_trade_deal_count"],
+            "total": daily_result["history_deal_count"],
+        },
         "open_risk_account": round(sum(positions_risk), 8) if all(v is not None for v in positions_risk) else None,
         "pending_risk_account": round(sum(pending_risk), 8) if all(v is not None for v in pending_risk) else None,
         "positions": all_positions,

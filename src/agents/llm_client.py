@@ -21,6 +21,7 @@ from dotenv import load_dotenv
 from pydantic import ValidationError
 
 from config.agent_config import OLLAMA_CONTEXT, OLLAMA_KEEP_ALIVE, OLLAMA_MODEL, OLLAMA_TEMPERATURE
+from src.agents import deepseek_client
 
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=False)
@@ -160,6 +161,14 @@ def _failure_code(exc: Exception) -> str:
         return exc.code
     safe_codes = {
         "LLM_API_KEY_MISSING",
+        "LLM_PROVIDER_DEPENDENCY_MISSING",
+        "LLM_AUTHENTICATION_REJECTED",
+        "LLM_PROVIDER_PERMISSION_DENIED",
+        "LLM_PROVIDER_MODEL_OR_ENDPOINT_NOT_FOUND",
+        "LLM_PROVIDER_RATE_LIMITED",
+        "LLM_PROVIDER_CONNECTION_FAILED",
+        "LLM_PROVIDER_REQUEST_REJECTED",
+        "LLM_PROVIDER_SERVER_ERROR",
         "LLM_CONFIGURATION_INVALID",
         "LLM_ALLOWED_EVIDENCE_MISSING",
         "LLM_ALLOWED_EVIDENCE_INVALID",
@@ -186,8 +195,13 @@ def _validate_evidence(result: Any, fields: list[str], allowed_ids: list[str]) -
             raise LLMProviderError("LLM_INVALID_EVIDENCE")
 
 
-def structured_chat(schema, system_prompt, payload, *, model_override=None):
-    """Call the selected provider once and return a validated Pydantic model."""
+def structured_chat(schema, system_prompt, payload, *, model_override=None, return_metadata=False):
+    """Call the selected provider once and return a validated Pydantic model.
+
+    ``return_metadata`` is intended for explicit live validation. It returns
+    only the provider-reported model, latency and token counts, never prompts,
+    response bodies, credentials, or internal reasoning.
+    """
     config = get_llm_configuration(schema)
     if model_override is not None:
         if config.provider != "ollama" or not str(model_override).strip():
@@ -213,18 +227,22 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None):
         config.keep_alive,
     )
 
+    metadata = {}
     try:
         if config.provider == "deepseek":
-            from src.agents.deepseek_client import deepseek_structured_chat
-
-            result = deepseek_structured_chat(
+            response = deepseek_client.deepseek_structured_chat(
                 schema,
                 system_prompt,
                 payload,
                 model=config.model,
                 timeout_seconds=config.timeout_seconds,
                 max_tokens=config.max_tokens,
+                return_metadata=return_metadata,
             )
+            if return_metadata:
+                result, metadata = response
+            else:
+                result = response
         else:
             host = os.environ.get("OLLAMA_HOST") or None
             client = _ollama_client(host, config.timeout_seconds)
@@ -249,6 +267,21 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None):
             if not content.strip():
                 raise LLMProviderError("LLM_EMPTY_RESPONSE")
             result = schema.model_validate_json(content)
+            if return_metadata:
+                metadata = {
+                    "provider_reported_model": (
+                        response.get("model") if isinstance(response, dict)
+                        else getattr(response, "model", None)
+                    ),
+                    "prompt_tokens": (
+                        response.get("prompt_eval_count") if isinstance(response, dict)
+                        else getattr(response, "prompt_eval_count", None)
+                    ),
+                    "completion_tokens": (
+                        response.get("eval_count") if isinstance(response, dict)
+                        else getattr(response, "eval_count", None)
+                    ),
+                }
 
         _validate_evidence(result, evidence_fields, allowed_ids)
     except Exception as exc:
@@ -262,11 +295,26 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None):
         )
         raise LLMProviderError(code) from None
 
+    elapsed = perf_counter() - started
     LOGGER.info(
         "LLM call complete provider=%s model=%s schema=%s elapsed_seconds=%.3f",
         config.provider,
         config.model,
         schema.__name__,
-        perf_counter() - started,
+        elapsed,
     )
+    if return_metadata:
+        return result, {
+            "provider": config.provider,
+            "configured_model": config.model,
+            "provider_reported_model": metadata.get("provider_reported_model"),
+            "latency_seconds": round(elapsed, 3),
+            "prompt_tokens": metadata.get("prompt_tokens"),
+            "completion_tokens": metadata.get("completion_tokens"),
+            "reasoning_tokens": metadata.get("reasoning_tokens"),
+            "timeout_seconds": config.timeout_seconds,
+            "reasoning_effort": config.reasoning_effort,
+            "max_tokens": config.max_tokens,
+            "max_retries": config.max_retries,
+        }
     return result

@@ -64,6 +64,24 @@ class RiskValidatorTests(unittest.TestCase):
         self.assertFalse(result["approved"])
         self.assertIn("MAX_PORTFOLIO_RISK_EXCEEDED", result["errors"])
 
+    def test_buy_and_sell_proposals_remain_dry_run_approvals(self):
+        for direction, candidate_status, stop, target in (
+            ("BUY", "CANDIDATE_LONG", 1.09, 1.12),
+            ("SELL", "CANDIDATE_SHORT", 1.11, 1.08),
+        ):
+            with self.subTest(direction=direction):
+                plan = dict(self.plan, direction=direction, stop_loss=stop, take_profit=target)
+                candidate = dict(self.candidate, status=candidate_status)
+                result = risk_validator.validate_dry_run(
+                    symbol="EURUSD", candidate=candidate, trade_plan=plan,
+                    request=self.request, order_check_result=self.order_check,
+                    terminal_info=self.terminal,
+                    portfolio_risk={"approved": True, "errors": []},
+                )
+                self.assertTrue(result["approved"], result["errors"])
+                self.assertEqual(result["status"], "DRY_RUN_APPROVED")
+                self.assertFalse(result.get("trade_authorized", False))
+
 
 if __name__ == "__main__":
     unittest.main()

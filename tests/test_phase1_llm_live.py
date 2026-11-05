@@ -1,0 +1,80 @@
+import os
+import sys
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.validate_phase1_llm_live import ProbeAnswer, _invalid_response_guard_check, validate
+from src.agents.deepseek_client import _api_failure_code
+from src.agents.llm_client import LLMProviderError
+
+
+class LiveProviderValidatorOfflineTests(unittest.TestCase):
+    def test_api_errors_are_classified_without_provider_body(self):
+        class AuthenticationError(Exception):
+            status_code = 401
+
+        class APIConnectionError(Exception):
+            pass
+
+        class RateLimitError(Exception):
+            status_code = 429
+
+        self.assertEqual(_api_failure_code(AuthenticationError("private body")), "LLM_AUTHENTICATION_REJECTED")
+        self.assertEqual(_api_failure_code(APIConnectionError("private body")), "LLM_PROVIDER_CONNECTION_FAILED")
+        self.assertEqual(_api_failure_code(RateLimitError("private body")), "LLM_PROVIDER_RATE_LIMITED")
+
+    def test_invalid_probe_schema_and_evidence_are_rejected_without_signal(self):
+        result = _invalid_response_guard_check()
+        self.assertEqual(result["status"], "PASS")
+        self.assertTrue(result["invalid_schema_rejected"])
+        self.assertTrue(result["invalid_evidence_rejected"])
+        self.assertFalse(result["operational_signal_created"])
+
+    def test_deepseek_is_pending_without_explicit_authorization_and_makes_no_call(self):
+        with patch.dict(os.environ, {"DEEPSEEK_API_KEY": "unit-test-only"}):
+            report = validate("deepseek", authorize_deepseek=False)
+        self.assertEqual(report["status"], "PENDING")
+        self.assertEqual(report["calls_made"], 0)
+        self.assertFalse(report["api_key_logged"])
+        self.assertFalse(report["market_order_sent"])
+
+    def test_explicitly_authorized_deepseek_runs_one_validated_request(self):
+        answer = ProbeAnswer(status="PASS", evidence_used=["LIVE_PROBE"])
+        metadata = {
+            "provider": "deepseek",
+            "configured_model": "deepseek-flash",
+            "provider_reported_model": "deepseek-flash",
+            "latency_seconds": 0.1,
+            "prompt_tokens": 10,
+            "completion_tokens": 4,
+        }
+        with patch.dict(os.environ, {
+            "DEEPSEEK_API_KEY": "unit-test-only",
+            "DEEPSEEK_MODEL": "deepseek-flash",
+        }):
+            with patch("src.agents.llm_client.structured_chat", return_value=(answer, metadata)) as request:
+                report = validate("deepseek", authorize_deepseek=True)
+        self.assertEqual(report["status"], "PASS")
+        self.assertEqual(report["calls_made"], 1)
+        self.assertEqual(report["provider_metadata"]["completion_tokens"], 4)
+        self.assertEqual(request.call_count, 1)
+        self.assertTrue(request.call_args.kwargs["return_metadata"])
+        self.assertFalse(report["api_key_logged"])
+        self.assertFalse(report["market_order_sent"])
+
+    def test_invalid_provider_response_never_becomes_signal(self):
+        with patch.dict(os.environ, {"DEEPSEEK_API_KEY": "unit-test-only"}):
+            with patch("src.agents.llm_client.structured_chat", side_effect=LLMProviderError("LLM_INVALID_EVIDENCE")):
+                report = validate("deepseek", authorize_deepseek=True)
+        self.assertEqual(report["status"], "FAIL")
+        self.assertEqual(report["calls_made"], 1)
+        self.assertFalse(report["operational_signal_created"])
+
+
+if __name__ == "__main__":
+    unittest.main()
