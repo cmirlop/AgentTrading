@@ -8,10 +8,13 @@ from datetime import datetime, timezone
 import json
 import math
 from pathlib import Path
+import shutil
 import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
+PRIVATE_REPORT = ROOT / "reports" / "private" / "phase1_mt5_validation.json"
+PUBLIC_SUMMARY = ROOT / "reports" / "phase1_mt5_validation.json"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -23,9 +26,14 @@ def _write(report, destination):
 
 
 def _traceability():
-    from scripts.validate_phase1 import _source_snapshot
+    from scripts.validate_phase1 import _external_scope_fingerprint, _external_scope_snapshot, _source_snapshot
 
-    return {"validation_fingerprint": _source_snapshot()}
+    snapshot = _source_snapshot()
+    return {
+        "validation_fingerprint": snapshot,
+        "external_scope": _external_scope_snapshot("mt5", snapshot),
+        "external_scope_fingerprint": _external_scope_fingerprint("mt5", snapshot),
+    }
 
 
 def _check(ok, reason=None, **details):
@@ -40,6 +48,114 @@ def _number(value, positive=False):
     if not math.isfinite(result) or (positive and result <= 0):
         return None
     return result
+
+
+DAILY_LIMIT_BLOCK_ERRORS = {"DAILY_LOSS_LIMIT_LOCKED", "DAILY_LOSS_LIMIT_REACHED"}
+
+
+def _daily_loss_limit_check(result):
+    approved = result.get("approved")
+    errors = result.get("errors")
+    used = _number(result.get("daily_risk_used"))
+    limit = _number(result.get("daily_loss_limit"), positive=True)
+    locked = result.get("locked")
+    valid_data = (
+        isinstance(approved, bool)
+        and isinstance(errors, list)
+        and all(isinstance(item, str) for item in errors)
+        and used is not None and used >= 0
+        and limit is not None
+        and isinstance(locked, bool)
+    )
+    if not valid_data:
+        return _check(False, "Daily risk evaluation returned incomplete or invalid data.",
+                      reason_code="DAILY_RISK_EVALUATION_INVALID")
+    if approved is True and not errors:
+        return _check(True, behavior="PROPOSALS_ALLOWED", approved=True, errors=[])
+    if approved is False and errors and set(errors).issubset(DAILY_LIMIT_BLOCK_ERRORS):
+        return _check(
+            True,
+            behavior="PROPOSALS_BLOCKED_DAILY_LIMIT_REACHED",
+            approved=False,
+            errors=errors,
+        )
+    return _check(
+        False,
+        "Daily risk evaluation failed or returned an unexplained rejection.",
+        reason_code="DAILY_RISK_EVALUATION_ERROR",
+        approved=approved,
+        errors=errors,
+    )
+
+
+def _overall_status(checks):
+    return "PASS" if checks and all(item.get("status") == "PASS" for item in checks.values()) else "FAIL"
+
+
+def _safe_public_summary(report):
+    checks = report.get("checks", {})
+    public_checks = {}
+    for name, check in checks.items():
+        if not isinstance(check, dict):
+            continue
+        public_checks[name] = {"status": check.get("status", "PENDING")}
+        if check.get("reason_code"):
+            public_checks[name]["reason_code"] = check["reason_code"]
+    fingerprint = report.get("traceability", {}).get("validation_fingerprint", {})
+    reason_code = report.get("reason_code") or (
+        "MT5_VALIDATION_FAILED" if report.get("status") == "FAIL" else None
+    )
+    safe_reasons = {
+        "ACCOUNT_NOT_VERIFIABLY_DEMO": "Connected account is not verifiably DEMO; operational checks were not run.",
+        "PYTHON_API_TRADING_NOT_DISABLED": "Python API trading is not verifiably disabled; operational checks were not run.",
+        "MT5_MODULE_UNAVAILABLE": "MetaTrader5 Python module is unavailable in this environment.",
+        "MT5_TERMINAL_UNAVAILABLE": "MT5 terminal did not initialize; integration checks were not run.",
+        "MT5_SESSION_UNAVAILABLE": "Account or terminal information is unavailable.",
+        "MT5_VALIDATION_EXCEPTION": "An MT5 validation check raised an exception; details are suppressed.",
+    }
+    return {
+        "schema_version": 1,
+        "phase": "FASE 1.1 MT5 DEMO",
+        "status": report.get("status", "PENDING"),
+        "generated_at_utc": report.get("generated_at_utc"),
+        "reason_code": reason_code,
+        "reason": safe_reasons.get(reason_code),
+        "checks": public_checks,
+        "traceability": {
+            "validation_fingerprint": {
+                "validation_commit": fingerprint.get("validation_commit"),
+                "branch": fingerprint.get("branch"),
+                "source_fingerprint_sha256": fingerprint.get("source_fingerprint_sha256"),
+                "dataset_sha256": fingerprint.get("dataset_sha256"),
+                "relevant_file_sha256": fingerprint.get("relevant_file_sha256"),
+                "backtest_config_sha256": fingerprint.get("backtest_config_sha256"),
+                "dependencies": fingerprint.get("dependencies"),
+                "python_version": fingerprint.get("python_version"),
+            },
+            "validation_commit": fingerprint.get("validation_commit"),
+            "branch": fingerprint.get("branch"),
+            "source_fingerprint_sha256": fingerprint.get("source_fingerprint_sha256"),
+            "external_scope": report.get("traceability", {}).get("external_scope"),
+            "external_scope_fingerprint": report.get("traceability", {}).get("external_scope_fingerprint"),
+        },
+        "private_detail_report_stored": True,
+        "previous_public_summary_archive": report.get("previous_public_summary_archive"),
+        "account_identifiers_stored": False,
+        "real_execution_authorized": False,
+        "order_send_calls": 0,
+    }
+
+
+def _require_private_destination(path):
+    target = Path(path).resolve()
+    try:
+        target.relative_to(ROOT.resolve())
+    except ValueError:
+        return
+    try:
+        target.relative_to((ROOT / "reports" / "private").resolve())
+    except ValueError:
+        raise ValueError("Detailed MT5 reports inside the repository must be written under reports/private/.") from None
 
 
 def _collect_rates(mt5, currencies, symbols):
@@ -64,11 +180,17 @@ def _collect_rates(mt5, currencies, symbols):
 
 
 def _pending_report(reason, generated_at):
+    reason_codes = {
+        "MetaTrader5 Python module is unavailable in this environment.": "MT5_MODULE_UNAVAILABLE",
+        "MT5 terminal did not initialize; integration checks were not run.": "MT5_TERMINAL_UNAVAILABLE",
+        "Account or terminal information is unavailable.": "MT5_SESSION_UNAVAILABLE",
+    }
     return {
         "phase": "FASE 1.1 MT5 DEMO",
         "status": "PENDING",
         "generated_at_utc": generated_at,
         "reason": reason,
+        "reason_code": reason_codes.get(reason, "MT5_VALIDATION_PENDING"),
         "manual_instructions": [
             "Ejecutar desde Windows 11 con la terminal MT5 abierta e iniciada en una cuenta DEMO.",
             "Activar 'Disable algorithmic trading via external Python API' en las opciones de la terminal.",
@@ -101,6 +223,7 @@ def validate(mt5=None, *, now=None):
         "phase": "FASE 1.1 MT5 DEMO",
         "status": "FAIL",
         "generated_at_utc": generated,
+        "reason_code": None,
         "checks": {},
         "account_identifiers_stored": False,
         "real_execution_authorized": False,
@@ -117,9 +240,28 @@ def validate(mt5=None, *, now=None):
 
         demo_constant = getattr(mt5, "ACCOUNT_TRADE_MODE_DEMO", None)
         is_demo = demo_constant is not None and getattr(account, "trade_mode", None) == demo_constant
-        report["checks"]["demo_account"] = _check(is_demo, "Connected account is not verifiably DEMO.")
         if not is_demo:
-            report["reason"] = "Real or unverifiable account rejected before market-data checks."
+            report["checks"]["demo_account"] = {
+                "status": "PENDING",
+                "reason_code": "ACCOUNT_NOT_VERIFIABLY_DEMO",
+            }
+            report["status"] = "PENDING"
+            report["reason_code"] = "ACCOUNT_NOT_VERIFIABLY_DEMO"
+            report["reason"] = "Connected account is not verifiably DEMO; market-data and account-history checks were not run."
+            return report
+        report["checks"]["demo_account"] = _check(True)
+
+        api_disabled = getattr(terminal, "tradeapi_disabled", None) is True
+        report["checks"]["python_trading_disabled"] = _check(
+            api_disabled,
+            "Terminal does not confirm that external Python trading is disabled.",
+            reason_code=None if api_disabled else "PYTHON_API_TRADING_NOT_DISABLED",
+        )
+        if not api_disabled:
+            report["checks"]["python_trading_disabled"]["status"] = "PENDING"
+            report["status"] = "PENDING"
+            report["reason_code"] = "PYTHON_API_TRADING_NOT_DISABLED"
+            report["reason"] = "Python API trading is not verifiably disabled; operational checks were not run."
             return report
 
         currency = str(getattr(account, "currency", "") or "").upper()
@@ -133,11 +275,6 @@ def validate(mt5=None, *, now=None):
         report["checks"]["account_values"] = _check(
             bool(currency and balance and equity), "Balance, equity or account currency is unavailable."
         )
-        report["checks"]["python_trading_disabled"] = _check(
-            getattr(terminal, "tradeapi_disabled", None) is True,
-            "Terminal does not confirm that external Python trading is disabled.",
-        )
-
         from config.market_config import SYMBOLS
         from config.risk_config import (
             DAILY_LOSS_TIMEZONE,
@@ -352,15 +489,7 @@ def validate(mt5=None, *, now=None):
                 reserve_proposal=False,
                 reservation_ttl_minutes=DAILY_RISK_RESERVATION_TTL_MINUTES,
             )
-        report["checks"]["daily_loss_limit_evaluation"] = _check(
-            isinstance(daily.get("approved"), bool),
-            "Daily risk guard could not evaluate a complete MT5 snapshot.",
-            approved=daily.get("approved"),
-            errors=daily.get("errors", []),
-            daily_risk_used=daily.get("daily_risk_used"),
-            daily_loss_limit=daily.get("daily_loss_limit"),
-            locked=daily.get("locked"),
-        )
+        report["checks"]["daily_loss_limit_evaluation"] = _daily_loss_limit_check(daily)
 
         report["checks"]["execution_safety"] = {
             "status": "PASS",
@@ -368,14 +497,11 @@ def validate(mt5=None, *, now=None):
             "real_execution_authorized": False,
             "request_checks": "order_calc_profit only; hypothetical BUY/SELL price-to-stop probes",
         }
-        report["status"] = "PASS" if all(
-            check.get("status") == "PASS"
-            for key, check in report["checks"].items()
-            if key != "daily_loss_limit_evaluation"
-        ) else "FAIL"
+        report["status"] = _overall_status(report["checks"])
         return report
     except Exception as exc:
         report["status"] = "FAIL"
+        report["reason_code"] = "MT5_VALIDATION_EXCEPTION"
         report["error"] = type(exc).__name__
         report["reason"] = "An MT5 validation check raised an exception; details are suppressed to avoid exposing sensitive terminal data."
         return report
@@ -388,16 +514,27 @@ def validate(mt5=None, *, now=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", default=str(ROOT / "reports" / "phase1_mt5_validation.json"))
+    parser.add_argument("--output", default=str(PRIVATE_REPORT))
+    parser.add_argument("--summary-output", default=str(PUBLIC_SUMMARY))
     args = parser.parse_args(argv)
+    _require_private_destination(args.output)
     report = validate()
     command = [sys.executable, "scripts/validate_phase1_mt5.py"]
-    if args.output != str(ROOT / "reports" / "phase1_mt5_validation.json"):
+    if args.output != str(PRIVATE_REPORT):
         command += ["--output", args.output]
+    if args.summary_output != str(PUBLIC_SUMMARY):
+        command += ["--summary-output", args.summary_output]
     report["command_executed"] = command
+    from scripts.validate_phase1 import _archive_existing_report
+
+    report["previous_private_report_archive"] = _archive_existing_report(args.output)
+    report["previous_public_summary_archive"] = _archive_existing_report(args.summary_output)
     _write(report, args.output)
+    summary = _safe_public_summary(report)
+    _write(summary, args.summary_output)
     print(json.dumps({
-        "report": args.output,
+        "report": "reports/private/phase1_mt5_validation.json" if args.output == str(PRIVATE_REPORT) else "private detail report",
+        "summary": args.summary_output,
         "status": report["status"],
         "real_execution_authorized": False,
         "account_identifiers_stored": False,
