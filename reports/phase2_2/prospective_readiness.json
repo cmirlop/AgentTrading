@@ -1,0 +1,18 @@
+{
+  "blockers": [
+    "Fase 1 sigue INCOMPLETE_PENDING_MANUAL para verificaciones locales MT5/provider.",
+    "El flujo actual usa la familia de estrategia DeepSeek para crear el plan; falta un plan TECHNICAL ONLY independiente para la misma población.",
+    "No hay outcomes prospectivos emparejados ni periodo confirmatorio UTC congelado.",
+    "Los precios API actuales y el presupuesto real deben autorizarse antes de cualquier llamada live.",
+    "La calidad de spread histórica no permite tratar todos los costes como tarifas observadas del bróker."
+  ],
+  "deepseek_value_add": "INCONCLUSIVE_INSUFFICIENT_DATA",
+  "manual_checks_not_run": [
+    "MT5 DEMO",
+    "DeepSeek live",
+    "Ollama live"
+  ],
+  "no_real_calls_or_orders": true,
+  "status": "PROSPECTIVE_EXPERIMENT_BLOCKED",
+  "strategy_conclusion": "INCONCLUSIVE"
+}

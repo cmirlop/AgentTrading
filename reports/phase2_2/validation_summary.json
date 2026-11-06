@@ -1,0 +1,231 @@
+{
+  "all_mt5_connections": 0,
+  "all_orders_sent": 0,
+  "all_provider_calls": 0,
+  "checks": {
+    "all_offline_unittest": "PASS",
+    "baseline_integrity": "PASS",
+    "confirmed_economic_comparison": "NOT_APPLICABLE_NO_PROSPECTIVE_DATA",
+    "deepseek_live": "PENDING",
+    "execution_safety": "PASS",
+    "ledger_and_coverage": "PASS",
+    "lookahead": "PASS",
+    "mt5_live": "PENDING",
+    "ollama_live": "PENDING",
+    "phase2_2_tests": "PASS",
+    "portfolio_risk_parity_fixtures": "PASS",
+    "synthetic_end_to_end": "PASS",
+    "transaction_costs": "PENDING_HISTORICAL_OR_PROSPECTIVE_COMMON_PLAN_DATA"
+  },
+  "deepseek_value_add": "INCONCLUSIVE_INSUFFICIENT_DATA",
+  "generated_at_utc": "2026-11-06T11:26:03.969449Z",
+  "limitations": [
+    "Fase 1 sigue INCOMPLETE_PENDING_MANUAL para verificaciones locales MT5/provider.",
+    "El flujo actual usa la familia de estrategia DeepSeek para crear el plan; falta un plan TECHNICAL ONLY independiente para la misma población.",
+    "No hay outcomes prospectivos emparejados ni periodo confirmatorio UTC congelado.",
+    "Los precios API actuales y el presupuesto real deben autorizarse antes de cualquier llamada live.",
+    "La calidad de spread histórica no permite tratar todos los costes como tarifas observadas del bróker."
+  ],
+  "phase_status": "PHASE2_2_COMPLETE",
+  "prospective_experiment_status": "PROSPECTIVE_EXPERIMENT_BLOCKED",
+  "schema_version": "2.2",
+  "security": {
+    "live_validations": "NOT_RUN_BY_DESIGN",
+    "mt5_connections_attempted": 0,
+    "order_execution_findings": [],
+    "orders_sent_by_phase2_2_validation": 0,
+    "provider_calls_attempted": 0,
+    "status": "PASS"
+  },
+  "strategy_conclusion": "INCONCLUSIVE",
+  "test_runs": [
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_phase2_2.py",
+        "-v"
+      ],
+      "duration_seconds": 1.995,
+      "name": "phase2_2_tests",
+      "return_code": 0,
+      "status": "PASS",
+      "summary_lines": [
+        "Ran 28 tests in 1.365s",
+        "OK"
+      ],
+      "tests_errored": 0,
+      "tests_failed": 0,
+      "tests_passed": 28,
+      "tests_run": 28,
+      "tests_skipped": 0,
+      "unittest_duration_seconds": 1.365,
+      "validation_markers": []
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "duration_seconds": 5.594,
+      "name": "all_offline_unittest",
+      "return_code": 0,
+      "status": "PASS",
+      "summary_lines": [
+        "Ran 150 tests in 4.998s",
+        "OK (skipped=1)"
+      ],
+      "tests_errored": 0,
+      "tests_failed": 0,
+      "tests_passed": 149,
+      "tests_run": 150,
+      "tests_skipped": 1,
+      "unittest_duration_seconds": 4.998,
+      "validation_markers": []
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "test_no_lookahead.py"
+      ],
+      "duration_seconds": 1.618,
+      "name": "lookahead_replay",
+      "return_code": 0,
+      "status": "PASS",
+      "summary_lines": [],
+      "tests_errored": 0,
+      "tests_failed": 0,
+      "tests_passed": null,
+      "tests_run": null,
+      "tests_skipped": 0,
+      "unittest_duration_seconds": null,
+      "validation_markers": [
+        "[OK] sin look-ahead",
+        "[OK] sin look-ahead",
+        "[OK] sin look-ahead",
+        "[OK] Checks realizados: 375"
+      ]
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "scripts/run_phase2_2_offline_demo.py",
+        "--output",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_2/synthetic_experiment.json"
+      ],
+      "duration_seconds": 0.559,
+      "name": "offline_end_to_end_demo",
+      "return_code": 0,
+      "status": "PASS",
+      "summary_lines": [],
+      "tests_errored": 0,
+      "tests_failed": 0,
+      "tests_passed": null,
+      "tests_run": null,
+      "tests_skipped": 0,
+      "unittest_duration_seconds": null,
+      "validation_markers": []
+    }
+  ],
+  "traceability": {
+    "base_commit": "bcb46d87eb7c320569c20c8caf3dfb15abb66854",
+    "baseline_dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "branch": "codex/phase2-2-prospective-experiment",
+    "commands_executed": [
+      [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_phase2_2.py",
+        "-v"
+      ],
+      [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "test_no_lookahead.py"
+      ],
+      [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "scripts/run_phase2_2_offline_demo.py",
+        "--output",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_2/synthetic_experiment.json"
+      ]
+    ],
+    "dependencies": {
+      "MetaTrader5": "NOT_INSTALLED",
+      "numpy": "2.3.5",
+      "ollama": "NOT_INSTALLED",
+      "openai": "NOT_INSTALLED",
+      "pandas": "2.2.3",
+      "pydantic": "2.13.4"
+    },
+    "python_version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "relevant_file_sha256": {
+      "config/backtest_cost_config.py": "01cfb3671cc47ff72dd2a3072c02c9cc91a001b2ab89b7dca65ab3195938cd72",
+      "config/risk_config.py": "0beeaa0a3328d71c8d52272ea2d6dfa89e7d5a8ad145e00aa4c6cc81f3f26c1d",
+      "run_dry_pipeline.py": "b788edfc6953587ad01e033bdc14c432cebfded2e0f0454c96b66b91e38466b8",
+      "run_market_agents.py": "48e01a64fbea5eb35a639474635dc4304e07e2652b8ba4895a86335606f24f01",
+      "run_multiagent_analysis.py": "808634772cc4b9e605399bbc978172335b20e6f13e6c21de29c13f1b77b79c14",
+      "src/agents/llm_client.py": "f13bc70bf30cf35d6023b0d5d76d7bc8c2815a006e147f3353a4ee4104710b58",
+      "src/agents/market_analyst.py": "35e068321031bbc48e8504f0502694f6db850e9e1ab0651e8e1856314bd421b0",
+      "src/event_ledger.py": "3a6f54486e47a494c7f88371225a219553b6e720865826ee7f5d7b6c15a27386",
+      "src/llm_evaluation.py": "cb890371406b1cb058c59273561f135ef0801858cf564e12d402b8b320bb7162",
+      "src/paired_policy_simulator.py": "bb1d548fcfc929d8656a156d3f8e9fb3d427ec4f79156802fe6c6046061da52c",
+      "src/research_policy.py": "20d3d20e20a4c3605ebd5609331a1c452731ec55426028ebd7ad987ecb9ece1f"
+    },
+    "working_tree_clean_before_validation": false,
+    "working_tree_status_before_validation": [
+      "M docs/FASE2_PROTOCOLO_LLM.md",
+      " M run_dry_pipeline.py",
+      " M run_market_agents.py",
+      " M run_multiagent_analysis.py",
+      " M src/agents/llm_client.py",
+      " M src/agents/market_analyst.py",
+      " M src/event_ledger.py",
+      " M src/llm_evaluation.py",
+      " M tests/test_phase1_validation_provenance.py",
+      " M tests/test_phase2_1_1.py",
+      "?? docs/FASE2_2_PLAN.md",
+      "?? docs/FASE2_2_POLITICA_DEEPSEEK.md",
+      "?? docs/FASE2_2_RESULTADOS.md",
+      "?? reports/phase2_2/baseline_integrity.json",
+      "?? reports/phase2_2/coverage_reconciliation.json",
+      "?? reports/phase2_2/ledger_reliability.json",
+      "?? reports/phase2_2/portfolio_parity.json",
+      "?? reports/phase2_2/prospective_readiness.json",
+      "?? reports/phase2_2/synthetic_experiment.json",
+      "?? reports/phase2_2/validation_summary.json",
+      "?? scripts/run_phase2_2_offline_demo.py",
+      "?? scripts/validate_phase2_2.py",
+      "?? src/paired_policy_simulator.py",
+      "?? src/research_policy.py",
+      "?? tests/test_phase2_2.py"
+    ]
+  }
+}

@@ -21,6 +21,10 @@ Este protocolo debe fecharse y congelarse antes de recopilar el periodo confirma
 
 Todas las políticas procesan los eventos cronológicamente y aplican los mismos límites de posiciones, una posición activa por símbolo, exposición, riesgo y costes. No se suman operaciones simultáneas incompatibles.
 
+La política candidata de DeepSeek se define en `docs/FASE2_2_POLITICA_DEEPSEEK.md`. El rol canónico (`MARKET_ANALYST_STRATEGY_FAMILY`) devuelve familias de estrategia, no lados BUY/SELL. `NONE`, respuestas inválidas, timeouts y ausencia de cobertura rechazan la operación de la política DeepSeek; la salida técnica conserva por separado su dirección. Las llamadas no canónicas no sustituyen una respuesta del rol preregistrado.
+
+**Condición obligatoria antes de evaluar PnL:** el flujo actual usa la familia devuelta por el modelo para crear el plan. El comparador exige `plan_strategy_source=TECHNICAL_ONLY_REFERENCE` y un único plan idéntico para ambas políticas. Los planes actuales, etiquetados `MODEL_SELECTED_STRATEGY_FAMILY`, permanecen `NO_EVALUABLE`. Debe definirse y congelarse un plan técnico independiente, con cobertura también para oportunidades rechazadas por DeepSeek. No se puede inferir ese plan retrospectivamente ni elegirlo por rentabilidad.
+
 ## Métrica primaria
 
 Diferencia emparejada de expectativa neta por oportunidad, después de costes, entre `TECHNICAL_PLUS_DEEPSEEK` y `TECHNICAL_ONLY`. El denominador es la población preregistrada de oportunidades, incluyendo abstenciones como cero y conservando por separado errores, órdenes no ejecutadas, ambigüedades y datos faltantes. La política de tratamiento de outcomes abiertos/ambiguos debe cerrarse antes del experimento.
@@ -36,6 +40,8 @@ PnL neto, expectativa en R, drawdown, profit factor, tasa de operación, frecuen
 1. **Desarrollo:** depuración de instrumentación y revisión de calidad; no se declara valor predictivo.
 2. **Validación:** pruebas de esquema, integridad temporal, capacidad de emparejamiento y simulador. Se permiten correcciones de ingeniería, no ajuste de estrategia.
 3. **Confirmatorio:** intervalo UTC futuro fijado por fecha antes de observar sus resultados. No se cambian prompt, modelo, parámetros, umbrales, filtros, costes ni selección de eventos durante ese intervalo.
+
+Las fechas y duración del periodo confirmatorio siguen **SIN CONGELAR**. Se fijarán antes de habilitar recopilación; los datos ya examinados no se reutilizan como confirmatorios. El cierre UTC de la vela de oportunidad y el instante efectivo del plan se guardan por separado, y la vela del plan no puede ser posterior a la oportunidad.
 
 Los periodos confirmatorios no se usan para escoger el tamaño de ventana, el modelo, el prompt o reglas de decisión. Cualquier modificación reinicia una nueva versión y requiere otro periodo confirmatorio.
 
@@ -53,3 +59,15 @@ Los periodos confirmatorios no se usan para escoger el tamaño de ventana, el mo
 Los eventos de decisión contienen timestamps UTC, hash de payload/prompt, proveedor/modelo, configuración, código, IDs de evidencia permitidos, estado Pydantic, latencia, tokens disponibles, error y decisión final del sistema. El outcome se añade como evento separado, fechado cuando se conoce. Nunca se completa el histórico con decisiones DeepSeek inventadas o sin procedencia verificable.
 
 La recopilación es DRY RUN. No se envían órdenes, ni demo ni reales. Las llamadas DeepSeek solo se realizarían fuera de la suite offline, bajo una autorización explícita y el presupuesto acordado por el usuario.
+
+## Costes, outcomes y presupuesto
+
+- Escenario principal predefinido: `CONSERVATIVE` de la configuración versionada. `BASE` y `STRESS` se muestran como sensibilidades separadas.
+- Los ceros de spread no verificados no se describen como coste real cero. Ningún spread se resta dos veces si ya está representado en bid/ask.
+- Cada política usa el mismo coste, capital de investigación fijo, plan contrafactual, prioridad de eventos y parámetros de riesgo. Las carteras son independientes; no comparten slots ni reservas.
+- `COMMON_PLAN_COUNTERFACTUAL` es el único outcome que alimenta esta comparación. Debe incluir costes, fills, timestamps de resolución/expiración y volumen base verificable. Outcomes abiertos o ambiguos no se convierten en PnL cero cerrado.
+- La puerta de presupuesto de esta fase solo tiene mocks. Antes de cualquier llamada real se deben verificar precios actuales y fijar límites de solicitudes, tokens por solicitud, tokens agregados y coste autorizado. Al agotarse un límite se desactivan nuevas consultas; no hay reintentos automáticos.
+
+## Condiciones de inicio
+
+No iniciar confirmación hasta definir el plan TECHNICAL ONLY común, completar reconciliación, validar paridad y fuentes de riesgo, congelar costes y horizonte UTC, establecer un presupuesto autorizado y realizar las verificaciones manuales necesarias de Fase 1. A fecha de este documento el estado es `PROSPECTIVE_EXPERIMENT_BLOCKED`.

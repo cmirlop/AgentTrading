@@ -1,0 +1,319 @@
+{
+  "behavior_fixtures": [
+    {
+      "detected_behavior": "IMPROVEMENT_FIXTURE",
+      "difference_eur": 5.0,
+      "economic_evidence": false,
+      "scenario": "improvement",
+      "technical_only_net_eur": -5.0,
+      "technical_plus_deepseek_net_eur": 0.0
+    },
+    {
+      "detected_behavior": "DEGRADATION_FIXTURE",
+      "difference_eur": -5.0,
+      "economic_evidence": false,
+      "scenario": "degradation",
+      "technical_only_net_eur": 5.0,
+      "technical_plus_deepseek_net_eur": 0.0
+    },
+    {
+      "detected_behavior": "NO_CHANGE_FIXTURE",
+      "difference_eur": 0.0,
+      "economic_evidence": false,
+      "scenario": "no-change",
+      "technical_only_net_eur": 3.0,
+      "technical_plus_deepseek_net_eur": 3.0
+    }
+  ],
+  "coverage_reconciliation": {
+    "confirmatory_eligible": false,
+    "counts": {
+      "eligible_without_trade_context": 0,
+      "events_without_traceability": 0,
+      "opportunities_detected": 4,
+      "opportunities_eligible": 4,
+      "opportunities_excluded": 0,
+      "outcomes_pending": 0,
+      "outcomes_persisted": 4,
+      "provider_errors": 2,
+      "queries_planned": 9,
+      "queries_sent": 9,
+      "responses_persisted": 9,
+      "responses_received": 7,
+      "responses_valid": 7,
+      "sent_queries_without_response": 0,
+      "system_decisions_persisted": 4,
+      "trade_contexts_persisted": 4,
+      "valid_filter_responses_without_system_decision": 0
+    },
+    "discrepancies": [],
+    "eligibility_reason": "SYNTHETIC_FIXTURE_IS_ENGINEERING_EVIDENCE_ONLY",
+    "provider_calls_or_orders_created_by_reconciliation": 0,
+    "status": "PASS"
+  },
+  "fixture_only": true,
+  "invalid_evidence_logged": true,
+  "mt5_calls": 0,
+  "opportunities": 4,
+  "orders_sent": 0,
+  "pairing_counts": {
+    "disagreeing_decisions": 1,
+    "duplicate_event_ids": 0,
+    "events_without_llm_coverage": 1,
+    "llm_buy_sell": 0,
+    "llm_events_total": 9,
+    "llm_filter_approved": 2,
+    "llm_invalid": 2,
+    "llm_invalid_action_taxonomy": 0,
+    "llm_none": 1,
+    "llm_strategy_declined": 1,
+    "llm_valid": 7,
+    "llm_wait": 0,
+    "matching_decisions": 2,
+    "multiple_canonical_calls": 0,
+    "outcome_events": 4,
+    "provider_errors": 2,
+    "technical_events_total": 4,
+    "trade_contexts_missing_or_invalid": 0,
+    "unverified_provenance": 1
+  },
+  "prompt_sha256": "4e54929356d993a6b633904d28c73dc1a2b70b591ee7498906dc0b44dfe198a3",
+  "real_deepseek_calls": 0,
+  "real_ollama_calls": 0,
+  "reproducibility": {
+    "provider_calls": 0,
+    "same_input_same_output": true,
+    "status": "PASS"
+  },
+  "risk_policy_simulation": {
+    "cost_scenario": "CONSERVATIVE",
+    "economic_inference_allowed": false,
+    "event_results": {
+      "ALWAYS_HOLD": [
+        {
+          "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        }
+      ],
+      "TECHNICAL_ONLY": [
+        {
+          "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+          "reasons": [
+            "NO_GLOBAL_SLOT_AVAILABLE",
+            "CURRENCY_EXPOSURE_LIMIT_EXCEEDED_USD"
+          ],
+          "status": "RISK_REJECTED"
+        },
+        {
+          "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+          "reasons": [
+            "POSITION_ALREADY_OPEN_FOR_SYMBOL",
+            "NO_GLOBAL_SLOT_AVAILABLE",
+            "CURRENCY_EXPOSURE_LIMIT_EXCEEDED_USD"
+          ],
+          "status": "RISK_REJECTED"
+        }
+      ],
+      "TECHNICAL_PLUS_DEEPSEEK": [
+        {
+          "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+          "reason": "MODEL_DECLINED_STRATEGY",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+          "reason": "LLM_PROVENANCE_UNVERIFIED",
+          "status": "POLICY_REJECTED"
+        }
+      ]
+    },
+    "external_api_calls": 0,
+    "incomplete_events": [],
+    "initial_equity_eur": 10000.0,
+    "limitations": [
+      "This deterministic simulator uses the production risk-sizing and portfolio preflight functions with synthetic or verified supplied snapshots.",
+      "MT5 margin checks and broker order validation are not reproducible offline and remain PENDING.",
+      "NO_EVALUABLE inputs are retained in the population and block confirmatory inference.",
+      "All fills and outcomes are hypothetical; no order is sent."
+    ],
+    "paired_descriptive_delta": {
+      "confidence_interval": null,
+      "descriptive_only": true,
+      "net_expectancy_eur_per_opportunity_difference": 0.75,
+      "net_pnl_eur_difference": 3.0,
+      "net_r_sum_difference": 0.6,
+      "opportunities": 4,
+      "technical_only_net_pnl_eur": 0.0,
+      "technical_plus_deepseek_net_pnl_eur": 3.0
+    },
+    "policies": {
+      "ALWAYS_HOLD": {
+        "ambiguous": 0,
+        "closed": 0,
+        "costs_eur": 0.0,
+        "eligible": 0,
+        "expectancy_net_eur_per_closed_trade": null,
+        "expectancy_net_eur_per_opportunity": 0.0,
+        "expired": 0,
+        "filled": 0,
+        "gross_pnl_eur": 0.0,
+        "llm_approved": 0,
+        "llm_rejected_or_uncovered": 0,
+        "max_drawdown_eur": 0.0,
+        "negative_net_pnl_eur": 0.0,
+        "net_pnl_eur": 0.0,
+        "net_r_sum": 0.0,
+        "no_evaluable": 0,
+        "open_or_unresolved": 0,
+        "opportunities": 4,
+        "positive_net_pnl_eur": 0.0,
+        "profit_factor_net": null,
+        "rejection_reasons": {
+          "POLICY_ALWAYS_HOLD": 4
+        },
+        "risk_accepted": 0,
+        "risk_rejected": 0
+      },
+      "TECHNICAL_ONLY": {
+        "ambiguous": 0,
+        "closed": 2,
+        "costs_eur": 0.5,
+        "eligible": 4,
+        "expectancy_net_eur_per_closed_trade": 0.0,
+        "expectancy_net_eur_per_opportunity": 0.0,
+        "expired": 0,
+        "filled": 2,
+        "gross_pnl_eur": 0.5,
+        "llm_approved": 0,
+        "llm_rejected_or_uncovered": 0,
+        "max_drawdown_eur": 2.0,
+        "negative_net_pnl_eur": 2.0,
+        "net_pnl_eur": 0.0,
+        "net_r_sum": 0.0,
+        "no_evaluable": 0,
+        "open_or_unresolved": 0,
+        "opportunities": 4,
+        "positive_net_pnl_eur": 2.0,
+        "profit_factor_net": 1.0,
+        "rejection_reasons": {
+          "CURRENCY_EXPOSURE_LIMIT_EXCEEDED_USD": 2,
+          "NO_GLOBAL_SLOT_AVAILABLE": 2,
+          "POSITION_ALREADY_OPEN_FOR_SYMBOL": 1
+        },
+        "risk_accepted": 2,
+        "risk_rejected": 2
+      },
+      "TECHNICAL_PLUS_DEEPSEEK": {
+        "ambiguous": 0,
+        "closed": 2,
+        "costs_eur": 0.5,
+        "eligible": 2,
+        "expectancy_net_eur_per_closed_trade": 1.5,
+        "expectancy_net_eur_per_opportunity": 0.75,
+        "expired": 0,
+        "filled": 2,
+        "gross_pnl_eur": 3.5,
+        "llm_approved": 2,
+        "llm_rejected_or_uncovered": 2,
+        "max_drawdown_eur": 0.0,
+        "negative_net_pnl_eur": 0.0,
+        "net_pnl_eur": 3.0,
+        "net_r_sum": 0.6,
+        "no_evaluable": 0,
+        "open_or_unresolved": 0,
+        "opportunities": 4,
+        "positive_net_pnl_eur": 3.0,
+        "profit_factor_net": null,
+        "rejection_reasons": {
+          "LLM_PROVENANCE_UNVERIFIED": 1,
+          "MODEL_DECLINED_STRATEGY": 1
+        },
+        "risk_accepted": 2,
+        "risk_rejected": 0
+      }
+    },
+    "real_orders_sent": 0,
+    "risk_config": {
+      "daily_loss_timezone": "UTC",
+      "max_currency_exposure_equity_multiple": 1.0,
+      "max_daily_loss_percent": 2.0,
+      "max_loss_per_trade_eur": 5.0,
+      "max_open_positions": 2,
+      "max_portfolio_risk_percent": 2.0,
+      "max_risk_per_trade_percent": 0.5,
+      "reservation_ttl_minutes": 15,
+      "source": "config.risk_config + src.risk_engine + src.risk_preflight"
+    },
+    "sequence": [
+      {
+        "decision_time_utc": "2026-03-02T12:00:00+00:00",
+        "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+        "symbol": "EURUSD"
+      },
+      {
+        "decision_time_utc": "2026-03-02T12:01:00+00:00",
+        "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+        "symbol": "USDCAD"
+      },
+      {
+        "decision_time_utc": "2026-03-02T12:02:00+00:00",
+        "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+        "symbol": "AUDUSD"
+      },
+      {
+        "decision_time_utc": "2026-03-02T12:03:00+00:00",
+        "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+        "symbol": "EURUSD"
+      }
+    ],
+    "status": "OFFLINE_RISK_PARITY_SIMULATION"
+  },
+  "status": "PASS",
+  "taxonomy_outputs_logged": [
+    "BUY",
+    "SELL",
+    "HOLD",
+    "WAIT"
+  ],
+  "timeout_logged": true
+}

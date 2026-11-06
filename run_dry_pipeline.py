@@ -31,7 +31,10 @@ from src.risk_validator import (
     validate_dry_run,
 )
 from src.risk_preflight import evaluate_plan_risk, release_plan_risk_reservation
-from src.event_ledger import record_system_decision
+from src.event_ledger import (
+    LedgerPersistenceError, record_system_decision, record_trade_context,
+    research_log_required,
+)
 
 
 BASE_DIR = (
@@ -103,19 +106,44 @@ def latest_analysis(
 
 
 def record_research_decision(event_id, decision, status, errors=None):
-    """Best-effort append-only observability; never authorizes order execution."""
+    """Append-only research observability; never authorizes order execution."""
     if not event_id:
+        if research_log_required():
+            raise LedgerPersistenceError("LEDGER_EVENT_CONTEXT_MISSING")
         return
     try:
-        record_system_decision(
+        result = record_system_decision(
             event_id,
             str(decision),
             validation_status=str(status),
             decision_stage="DRY_RUN_VALIDATION",
             rejection_code=";".join(str(item) for item in (errors or []))[:240] or None,
         )
+        if research_log_required() and not result.persisted:
+            raise LedgerPersistenceError(result.error_code or "LEDGER_SYSTEM_DECISION_NOT_PERSISTED")
     except Exception:
+        if research_log_required():
+            raise
+
+
+def _research_market_risk_context(runtime_state, account_state):
+    """Return market inputs for offline sizing without account/position data."""
+    snapshot = runtime_state.get("risk_snapshot") or {}
+    return {
+        "account_currency": (account_state or {}).get("currency"),
+        "symbol_metadata": snapshot.get("symbol_metadata"),
+        "conversion_rates": snapshot.get("conversion_rates"),
+    }
+
+
+def record_research_trade_context(event_id, context, *, context_type="TRADE_PLAN_RISK_INPUT"):
+    if not event_id:
+        if research_log_required():
+            raise LedgerPersistenceError("LEDGER_EVENT_CONTEXT_MISSING")
         return
+    result = record_trade_context(event_id, context, context_type=context_type)
+    if research_log_required() and not result.persisted:
+        raise LedgerPersistenceError(result.error_code or "LEDGER_TRADE_CONTEXT_NOT_PERSISTED")
 
 
 def order_check_to_dict(
@@ -323,6 +351,17 @@ def main():
                 "allowed"
             ]:
 
+                record_research_trade_context(event_id, {
+                    "candidate_status": candidate.get("status"),
+                    "candidate_rejection_codes": candidate.get("rejection_reasons", []),
+                    "plan_status": "NOT_BUILT",
+                    "plan_strategy_source": "NO_PLAN_AVAILABLE",
+                    "plan": None,
+                    "context_known_at_utc": datetime.now(timezone.utc).isoformat(),
+                    "risk_context_known_at_utc": runtime.get("generated_at"),
+                    "risk_context": _research_market_risk_context(runtime, runtime.get("account")),
+                })
+
                 symbol_result[
                     "final_validation"
                 ] = {
@@ -391,6 +430,22 @@ def main():
                 )
             )
 
+            record_research_trade_context(event_id, {
+                "candidate_status": candidate.get("status"),
+                "candidate_rejection_codes": candidate.get("rejection_reasons", []),
+                "plan_status": plan.get("status"),
+                "plan_strategy_source": "MODEL_SELECTED_STRATEGY_FAMILY",
+                "plan": plan,
+                "market_data_time_utc": market_state.get("analysis_time"),
+                "context_known_at_utc": datetime.now(timezone.utc).isoformat(),
+                "risk_context_known_at_utc": runtime.get("generated_at"),
+                "risk_context": _research_market_risk_context(runtime, runtime.get("account")),
+                "market_data_quality": {
+                    "spread_status": (market_state.get("spread_quality") or {}).get("status", "UNVERIFIED")
+                    if isinstance(market_state.get("spread_quality"), dict) else "UNVERIFIED",
+                },
+            })
+
             symbol_result[
                 "trade_plan"
             ] = plan
@@ -458,6 +513,10 @@ def main():
                 plan,
                 runtime,
             )
+            record_research_trade_context(event_id, {
+                "risk_approved": bool(portfolio_risk.get("approved")),
+                "risk_rejection_codes": portfolio_risk.get("errors", []),
+            }, context_type="RISK_PREFLIGHT_RESULT")
             symbol_result["portfolio_risk"] = portfolio_risk
             if not portfolio_risk.get("approved"):
                 symbol_result["final_validation"] = {

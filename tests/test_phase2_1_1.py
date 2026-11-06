@@ -13,9 +13,10 @@ import pandas as pd
 from pydantic import BaseModel
 
 from src.agents.llm_client import LLMProviderError, structured_chat
-from src.event_ledger import append_outcome, bind_event, initialize_ledger, record_llm_call, record_opportunity, record_system_decision
+from src.event_ledger import append_outcome, bind_event, initialize_ledger, record_llm_call, record_llm_query_started, record_opportunity, record_system_decision
 from src.llm_evaluation import compare_paired_policies, pair_ledger
 from src.phase2_1_evaluation import classify_engineering_status, classify_llm_value_add, classify_strategy_evidence
+from src.research_policy import CANONICAL_FILTER_ROLE, POLICY_VERSION, MARKET_ANALYST_FILTER_PROMPT
 from src.spread_quality import audit_spread_values, classify_spread, effective_spread_points
 from src.warmup_audit import compare_indicator_windows, ema200_stabilization_bars, indicator_at_window
 
@@ -191,9 +192,15 @@ class Phase2111Tests(unittest.TestCase):
         self.assertEqual(empty["status"], "NO_VERIFIABLE_PAIRS")
         event_id = record_opportunity("AUDUSD", "2026-01-01T00:00:00Z", {"technical_decision": "HOLD"}, path=self.db_path)
         with sqlite3.connect(self.db_path) as db:
-            db.execute("INSERT INTO llm_events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)", (
+            db.execute("""INSERT INTO llm_events (
+                llm_event_id,event_id,schema_name,requested_at_utc,responded_at_utc,provider,configured_model,
+                reported_model,prompt_sha256,payload_sha256,allowed_evidence_json,decision_json,pydantic_status,
+                rejection_code,latency_ms,prompt_tokens,completion_tokens,error_code,final_system_decision,
+                agent_role,agent_stage,decision_policy_id,schema_version,order_executed,created_at_utc
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)""", (
                 "legacy", event_id, "UnknownSchema", "2026-01-01T00:00:01Z", "2026-01-01T00:00:02Z", "unknown", "", None,
-                "0" * 64, "1" * 64, "[]", '{"decision":"SELL"}', "VALID", None, 10, None, None, None, None, "2026-01-01T00:00:02Z",
+                "0" * 64, "1" * 64, "[]", '{"decision":"SELL"}', "VALID", None, 10, None, None, None, None,
+                "UNREGISTERED_SCHEMA", "UNCLASSIFIED", None, "1.0", "2026-01-01T00:00:02Z",
             ))
         paired = pair_ledger(self.db_path)
         self.assertEqual(paired["status"], "NO_VERIFIABLE_PAIRS")
@@ -207,8 +214,8 @@ class Phase2111Tests(unittest.TestCase):
         self.assertEqual(len(joined["pairs"]), 0)
         self.assertEqual(len(joined["population"]), 1)
         comparison = compare_paired_policies(joined["population"])
-        self.assertEqual(comparison["policies"]["TECHNICAL_ONLY"]["net_pnl_eur"], 3.0)
-        self.assertEqual(comparison["policies"]["TECHNICAL_PLUS_LLM"]["net_pnl_eur"], 0.0)
+        self.assertEqual(comparison["status"], "NO_EVALUABLE")
+        self.assertFalse(comparison["economic_inference_allowed"])
 
     def test_pairing_and_policy_interface_use_same_event_portfolio_constraints(self):
         event_ids = []
@@ -219,18 +226,17 @@ class Phase2111Tests(unittest.TestCase):
             timestamp = f"2026-01-01T00:0{idx}:00Z"
             event_id = record_opportunity(symbol, timestamp, {"technical_decision": technical, "technical_evaluation": {"setup_quality": quality, "overall_score": quality / 2}}, path=self.db_path)
             event_ids.append(event_id)
-            with bind_event(event_id, self.db_path):
-                record_llm_call(schema_name="Market", provider="deepseek", model="deepseek-flash", prompt="p", payload={"allowed_evidence_ids": ["E1"]}, allowed_evidence=["E1"], requested_at=f"2026-01-01T00:0{idx}:01Z", result=type("R", (), {"model_dump": lambda self, **kwargs: {"strategy": "BREAKOUT", "evidence_used": ["E1"]}})())
-            record_system_decision(event_id, system, validation_status="VALID", decision_stage="MARKET_ANALYSIS", path=self.db_path)
+            model_strategy = "PULLBACK" if idx == 0 else "NONE"
+            payload = {"allowed_evidence_ids": ["E1"]}
+            with bind_event(event_id, self.db_path, agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION):
+                record_llm_query_started(role=CANONICAL_FILTER_ROLE, policy_id=POLICY_VERSION, payload=payload)
+                record_llm_call(schema_name="StrategyAssessment", provider="deepseek", model="deepseek-flash", prompt=MARKET_ANALYST_FILTER_PROMPT, payload=payload, allowed_evidence=["E1"], requested_at=f"2026-01-01T00:0{idx}:01Z", result=type("R", (), {"model_dump": lambda self, **kwargs: {"strategy": model_strategy, "evidence_used": ["E1"]}})(), metadata={"schema_module": "src.agents.market_analyst", "provider_reported_model": "deepseek-flash"}, agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION)
+            record_system_decision(event_id, system, validation_status="VALID", decision_stage="MARKET_ANALYSIS", agent_role=CANONICAL_FILTER_ROLE, decision_policy_id=POLICY_VERSION, path=self.db_path)
             append_outcome(event_id, "2026-01-02T00:00:00Z", {"policy_id": "TRADE_CANDIDATE", "result": "WIN" if pnl > 0 else "LOSS", "net_pnl_eur": pnl, "net_r": pnl / 10, "release_time_utc": f"2026-01-01T01:0{idx}:00Z", "cost_scenario": "BASE"}, path=self.db_path)
         joined = pair_ledger(self.db_path)
         self.assertEqual(joined["counts"]["matching_decisions"], 1)
         comparison = compare_paired_policies(joined["pairs"], max_open_positions=1)
-        self.assertEqual(comparison["status"], "DESCRIPTIVE_PAIRED_POLICY_COMPARISON")
-        self.assertEqual(comparison["policies"]["TECHNICAL_ONLY"]["closed"], 1)
-        self.assertEqual(comparison["policies"]["TECHNICAL_ONLY"]["net_pnl_eur"], 10.0)
-        self.assertEqual(comparison["policies"]["TECHNICAL_PLUS_LLM"]["net_pnl_eur"], 10.0)
-        self.assertEqual(comparison["policies"]["ALWAYS_HOLD"]["net_pnl_eur"], 0.0)
+        self.assertEqual(comparison["status"], "NO_EVALUABLE_RISK_CONFIG_OVERRIDE")
 
     def test_phase2_conclusions_have_explicit_independent_states(self):
         required = {"unit_tests", "baseline_integrity"}

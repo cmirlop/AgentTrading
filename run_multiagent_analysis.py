@@ -15,7 +15,7 @@ from config.market_config import (
 from src.orchestration.orchestrator import (
     MultiAgentOrchestrator,
 )
-from src.event_ledger import bind_event, record_opportunity, record_system_decision
+from src.event_ledger import bind_event, record_opportunity, record_system_decision, research_log_required
 from src.market_snapshot import build_compact_snapshot
 from src.technical_evaluator import evaluate_technical_state
 
@@ -128,8 +128,14 @@ def main():
                 "technical_decision": technical_decision,
                 "technical_evaluation": {key: technical[key] for key in ("bias", "overall_score", "setup_quality", "alignment", "timeframe_scores")},
             }
-            event_id = record_opportunity(symbol, timestamp, snapshot)
+            event_id = record_opportunity(
+                symbol, timestamp, snapshot,
+                eligible=technical_decision != "NO_TRADE",
+                exclusion_reason="NO_TECHNICAL_CANDIDATE" if technical_decision == "NO_TRADE" else None,
+            )
     except Exception:
+        if research_log_required():
+            raise
         event_id = None
     call_args = dict(symbol=symbol, market_state=market_state, runtime_state=runtime_state, calendar_state=calendar_state)
     if event_id:
@@ -148,9 +154,11 @@ def main():
                 decision_stage="MARKET_ANALYSIS",
                 validation_status="VALID" if result_payload.get("final_approved") else "REJECTED",
                 rejection_code=";".join(result_payload.get("final_errors", [])) or None,
+                agent_role="MULTIAGENT_DETERMINISTIC_FINAL",
             )
         except Exception:
-            pass
+            if research_log_required():
+                raise
 
     print()
     print("=" * 90)

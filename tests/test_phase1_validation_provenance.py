@@ -269,6 +269,10 @@ class ValidationProvenanceTests(unittest.TestCase):
 
     def test_external_results_require_matching_source_provenance(self):
         snapshot = _source_snapshot()
+        # This test validates hash reuse, not the environment's installed SDK.
+        # Supply a deterministic dependency snapshot and cover missing-SDK
+        # behavior in a separate explicit assertion below.
+        snapshot["dependencies"] = {**snapshot["dependencies"], "openai": "test-sdk-version"}
         relative = "reports/_test_external_provenance_deepseek.json"
         path = ROOT / relative
         try:
@@ -314,6 +318,30 @@ class ValidationProvenanceTests(unittest.TestCase):
             result = _external_validation_status(relative, snapshot)
             self.assertEqual(result["status"], "PENDING")
             self.assertIn("24 hours", result["reason"])
+        finally:
+            path.unlink(missing_ok=True)
+
+    def test_external_result_remains_pending_when_provider_sdk_is_missing(self):
+        snapshot = _source_snapshot()
+        snapshot["dependencies"] = {**snapshot["dependencies"], "openai": "NOT_INSTALLED"}
+        scope = _external_scope_snapshot("deepseek", snapshot)
+        relative = "reports/_test_external_provenance_deepseek_missing_sdk.json"
+        path = ROOT / relative
+        try:
+            path.write_text(json.dumps({
+                "status": "PASS",
+                "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+                "configuration": scope["configuration"],
+                "traceability": {
+                    "validation_fingerprint": dict(snapshot),
+                    "external_scope": scope,
+                    "external_scope_fingerprint": _external_scope_data_fingerprint(scope),
+                },
+                "command_executed": ["synthetic-fixture"],
+            }), encoding="utf-8")
+            result = _external_validation_status(relative, snapshot)
+            self.assertEqual(result["status"], "PENDING")
+            self.assertIn("missing_provider_dependency_version", result["stale_fields"])
         finally:
             path.unlink(missing_ok=True)
 

@@ -16,6 +16,7 @@ from src.market_snapshot import (
 from src.technical_evaluator import (
     evaluate_technical_state,
 )
+from src.research_policy import MARKET_ANALYST_FILTER_PROMPT
 
 
 MODEL = "qwen3:4b"
@@ -179,46 +180,7 @@ class MarketAnalystAgent:
                 ],
         }
 
-        system_prompt = """
-Eres especialista en patrones y estrategias
-de trading Forex.
-
-Python YA ha calculado:
-
-- dirección técnica
-- score de cada timeframe
-- alineación temporal
-- setup_quality
-- evidencias alcistas/bajistas
-
-NO debes recalcular esos valores.
-
-Tu única función es clasificar qué estrategia
-describe mejor la situación.
-
-Estrategias permitidas:
-
-TREND_CONTINUATION
-PULLBACK
-BREAKOUT
-REVERSAL
-RANGE_FADE
-NONE
-
-La temporalidad principal es M15.
-
-NO inventes noticias.
-NO inventes gaps.
-NO inventes indicadores.
-
-evidence_used SOLO puede contener identificadores
-exactos presentes en available_evidence_ids.
-
-Si no hay una configuración clara:
-strategy = NONE.
-
-Devuelve exclusivamente el JSON requerido.
-"""
+        system_prompt = MARKET_ANALYST_FILTER_PROMPT
 
         start = (
             time.perf_counter()
