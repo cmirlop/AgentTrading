@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-11-06T07:59:20.824458+00:00",
+  "technical_only": true,
+  "llm_included": false,
+  "macro_history_included": false,
+  "portfolio_constraints_included": false,
+  "account_currency_pnl_included": false,
+  "ambiguous_intrabar_excluded": true,
+  "cost_scenario": "STRESS",
+  "cost_assumptions": {
+    "historical_spread_multiplier": 2.0,
+    "commission_eur_per_lot_round_turn": 10.0,
+    "slippage_points_per_side": 3.0,
+    "assumptions_unverified": [
+      "spread_multiplier=2.0",
+      "commission=10 EUR/lot",
+      "slippage=3 points/side"
+    ]
+  },
+  "source_scan": "data/backtest/validation_candidate_scan.csv"
+}

@@ -1,0 +1,321 @@
+{
+  "status": "RECONSTRUCTION_DIFFERS_AFTER_HISTORICAL_WARMUP_EXTENSION",
+  "frozen_dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "current_reconstruction_sha256": "8a953996628892b961d8481ee120a8ae308753c0e08119d9bf4dcbb4b2841ead",
+  "source_snapshot_commit": "5b858ddcb285136b0ce41b0260a76798b5b3495e",
+  "dataset_sha256_at_source_snapshot": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "source_snapshot_hash_matches_frozen_dataset": true,
+  "technical_logic_source_comparison": {
+    "src/indicators.py": {
+      "available_at_source_snapshot": true,
+      "unchanged_since_snapshot": true,
+      "current_sha256": "da2fc0f6993da5ecf2c9a9bb8c29f46624963c858411646c5912c33a6658f150"
+    },
+    "src/historical_state.py": {
+      "available_at_source_snapshot": true,
+      "unchanged_since_snapshot": true,
+      "current_sha256": "ac237e2560ceece6a2e19b1133adc24ada61177133f0dd74f714d2b11957a651"
+    },
+    "src/technical_evaluator.py": {
+      "available_at_source_snapshot": true,
+      "unchanged_since_snapshot": true,
+      "current_sha256": "02981cc81f48bfc96065e505f41e986965b5f988114cb1d46f7ca8164d7e0b6b"
+    },
+    "src/market_snapshot.py": {
+      "available_at_source_snapshot": true,
+      "unchanged_since_snapshot": true,
+      "current_sha256": "002be986c16d136466ab792be409704087f8300062b368d7e8e5a64976555ade"
+    },
+    "src/session_gate.py": {
+      "available_at_source_snapshot": true,
+      "unchanged_since_snapshot": true,
+      "current_sha256": "46f14fa5236c1746d7382433a2b2eaa8b857aee34e323bf212ea173362a08d78"
+    }
+  },
+  "frozen_rows": 22011,
+  "reconstructed_rows": 22011,
+  "matching_event_ids": 22011,
+  "frozen_only_event_ids": 0,
+  "reconstructed_only_event_ids": 0,
+  "changed_feature_columns": {
+    "d1_score": {
+      "changed_rows": 1278,
+      "max_absolute_difference": 28.580000000000005
+    },
+    "setup_quality": {
+      "changed_rows": 1200,
+      "max_absolute_difference": 5.0
+    },
+    "candidate_65": {
+      "changed_rows": 13,
+      "max_absolute_difference": 1.0
+    },
+    "h4_score": {
+      "changed_rows": 20,
+      "max_absolute_difference": 28.570000000000007
+    },
+    "bias": {
+      "changed_rows": 34,
+      "max_absolute_difference": null
+    },
+    "overall_score": {
+      "changed_rows": 1298,
+      "max_absolute_difference": 5.719999999999999
+    }
+  },
+  "selection_counts_by_existing_threshold": {
+    "65": {
+      "frozen_count": 10284,
+      "current_reconstruction_count": 10287,
+      "event_membership_changes": 13
+    },
+    "75": {
+      "frozen_count": 8153,
+      "current_reconstruction_count": 8167,
+      "event_membership_changes": 14
+    },
+    "85": {
+      "frozen_count": 5716,
+      "current_reconstruction_count": 5730,
+      "event_membership_changes": 20
+    },
+    "90": {
+      "frozen_count": 4084,
+      "current_reconstruction_count": 4097,
+      "event_membership_changes": 19
+    }
+  },
+  "market_data_snapshot_vs_current": [
+    {
+      "symbol": "EURUSD",
+      "timeframe": "M5",
+      "snapshot_rows": 39165,
+      "current_rows": 100538,
+      "snapshot_min_time": "2026-03-31T18:25:00+00:00",
+      "current_min_time": "2025-06-06T04:15:00+00:00",
+      "snapshot_max_time": "2026-10-07T18:20:00+00:00",
+      "current_max_time": "2026-10-12T06:35:00+00:00",
+      "overlap_rows": 39165,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 60650,
+      "additional_bars_inside_candidate_period": 0,
+      "bar_duration_minutes": 5
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "M15",
+      "snapshot_rows": 13535,
+      "current_rows": 50878,
+      "snapshot_min_time": "2026-03-24T18:30:00+00:00",
+      "current_min_time": "2024-09-24T07:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T18:00:00+00:00",
+      "current_max_time": "2026-10-12T06:15:00+00:00",
+      "overlap_rows": 13535,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 37102,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 15
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "H1",
+      "snapshot_rows": 3666,
+      "current_rows": 12990,
+      "snapshot_min_time": "2026-03-09T00:00:00+00:00",
+      "current_min_time": "2024-09-09T00:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T17:00:00+00:00",
+      "current_max_time": "2026-10-12T05:00:00+00:00",
+      "overlap_rows": 3666,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 9264,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 60
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "H4",
+      "snapshot_rows": 1169,
+      "current_rows": 3503,
+      "snapshot_min_time": "2026-01-07T20:00:00+00:00",
+      "current_min_time": "2024-07-10T08:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T12:00:00+00:00",
+      "current_max_time": "2026-10-12T00:00:00+00:00",
+      "overlap_rows": 1169,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 2319,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 240
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "D1",
+      "snapshot_rows": 450,
+      "current_rows": 839,
+      "snapshot_min_time": "2025-01-13T00:00:00+00:00",
+      "current_min_time": "2023-07-17T00:00:00+00:00",
+      "snapshot_max_time": "2026-10-06T00:00:00+00:00",
+      "current_max_time": "2026-10-09T00:00:00+00:00",
+      "overlap_rows": 450,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 386,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 1440
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "M5",
+      "snapshot_rows": 39165,
+      "current_rows": 100538,
+      "snapshot_min_time": "2026-03-31T18:25:00+00:00",
+      "current_min_time": "2025-06-06T04:10:00+00:00",
+      "snapshot_max_time": "2026-10-07T18:20:00+00:00",
+      "current_max_time": "2026-10-12T06:35:00+00:00",
+      "overlap_rows": 39165,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 60650,
+      "additional_bars_inside_candidate_period": 0,
+      "bar_duration_minutes": 5
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "M15",
+      "snapshot_rows": 13535,
+      "current_rows": 50877,
+      "snapshot_min_time": "2026-03-24T18:30:00+00:00",
+      "current_min_time": "2024-09-24T07:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T18:00:00+00:00",
+      "current_max_time": "2026-10-12T06:15:00+00:00",
+      "overlap_rows": 13535,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 37101,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 15
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "H1",
+      "snapshot_rows": 3666,
+      "current_rows": 12990,
+      "snapshot_min_time": "2026-03-09T00:00:00+00:00",
+      "current_min_time": "2024-09-09T00:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T17:00:00+00:00",
+      "current_max_time": "2026-10-12T05:00:00+00:00",
+      "overlap_rows": 3666,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 9264,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 60
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "H4",
+      "snapshot_rows": 1169,
+      "current_rows": 3503,
+      "snapshot_min_time": "2026-01-07T20:00:00+00:00",
+      "current_min_time": "2024-07-10T08:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T12:00:00+00:00",
+      "current_max_time": "2026-10-12T00:00:00+00:00",
+      "overlap_rows": 1169,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 2319,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 240
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "D1",
+      "snapshot_rows": 450,
+      "current_rows": 839,
+      "snapshot_min_time": "2025-01-13T00:00:00+00:00",
+      "current_min_time": "2023-07-17T00:00:00+00:00",
+      "snapshot_max_time": "2026-10-06T00:00:00+00:00",
+      "current_max_time": "2026-10-09T00:00:00+00:00",
+      "overlap_rows": 450,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 386,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 1440
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "M5",
+      "snapshot_rows": 39159,
+      "current_rows": 100538,
+      "snapshot_min_time": "2026-03-31T18:25:00+00:00",
+      "current_min_time": "2025-06-06T03:45:00+00:00",
+      "snapshot_max_time": "2026-10-07T18:20:00+00:00",
+      "current_max_time": "2026-10-12T06:35:00+00:00",
+      "overlap_rows": 39159,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 60656,
+      "additional_bars_inside_candidate_period": 0,
+      "bar_duration_minutes": 5
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "M15",
+      "snapshot_rows": 13534,
+      "current_rows": 50877,
+      "snapshot_min_time": "2026-03-24T18:30:00+00:00",
+      "current_min_time": "2024-09-24T07:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T18:00:00+00:00",
+      "current_max_time": "2026-10-12T06:15:00+00:00",
+      "overlap_rows": 13534,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 37102,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 15
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "H1",
+      "snapshot_rows": 3666,
+      "current_rows": 12990,
+      "snapshot_min_time": "2026-03-09T00:00:00+00:00",
+      "current_min_time": "2024-09-09T00:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T17:00:00+00:00",
+      "current_max_time": "2026-10-12T05:00:00+00:00",
+      "overlap_rows": 3666,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 9264,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 60
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "H4",
+      "snapshot_rows": 1169,
+      "current_rows": 3503,
+      "snapshot_min_time": "2026-01-07T20:00:00+00:00",
+      "current_min_time": "2024-07-10T08:00:00+00:00",
+      "snapshot_max_time": "2026-10-07T12:00:00+00:00",
+      "current_max_time": "2026-10-12T00:00:00+00:00",
+      "overlap_rows": 1169,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 2319,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 240
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "D1",
+      "snapshot_rows": 450,
+      "current_rows": 839,
+      "snapshot_min_time": "2025-01-13T00:00:00+00:00",
+      "current_min_time": "2023-07-17T00:00:00+00:00",
+      "snapshot_max_time": "2026-10-06T00:00:00+00:00",
+      "current_max_time": "2026-10-09T00:00:00+00:00",
+      "overlap_rows": 450,
+      "overlap_bars_with_changed_ohlcv_or_spread": 0,
+      "additional_bars_before_candidate_start": 386,
+      "additional_bars_inside_candidate_period": 1,
+      "bar_duration_minutes": 1440
+    }
+  ],
+  "interpretation": "The saved scan is the artifact committed with the 2026-10-07 market snapshot. Current market files preserve overlapping historical OHLC/spread rows but include additional pre-period warm-up bars; long-history indicator initialization changes the reconstructed feature values. Keep the known-hash frozen scan for this pre-registered analysis; do not mix the reconstruction.",
+  "temporary_reconstruction_removed_after_audit": true,
+  "reconstruction_invocation": {
+    "status": "NOT_REQUESTED"
+  },
+  "previous_verified_reconstruction_reused": true
+}
