@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "synthetic_fixture": true,
+  "live_provider_calls": 0,
+  "actions_logged": [
+    "BUY",
+    "SELL",
+    "HOLD",
+    "WAIT"
+  ],
+  "counts": {
+    "technical_events_total": 4,
+    "llm_events_total": 4,
+    "llm_valid": 4,
+    "llm_invalid": 0,
+    "hold": 2,
+    "buy_sell": 2,
+    "matching_decisions": 4,
+    "disagreeing_decisions": 0,
+    "events_without_llm_coverage": 0,
+    "duplicate_event_ids": 0,
+    "unverified_provenance": 0,
+    "outcome_events": 4
+  },
+  "policy_interface_status": "DESCRIPTIVE_PAIRED_POLICY_COMPARISON",
+  "policy_comparison_fixture": {
+    "status": "DESCRIPTIVE_PAIRED_POLICY_COMPARISON",
+    "cost_scenario": "BASE",
+    "portfolio_constraints": {
+      "max_open_positions": 3,
+      "one_active_position_per_symbol": true,
+      "same_timestamp_priority": [
+        "technical_setup_quality_desc",
+        "abs_overall_score_desc",
+        "symbol_asc"
+      ]
+    },
+    "future_outcomes_used_only_for_scoring": true,
+    "policies": {
+      "TECHNICAL_ONLY": {
+        "opportunities": 4,
+        "eligible": 2,
+        "accepted": 1,
+        "rejected_portfolio": 1,
+        "closed": 1,
+        "ambiguous": 0,
+        "open_or_unresolved": 0,
+        "net_pnl_eur": 1.0,
+        "net_r_sum": 1.0,
+        "expectancy_net_eur_per_closed_trade": 1.0
+      },
+      "TECHNICAL_PLUS_LLM": {
+        "opportunities": 4,
+        "eligible": 2,
+        "accepted": 1,
+        "rejected_portfolio": 1,
+        "closed": 1,
+        "ambiguous": 0,
+        "open_or_unresolved": 0,
+        "net_pnl_eur": 1.0,
+        "net_r_sum": 1.0,
+        "expectancy_net_eur_per_closed_trade": 1.0
+      },
+      "ALWAYS_HOLD": {
+        "opportunities": 4,
+        "eligible": 0,
+        "accepted": 0,
+        "rejected_portfolio": 0,
+        "closed": 0,
+        "ambiguous": 0,
+        "open_or_unresolved": 0,
+        "net_pnl_eur": 0.0,
+        "net_r_sum": 0.0,
+        "expectancy_net_eur_per_closed_trade": null
+      }
+    },
+    "limitations": [
+      "The comparator is valid only if every candidate outcome was simulated under the exact same plan and cost scenario.",
+      "An inconclusive/no-sample result is not evidence of no LLM effect.",
+      "Production portfolio risk sizing and broker validation remain outside this offline paired interface."
+    ]
+  },
+  "provider_errors_and_invalid_responses_tested_by_unit_suite": true,
+  "orders_executed": 0,
+  "secrets_persisted": false
+}

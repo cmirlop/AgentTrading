@@ -16,6 +16,7 @@ from functools import lru_cache
 from pathlib import Path
 from time import perf_counter
 from typing import Any
+from datetime import datetime, timezone
 
 from dotenv import load_dotenv
 from pydantic import ValidationError
@@ -202,17 +203,40 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
     only the provider-reported model, latency and token counts, never prompts,
     response bodies, credentials, or internal reasoning.
     """
-    config = get_llm_configuration(schema)
-    if model_override is not None:
-        if config.provider != "ollama" or not str(model_override).strip():
-            raise LLMProviderError("LLM_MODEL_OVERRIDE_UNSUPPORTED")
-        config = replace(config, model=str(model_override).strip())
-    if not isinstance(payload, dict):
-        raise LLMProviderError("LLM_PAYLOAD_INVALID")
-
-    allowed_ids, evidence_fields = _allowed_evidence(payload, schema)
-    output_schema = _schema_with_evidence(schema, allowed_ids, evidence_fields)
     started = perf_counter()
+    requested_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    allowed_ids: list[str] = []
+    config = None
+
+    def record_failure(code: str) -> None:
+        try:
+            from src.event_ledger import record_llm_call
+            provider = config.provider if config else os.environ.get("LLM_PROVIDER", "ollama").strip().lower()
+            model = config.model if config else os.environ.get("DEEPSEEK_MODEL" if provider == "deepseek" else "OLLAMA_MODEL", "unavailable")
+            record_llm_call(
+                schema_name=schema.__name__, provider=provider, model=model,
+                prompt=system_prompt, payload=payload, allowed_evidence=allowed_ids,
+                requested_at=requested_at, error_code=code, rejection_code=code,
+                elapsed_seconds=perf_counter() - started,
+            )
+        except Exception:
+            pass
+
+    try:
+        config = get_llm_configuration(schema)
+        if model_override is not None:
+            if config.provider != "ollama" or not str(model_override).strip():
+                raise LLMProviderError("LLM_MODEL_OVERRIDE_UNSUPPORTED")
+            config = replace(config, model=str(model_override).strip())
+        if not isinstance(payload, dict):
+            raise LLMProviderError("LLM_PAYLOAD_INVALID")
+        allowed_ids, evidence_fields = _allowed_evidence(payload, schema)
+        output_schema = _schema_with_evidence(schema, allowed_ids, evidence_fields)
+    except Exception as exc:
+        code = _failure_code(exc)
+        record_failure(code)
+        raise LLMProviderError(code) from None
+
     LOGGER.info(
         "LLM call provider=%s model=%s schema=%s timeout_seconds=%s "
         "reasoning_effort=%s max_tokens=%s temperature=%s context_window=%s keep_alive=%s max_retries=0",
@@ -237,12 +261,18 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
                 model=config.model,
                 timeout_seconds=config.timeout_seconds,
                 max_tokens=config.max_tokens,
-                return_metadata=return_metadata,
+                # Metadata comes from the same response; this does not make an
+                # extra provider request and lets the append-only ledger retain
+                # usage counts even when the caller does not request metadata.
+                return_metadata=True,
             )
-            if return_metadata:
+            if isinstance(response, tuple) and len(response) == 2:
                 result, metadata = response
             else:
+                # Test doubles and older provider adapters may only return the
+                # schema model; preserve compatibility and log missing usage.
                 result = response
+                metadata = {}
         else:
             host = os.environ.get("OLLAMA_HOST") or None
             client = _ollama_client(host, config.timeout_seconds)
@@ -267,25 +297,25 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
             if not content.strip():
                 raise LLMProviderError("LLM_EMPTY_RESPONSE")
             result = schema.model_validate_json(content)
-            if return_metadata:
-                metadata = {
-                    "provider_reported_model": (
-                        response.get("model") if isinstance(response, dict)
-                        else getattr(response, "model", None)
-                    ),
-                    "prompt_tokens": (
-                        response.get("prompt_eval_count") if isinstance(response, dict)
-                        else getattr(response, "prompt_eval_count", None)
-                    ),
-                    "completion_tokens": (
-                        response.get("eval_count") if isinstance(response, dict)
-                        else getattr(response, "eval_count", None)
-                    ),
-                }
+            metadata = {
+                "provider_reported_model": (
+                    response.get("model") if isinstance(response, dict)
+                    else getattr(response, "model", None)
+                ),
+                "prompt_tokens": (
+                    response.get("prompt_eval_count") if isinstance(response, dict)
+                    else getattr(response, "prompt_eval_count", None)
+                ),
+                "completion_tokens": (
+                    response.get("eval_count") if isinstance(response, dict)
+                    else getattr(response, "eval_count", None)
+                ),
+            }
 
         _validate_evidence(result, evidence_fields, allowed_ids)
     except Exception as exc:
         code = _failure_code(exc)
+        record_failure(code)
         LOGGER.warning(
             "LLM call failed provider=%s model=%s schema=%s error=%s",
             config.provider,
@@ -296,6 +326,16 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
         raise LLMProviderError(code) from None
 
     elapsed = perf_counter() - started
+    try:
+        from src.event_ledger import record_llm_call
+        record_llm_call(
+            schema_name=schema.__name__, provider=config.provider, model=config.model,
+            prompt=system_prompt, payload=payload, allowed_evidence=allowed_ids,
+            requested_at=requested_at, result=result, elapsed_seconds=elapsed,
+            metadata=metadata,
+        )
+    except Exception:
+        pass
     LOGGER.info(
         "LLM call complete provider=%s model=%s schema=%s elapsed_seconds=%.3f",
         config.provider,

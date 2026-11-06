@@ -1,0 +1,671 @@
+{
+  "generated_at_utc": "2026-11-06T09:45:51.438395+00:00",
+  "phase2_1_status": "PHASE2_1_COMPLETE",
+  "phase2_1_engineering_status": "COMPLETE",
+  "strategy_conclusion": "INCONCLUSIVE",
+  "deepseek_value_add": "INCONCLUSIVE_INSUFFICIENT_DATA",
+  "phase1_operational_readiness": {
+    "status": "INCOMPLETE_PENDING_MANUAL",
+    "blocks_phase2_1_engineering": false
+  },
+  "cost_scenarios": {
+    "BASE": {
+      "historical_spread_multiplier": 1.0,
+      "commission_eur_per_lot_round_turn": 0.0,
+      "slippage_points_per_side": 0.0,
+      "assumptions_unverified": [
+        "commission=0",
+        "slippage=0"
+      ]
+    },
+    "CONSERVATIVE": {
+      "historical_spread_multiplier": 1.25,
+      "commission_eur_per_lot_round_turn": 7.0,
+      "slippage_points_per_side": 1.0,
+      "assumptions_unverified": [
+        "spread_multiplier=1.25",
+        "commission=7 EUR/lot",
+        "slippage=1 point/side"
+      ]
+    },
+    "STRESS": {
+      "historical_spread_multiplier": 2.0,
+      "commission_eur_per_lot_round_turn": 10.0,
+      "slippage_points_per_side": 3.0,
+      "assumptions_unverified": [
+        "spread_multiplier=2.0",
+        "commission=10 EUR/lot",
+        "slippage=3 points/side"
+      ]
+    }
+  },
+  "cost_interpretation": "Historical bid/ask is embedded in execution comparisons; transaction_cost_eur is modeled commission plus slippage. Spread zeros dominate EURUSD/AUDUSD bars, so BASE spread coverage is not verified, while CONSERVATIVE/STRESS are explicit unverified assumptions.",
+  "integrity": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "python_executable": "/workspace/.venvs/AgentTrading/bin/python",
+    "pandas": "3.1.0",
+    "numpy": "2.5.4",
+    "pytest_available": false,
+    "seed": 20261106
+  },
+  "provenance": {
+    "git": {
+      "commit": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf",
+      "branch": "codex/phase2-1-1-consolidation",
+      "working_tree_clean": false,
+      "working_tree_status": [
+        " M .gitignore",
+        " M run_dry_pipeline.py",
+        " M run_market_agents.py",
+        " M run_multiagent_analysis.py",
+        " M run_portfolio_backtest.py",
+        " M run_stateful_backtest.py",
+        " M scripts/validate_phase2_1.py",
+        " M src/agents/llm_client.py",
+        " M src/historical_execution.py",
+        " M src/phase2_1_evaluation.py",
+        " M tests/test_phase1_backtest.py",
+        " M tests/test_phase1_mt5_safety.py",
+        " M tests/test_phase2_1.py",
+        "?? docs/FASE2_1_1_PLAN.md",
+        "?? docs/FASE2_1_1_RESULTADOS.md",
+        "?? docs/FASE2_PROTOCOLO_LLM.md",
+        "?? reports/phase2_1_1/",
+        "?? scripts/validate_phase2_1_1.py",
+        "?? src/event_ledger.py",
+        "?? src/llm_evaluation.py",
+        "?? src/spread_quality.py",
+        "?? src/warmup_audit.py",
+        "?? tests/test_phase2_1_1.py"
+      ],
+      "reference_commit_available": true,
+      "origin_main": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf"
+    },
+    "source_fingerprint_sha256": {
+      "run_portfolio_backtest.py": "5521d032f899e32a60df013870ed2fe0da81b9f2d8368430410c0912197fb62a",
+      "run_stateful_backtest.py": "a71615abb6980c4b90426396b1c1435efc85eeb2ff082cfbe65a2e7ed057745d",
+      "src/historical_execution.py": "6c648843c3056b36baec803f38f17a561a7634ba574ca208bd134840f103f0da",
+      "src/historical_state.py": "ac237e2560ceece6a2e19b1133adc24ada61177133f0dd74f714d2b11957a651",
+      "src/historical_trade_planner.py": "77292f82d40c1bfe89fee318d3daffe635722ec1261870ade6ebf207b7a8b0a8",
+      "src/historical_risk.py": "b83babec27ffe3e80afca1949e935d62b57d0f46281be11fda443488283e5196",
+      "config/backtest_config.py": "38967598f48e677245dc07529cf25f6e73ac0d1f23ca307ae3d88d04cc39a36f",
+      "config/backtest_cost_config.py": "01cfb3671cc47ff72dd2a3072c02c9cc91a001b2ab89b7dca65ab3195938cd72",
+      "config/risk_config.py": "0beeaa0a3328d71c8d52272ea2d6dfa89e7d5a8ad145e00aa4c6cc81f3f26c1d",
+      "config/execution_config.py": "1b3a64735ed24bd98dda408373e095443596d8334db5082326beef143e01604a",
+      "data/backtest/technical_candidate_scan.csv": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+      "src/phase2_1_evaluation.py": "5cd87cb730065cbb09e5614821a25a653a2807de57dac092e30abb0b38377827",
+      "scripts/validate_phase2_1.py": "3ea1b336b4685c9e70e1ec763d0148d1a4dab3c1d74bee390ef0cee27b6106fa",
+      "tests/test_phase2_1.py": "d5c63af2272034ff687ba4195ad5f7e5827d6be6761656fa2b20b0cc10a6045b",
+      "docs/FASE2_1_PLAN.md": "810458196c5b7a8bee34efd2d10df32c00ae49a001e5ee5072d9c2404078e83f"
+    },
+    "dataset_hashes": {
+      "technical_candidate_scan.csv": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+      "validation_candidate_scan.csv": "8c5bd365d54545e34fb1c46340a8a3173d98e4aaa5ed8cf47d772251dc042a52"
+    },
+    "backtest_output_hashes": {
+      "reports/phase2_1/backtests/portfolio_BASE_metadata.json": "e6cb5752a2c0bc004678fde1d59b34067b9da03dfc92c572f69e2f56e5433103",
+      "reports/phase2_1/backtests/portfolio_BASE_repeat_metadata.json": "be4567d168e9fedcff5ded1315bedf4b4b9f0c02a92a038f522069e46ceff022",
+      "reports/phase2_1/backtests/portfolio_BASE_repeat_summary.csv": "28e727d0325638695fe7f99519a508052370c586ed6ad7c0864b9adf629fe472",
+      "reports/phase2_1/backtests/portfolio_BASE_repeat_trades.csv": "ddcd40d87ced30d8868160060ff72102e9b8110bb8049d670de6102828d7a7ac",
+      "reports/phase2_1/backtests/portfolio_BASE_summary.csv": "28e727d0325638695fe7f99519a508052370c586ed6ad7c0864b9adf629fe472",
+      "reports/phase2_1/backtests/portfolio_BASE_trades.csv": "ddcd40d87ced30d8868160060ff72102e9b8110bb8049d670de6102828d7a7ac",
+      "reports/phase2_1/backtests/portfolio_CONSERVATIVE_metadata.json": "a414f48c01cb5cdc7934fe325e8422102de103516d8bb0dca7e8a89b8047f356",
+      "reports/phase2_1/backtests/portfolio_CONSERVATIVE_summary.csv": "03f0b0b6d101d6282128a7605407ec6bdaffd3de57089d5143479ed46f41c93f",
+      "reports/phase2_1/backtests/portfolio_CONSERVATIVE_trades.csv": "39d23bb473d61b2a4d68eb9e486ce5ebd811676ecd6d5beddf37b7d6ca62c4fe",
+      "reports/phase2_1/backtests/portfolio_STRESS_metadata.json": "fb6e44a6caafefe28f8b9bd70d2248aebd4e38ac0d8eaf6b51cdfe959f4db6c1",
+      "reports/phase2_1/backtests/portfolio_STRESS_summary.csv": "8505d894ecd295fbc1cb12f602b1a8eac26fa5d370f3598df534dbcca0d22a7c",
+      "reports/phase2_1/backtests/portfolio_STRESS_trades.csv": "5add897c7a6d6b4681c28c66528242b23afeaa83ad9ed01370501a9dd30cba08",
+      "reports/phase2_1/backtests/portfolio_validation_BASE_metadata.json": "da67b7f923d33838196074ee719e9ce0eae08c6117857a525a219b6cd0400ac2",
+      "reports/phase2_1/backtests/portfolio_validation_BASE_summary.csv": "bf3139a6e157ec4978c962ecf358cd840e732eb5dba0f4dcde8f709f0602b5d4",
+      "reports/phase2_1/backtests/portfolio_validation_BASE_trades.csv": "ed3b101d661b3f1159f8e1ca2ac7238595981cb9f1e2fdc1cc76b7dc9ce26db9",
+      "reports/phase2_1/backtests/portfolio_validation_CONSERVATIVE_metadata.json": "451d9cba4ab488710b51ba24446a1380311dd72d34617968f89de90cad103d3f",
+      "reports/phase2_1/backtests/portfolio_validation_CONSERVATIVE_summary.csv": "253c8d831fed47239c2bbfdbe189d604b4517f06502629b86b373c00439857e2",
+      "reports/phase2_1/backtests/portfolio_validation_CONSERVATIVE_trades.csv": "0d6649fe6034929cb889f611ae8e6a2499c9aef1ec5ce382b61fc00e154cd5f7",
+      "reports/phase2_1/backtests/portfolio_validation_STRESS_metadata.json": "d653684a48723e4bbfb37b61417924eb32b61e28d44149d13e13e1ccfb65f8c5",
+      "reports/phase2_1/backtests/portfolio_validation_STRESS_summary.csv": "1e25e70f2784467c1837444432160bf86cee4c92e8a40672143d48798aeac26d",
+      "reports/phase2_1/backtests/portfolio_validation_STRESS_trades.csv": "ba184693946f0e8e8d6bb2108cfb6ab0e9602526ca4358045d73e9fdfdfd6ed7",
+      "reports/phase2_1/backtests/stateful_BASE_metadata.json": "a458194754bdac58cee0539f633bab4f2ebe2ea66f3a0cda8b8016b45f23161e",
+      "reports/phase2_1/backtests/stateful_BASE_repeat_metadata.json": "711c8377f333432b784a3c96fe80abb304c59d5737d5901a4f76c3dd395c1bee",
+      "reports/phase2_1/backtests/stateful_BASE_repeat_summary.csv": "0688a052a8ce17479e1d251b5b7505e2cc0ab460a786cc2787bee52504f2a963",
+      "reports/phase2_1/backtests/stateful_BASE_repeat_trades.csv": "f41767467a9ff18592a7902e94b146947366b1c545c8cf330b65f8d243b6454d",
+      "reports/phase2_1/backtests/stateful_BASE_summary.csv": "0688a052a8ce17479e1d251b5b7505e2cc0ab460a786cc2787bee52504f2a963",
+      "reports/phase2_1/backtests/stateful_BASE_trades.csv": "f41767467a9ff18592a7902e94b146947366b1c545c8cf330b65f8d243b6454d",
+      "reports/phase2_1/backtests/stateful_CONSERVATIVE_metadata.json": "ec4fd392a06c2c9a4ef6d8d29637bcb1b02fbc30b898aa7c04ad34aeffb5f26c",
+      "reports/phase2_1/backtests/stateful_CONSERVATIVE_summary.csv": "d4d4829b179c40795423ad095c3cc8660c3047033b819062ed706dcaa8cbc738",
+      "reports/phase2_1/backtests/stateful_CONSERVATIVE_trades.csv": "664d5e99d0f694b7478c07d41eb27b266f028082e340f7a7b6ed0c00f3f26ba4",
+      "reports/phase2_1/backtests/stateful_STRESS_metadata.json": "44fb3c0e759a51d6c98c0dd8d996b580034a42739bb83e7fcfb757651c392852",
+      "reports/phase2_1/backtests/stateful_STRESS_summary.csv": "2619aeb2f39c53b46ff2dadf2a81fee02eddda9374ec185b2141836fd323e437",
+      "reports/phase2_1/backtests/stateful_STRESS_trades.csv": "f72077dea41cddede2731bf8db2d9945952d3dee39cb6b01306dd698a281c217",
+      "reports/phase2_1/backtests/stateful_validation_BASE_metadata.json": "49298a23ecbce82d12342fe3ce59d2b51267d2321e06722b1fc9f35d9a666afb",
+      "reports/phase2_1/backtests/stateful_validation_BASE_summary.csv": "69ddccf54ed6e843017472327bd331c0ee08b3f2415de4cbf43441ce2595615b",
+      "reports/phase2_1/backtests/stateful_validation_BASE_trades.csv": "c5c80a0c0f05c8943e37e8aba4152a008bd6ec6f5e5a5d0c9899fa11b5a5143d",
+      "reports/phase2_1/backtests/stateful_validation_CONSERVATIVE_metadata.json": "d70b33b5729755b2b7c40cdacefc060dad4ddf143d0af70b0ed6de85518d718c",
+      "reports/phase2_1/backtests/stateful_validation_CONSERVATIVE_summary.csv": "93d1f3fd6d75a393054756767bc67c51214054e2965d7058f7662b76852b3003",
+      "reports/phase2_1/backtests/stateful_validation_CONSERVATIVE_trades.csv": "093cc02e069124e2cf53bf343efb4204baecb20c960d6405c412fa7559b39e2b",
+      "reports/phase2_1/backtests/stateful_validation_STRESS_metadata.json": "cc3473c0b4fa9b947a645f0d1d4850d13376cb3b2af611b88ed1b4f8eee8811d",
+      "reports/phase2_1/backtests/stateful_validation_STRESS_summary.csv": "715b92770595185af22f2c307f565466a0d9da9ea93315d473967e82991822e7",
+      "reports/phase2_1/backtests/stateful_validation_STRESS_trades.csv": "5c5b819abcc89b3eb41f4550f4cbea402f790c76c1bb0b0e3f318fb7e63ba22e"
+    }
+  },
+  "commands": [
+    [
+      "validate_phase2_1.py"
+    ],
+    null,
+    [
+      "/workspace/.venvs/AgentTrading/bin/python",
+      "test_no_lookahead.py"
+    ],
+    [
+      "/workspace/.venvs/AgentTrading/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ]
+  ],
+  "baseline_reference": [
+    {
+      "scenario": "BASE",
+      "expected_net_eur": 25.62,
+      "reproduced_net_eur": 25.62008,
+      "difference_eur": 8e-05,
+      "matches_within_0_01": true
+    },
+    {
+      "scenario": "CONSERVATIVE",
+      "expected_net_eur": -27.53,
+      "reproduced_net_eur": -27.52673217,
+      "difference_eur": 0.00326783,
+      "matches_within_0_01": true
+    },
+    {
+      "scenario": "STRESS",
+      "expected_net_eur": -74.39,
+      "reproduced_net_eur": -74.39422447,
+      "difference_eur": -0.00422447,
+      "matches_within_0_01": true
+    }
+  ],
+  "partition": {
+    "method": "chronological_unique_UTC_days",
+    "requested_fractions": {
+      "train": 0.6,
+      "validation": 0.2,
+      "test": 0.2
+    },
+    "unique_utc_days": 132,
+    "train_days_before_embargo": 79,
+    "validation_days_before_embargo": 26,
+    "test_days_before_embargo": 27,
+    "first_utc_day": "2026-04-07T00:00:00+00:00",
+    "last_utc_day": "2026-10-07T00:00:00+00:00",
+    "train_end_exclusive_utc": "2026-07-27T00:00:00+00:00",
+    "test_start_utc": "2026-09-01T00:00:00+00:00",
+    "dataset_end_exclusive_utc": "2026-10-08T00:00:00+00:00",
+    "embargo_hours": 24,
+    "rows_by_period": {
+      "TRAIN": 13137,
+      "TEST": 4338,
+      "VALIDATION": 4032,
+      "EMBARGO": 504
+    },
+    "holdout_is_confirmatory": false,
+    "holdout_limitation": "The primary interval is explicitly marked EXPLORATION_DAYS in the repository config and was previously examined; TEST is a chronological holdout in this report but not an untouched confirmatory sample.",
+    "test_protected_from_tuning": true,
+    "walk_forward_folds": 6
+  },
+  "checks": [
+    {
+      "name": "primary_dataset_hash",
+      "status": "PASS",
+      "evidence": {
+        "path": "data/backtest/technical_candidate_scan.csv",
+        "sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+        "expected_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+        "matches_reference": true,
+        "records": 22011,
+        "instruments": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ],
+        "unique_event_ids": 22011,
+        "duplicate_symbol_timestamp_event_ids": 0
+      }
+    },
+    {
+      "name": "offline_phase2_1_tests",
+      "status": "PASS",
+      "evidence": {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_*.py",
+          "-v"
+        ],
+        "return_code": 0,
+        "duration_seconds": 5.937,
+        "output": "5_pending_summary_is_reusable_with_verified_provenance) ... skipped 'MetaTrader5 package unavailable; provider-specific provenance cannot be verified here'\ntest_public_mt5_summary_drops_financial_and_account_fields (test_phase1_mt5_safety.MT5SafetyTests.test_public_mt5_summary_drops_financial_and_account_fields) ... ok\ntest_public_pending_summary_preserves_safe_reason_and_origin_provenance (test_phase1_mt5_safety.MT5SafetyTests.test_public_pending_summary_preserves_safe_reason_and_origin_provenance) ... ok\ntest_public_text_redacts_credentials_and_account_identifiers (test_phase1_mt5_safety.MT5SafetyTests.test_public_text_redacts_credentials_and_account_identifiers) ... ok\ntest_python_api_must_be_disabled_before_market_data_checks (test_phase1_mt5_safety.MT5SafetyTests.test_python_api_must_be_disabled_before_market_data_checks) ... ok\ntest_real_account_is_rejected_without_symbol_or_order_requests (test_phase1_mt5_safety.MT5SafetyTests.test_real_account_is_rejected_without_symbol_or_order_requests) ... ok\ntest_daily_loss_locks_across_restart_and_resets_at_utc_day (test_phase1_risk.DailyRiskTests.test_daily_loss_locks_across_restart_and_resets_at_utc_day) ... ok\ntest_duplicate_proposal_rejected_after_restart (test_phase1_risk.DailyRiskTests.test_duplicate_proposal_rejected_after_restart) ... ok\ntest_open_pending_risk_and_new_proposal_count_toward_limit (test_phase1_risk.DailyRiskTests.test_open_pending_risk_and_new_proposal_count_toward_limit) ... ok\ntest_preflight_aggregates_simultaneous_proposal_risk (test_phase1_risk.PortfolioExposureTests.test_preflight_aggregates_simultaneous_proposal_risk) ... ok\ntest_preflight_approves_once_then_rejects_duplicate (test_phase1_risk.PortfolioExposureTests.test_preflight_approves_once_then_rejects_duplicate) ... ok\ntest_preflight_rejects_unavailable_runtime_snapshot (test_phase1_risk.PortfolioExposureTests.test_preflight_rejects_unavailable_runtime_snapshot) ... ok\ntest_unknown_existing_risk_or_symbol_metadata_rejected (test_phase1_risk.PortfolioExposureTests.test_unknown_existing_risk_or_symbol_metadata_rejected) ... ok\ntest_usd_exposure_across_pairs_is_aggregated (test_phase1_risk.PortfolioExposureTests.test_usd_exposure_across_pairs_is_aggregated) ... ok\ntest_invalid_or_missing_stop_loss_rejected (test_phase1_risk.RiskSizingTests.test_invalid_or_missing_stop_loss_rejected) ... ok\ntest_minimum_volume_cannot_override_budget (test_phase1_risk.RiskSizingTests.test_minimum_volume_cannot_override_budget) ... ok\ntest_missing_symbol_metadata_fails_closed (test_phase1_risk.RiskSizingTests.test_missing_symbol_metadata_fails_closed) ... ok\ntest_required_currency_conversion_is_used (test_phase1_risk.RiskSizingTests.test_required_currency_conversion_is_used) ... ok\ntest_size_respects_tick_value_percent_and_absolute_cap (test_phase1_risk.RiskSizingTests.test_size_respects_tick_value_percent_and_absolute_cap) ... ok\ntest_below_minimum_and_request_volume_mismatch_are_rejected (test_phase1_risk_validator.RiskValidatorTests.test_below_minimum_and_request_volume_mismatch_are_rejected) ... ok\ntest_buy_and_sell_proposals_remain_dry_run_approvals (test_phase1_risk_validator.RiskValidatorTests.test_buy_and_sell_proposals_remain_dry_run_approvals) ... ok\ntest_dynamic_broker_volume_is_accepted_when_within_constraints (test_phase1_risk_validator.RiskValidatorTests.test_dynamic_broker_volume_is_accepted_when_within_constraints) ... ok\ntest_missing_portfolio_preflight_is_fail_closed (test_phase1_risk_validator.RiskValidatorTests.test_missing_portfolio_preflight_is_fail_closed) ... ok\ntest_any_unattributed_economic_difference_remains_pending_review (test_phase1_validation_provenance.ValidationProvenanceTests.test_any_unattributed_economic_difference_remains_pending_review) ... ok\ntest_backtest_evidence_reuse_accepts_merge_metadata_and_rejects_source_changes (test_phase1_validation_provenance.ValidationProvenanceTests.test_backtest_evidence_reuse_accepts_merge_metadata_and_rejects_source_changes) ... ok\ntest_external_results_require_matching_source_provenance (test_phase1_validation_provenance.ValidationProvenanceTests.test_external_results_require_matching_source_provenance) ... ok\ntest_final_phase_status_distinguishes_failure_from_manual_pending (test_phase1_validation_provenance.ValidationProvenanceTests.test_final_phase_status_distinguishes_failure_from_manual_pending) ... ok\ntest_historical_dataset_is_reused_only_from_matching_git_blob_hash (test_phase1_validation_provenance.ValidationProvenanceTests.test_historical_dataset_is_reused_only_from_matching_git_blob_hash) ... ok\ntest_known_simulator_correction_is_hash_pinned_but_metric_deltas_stay_pending (test_phase1_validation_provenance.ValidationProvenanceTests.test_known_simulator_correction_is_hash_pinned_but_metric_deltas_stay_pending) ... ok\ntest_legacy_provider_probe_can_follow_content_equivalent_merge_blob (test_phase1_validation_provenance.ValidationProvenanceTests.test_legacy_provider_probe_can_follow_content_equivalent_merge_blob) ... ok\ntest_main_runtime_has_no_order_send_call_and_requires_python_trading_disabled (test_phase1_validation_provenance.ValidationProvenanceTests.test_main_runtime_has_no_order_send_call_and_requires_python_trading_disabled) ... ok\ntest_merge_commit_and_branch_change_preserve_identical_content_provenance (test_phase1_validation_provenance.ValidationProvenanceTests.test_merge_commit_and_branch_change_preserve_identical_content_provenance) ... ok\ntest_provider_scope_ignores_merge_metadata_but_tracks_probe_logic (test_phase1_validation_provenance.ValidationProvenanceTests.test_provider_scope_ignores_merge_metadata_but_tracks_probe_logic) ... ok\ntest_refresh_rejects_changed_dataset_code_or_config_hash (test_phase1_validation_provenance.ValidationProvenanceTests.test_refresh_rejects_changed_dataset_code_or_config_hash) ... ok\ntest_refresh_rejects_prior_report_without_exact_fingerprint (test_phase1_validation_provenance.ValidationProvenanceTests.test_refresh_rejects_prior_report_without_exact_fingerprint) ... ok\ntest_scan_finds_direct_import_alias_and_dynamic_send_paths (test_phase1_validation_provenance.ValidationProvenanceTests.test_scan_finds_direct_import_alias_and_dynamic_send_paths) ... ok\ntest_source_hash_is_stable_across_windows_and_unix_line_endings (test_phase1_validation_provenance.ValidationProvenanceTests.test_source_hash_is_stable_across_windows_and_unix_line_endings) ... ok\ntest_stable_trade_id_comparison_reports_plan_state_and_cost_changes (test_phase1_validation_provenance.ValidationProvenanceTests.test_stable_trade_id_comparison_reports_plan_state_and_cost_changes) ... ok\ntest_engineering_completion_does_not_depend_on_phase1_or_llm_sample (test_phase2_1.Phase2ConclusionTests.test_engineering_completion_does_not_depend_on_phase1_or_llm_sample) ... ok\ntest_engineering_state_distinguishes_incomplete_and_failed (test_phase2_1.Phase2ConclusionTests.test_engineering_state_distinguishes_incomplete_and_failed) ... ok\ntest_llm_conclusion_returns_all_defined_states (test_phase2_1.Phase2ConclusionTests.test_llm_conclusion_returns_all_defined_states) ... ok\ntest_strategy_conclusion_requires_confirmatory_robust_evidence (test_phase2_1.Phase2ConclusionTests.test_strategy_conclusion_requires_confirmatory_robust_evidence) ... ok\ntest_strategy_mixed_walk_forward_or_single_symbol_is_inconclusive (test_phase2_1.Phase2ConclusionTests.test_strategy_mixed_walk_forward_or_single_symbol_is_inconclusive) ... ok\ntest_chronological_split_is_ordered_and_embargoed (test_phase2_1.Phase2DataTests.test_chronological_split_is_ordered_and_embargoed) ... ok\ntest_embargo_and_cross_partition_trades_are_purged (test_phase2_1.Phase2DataTests.test_embargo_and_cross_partition_trades_are_purged) ... ok\ntest_event_ids_are_unique_on_distinct_symbol_closes (test_phase2_1.Phase2DataTests.test_event_ids_are_unique_on_distinct_symbol_closes) ... ok\ntest_event_pairing_uses_only_common_ids (test_phase2_1.Phase2DataTests.test_event_pairing_uses_only_common_ids) ... ok\ntest_provenance_rejects_unattributed_model_decision (test_phase2_1.Phase2DataTests.test_provenance_rejects_unattributed_model_decision) ... ok\ntest_split_rejects_timezone_naive_timestamps (test_phase2_1.Phase2DataTests.test_split_rejects_timezone_naive_timestamps) ... ok\ntest_stable_event_id_ignores_future_outcome_fields (test_phase2_1.Phase2DataTests.test_stable_event_id_ignores_future_outcome_fields) ... ok\ntest_test_partition_is_protected_from_tuning (test_phase2_1.Phase2DataTests.test_test_partition_is_protected_from_tuning) ... ok\ntest_ambiguous_and_open_trades_are_not_in_net_expectancy (test_phase2_1.Phase2StatisticsTests.test_ambiguous_and_open_trades_are_not_in_net_expectancy) ... ok\ntest_costs_are_not_double_subtracted_when_net_pnl_is_present (test_phase2_1.Phase2StatisticsTests.test_costs_are_not_double_subtracted_when_net_pnl_is_present) ... ok\ntest_phase2_code_has_no_live_provider_or_order_calls (test_phase2_1.Phase2StatisticsTests.test_phase2_code_has_no_live_provider_or_order_calls) ... ok\ntest_position_overlap_exposure_is_aggregated_from_fills (test_phase2_1.Phase2StatisticsTests.test_position_overlap_exposure_is_aggregated_from_fills) ... ok\ntest_weekly_block_bootstrap_is_reproducible_with_seed (test_phase2_1.Phase2StatisticsTests.test_weekly_block_bootstrap_is_reproducible_with_seed) ... ok\ntest_weekly_block_bootstrap_marks_too_few_blocks_insufficient (test_phase2_1.Phase2StatisticsTests.test_weekly_block_bootstrap_marks_too_few_blocks_insufficient) ... ok\ntest_concurrent_llm_events_are_append_only_without_lost_writes (test_phase2_1_1.Phase2111Tests.test_concurrent_llm_events_are_append_only_without_lost_writes) ... ok\ntest_event_id_is_stable_deduplicated_and_conflicts_rejected (test_phase2_1_1.Phase2111Tests.test_event_id_is_stable_deduplicated_and_conflicts_rejected) ... ok\ntest_event_ledger_is_safe_for_concurrent_duplicate_writers (test_phase2_1_1.Phase2111Tests.test_event_ledger_is_safe_for_concurrent_duplicate_writers) ... ok\ntest_invalid_evidence_and_provider_error_are_logged_not_operational (test_phase2_1_1.Phase2111Tests.test_invalid_evidence_and_provider_error_are_logged_not_operational) ... LLM call failed provider=ollama model=qwen3:4b schema=_Decision error=LLM_INVALID_EVIDENCE\nLLM call failed provider=ollama model=qwen3:4b schema=_Decision error=LLM_TIMEOUT\nok\ntest_mock_llm_call_records_valid_decision_and_no_secret (test_phase2_1_1.Phase2111Tests.test_mock_llm_call_records_valid_decision_and_no_secret) ... ok\ntest_outcome_is_appended_separately_and_original_is_immutable (test_phase2_1_1.Phase2111Tests.test_outcome_is_appended_separately_and_original_is_immutable) ... ok\ntest_pairing_and_policy_interface_use_same_event_portfolio_constraints (test_phase2_1_1.Phase2111Tests.test_pairing_and_policy_interface_use_same_event_portfolio_constraints) ... ok\ntest_pairing_never_invents_llm_decisions_and_requires_provenance (test_phase2_1_1.Phase2111Tests.test_pairing_never_invents_llm_decisions_and_requires_provenance) ... ok\ntest_phase2_conclusions_have_explicit_independent_states (test_phase2_1_1.Phase2111Tests.test_phase2_conclusions_have_explicit_independent_states) ... ok\ntest_spread_units_are_not_silently_converted (test_phase2_1_1.Phase2111Tests.test_spread_units_are_not_silently_converted) ... ok\ntest_spread_zero_missing_invalid_and_assumption_are_distinct (test_phase2_1_1.Phase2111Tests.test_spread_zero_missing_invalid_and_assumption_are_distinct) ... ok\ntest_uncovered_opportunity_stays_in_technical_population (test_phase2_1_1.Phase2111Tests.test_uncovered_opportunity_stays_in_technical_population) ... ok\ntest_warmup_cutoff_excludes_unclosed_and_future_bars (test_phase2_1_1.Phase2111Tests.test_warmup_cutoff_excludes_unclosed_and_future_bars) ... ok\ntest_warmup_insufficiency_and_predeclared_stability_criterion (test_phase2_1_1.Phase2111Tests.test_warmup_insufficiency_and_predeclared_stability_criterion) ... ok\n\n----------------------------------------------------------------------\nRan 121 tests in 4.786s\n\nOK (skipped=1)\n"
+      }
+    },
+    {
+      "name": "existing_project_tests",
+      "status": "NOT_APPLICABLE",
+      "evidence": {
+        "name": "optional_pytest_runner",
+        "status": "NOT_APPLICABLE",
+        "reason": "The repository's discovered tests use unittest and standalone assertions; pytest is not required to run them.",
+        "installed": false
+      }
+    },
+    {
+      "name": "existing_lookahead_check",
+      "status": "PASS",
+      "evidence": {
+        "name": "existing_historical_no_lookahead_check",
+        "status": "PASS",
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "test_no_lookahead.py"
+        ],
+        "return_code": 0,
+        "duration_seconds": 1.154,
+        "output": "================================================================================\nBACKTEST - NO LOOKAHEAD TEST\n================================================================================\n\nEURUSD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 1.158379725816395\n [OK] sin look-ahead\n\nUSDCAD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 1.3815670652387981\n [OK] sin look-ahead\n\nAUDUSD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 0.6753688010223463\n [OK] sin look-ahead\n\n[OK] Checks realizados: 375\n"
+      }
+    },
+    {
+      "name": "feature_columns_exclude_outcomes",
+      "status": "PASS",
+      "evidence": {
+        "unexpected_columns": [],
+        "columns": [
+          "symbol",
+          "analysis_time",
+          "session",
+          "bias",
+          "overall_score",
+          "alignment",
+          "setup_quality",
+          "candidate_65",
+          "m5_score",
+          "m15_score",
+          "h1_score",
+          "h4_score",
+          "d1_score"
+        ]
+      }
+    },
+    {
+      "name": "current_backtest_outputs",
+      "status": "PASS",
+      "evidence": {
+        "errors": [],
+        "validation_period_errors": [],
+        "scenarios": [
+          "BASE",
+          "CONSERVATIVE",
+          "STRESS"
+        ],
+        "stateful_scenarios": [
+          "BASE",
+          "CONSERVATIVE",
+          "STRESS"
+        ],
+        "validation_period_rows": 96
+      }
+    },
+    {
+      "name": "baseline_reference_reproduction",
+      "status": "PASS",
+      "evidence": [
+        {
+          "scenario": "BASE",
+          "expected_net_eur": 25.62,
+          "reproduced_net_eur": 25.62008,
+          "difference_eur": 8e-05,
+          "matches_within_0_01": true
+        },
+        {
+          "scenario": "CONSERVATIVE",
+          "expected_net_eur": -27.53,
+          "reproduced_net_eur": -27.52673217,
+          "difference_eur": 0.00326783,
+          "matches_within_0_01": true
+        },
+        {
+          "scenario": "STRESS",
+          "expected_net_eur": -74.39,
+          "reproduced_net_eur": -74.39422447,
+          "difference_eur": -0.00422447,
+          "matches_within_0_01": true
+        }
+      ]
+    },
+    {
+      "name": "archived_backtest_attribution",
+      "status": "PENDING",
+      "evidence": [
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 65,
+          "mode": "LIMIT",
+          "archived_signals": 1707,
+          "reproduced_signals": 1737,
+          "signals_difference": 30,
+          "archived_pnl_eur": 23.94,
+          "reproduced_base_net_eur": 25.62008,
+          "pnl_difference_eur": 1.68008,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 65,
+          "mode": "STOP",
+          "archived_signals": 570,
+          "reproduced_signals": 576,
+          "signals_difference": 6,
+          "archived_pnl_eur": 51.55,
+          "reproduced_base_net_eur": 51.98045,
+          "pnl_difference_eur": 0.43045,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 75,
+          "mode": "LIMIT",
+          "archived_signals": 1536,
+          "reproduced_signals": 1556,
+          "signals_difference": 20,
+          "archived_pnl_eur": 16.77,
+          "reproduced_base_net_eur": 16.4288,
+          "pnl_difference_eur": -0.3412,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 75,
+          "mode": "STOP",
+          "archived_signals": 591,
+          "reproduced_signals": 602,
+          "signals_difference": 11,
+          "archived_pnl_eur": 28.74,
+          "reproduced_base_net_eur": 24.46034,
+          "pnl_difference_eur": -4.27966,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 85,
+          "mode": "LIMIT",
+          "archived_signals": 1288,
+          "reproduced_signals": 1301,
+          "signals_difference": 13,
+          "archived_pnl_eur": 12.2,
+          "reproduced_base_net_eur": 10.64678,
+          "pnl_difference_eur": -1.55322,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 85,
+          "mode": "STOP",
+          "archived_signals": 496,
+          "reproduced_signals": 505,
+          "signals_difference": 9,
+          "archived_pnl_eur": 23.57,
+          "reproduced_base_net_eur": 20.11145,
+          "pnl_difference_eur": -3.45855,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 90,
+          "mode": "LIMIT",
+          "archived_signals": 1107,
+          "reproduced_signals": 1110,
+          "signals_difference": 3,
+          "archived_pnl_eur": 20.86,
+          "reproduced_base_net_eur": 24.43281,
+          "pnl_difference_eur": 3.57281,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "technical_candidate_scan",
+          "threshold": 90,
+          "mode": "STOP",
+          "archived_signals": 417,
+          "reproduced_signals": 428,
+          "signals_difference": 11,
+          "archived_pnl_eur": 23.78,
+          "reproduced_base_net_eur": 21.11517,
+          "pnl_difference_eur": -2.66483,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 65,
+          "mode": "LIMIT",
+          "archived_signals": 2737,
+          "reproduced_signals": 2771,
+          "signals_difference": 34,
+          "archived_pnl_eur": -31.25,
+          "reproduced_base_net_eur": -28.60619,
+          "pnl_difference_eur": 2.64381,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 65,
+          "mode": "STOP",
+          "archived_signals": 869,
+          "reproduced_signals": 867,
+          "signals_difference": -2,
+          "archived_pnl_eur": -34.28,
+          "reproduced_base_net_eur": -26.64317,
+          "pnl_difference_eur": 7.63683,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 75,
+          "mode": "LIMIT",
+          "archived_signals": 2348,
+          "reproduced_signals": 2370,
+          "signals_difference": 22,
+          "archived_pnl_eur": -9.23,
+          "reproduced_base_net_eur": -6.60624,
+          "pnl_difference_eur": 2.62376,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 75,
+          "mode": "STOP",
+          "archived_signals": 731,
+          "reproduced_signals": 746,
+          "signals_difference": 15,
+          "archived_pnl_eur": -17.87,
+          "reproduced_base_net_eur": -16.9929,
+          "pnl_difference_eur": 0.8771,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 85,
+          "mode": "LIMIT",
+          "archived_signals": 1927,
+          "reproduced_signals": 1967,
+          "signals_difference": 40,
+          "archived_pnl_eur": -24.46,
+          "reproduced_base_net_eur": -21.70009,
+          "pnl_difference_eur": 2.75991,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 85,
+          "mode": "STOP",
+          "archived_signals": 652,
+          "reproduced_signals": 674,
+          "signals_difference": 22,
+          "archived_pnl_eur": 43.79,
+          "reproduced_base_net_eur": 39.66112,
+          "pnl_difference_eur": -4.12888,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 90,
+          "mode": "LIMIT",
+          "archived_signals": 1581,
+          "reproduced_signals": 1601,
+          "signals_difference": 20,
+          "archived_pnl_eur": -9.98,
+          "reproduced_base_net_eur": -3.3301,
+          "pnl_difference_eur": 6.6499,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        },
+        {
+          "dataset": "validation_candidate_scan",
+          "threshold": 90,
+          "mode": "STOP",
+          "archived_signals": 581,
+          "reproduced_signals": 590,
+          "signals_difference": 9,
+          "archived_pnl_eur": 39.4,
+          "reproduced_base_net_eur": 37.9705,
+          "pnl_difference_eur": -1.4295,
+          "attribution": "UNRESOLVED_ARCHIVED_SUMMARY_DIFFERS_FROM_REPRODUCED_CURRENT_SIMULATOR"
+        }
+      ]
+    },
+    {
+      "name": "base_repeat_reproducibility",
+      "status": "PASS",
+      "evidence": {
+        "status": "PASS",
+        "reason": null,
+        "repeat_files_present": true,
+        "portfolio_trades.csv": {
+          "base_sha256": "ddcd40d87ced30d8868160060ff72102e9b8110bb8049d670de6102828d7a7ac",
+          "repeat_sha256": "ddcd40d87ced30d8868160060ff72102e9b8110bb8049d670de6102828d7a7ac",
+          "match": true
+        },
+        "portfolio_summary.csv": {
+          "base_sha256": "28e727d0325638695fe7f99519a508052370c586ed6ad7c0864b9adf629fe472",
+          "repeat_sha256": "28e727d0325638695fe7f99519a508052370c586ed6ad7c0864b9adf629fe472",
+          "match": true
+        },
+        "stateful_trades.csv": {
+          "base_sha256": "f41767467a9ff18592a7902e94b146947366b1c545c8cf330b65f8d243b6454d",
+          "repeat_sha256": "f41767467a9ff18592a7902e94b146947366b1c545c8cf330b65f8d243b6454d",
+          "match": true
+        },
+        "stateful_summary.csv": {
+          "base_sha256": "0688a052a8ce17479e1d251b5b7505e2cc0ab460a786cc2787bee52504f2a963",
+          "repeat_sha256": "0688a052a8ce17479e1d251b5b7505e2cc0ab460a786cc2787bee52504f2a963",
+          "match": true
+        }
+      }
+    },
+    {
+      "name": "deepseek_value_add",
+      "status": "PENDING",
+      "evidence": {
+        "status": "DEEPSEEK_VALUE_ADD_INCONCLUSIVE_INSUFFICIENT_DATA",
+        "matched_pairs": 0,
+        "reason": "Saved decision logs lack verifiable provider/model/prompt provenance; the archived logs are dated after the primary opportunity scan. The Apr 2026 replay is labeled LLM but does not identify DeepSeek or its prompt."
+      }
+    },
+    {
+      "name": "execution_safety",
+      "status": "PASS",
+      "evidence": {
+        "order_send_aliases_or_calls": [],
+        "mt5_calls_performed": 0,
+        "provider_api_calls_performed": 0,
+        "order_submission": false,
+        "dry_run_gate_present": true
+      }
+    },
+    {
+      "name": "git_reference_preparation",
+      "status": "PASS",
+      "evidence": {
+        "commit": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf",
+        "branch": "codex/phase2-1-1-consolidation",
+        "working_tree_clean": false,
+        "working_tree_status": [
+          "M .gitignore",
+          " M run_dry_pipeline.py",
+          " M run_market_agents.py",
+          " M run_multiagent_analysis.py",
+          " M run_portfolio_backtest.py",
+          " M run_stateful_backtest.py",
+          " M scripts/validate_phase2_1.py",
+          " M src/agents/llm_client.py",
+          " M src/historical_execution.py",
+          " M src/phase2_1_evaluation.py",
+          " M tests/test_phase1_backtest.py",
+          " M tests/test_phase1_mt5_safety.py",
+          " M tests/test_phase2_1.py",
+          "?? docs/FASE2_1_1_PLAN.md",
+          "?? docs/FASE2_PROTOCOLO_LLM.md",
+          "?? reports/phase2_1_1/",
+          "?? scripts/validate_phase2_1_1.py",
+          "?? src/event_ledger.py",
+          "?? src/llm_evaluation.py",
+          "?? src/spread_quality.py",
+          "?? src/warmup_audit.py",
+          "?? tests/test_phase2_1_1.py"
+        ],
+        "reference_commit_available": true,
+        "origin_main": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf"
+      }
+    },
+    {
+      "name": "phase1_closure",
+      "status": "PENDING",
+      "evidence": {
+        "phase1_status": "INCOMPLETE_PENDING_MANUAL",
+        "report": "reports/phase1_validation.json"
+      }
+    }
+  ],
+  "known_limits": [
+    "Phase 2.1 engineering state is independent of Phase 1 MT5-demo and live-provider readiness.",
+    "The available offline test suite is executed with unittest; pytest is optional for the discovered tests.",
+    "The primary period is marked as previously explored; chronological TEST results are not confirmatory.",
+    "No verifiable event-level DeepSeek or Ollama decision set overlaps the primary opportunities.",
+    "MT5 broker, raw tick history, and verified real-world commission/slippage are unavailable; no external integration was called.",
+    "Phase 1 status remains INCOMPLETE_PENDING_MANUAL per its existing validation report."
+  ],
+  "commands_to_complete_reproducibility": [
+    "python run_portfolio_backtest.py --scan technical_candidate_scan.csv --cost-scenario BASE --name portfolio_BASE_repeat --output-dir reports/phase2_1/backtests",
+    "python run_stateful_backtest.py --scan data/backtest/technical_candidate_scan.csv --cost-scenario BASE --name stateful_BASE_repeat --output-dir reports/phase2_1/backtests",
+    "python scripts/validate_phase2_1.py"
+  ],
+  "backtest_execution": [
+    {
+      "command": "run_portfolio_backtest.py/run_stateful_backtest.py --cost-scenario BASE|CONSERVATIVE|STRESS",
+      "status": "REUSED_AND_HASHED_CURRENT_TASK_OUTPUTS"
+    }
+  ],
+  "validation_period_execution": [
+    {
+      "command": "run_portfolio_backtest.py/run_stateful_backtest.py --scan validation_candidate_scan.csv --cost-scenario BASE|CONSERVATIVE|STRESS",
+      "status": "REUSED_AND_HASHED_CURRENT_TASK_OUTPUTS"
+    }
+  ],
+  "working_tree_provenance_refreshed_at_utc": "2026-11-06T09:51:00.774888Z"
+}

@@ -2,6 +2,10 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from src.event_ledger import bind_event, record_opportunity, record_system_decision
+from src.market_snapshot import build_compact_snapshot
+from src.technical_evaluator import evaluate_technical_state
+
 from src.agents.market_analyst import (
     MarketAnalystAgent,
 )
@@ -48,6 +52,7 @@ def save_analysis(
     symbol,
     analysis,
     metrics,
+    event_id=None,
 ):
 
     now = datetime.now(
@@ -83,6 +88,8 @@ def save_analysis(
 
         "symbol":
             symbol,
+
+        "event_id": event_id,
 
         "analysis":
             analysis.model_dump(),
@@ -281,17 +288,45 @@ def main():
         state = load_state(
             symbol
         )
-
-        analysis, metrics = (
-            agent.analyze(
-                state
-            )
-        )
+        event_id = None
+        try:
+            timestamp = state.get("analysis_time") or state.get("timestamp")
+            if timestamp:
+                technical = evaluate_technical_state(build_compact_snapshot(state, candles_per_timeframe=4))
+                technical_decision = "NO_TRADE"
+                if technical["setup_quality"] >= 65 and technical["alignment"] != "CONFLICT" and technical["bias"] != "NEUTRAL":
+                    technical_decision = "WATCH_LONG" if technical["bias"] == "BULLISH" else "WATCH_SHORT"
+                opportunity_snapshot = {
+                    **state,
+                    "technical_decision": technical_decision,
+                    "technical_evaluation": {key: technical[key] for key in ("bias", "overall_score", "setup_quality", "alignment", "timeframe_scores")},
+                }
+                event_id = record_opportunity(
+                    symbol, timestamp, opportunity_snapshot,
+                )
+        except Exception:
+            event_id = None
+        if event_id:
+            with bind_event(event_id):
+                analysis, metrics = agent.analyze(state)
+        else:
+            analysis, metrics = agent.analyze(state)
+        if event_id:
+            try:
+                record_system_decision(
+                    event_id, analysis.decision,
+                    validation_status="VALID" if analysis.validation_ok else "INVALID",
+                    decision_stage="MARKET_ANALYSIS",
+                    rejection_code=None if analysis.validation_ok else "ANALYSIS_VALIDATION_FAILED",
+                )
+            except Exception:
+                pass
 
         path = save_analysis(
             symbol,
             analysis,
             metrics,
+            event_id=event_id,
         )
 
         print_analysis(

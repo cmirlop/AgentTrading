@@ -1,0 +1,1752 @@
+{
+  "generated_at_utc": "2026-11-06T09:36:31.509564Z",
+  "classification": "OBSERVED_ZERO_UNVERIFIED is not treated as a verified zero-cost quote.",
+  "diagnostics": [
+    "zero/missing/invalid fractions",
+    "positive-spread percentiles",
+    "p99/max outliers",
+    "UTC session cuts",
+    "bid/ask field availability",
+    "dataset hashes"
+  ],
+  "all_sources_present": true,
+  "sources": [
+    {
+      "symbol": "EURUSD",
+      "timeframe": "M5",
+      "path": "data/market/EURUSD/M5.csv",
+      "sha256": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67",
+      "rows": 100538,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 100538,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 5689,
+          "OBSERVED_ZERO_UNVERIFIED": 94849
+        },
+        "zero_fraction_all_rows": 0.94341443,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.05658557,
+        "median_positive_points": 21.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 5.0,
+        "p99_all_numeric_points": 40.0,
+        "max_points": 200.0,
+        "values_at_least_20_points": 3675,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 29343,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 4262,
+            "OBSERVED_ZERO_UNVERIFIED": 25081
+          },
+          "zero_fraction_all_rows": 0.85475241,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.14524759,
+          "median_positive_points": 26.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 33.0,
+          "p99_all_numeric_points": 61.0,
+          "max_points": 200.0,
+          "values_at_least_20_points": 3662,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 25127,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 34,
+            "OBSERVED_ZERO_UNVERIFIED": 25093
+          },
+          "zero_fraction_all_rows": 0.99864687,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00135313,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 1.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 12564,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 20,
+            "OBSERVED_ZERO_UNVERIFIED": 12544
+          },
+          "zero_fraction_all_rows": 0.99840815,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00159185,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 20940,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 40,
+            "OBSERVED_ZERO_UNVERIFIED": 20900
+          },
+          "zero_fraction_all_rows": 0.99808978,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00191022,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 12564,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 1333,
+            "OBSERVED_ZERO_UNVERIFIED": 11231
+          },
+          "zero_fraction_all_rows": 0.89390322,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.10609678,
+          "median_positive_points": 5.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 5.0,
+          "p99_all_numeric_points": 5.0,
+          "max_points": 70.0,
+          "values_at_least_20_points": 13,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "M15",
+      "path": "data/market/EURUSD/M15.csv",
+      "sha256": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b",
+      "rows": 50878,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 50878,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 2593,
+          "OBSERVED_ZERO_UNVERIFIED": 48285
+        },
+        "zero_fraction_all_rows": 0.94903495,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.05096505,
+        "median_positive_points": 21.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 2.0,
+        "p99_all_numeric_points": 28.0,
+        "max_points": 200.0,
+        "values_at_least_20_points": 1387,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 14838,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2107,
+            "OBSERVED_ZERO_UNVERIFIED": 12731
+          },
+          "zero_fraction_all_rows": 0.85799973,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.14200027,
+          "median_positive_points": 21.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 22.0,
+          "p99_all_numeric_points": 45.0,
+          "max_points": 200.0,
+          "values_at_least_20_points": 1385,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 12720,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 11,
+            "OBSERVED_ZERO_UNVERIFIED": 12709
+          },
+          "zero_fraction_all_rows": 0.99913522,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00086478,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 7.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 6360,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 6,
+            "OBSERVED_ZERO_UNVERIFIED": 6354
+          },
+          "zero_fraction_all_rows": 0.9990566,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0009434,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 10600,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 27,
+            "OBSERVED_ZERO_UNVERIFIED": 10573
+          },
+          "zero_fraction_all_rows": 0.99745283,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00254717,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 5.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 6360,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 442,
+            "OBSERVED_ZERO_UNVERIFIED": 5918
+          },
+          "zero_fraction_all_rows": 0.93050314,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.06949686,
+          "median_positive_points": 5.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 5.0,
+          "p99_all_numeric_points": 5.0,
+          "max_points": 70.0,
+          "values_at_least_20_points": 2,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "H1",
+      "path": "data/market/EURUSD/H1.csv",
+      "sha256": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b",
+      "rows": 12990,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 12990,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 536,
+          "OBSERVED_ZERO_UNVERIFIED": 12454
+        },
+        "zero_fraction_all_rows": 0.95873749,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.04126251,
+        "median_positive_points": 17.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 0.0,
+        "p99_all_numeric_points": 21.0,
+        "max_points": 81.0,
+        "values_at_least_20_points": 190,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 3793,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 525,
+            "OBSERVED_ZERO_UNVERIFIED": 3268
+          },
+          "zero_fraction_all_rows": 0.86158713,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.13841287,
+          "median_positive_points": 17.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 19.399999999999636,
+          "p99_all_numeric_points": 25.0,
+          "max_points": 81.0,
+          "values_at_least_20_points": 190,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 3246,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 3246
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 1623,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 1623
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 2705,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2,
+            "OBSERVED_ZERO_UNVERIFIED": 2703
+          },
+          "zero_fraction_all_rows": 0.99926063,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00073937,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 1623,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 9,
+            "OBSERVED_ZERO_UNVERIFIED": 1614
+          },
+          "zero_fraction_all_rows": 0.99445471,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00554529,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 7.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "H4",
+      "path": "data/market/EURUSD/H4.csv",
+      "sha256": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92",
+      "rows": 3503,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 3503,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 2,
+          "OBSERVED_ZERO_UNVERIFIED": 3501
+        },
+        "zero_fraction_all_rows": 0.99942906,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.00057094,
+        "median_positive_points": 2.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 0.0,
+        "p99_all_numeric_points": 0.0,
+        "max_points": 2.0,
+        "values_at_least_20_points": 0,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 1167,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 1167
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 1168,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 1168
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 1168,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2,
+            "OBSERVED_ZERO_UNVERIFIED": 1166
+          },
+          "zero_fraction_all_rows": 0.99828767,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00171233,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "EURUSD",
+      "timeframe": "D1",
+      "path": "data/market/EURUSD/D1.csv",
+      "sha256": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539",
+      "rows": 839,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 839,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 0,
+          "OBSERVED_ZERO_UNVERIFIED": 839
+        },
+        "zero_fraction_all_rows": 1.0,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.0,
+        "median_positive_points": null,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 0.0,
+        "p99_all_numeric_points": 0.0,
+        "max_points": 0.0,
+        "values_at_least_20_points": 0,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 839,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 839
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "M5",
+      "path": "data/market/USDCAD/M5.csv",
+      "sha256": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52",
+      "rows": 100538,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 100538,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 86582,
+          "OBSERVED_ZERO_UNVERIFIED": 13956
+        },
+        "zero_fraction_all_rows": 0.13881319,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.86118681,
+        "median_positive_points": 1.0,
+        "p50_all_numeric_points": 1.0,
+        "p95_all_numeric_points": 7.0,
+        "p99_all_numeric_points": 68.0,
+        "max_points": 300.0,
+        "values_at_least_20_points": 4166,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 29343,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 25715,
+            "OBSERVED_ZERO_UNVERIFIED": 3628
+          },
+          "zero_fraction_all_rows": 0.12364107,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.87635893,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 55.0,
+          "p99_all_numeric_points": 110.0,
+          "max_points": 300.0,
+          "values_at_least_20_points": 4147,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 25127,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 21801,
+            "OBSERVED_ZERO_UNVERIFIED": 3326
+          },
+          "zero_fraction_all_rows": 0.13236757,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.86763243,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 3.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 12564,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 10693,
+            "OBSERVED_ZERO_UNVERIFIED": 1871
+          },
+          "zero_fraction_all_rows": 0.14891754,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.85108246,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 3.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 20940,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 17321,
+            "OBSERVED_ZERO_UNVERIFIED": 3619
+          },
+          "zero_fraction_all_rows": 0.17282713,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.82717287,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 3.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 12564,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 11052,
+            "OBSERVED_ZERO_UNVERIFIED": 1512
+          },
+          "zero_fraction_all_rows": 0.12034384,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.87965616,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 7.0,
+          "p99_all_numeric_points": 11.0,
+          "max_points": 100.0,
+          "values_at_least_20_points": 19,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "M15",
+      "path": "data/market/USDCAD/M15.csv",
+      "sha256": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e",
+      "rows": 50877,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 50877,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 39117,
+          "OBSERVED_ZERO_UNVERIFIED": 11760
+        },
+        "zero_fraction_all_rows": 0.2311457,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.7688543,
+        "median_positive_points": 1.0,
+        "p50_all_numeric_points": 1.0,
+        "p95_all_numeric_points": 4.0,
+        "p99_all_numeric_points": 52.0,
+        "max_points": 268.0,
+        "values_at_least_20_points": 1880,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 14837,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 12025,
+            "OBSERVED_ZERO_UNVERIFIED": 2812
+          },
+          "zero_fraction_all_rows": 0.18952618,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.81047382,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 43.0,
+          "p99_all_numeric_points": 89.0,
+          "max_points": 268.0,
+          "values_at_least_20_points": 1875,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 12720,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 9755,
+            "OBSERVED_ZERO_UNVERIFIED": 2965
+          },
+          "zero_fraction_all_rows": 0.23309748,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.76690252,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 8.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 6360,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 4728,
+            "OBSERVED_ZERO_UNVERIFIED": 1632
+          },
+          "zero_fraction_all_rows": 0.25660377,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.74339623,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 9.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 10600,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 7594,
+            "OBSERVED_ZERO_UNVERIFIED": 3006
+          },
+          "zero_fraction_all_rows": 0.28358491,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.71641509,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 15.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 6360,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 5015,
+            "OBSERVED_ZERO_UNVERIFIED": 1345
+          },
+          "zero_fraction_all_rows": 0.21147799,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.78852201,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 7.0,
+          "p99_all_numeric_points": 9.0,
+          "max_points": 59.0,
+          "values_at_least_20_points": 5,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "H1",
+      "path": "data/market/USDCAD/H1.csv",
+      "sha256": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175",
+      "rows": 12990,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 12990,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 8913,
+          "OBSERVED_ZERO_UNVERIFIED": 4077
+        },
+        "zero_fraction_all_rows": 0.31385681,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.68614319,
+        "median_positive_points": 1.0,
+        "p50_all_numeric_points": 1.0,
+        "p95_all_numeric_points": 1.0,
+        "p99_all_numeric_points": 35.0,
+        "max_points": 136.0,
+        "values_at_least_20_points": 385,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 3793,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2787,
+            "OBSERVED_ZERO_UNVERIFIED": 1006
+          },
+          "zero_fraction_all_rows": 0.26522542,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.73477458,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 35.0,
+          "p99_all_numeric_points": 52.0,
+          "max_points": 136.0,
+          "values_at_least_20_points": 385,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 3246,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2207,
+            "OBSERVED_ZERO_UNVERIFIED": 1039
+          },
+          "zero_fraction_all_rows": 0.32008626,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.67991374,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 1.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 1623,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 1062,
+            "OBSERVED_ZERO_UNVERIFIED": 561
+          },
+          "zero_fraction_all_rows": 0.34565619,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.65434381,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 1.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 2705,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 1740,
+            "OBSERVED_ZERO_UNVERIFIED": 965
+          },
+          "zero_fraction_all_rows": 0.35674677,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.64325323,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 3.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 1623,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 1117,
+            "OBSERVED_ZERO_UNVERIFIED": 506
+          },
+          "zero_fraction_all_rows": 0.31176833,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.68823167,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 12.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "H4",
+      "path": "data/market/USDCAD/H4.csv",
+      "sha256": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da",
+      "rows": 3503,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 3503,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 2041,
+          "OBSERVED_ZERO_UNVERIFIED": 1462
+        },
+        "zero_fraction_all_rows": 0.41735655,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.58264345,
+        "median_positive_points": 1.0,
+        "p50_all_numeric_points": 1.0,
+        "p95_all_numeric_points": 1.0,
+        "p99_all_numeric_points": 1.0,
+        "max_points": 3.0,
+        "values_at_least_20_points": 0,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 1167,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 690,
+            "OBSERVED_ZERO_UNVERIFIED": 477
+          },
+          "zero_fraction_all_rows": 0.40874036,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.59125964,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 1.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 1168,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 680,
+            "OBSERVED_ZERO_UNVERIFIED": 488
+          },
+          "zero_fraction_all_rows": 0.41780822,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.58219178,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 1.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 1168,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 671,
+            "OBSERVED_ZERO_UNVERIFIED": 497
+          },
+          "zero_fraction_all_rows": 0.4255137,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.5744863,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 1.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 3.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "USDCAD",
+      "timeframe": "D1",
+      "path": "data/market/USDCAD/D1.csv",
+      "sha256": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326",
+      "rows": 839,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 839,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 318,
+          "OBSERVED_ZERO_UNVERIFIED": 521
+        },
+        "zero_fraction_all_rows": 0.62097735,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.37902265,
+        "median_positive_points": 1.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 1.0,
+        "p99_all_numeric_points": 1.0,
+        "max_points": 1.0,
+        "values_at_least_20_points": 0,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 839,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 318,
+            "OBSERVED_ZERO_UNVERIFIED": 521
+          },
+          "zero_fraction_all_rows": 0.62097735,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.37902265,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 1.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 1.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "M5",
+      "path": "data/market/AUDUSD/M5.csv",
+      "sha256": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0",
+      "rows": 100538,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 100538,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 7124,
+          "OBSERVED_ZERO_UNVERIFIED": 93414
+        },
+        "zero_fraction_all_rows": 0.92914122,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.07085878,
+        "median_positive_points": 26.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 5.0,
+        "p99_all_numeric_points": 52.0,
+        "max_points": 300.0,
+        "values_at_least_20_points": 4103,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 29349,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 4510,
+            "OBSERVED_ZERO_UNVERIFIED": 24839
+          },
+          "zero_fraction_all_rows": 0.84633207,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.15366793,
+          "median_positive_points": 37.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 46.0,
+          "p99_all_numeric_points": 77.0,
+          "max_points": 300.0,
+          "values_at_least_20_points": 4088,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 25127,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 453,
+            "OBSERVED_ZERO_UNVERIFIED": 24674
+          },
+          "zero_fraction_all_rows": 0.98197158,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.01802842,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 12564,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 309,
+            "OBSERVED_ZERO_UNVERIFIED": 12255
+          },
+          "zero_fraction_all_rows": 0.97540592,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.02459408,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 3.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 20940,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 394,
+            "OBSERVED_ZERO_UNVERIFIED": 20546
+          },
+          "zero_fraction_all_rows": 0.98118434,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.01881566,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 1.0,
+          "max_points": 3.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 12558,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 1458,
+            "OBSERVED_ZERO_UNVERIFIED": 11100
+          },
+          "zero_fraction_all_rows": 0.88389871,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.11610129,
+          "median_positive_points": 5.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 5.0,
+          "p99_all_numeric_points": 7.0,
+          "max_points": 166.0,
+          "values_at_least_20_points": 15,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "M15",
+      "path": "data/market/AUDUSD/M15.csv",
+      "sha256": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273",
+      "rows": 50877,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 50877,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 2630,
+          "OBSERVED_ZERO_UNVERIFIED": 48247
+        },
+        "zero_fraction_all_rows": 0.9483067,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.0516933,
+        "median_positive_points": 25.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 2.0,
+        "p99_all_numeric_points": 38.0,
+        "max_points": 234.0,
+        "values_at_least_20_points": 1639,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 14838,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2127,
+            "OBSERVED_ZERO_UNVERIFIED": 12711
+          },
+          "zero_fraction_all_rows": 0.85665184,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.14334816,
+          "median_positive_points": 27.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 33.0,
+          "p99_all_numeric_points": 58.0,
+          "max_points": 234.0,
+          "values_at_least_20_points": 1635,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 12720,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 8,
+            "OBSERVED_ZERO_UNVERIFIED": 12712
+          },
+          "zero_fraction_all_rows": 0.99937107,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00062893,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 6360,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 12,
+            "OBSERVED_ZERO_UNVERIFIED": 6348
+          },
+          "zero_fraction_all_rows": 0.99811321,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00188679,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 10600,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 38,
+            "OBSERVED_ZERO_UNVERIFIED": 10562
+          },
+          "zero_fraction_all_rows": 0.99641509,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00358491,
+          "median_positive_points": 1.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 6359,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 445,
+            "OBSERVED_ZERO_UNVERIFIED": 5914
+          },
+          "zero_fraction_all_rows": 0.93002044,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.06997956,
+          "median_positive_points": 5.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 4.0,
+          "p99_all_numeric_points": 5.0,
+          "max_points": 100.0,
+          "values_at_least_20_points": 4,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "H1",
+      "path": "data/market/AUDUSD/H1.csv",
+      "sha256": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2",
+      "rows": 12990,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 12990,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 542,
+          "OBSERVED_ZERO_UNVERIFIED": 12448
+        },
+        "zero_fraction_all_rows": 0.9582756,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.0417244,
+        "median_positive_points": 20.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 0.0,
+        "p99_all_numeric_points": 27.0,
+        "max_points": 157.0,
+        "values_at_least_20_points": 287,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 3793,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 530,
+            "OBSERVED_ZERO_UNVERIFIED": 3263
+          },
+          "zero_fraction_all_rows": 0.86026892,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.13973108,
+          "median_positive_points": 20.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 23.0,
+          "p99_all_numeric_points": 37.0,
+          "max_points": 157.0,
+          "values_at_least_20_points": 287,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 3246,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 3246
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON_NEW_YORK_OVERLAP": {
+          "records": 1623,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 1623
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 2705,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2,
+            "OBSERVED_ZERO_UNVERIFIED": 2703
+          },
+          "zero_fraction_all_rows": 0.99926063,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00073937,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "ROLLOVER_OFF_HOURS": {
+          "records": 1623,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 10,
+            "OBSERVED_ZERO_UNVERIFIED": 1613
+          },
+          "zero_fraction_all_rows": 0.99383857,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00616143,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 5.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "H4",
+      "path": "data/market/AUDUSD/H4.csv",
+      "sha256": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b",
+      "rows": 3503,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 3503,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 2,
+          "OBSERVED_ZERO_UNVERIFIED": 3501
+        },
+        "zero_fraction_all_rows": 0.99942906,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.00057094,
+        "median_positive_points": 2.0,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 0.0,
+        "p99_all_numeric_points": 0.0,
+        "max_points": 2.0,
+        "values_at_least_20_points": 0,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 1167,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 1167
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "LONDON": {
+          "records": 1168,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 1168
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        },
+        "NEW_YORK": {
+          "records": 1168,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 2,
+            "OBSERVED_ZERO_UNVERIFIED": 1166
+          },
+          "zero_fraction_all_rows": 0.99828767,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.00171233,
+          "median_positive_points": 2.0,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 2.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    },
+    {
+      "symbol": "AUDUSD",
+      "timeframe": "D1",
+      "path": "data/market/AUDUSD/D1.csv",
+      "sha256": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148",
+      "rows": 839,
+      "status": "PASS",
+      "spread_column_available": true,
+      "bid_ask_columns_available": false,
+      "raw_source": "MT5 copy_rates_range spread field exported by download_history.py/sync_market_data.py without zero imputation; zero semantics remain unverified.",
+      "unit_handling": "Raw spread is interpreted as MT5 points by the simulator and multiplied by static SYMBOL_POINT. Per-file broker digits/symbol metadata are not archived, so historical conversion cannot be independently verified.",
+      "summary": {
+        "records": 839,
+        "quality_counts": {
+          "IMPUTED_ASSUMPTION": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "OBSERVED_VALID": 0,
+          "OBSERVED_ZERO_UNVERIFIED": 839
+        },
+        "zero_fraction_all_rows": 1.0,
+        "missing_fraction_all_rows": 0.0,
+        "invalid_fraction_all_rows": 0.0,
+        "positive_observed_fraction_all_rows": 0.0,
+        "median_positive_points": null,
+        "p50_all_numeric_points": 0.0,
+        "p95_all_numeric_points": 0.0,
+        "p99_all_numeric_points": 0.0,
+        "max_points": 0.0,
+        "values_at_least_20_points": 0,
+        "source_values_modified": false
+      },
+      "by_utc_session": {
+        "ASIA": {
+          "records": 839,
+          "quality_counts": {
+            "IMPUTED_ASSUMPTION": 0,
+            "INVALID": 0,
+            "MISSING": 0,
+            "OBSERVED_VALID": 0,
+            "OBSERVED_ZERO_UNVERIFIED": 839
+          },
+          "zero_fraction_all_rows": 1.0,
+          "missing_fraction_all_rows": 0.0,
+          "invalid_fraction_all_rows": 0.0,
+          "positive_observed_fraction_all_rows": 0.0,
+          "median_positive_points": null,
+          "p50_all_numeric_points": 0.0,
+          "p95_all_numeric_points": 0.0,
+          "p99_all_numeric_points": 0.0,
+          "max_points": 0.0,
+          "values_at_least_20_points": 0,
+          "source_values_modified": false
+        }
+      },
+      "source_csv_modified": false
+    }
+  ]
+}

@@ -16,6 +16,14 @@ import pandas as pd
 
 RESOLVED = {"WIN", "LOSS"}
 AMBIGUOUS_PREFIX = "AMBIGUOUS"
+ENGINEERING_STATES = {"COMPLETE", "INCOMPLETE", "FAILED"}
+STRATEGY_STATES = {"PROMISING", "NOT_PROMISING", "INCONCLUSIVE"}
+LLM_VALUE_STATES = {
+    "EVIDENCE_OF_IMPROVEMENT",
+    "NO_EVIDENCE_OF_IMPROVEMENT",
+    "EVIDENCE_OF_DEGRADATION",
+    "INCONCLUSIVE_INSUFFICIENT_DATA",
+}
 KNOWN_DECISION_FIELDS = {
     "symbol",
     "analysis_time",
@@ -417,6 +425,101 @@ def weekly_block_bootstrap_mean(
         "observed_mean": round(float(subset[value_col].mean()), 8),
         "ci95": [round(float(lower), 8), round(float(upper), 8)],
     }
+
+
+def classify_engineering_status(checks: dict[str, str], required: set[str]) -> str:
+    """Classify offline implementation health independently of research findings.
+
+    A missing/unrun check is INCOMPLETE; only an executed failure is FAILED.
+    External readiness and the availability of historical model decisions are
+    intentionally not engineering checks.
+    """
+    if not required:
+        raise ValueError("ENGINEERING_REQUIRED_CHECKS_EMPTY")
+    statuses = {str(checks.get(name, "PENDING")).upper() for name in required}
+    if "FAIL" in statuses:
+        return "FAILED"
+    if statuses - {"PASS", "NOT_APPLICABLE"}:
+        return "INCOMPLETE"
+    return "COMPLETE"
+
+
+def classify_strategy_evidence(
+    *,
+    confirmatory: bool,
+    conservative_expectancy: float | None,
+    conservative_ci95: list[float] | tuple[float, float] | None,
+    walk_forward_expectancies: list[float | None] | None = None,
+    symbol_net_pnl: dict[str, float] | None = None,
+) -> str:
+    """Apply the preregistered, cost-aware decision rule to evidence.
+
+    PROMISING requires a valid untouched confirmatory interval, positive
+    conservative expectancy with its lower CI above zero, every preregistered
+    walk-forward fold positive, and positive net PnL in at least two symbols.
+    NOT_PROMISING requires an untouched confirmatory conservative CI wholly at
+    or below zero. Any incomplete or mixed evidence is INCONCLUSIVE.
+    """
+    if not confirmatory or conservative_expectancy is None or conservative_ci95 is None:
+        return "INCONCLUSIVE"
+    try:
+        lower, upper = map(float, conservative_ci95)
+        expectancy = float(conservative_expectancy)
+    except (TypeError, ValueError):
+        return "INCONCLUSIVE"
+    if not all(math.isfinite(value) for value in (lower, upper, expectancy)) or lower > upper:
+        return "INCONCLUSIVE"
+    if upper <= 0 and expectancy <= 0:
+        return "NOT_PROMISING"
+    folds = list(walk_forward_expectancies or [])
+    symbol_values = list((symbol_net_pnl or {}).values())
+    try:
+        consistency = bool(folds) and all(value is not None and math.isfinite(float(value)) and float(value) > 0 for value in folds)
+        diversified = sum(1 for value in symbol_values if value is not None and math.isfinite(float(value)) and float(value) > 0) >= 2
+    except (TypeError, ValueError, OverflowError):
+        return "INCONCLUSIVE"
+    if expectancy > 0 and lower > 0 and consistency and diversified:
+        return "PROMISING"
+    return "INCONCLUSIVE"
+
+
+def classify_llm_value_add(
+    *,
+    valid_pairs: int,
+    confirmatory: bool,
+    paired_mean_difference: float | None,
+    paired_ci95: list[float] | tuple[float, float] | None,
+    independent_blocks: int | None,
+    minimum_independent_blocks: int = 10,
+) -> str:
+    """Classify paired LLM evidence; no pairs remain an explicit research result."""
+    try:
+        valid_pairs = int(valid_pairs)
+        independent_blocks = int(independent_blocks) if independent_blocks is not None else None
+        minimum_independent_blocks = int(minimum_independent_blocks)
+    except (TypeError, ValueError, OverflowError):
+        return "INCONCLUSIVE_INSUFFICIENT_DATA"
+    if (
+        valid_pairs <= 0
+        or not confirmatory
+        or paired_mean_difference is None
+        or paired_ci95 is None
+        or independent_blocks is None
+        or independent_blocks < minimum_independent_blocks
+    ):
+        return "INCONCLUSIVE_INSUFFICIENT_DATA"
+    try:
+        lower, upper = map(float, paired_ci95)
+        mean = float(paired_mean_difference)
+    except (TypeError, ValueError):
+        return "INCONCLUSIVE_INSUFFICIENT_DATA"
+    if not all(math.isfinite(value) for value in (lower, upper, mean)) or lower > upper:
+        return "INCONCLUSIVE_INSUFFICIENT_DATA"
+    if lower > 0 and mean > 0:
+        return "EVIDENCE_OF_IMPROVEMENT"
+    if upper < 0 and mean < 0:
+        return "EVIDENCE_OF_DEGRADATION"
+    return "NO_EVIDENCE_OF_IMPROVEMENT"
 
 
 def month_group_summary(trades: pd.DataFrame, group_columns: list[str]) -> list[dict[str, Any]]:

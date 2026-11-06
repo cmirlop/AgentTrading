@@ -1,0 +1,156 @@
+{
+  "decision_files": 13,
+  "decision_records_with_matching_primary_event": 0,
+  "matched_records_with_provider_model_prompt": 0,
+  "provider_attributed_decisions": 0,
+  "deepseek_attributed_decisions": 0,
+  "saved_decision_metadata": [
+    {
+      "path": "data/decisions/2026-10-08/15-50-33_EURUSD.json",
+      "symbol": "EURUSD",
+      "timestamp": "2026-10-08T15:45:00+00:00",
+      "event_id": "07cc4caec3ee75157806395e5c5180cf526f4390b3f8f90c82bf75511e386f1f",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 10
+    },
+    {
+      "path": "data/decisions/2026-10-08/15-53-48_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-08T15:45:00+00:00",
+      "event_id": "2d5bb038b62c9dad488be07573add354d6c3b88ec66d641667b925fdfa80345b",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 10
+    },
+    {
+      "path": "data/decisions/2026-10-08/15-55-51_AUDUSD.json",
+      "symbol": "AUDUSD",
+      "timestamp": "2026-10-08T15:45:00+00:00",
+      "event_id": "72641427ef0fb1d7cb72ecff9304762c720e3f33972b76ece9a3296a99133119",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 10
+    },
+    {
+      "path": "data/decisions/2026-10-08/16-41-21_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-08T15:45:00+00:00",
+      "event_id": "2d5bb038b62c9dad488be07573add354d6c3b88ec66d641667b925fdfa80345b",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 10
+    },
+    {
+      "path": "data/decisions/2026-10-08/16-43-30_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-08T16:30:00+00:00",
+      "event_id": "0e369149ac463bfa70cebf811a4a22177f79ce367dc1ce8eeffe786dab7082c9",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 10
+    },
+    {
+      "path": "data/decisions/2026-10-08/17-11-03_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-08T17:00:00+00:00",
+      "event_id": "22b9810978d5f19cc19505b800b41d66f54db487e77b4b2ad65c68094650dc5d",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 17
+    },
+    {
+      "path": "data/decisions/2026-10-08/17-30-09_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-08T17:15:00+00:00",
+      "event_id": "cb05280da2b68cb915f49d5721e56e009a742a1bfbde1f02ec423dbe67417929",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 17
+    },
+    {
+      "path": "data/decisions/2026-10-09/17-28-06_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-09T17:15:00+00:00",
+      "event_id": "5644498d3362839fbb2b3452ecf1edce1c86f655cd73eec843f8fd6dc931954b",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 12
+    },
+    {
+      "path": "data/decisions/2026-10-09/17-31-49_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-09T17:30:00+00:00",
+      "event_id": "71c0b0bd9ce26114ff53219f681e6bb639b257126e846c91afb9a6254fbde20d",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 13
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-03-44_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-10T00:00:00+00:00",
+      "event_id": "c37354ed6324e2ad02c6e5941a72bb3ed4034e64147fb114d4ec5a567a02b40b",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 2
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-08-19_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-10T00:00:00+00:00",
+      "event_id": "c37354ed6324e2ad02c6e5941a72bb3ed4034e64147fb114d4ec5a567a02b40b",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 2
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-27-06_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-10T00:00:00+00:00",
+      "event_id": "c37354ed6324e2ad02c6e5941a72bb3ed4034e64147fb114d4ec5a567a02b40b",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 2
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-50-01_USDCAD.json",
+      "symbol": "USDCAD",
+      "timestamp": "2026-10-10T00:00:00+00:00",
+      "event_id": "c37354ed6324e2ad02c6e5941a72bb3ed4034e64147fb114d4ec5a567a02b40b",
+      "providers": [],
+      "models": [],
+      "prompt_versions": [],
+      "message_count": 2
+    }
+  ],
+  "multiagent_replay_cache": {
+    "records": 11,
+    "source_counts": {
+      "LLM": 11
+    },
+    "action_counts": {
+      "WAIT": 11
+    },
+    "overlap_with_primary_scan": 11,
+    "deepseek_attributed": 0
+  },
+  "reusable_deepseek_pairs": 0,
+  "status": "DEEPSEEK_VALUE_ADD_INCONCLUSIVE_INSUFFICIENT_DATA",
+  "reason": "Saved decision logs lack verifiable provider/model/prompt provenance; the archived logs are dated after the primary opportunity scan. The Apr 2026 replay is labeled LLM but does not identify DeepSeek or its prompt.",
+  "probe_reports_excluded": [
+    "reports/phase1_llm_live_deepseek.json: provider integration probe, not an event-level strategy decision"
+  ]
+}

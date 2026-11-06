@@ -1,0 +1,19 @@
+{
+  "generated_at_utc": "2026-11-06T09:36:29.873574Z",
+  "baseline": {
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "expected_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "actual_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "matches_original": true,
+    "source_modified": false
+  },
+  "git": {
+    "repository": "https://github.com/cmirlop/AgentTrading.git",
+    "branch": "codex/phase2-1-1-consolidation",
+    "head": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf",
+    "main_head": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf",
+    "working_tree_clean": false,
+    "status_porcelain": " M .gitignore\n M run_dry_pipeline.py\n M run_market_agents.py\n M run_multiagent_analysis.py\n M run_portfolio_backtest.py\n M run_stateful_backtest.py\n M scripts/validate_phase2_1.py\n M src/agents/llm_client.py\n M src/historical_execution.py\n M src/phase2_1_evaluation.py\n M tests/test_phase1_backtest.py\n M tests/test_phase1_mt5_safety.py\n M tests/test_phase2_1.py\n?? docs/FASE2_1_1_PLAN.md\n?? docs/FASE2_1_1_RESULTADOS.md\n?? docs/FASE2_PROTOCOLO_LLM.md\n?? reports/phase2_1_1/\n?? scripts/validate_phase2_1_1.py\n?? src/event_ledger.py\n?? src/llm_evaluation.py\n?? src/spread_quality.py\n?? src/warmup_audit.py\n?? tests/test_phase2_1_1.py"
+  },
+  "working_tree_provenance_refreshed_at_utc": "2026-11-06T09:51:00.774888Z"
+}

@@ -1,0 +1,172 @@
+{
+  "seed": 20261106,
+  "method": "weekly block bootstrap, UTC exit weeks",
+  "primary_strategy": "portfolio threshold 65 LIMIT",
+  "scenarios": {
+    "BASE": {
+      "all_period_weekly_block_ci95": {
+        "status": "PASS",
+        "method": "weekly_block_bootstrap_mean_per_closed_trade",
+        "seed": 20261106,
+        "repetitions": 2000,
+        "blocks": 27,
+        "closed_trades": 628,
+        "observed_mean": 0.04079631,
+        "ci95": [
+          -0.01626976,
+          0.09433903
+        ]
+      },
+      "test_weekly_block_ci95": {
+        "status": "INSUFFICIENT_DATA",
+        "reason": "WEEKLY_BLOCKS_BELOW_10",
+        "blocks": 6,
+        "closed_trades": 128,
+        "ci95": null
+      },
+      "test_metrics": {
+        "dataset": "technical_candidate_scan",
+        "scenario": "BASE",
+        "period": "TEST",
+        "proposed": 358,
+        "executed": 142,
+        "closed": 128,
+        "expired": 215,
+        "ambiguous": 13,
+        "open_or_pending": 2,
+        "gross_pnl_eur": 11.68979,
+        "costs_eur_closed": 0.0,
+        "costs_eur_all": 0.0,
+        "net_pnl_eur": 11.68979,
+        "expectancy_net_eur": 0.09132648,
+        "expectancy_net_r": 0.13828125,
+        "profit_factor_net": 1.28704987,
+        "max_drawdown_net_eur": 6.96107,
+        "wins_net": 47,
+        "losses_net": 81,
+        "time_in_market_hours": 501.75,
+        "time_in_market_pct": 0.59081543,
+        "max_simultaneous_filled_positions": 2,
+        "max_open_risk_eur": 2.256,
+        "weekly_block_ci95_expectancy": null,
+        "independent_week_blocks": 6,
+        "ci_status": "INSUFFICIENT_DATA",
+        "purged_reason_counts": {
+          "IN_PARTITION": 1697,
+          "SIGNAL_IN_EMBARGO": 39,
+          "EVENT_CROSSES_PARTITION_OR_EMBARGO": 1
+        }
+      }
+    },
+    "CONSERVATIVE": {
+      "all_period_weekly_block_ci95": {
+        "status": "PASS",
+        "method": "weekly_block_bootstrap_mean_per_closed_trade",
+        "seed": 20261106,
+        "repetitions": 2000,
+        "blocks": 27,
+        "closed_trades": 627,
+        "observed_mean": -0.04390228,
+        "ci95": [
+          -0.10137066,
+          0.01085036
+        ]
+      },
+      "test_weekly_block_ci95": {
+        "status": "INSUFFICIENT_DATA",
+        "reason": "WEEKLY_BLOCKS_BELOW_10",
+        "blocks": 6,
+        "closed_trades": 127,
+        "ci95": null
+      },
+      "test_metrics": {
+        "dataset": "technical_candidate_scan",
+        "scenario": "CONSERVATIVE",
+        "period": "TEST",
+        "proposed": 357,
+        "executed": 141,
+        "closed": 127,
+        "expired": 215,
+        "ambiguous": 13,
+        "open_or_pending": 2,
+        "gross_pnl_eur": 12.18754,
+        "costs_eur_closed": 10.83699582,
+        "costs_eur_all": 11.99455467,
+        "net_pnl_eur": 1.35054422,
+        "expectancy_net_eur": 0.01063421,
+        "expectancy_net_r": -0.0569555,
+        "profit_factor_net": 1.02872033,
+        "max_drawdown_net_eur": 10.23676888,
+        "wins_net": 47,
+        "losses_net": 80,
+        "time_in_market_hours": 500.66666667,
+        "time_in_market_pct": 0.58953979,
+        "max_simultaneous_filled_positions": 2,
+        "max_open_risk_eur": 2.256,
+        "weekly_block_ci95_expectancy": null,
+        "independent_week_blocks": 6,
+        "ci_status": "INSUFFICIENT_DATA",
+        "purged_reason_counts": {
+          "IN_PARTITION": 1696,
+          "SIGNAL_IN_EMBARGO": 39,
+          "EVENT_CROSSES_PARTITION_OR_EMBARGO": 1
+        }
+      }
+    },
+    "STRESS": {
+      "all_period_weekly_block_ci95": {
+        "status": "PASS",
+        "method": "weekly_block_bootstrap_mean_per_closed_trade",
+        "seed": 20261106,
+        "repetitions": 2000,
+        "blocks": 27,
+        "closed_trades": 632,
+        "observed_mean": -0.11771238,
+        "ci95": [
+          -0.17956615,
+          -0.05884638
+        ]
+      },
+      "test_weekly_block_ci95": {
+        "status": "INSUFFICIENT_DATA",
+        "reason": "WEEKLY_BLOCKS_BELOW_10",
+        "blocks": 6,
+        "closed_trades": 130,
+        "ci95": null
+      },
+      "test_metrics": {
+        "dataset": "technical_candidate_scan",
+        "scenario": "STRESS",
+        "period": "TEST",
+        "proposed": 365,
+        "executed": 144,
+        "closed": 130,
+        "expired": 220,
+        "ambiguous": 13,
+        "open_or_pending": 2,
+        "gross_pnl_eur": 11.08984,
+        "costs_eur_closed": 18.96780231,
+        "costs_eur_all": 20.95547497,
+        "net_pnl_eur": -7.87796226,
+        "expectancy_net_eur": -0.06059971,
+        "expectancy_net_r": -0.22898479,
+        "profit_factor_net": 0.85253296,
+        "max_drawdown_net_eur": 14.05371343,
+        "wins_net": 47,
+        "losses_net": 83,
+        "time_in_market_hours": 491.08333333,
+        "time_in_market_pct": 0.57825532,
+        "max_simultaneous_filled_positions": 2,
+        "max_open_risk_eur": 2.256,
+        "weekly_block_ci95_expectancy": null,
+        "independent_week_blocks": 6,
+        "ci_status": "INSUFFICIENT_DATA",
+        "purged_reason_counts": {
+          "IN_PARTITION": 1708,
+          "SIGNAL_IN_EMBARGO": 39,
+          "EVENT_CROSSES_PARTITION_OR_EMBARGO": 1
+        }
+      }
+    }
+  }
+}

@@ -11,10 +11,12 @@ from src.historical_trade_planner import (
 )
 from config.backtest_cost_config import COST_SCENARIOS
 from config.risk_config import LOT_SIZE
+from src.spread_quality import classify_spread, effective_spread_points
 
 
 def _settlement(result, gross_r, fill_time, exit_time, release_time, *,
-                plan, point, scenario, risk_amount_eur, filled):
+                plan, point, scenario, risk_amount_eur, filled,
+                spread_floor_points=0.0, spread_audit=None):
     costs = COST_SCENARIOS[scenario]
     round_turn = result in {
         "WIN", "LOSS", "AMBIGUOUS_ENTRY_BAR", "AMBIGUOUS_BOTH", "AMBIGUOUS_EXPIRY_BAR",
@@ -50,6 +52,16 @@ def _settlement(result, gross_r, fill_time, exit_time, release_time, *,
         "fill_time": fill_time,
         "exit_time": exit_time,
         "release_time": release_time,
+        "spread_floor_assumption_points": float(spread_floor_points),
+        "spread_bars_examined": int((spread_audit or {}).get("bars_examined", 0)),
+        "unverified_zero_spread_bar_count": int((spread_audit or {}).get("unverified_zero_spread_bar_count", 0)),
+        "spread_floor_applied_bar_count": int((spread_audit or {}).get("spread_floor_applied_bar_count", 0)),
+        "spread_data_quality": (
+            "IMPUTED_ASSUMPTION" if (spread_audit or {}).get("spread_floor_applied_bar_count", 0)
+            else "OBSERVED_ZERO_UNVERIFIED" if (spread_audit or {}).get("unverified_zero_spread_bar_count", 0)
+            else "OBSERVED_VALID" if (spread_audit or {}).get("bars_examined", 0)
+            else "MISSING"
+        ),
     }
 
 
@@ -59,11 +71,32 @@ def simulate_trade(
     m5_history,
     cost_scenario="BASE",
     risk_amount_eur=None,
+    spread_floor_points=0.0,
 ):
 
     cost_scenario = str(cost_scenario).upper()
     if cost_scenario not in COST_SCENARIOS:
         raise ValueError("UNKNOWN_COST_SCENARIO")
+    try:
+        spread_floor_points = float(spread_floor_points)
+    except (TypeError, ValueError, OverflowError):
+        raise ValueError("SPREAD_ASSUMPTION_INVALID") from None
+    if not isfinite(spread_floor_points) or spread_floor_points < 0:
+        raise ValueError("SPREAD_ASSUMPTION_INVALID")
+
+    spread_audit = {
+        "bars_examined": 0,
+        "unverified_zero_spread_bar_count": 0,
+        "spread_floor_applied_bar_count": 0,
+    }
+
+    def _finalize(*args, **kwargs):
+        return _settlement(
+            *args,
+            spread_floor_points=spread_floor_points,
+            spread_audit=spread_audit,
+            **kwargs,
+        )
 
     symbol = plan[
         "symbol"
@@ -151,7 +184,7 @@ def simulate_trade(
         final_time = signal_time
         if not m5_history.empty and "bar_close" in m5_history:
             final_time = m5_history["bar_close"].iloc[-1]
-        return _settlement(
+        return _finalize(
             "PENDING_AT_END", None, None, final_time, final_time,
             plan=plan, point=point, scenario=cost_scenario,
             risk_amount_eur=risk_amount_eur, filled=False,
@@ -178,22 +211,29 @@ def simulate_trade(
         )
 
         if not filled and bar_open_time >= expiration:
-            return _settlement(
+            return _finalize(
                 "EXPIRED", 0.0, None, expiration, expiration,
                 plan=plan, point=point, scenario=cost_scenario,
                 risk_amount_eur=risk_amount_eur, filled=False,
             )
 
-        if pd.isna(bar["spread"]):
+        raw_spread = bar["spread"]
+        raw_quality = classify_spread(raw_spread)
+        if raw_quality == "MISSING":
             raise ValueError("HISTORICAL_SPREAD_UNAVAILABLE")
-
-        spread_price = (
-            float(
-                bar["spread"]
-            )
-            * point
-            * COST_SCENARIOS[cost_scenario]["historical_spread_multiplier"]
+        if raw_quality == "INVALID":
+            raise ValueError("HISTORICAL_SPREAD_INVALID")
+        effective_points, _, floor_applied = effective_spread_points(
+            raw_spread,
+            multiplier=COST_SCENARIOS[cost_scenario]["historical_spread_multiplier"],
+            floor_points=spread_floor_points,
         )
+        spread_audit["bars_examined"] += 1
+        if raw_quality == "OBSERVED_ZERO_UNVERIFIED":
+            spread_audit["unverified_zero_spread_bar_count"] += 1
+        if floor_applied:
+            spread_audit["spread_floor_applied_bar_count"] += 1
+        spread_price = effective_points * point
         if not isfinite(spread_price) or spread_price < 0:
             raise ValueError("HISTORICAL_SPREAD_INVALID")
 
@@ -267,7 +307,7 @@ def simulate_trade(
 
             if not trigger:
                 if bar_close_time >= expiration:
-                    return _settlement(
+                    return _finalize(
                         "EXPIRED", 0.0, None, expiration, expiration,
                         plan=plan, point=point, scenario=cost_scenario,
                         risk_amount_eur=risk_amount_eur, filled=False,
@@ -275,7 +315,7 @@ def simulate_trade(
                 continue
 
             if bar_close_time >= expiration:
-                return _settlement(
+                return _finalize(
                     "AMBIGUOUS_EXPIRY_BAR", None, bar_open_time, bar_close_time, bar_close_time,
                     plan=plan, point=point, scenario=cost_scenario, risk_amount_eur=risk_amount_eur,
                     filled=True,
@@ -313,7 +353,7 @@ def simulate_trade(
 
             if same_bar_exit:
 
-                return _settlement(
+                return _finalize(
                     "AMBIGUOUS_ENTRY_BAR", None, fill_time, bar_close_time, bar_close_time,
                     plan=plan, point=point, scenario=cost_scenario,
                     risk_amount_eur=risk_amount_eur, filled=True,
@@ -355,7 +395,7 @@ def simulate_trade(
             tp_hit
         ):
 
-            return _settlement(
+                return _finalize(
                 "AMBIGUOUS_BOTH", None, fill_time, bar_close_time, bar_close_time,
                 plan=plan, point=point, scenario=cost_scenario,
                 risk_amount_eur=risk_amount_eur, filled=True,
@@ -363,7 +403,7 @@ def simulate_trade(
 
         if stop_hit:
 
-            return _settlement(
+            return _finalize(
                 "LOSS", -1.0, fill_time, bar_close_time, bar_close_time,
                 plan=plan, point=point, scenario=cost_scenario,
                 risk_amount_eur=risk_amount_eur, filled=True,
@@ -371,7 +411,7 @@ def simulate_trade(
 
         if tp_hit:
 
-            return _settlement(
+            return _finalize(
                 "WIN", float(plan["target_rr"]), fill_time, bar_close_time, bar_close_time,
                 plan=plan, point=point, scenario=cost_scenario,
                 risk_amount_eur=risk_amount_eur, filled=True,
@@ -380,12 +420,12 @@ def simulate_trade(
     # Final del histórico.
     final_time = m5_history["bar_close"].iloc[-1]
     if not filled and final_time >= expiration:
-        return _settlement(
+        return _finalize(
             "EXPIRED", 0.0, None, expiration, expiration,
             plan=plan, point=point, scenario=cost_scenario,
             risk_amount_eur=risk_amount_eur, filled=False,
         )
-    return _settlement(
+    return _finalize(
         "OPEN_AT_END" if filled else "PENDING_AT_END", None, fill_time, final_time, final_time,
         plan=plan, point=point, scenario=cost_scenario,
         risk_amount_eur=risk_amount_eur, filled=filled,

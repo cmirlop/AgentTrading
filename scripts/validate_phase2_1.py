@@ -36,6 +36,9 @@ from config.backtest_cost_config import COST_SCENARIOS  # noqa: E402
 from src.phase2_1_evaluation import (  # noqa: E402
     assert_not_test_for_tuning,
     attach_event_ids,
+    classify_engineering_status,
+    classify_llm_value_add,
+    classify_strategy_evidence,
     chronological_split,
     month_group_summary,
     purge_trade_events,
@@ -455,11 +458,11 @@ def audit_candidate_reconstruction() -> dict:
 
 
 def run_offline_tests() -> dict:
-    command = [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_phase2_1.py", "-v"]
+    command = [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py", "-v"]
     started = time.monotonic()
     result = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
     return {
-        "name": "phase2_1_unittest_suite",
+        "name": "offline_project_unittest_suite",
         "status": "PASS" if result.returncode == 0 else "FAIL",
         "command": command,
         "return_code": result.returncode,
@@ -960,8 +963,12 @@ def main() -> int:
         baseline_ref.append({"scenario": scenario, "expected_net_eur": expected, "reproduced_net_eur": actual, "difference_eur": None if actual is None else round(actual - expected, 8), "matches_within_0_01": actual is not None and abs(actual - expected) <= 0.01})
 
     pytest_available = importlib.util.find_spec("pytest") is not None
-    baseline_test_status = "PENDING" if not pytest_available else "NOT_RUN"
-    offline_suite = {"name": "existing_project_pytest_suite", "status": baseline_test_status, "reason": "pytest is not installed in the selected environment; the existing suite could not start." if not pytest_available else "The original suite has not been run in this invocation."}
+    offline_suite = {
+        "name": "optional_pytest_runner",
+        "status": "NOT_APPLICABLE",
+        "reason": "The repository's discovered tests use unittest and standalone assertions; pytest is not required to run them.",
+        "installed": pytest_available,
+    }
     phase_tests = {"name": "phase2_1_unittest_suite", "status": "PENDING" if args.skip_offline_tests else "NOT_RUN"}
     if not args.skip_offline_tests:
         phase_tests = run_offline_tests()
@@ -1019,24 +1026,49 @@ def main() -> int:
         {"name": "git_reference_preparation", "status": "PENDING" if not git["reference_commit_available"] or git.get("origin_main") != git.get("commit") else "PASS", "evidence": git},
         {"name": "phase1_closure", "status": "PENDING" if "PENDING" in str(phase1_state).upper() or "INCOMPLETE" in str(phase1_state).upper() else "UNKNOWN", "evidence": {"phase1_status": phase1_state, "report": "reports/phase1_validation.json"}},
     ]
-    statuses = {row["status"] for row in checks}
-    if "FAIL" in statuses:
-        final_state = "PHASE2_1_FAILED"
-    elif "PENDING" in statuses or "NOT_RUN" in statuses:
-        final_state = "PHASE2_1_INCOMPLETE"
-    else:
-        final_state = "PHASE2_1_COMPLETE"
+    required_engineering_checks = {
+        "primary_dataset_hash", "offline_phase2_1_tests", "existing_lookahead_check",
+        "feature_columns_exclude_outcomes", "current_backtest_outputs",
+        "baseline_reference_reproduction", "base_repeat_reproducibility", "execution_safety",
+    }
+    engineering_status = classify_engineering_status(
+        {row["name"]: row["status"] for row in checks}, required_engineering_checks,
+    )
+    final_state = {
+        "COMPLETE": "PHASE2_1_COMPLETE",
+        "INCOMPLETE": "PHASE2_1_INCOMPLETE",
+        "FAILED": "PHASE2_1_FAILED",
+    }[engineering_status]
 
-    # Conservative conclusion: the predefined criterion needs positive conservative TEST expectancy
-    # with an informative weekly-block CI; the available TEST is explored and too short for such CI.
-    strategy_conclusion = "INCONCLUSIVE"
-    deepseek_conclusion = "INCONCLUSIVE_INSUFFICIENT_DATA"
+    conservative_stat = statistical["scenarios"].get("CONSERVATIVE", {})
+    conservative_ci = conservative_stat.get("test_weekly_block_ci95", {}).get("ci95")
+    conservative_test = conservative_stat.get("test_metrics") or {}
+    conservative_test_expectancy = conservative_test.get("expectancy_net_eur")
+    conservative_portfolio = next((row for row in primary_portfolio if row.get("scenario") == "CONSERVATIVE" and row.get("threshold") == 65 and row.get("mode") == "LIMIT"), None)
+    symbol_net = {symbol: metrics.get("net_pnl_eur", 0.0) for symbol, metrics in (conservative_portfolio or {}).get("by_symbol_metrics", {}).items()}
+    conservative_folds = [row.get("expectancy_net_eur") for row in walk_forward if row.get("scenario") == "CONSERVATIVE" and row.get("fold") is not None]
+    strategy_conclusion = classify_strategy_evidence(
+        confirmatory=bool(split_info.get("holdout_is_confirmatory")),
+        conservative_expectancy=conservative_test_expectancy,
+        conservative_ci95=conservative_ci,
+        walk_forward_expectancies=conservative_folds,
+        symbol_net_pnl=symbol_net,
+    )
+    deepseek_conclusion = classify_llm_value_add(
+        valid_pairs=int(llm_audit.get("matched_pairs", 0) or 0),
+        confirmatory=False,
+        paired_mean_difference=None,
+        paired_ci95=None,
+        independent_blocks=0,
+    )
     execution_commands = backtest_commands or [{"command": "run_portfolio_backtest.py/run_stateful_backtest.py --cost-scenario BASE|CONSERVATIVE|STRESS", "status": "REUSED_AND_HASHED_CURRENT_TASK_OUTPUTS"}]
     validation = {
         "generated_at_utc": utc_now(),
         "phase2_1_status": final_state,
+        "phase2_1_engineering_status": engineering_status,
         "strategy_conclusion": strategy_conclusion,
         "deepseek_value_add": deepseek_conclusion,
+        "phase1_operational_readiness": {"status": phase1_state, "blocks_phase2_1_engineering": False},
         "cost_scenarios": COST_SCENARIOS,
         "cost_interpretation": "Historical bid/ask is embedded in execution comparisons; transaction_cost_eur is modeled commission plus slippage. Spread zeros dominate EURUSD/AUDUSD bars, so BASE spread coverage is not verified, while CONSERVATIVE/STRESS are explicit unverified assumptions.",
         "integrity": {"python": sys.version, "python_executable": sys.executable, "pandas": pd.__version__, "numpy": getattr(__import__("numpy"), "__version__", None), "pytest_available": pytest_available, "seed": SEED},
@@ -1046,8 +1078,8 @@ def main() -> int:
         "partition": split_info,
         "checks": checks,
         "known_limits": [
-            "origin/main could not be fetched due to the environment proxy; work used the isolated current HEAD worktree.",
-            "Existing pytest suite could not run because pytest is unavailable.",
+            "Phase 2.1 engineering state is independent of Phase 1 MT5-demo and live-provider readiness.",
+            "The available offline test suite is executed with unittest; pytest is optional for the discovered tests.",
             "The primary period is marked as previously explored; chronological TEST results are not confirmatory.",
             "No verifiable event-level DeepSeek or Ollama decision set overlaps the primary opportunities.",
             "MT5 broker, raw tick history, and verified real-world commission/slippage are unavailable; no external integration was called.",

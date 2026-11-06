@@ -9,6 +9,9 @@ import pandas as pd
 from src.phase2_1_evaluation import (
     assert_not_test_for_tuning,
     attach_event_ids,
+    classify_engineering_status,
+    classify_llm_value_add,
+    classify_strategy_evidence,
     chronological_split,
     pair_on_event_id,
     purge_trade_events,
@@ -161,6 +164,68 @@ class Phase2StatisticsTests(unittest.TestCase):
                 elif isinstance(node, ast.Call):
                     name = node.func.id if isinstance(node.func, ast.Name) else node.func.attr if isinstance(node.func, ast.Attribute) else ""
                     self.assertNotIn(name.lower(), {"order_send", "place_order", "send_order", "create_order"})
+
+
+class Phase2ConclusionTests(unittest.TestCase):
+    def test_engineering_completion_does_not_depend_on_phase1_or_llm_sample(self):
+        required = {"offline_tests", "baseline_hash", "spread_audit", "event_ledger"}
+        checks = {name: "PASS" for name in required}
+        # Phase 1 operational readiness and research sample size are separate outputs.
+        self.assertEqual(classify_engineering_status(checks, required), "COMPLETE")
+
+    def test_engineering_state_distinguishes_incomplete_and_failed(self):
+        required = {"tests", "baseline"}
+        self.assertEqual(classify_engineering_status({"tests": "PASS"}, required), "INCOMPLETE")
+        self.assertEqual(classify_engineering_status({"tests": "PASS", "baseline": "FAIL"}, required), "FAILED")
+
+    def test_strategy_conclusion_requires_confirmatory_robust_evidence(self):
+        promising = classify_strategy_evidence(
+            confirmatory=True,
+            conservative_expectancy=0.05,
+            conservative_ci95=[0.01, 0.09],
+            walk_forward_expectancies=[0.02, 0.04],
+            symbol_net_pnl={"EURUSD": 10.0, "USDCAD": 5.0, "AUDUSD": -2.0},
+        )
+        self.assertEqual(promising, "PROMISING")
+        not_promising = classify_strategy_evidence(
+            confirmatory=True,
+            conservative_expectancy=-0.03,
+            conservative_ci95=[-0.07, -0.01],
+        )
+        self.assertEqual(not_promising, "NOT_PROMISING")
+        non_confirmatory = classify_strategy_evidence(
+            confirmatory=False,
+            conservative_expectancy=0.5,
+            conservative_ci95=[0.1, 0.9],
+            walk_forward_expectancies=[0.2],
+            symbol_net_pnl={"EURUSD": 1.0, "USDCAD": 1.0},
+        )
+        self.assertEqual(non_confirmatory, "INCONCLUSIVE")
+
+    def test_strategy_mixed_walk_forward_or_single_symbol_is_inconclusive(self):
+        self.assertEqual(classify_strategy_evidence(
+            confirmatory=True,
+            conservative_expectancy=0.05,
+            conservative_ci95=[0.01, 0.09],
+            walk_forward_expectancies=[0.02, -0.01],
+            symbol_net_pnl={"EURUSD": 10.0, "USDCAD": -1.0, "AUDUSD": -2.0},
+        ), "INCONCLUSIVE")
+
+    def test_llm_conclusion_returns_all_defined_states(self):
+        common = {"valid_pairs": 30, "confirmatory": True, "independent_blocks": 12}
+        self.assertEqual(classify_llm_value_add(
+            **common, paired_mean_difference=0.04, paired_ci95=[0.01, 0.07]
+        ), "EVIDENCE_OF_IMPROVEMENT")
+        self.assertEqual(classify_llm_value_add(
+            **common, paired_mean_difference=0.0, paired_ci95=[-0.02, 0.02]
+        ), "NO_EVIDENCE_OF_IMPROVEMENT")
+        self.assertEqual(classify_llm_value_add(
+            **common, paired_mean_difference=-0.04, paired_ci95=[-0.07, -0.01]
+        ), "EVIDENCE_OF_DEGRADATION")
+        self.assertEqual(classify_llm_value_add(
+            valid_pairs=0, confirmatory=True, paired_mean_difference=None,
+            paired_ci95=None, independent_blocks=0,
+        ), "INCONCLUSIVE_INSUFFICIENT_DATA")
 
 
 if __name__ == "__main__":

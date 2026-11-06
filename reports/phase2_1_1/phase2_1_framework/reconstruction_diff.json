@@ -1,0 +1,8 @@
+{
+  "status": "NOT_RUN",
+  "frozen_dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "reconstruction_invocation": {
+    "status": "NOT_REQUESTED"
+  },
+  "reproducible_command": "python scripts/validate_phase2_1.py --reconstruct-current-candidates"
+}
