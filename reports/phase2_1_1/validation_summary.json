@@ -1,0 +1,720 @@
+{
+  "generated_at_utc": "2026-11-06T09:47:17.511981Z",
+  "phase2_1_1_status": "PHASE2_1_1_COMPLETE",
+  "phase2_1_engineering_status": "COMPLETE",
+  "phase2_1_strategy_conclusion": "INCONCLUSIVE",
+  "deepseek_value_add": "INCONCLUSIVE_INSUFFICIENT_DATA",
+  "phase1_operational_readiness": {
+    "status": "INCOMPLETE_PENDING_MANUAL",
+    "blocks_phase2_1_1": false
+  },
+  "git": {
+    "repository": "https://github.com/cmirlop/AgentTrading.git",
+    "branch": "codex/phase2-1-1-consolidation",
+    "head": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf",
+    "main_head": "6c326ee8d4d5ac17d4d47737a190e305cd85f6cf",
+    "working_tree_clean": false,
+    "status_porcelain": " M .gitignore\n M run_dry_pipeline.py\n M run_market_agents.py\n M run_multiagent_analysis.py\n M run_portfolio_backtest.py\n M run_stateful_backtest.py\n M scripts/validate_phase2_1.py\n M src/agents/llm_client.py\n M src/historical_execution.py\n M src/phase2_1_evaluation.py\n M tests/test_phase1_backtest.py\n M tests/test_phase1_mt5_safety.py\n M tests/test_phase2_1.py\n?? docs/FASE2_1_1_PLAN.md\n?? docs/FASE2_1_1_RESULTADOS.md\n?? docs/FASE2_PROTOCOLO_LLM.md\n?? reports/phase2_1_1/\n?? scripts/validate_phase2_1_1.py\n?? src/event_ledger.py\n?? src/llm_evaluation.py\n?? src/spread_quality.py\n?? src/warmup_audit.py\n?? tests/test_phase2_1_1.py"
+  },
+  "python": {
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/.venvs/AgentTrading/bin/python",
+    "dependencies": {
+      "pandas": "3.1.0",
+      "numpy": "2.5.4",
+      "pydantic": "2.14.2",
+      "python-dotenv": "1.2.4",
+      "ollama": "0.6.3",
+      "openai": "3.41.0",
+      "pytest": null,
+      "MetaTrader5": null
+    }
+  },
+  "datasets": {
+    "technical_candidate_scan": {
+      "path": "data/backtest/technical_candidate_scan.csv",
+      "expected_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+      "actual_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+      "matches_original": true,
+      "source_modified": false
+    }
+  },
+  "tests": {
+    "status": "PASS",
+    "commands": [
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_*.py",
+          "-v"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 6.014,
+        "tests_reported": 121,
+        "output_tail": "st_phase2_1.Phase2ConclusionTests.test_llm_conclusion_returns_all_defined_states) ... ok\ntest_strategy_conclusion_requires_confirmatory_robust_evidence (test_phase2_1.Phase2ConclusionTests.test_strategy_conclusion_requires_confirmatory_robust_evidence) ... ok\ntest_strategy_mixed_walk_forward_or_single_symbol_is_inconclusive (test_phase2_1.Phase2ConclusionTests.test_strategy_mixed_walk_forward_or_single_symbol_is_inconclusive) ... ok\ntest_chronological_split_is_ordered_and_embargoed (test_phase2_1.Phase2DataTests.test_chronological_split_is_ordered_and_embargoed) ... ok\ntest_embargo_and_cross_partition_trades_are_purged (test_phase2_1.Phase2DataTests.test_embargo_and_cross_partition_trades_are_purged) ... ok\ntest_event_ids_are_unique_on_distinct_symbol_closes (test_phase2_1.Phase2DataTests.test_event_ids_are_unique_on_distinct_symbol_closes) ... ok\ntest_event_pairing_uses_only_common_ids (test_phase2_1.Phase2DataTests.test_event_pairing_uses_only_common_ids) ... ok\ntest_provenance_rejects_unattributed_model_decision (test_phase2_1.Phase2DataTests.test_provenance_rejects_unattributed_model_decision) ... ok\ntest_split_rejects_timezone_naive_timestamps (test_phase2_1.Phase2DataTests.test_split_rejects_timezone_naive_timestamps) ... ok\ntest_stable_event_id_ignores_future_outcome_fields (test_phase2_1.Phase2DataTests.test_stable_event_id_ignores_future_outcome_fields) ... ok\ntest_test_partition_is_protected_from_tuning (test_phase2_1.Phase2DataTests.test_test_partition_is_protected_from_tuning) ... ok\ntest_ambiguous_and_open_trades_are_not_in_net_expectancy (test_phase2_1.Phase2StatisticsTests.test_ambiguous_and_open_trades_are_not_in_net_expectancy) ... ok\ntest_costs_are_not_double_subtracted_when_net_pnl_is_present (test_phase2_1.Phase2StatisticsTests.test_costs_are_not_double_subtracted_when_net_pnl_is_present) ... ok\ntest_phase2_code_has_no_live_provider_or_order_calls (test_phase2_1.Phase2StatisticsTests.test_phase2_code_has_no_live_provider_or_order_calls) ... ok\ntest_position_overlap_exposure_is_aggregated_from_fills (test_phase2_1.Phase2StatisticsTests.test_position_overlap_exposure_is_aggregated_from_fills) ... ok\ntest_weekly_block_bootstrap_is_reproducible_with_seed (test_phase2_1.Phase2StatisticsTests.test_weekly_block_bootstrap_is_reproducible_with_seed) ... ok\ntest_weekly_block_bootstrap_marks_too_few_blocks_insufficient (test_phase2_1.Phase2StatisticsTests.test_weekly_block_bootstrap_marks_too_few_blocks_insufficient) ... ok\ntest_concurrent_llm_events_are_append_only_without_lost_writes (test_phase2_1_1.Phase2111Tests.test_concurrent_llm_events_are_append_only_without_lost_writes) ... ok\ntest_event_id_is_stable_deduplicated_and_conflicts_rejected (test_phase2_1_1.Phase2111Tests.test_event_id_is_stable_deduplicated_and_conflicts_rejected) ... ok\ntest_event_ledger_is_safe_for_concurrent_duplicate_writers (test_phase2_1_1.Phase2111Tests.test_event_ledger_is_safe_for_concurrent_duplicate_writers) ... ok\ntest_invalid_evidence_and_provider_error_are_logged_not_operational (test_phase2_1_1.Phase2111Tests.test_invalid_evidence_and_provider_error_are_logged_not_operational) ... LLM call failed provider=ollama model=qwen3:4b schema=_Decision error=LLM_INVALID_EVIDENCE\nLLM call failed provider=ollama model=qwen3:4b schema=_Decision error=LLM_TIMEOUT\nok\ntest_mock_llm_call_records_valid_decision_and_no_secret (test_phase2_1_1.Phase2111Tests.test_mock_llm_call_records_valid_decision_and_no_secret) ... ok\ntest_outcome_is_appended_separately_and_original_is_immutable (test_phase2_1_1.Phase2111Tests.test_outcome_is_appended_separately_and_original_is_immutable) ... ok\ntest_pairing_and_policy_interface_use_same_event_portfolio_constraints (test_phase2_1_1.Phase2111Tests.test_pairing_and_policy_interface_use_same_event_portfolio_constraints) ... ok\ntest_pairing_never_invents_llm_decisions_and_requires_provenance (test_phase2_1_1.Phase2111Tests.test_pairing_never_invents_llm_decisions_and_requires_provenance) ... ok\ntest_phase2_conclusions_have_explicit_independent_states (test_phase2_1_1.Phase2111Tests.test_phase2_conclusions_have_explicit_independent_states) ... ok\ntest_spread_units_are_not_silently_converted (test_phase2_1_1.Phase2111Tests.test_spread_units_are_not_silently_converted) ... ok\ntest_spread_zero_missing_invalid_and_assumption_are_distinct (test_phase2_1_1.Phase2111Tests.test_spread_zero_missing_invalid_and_assumption_are_distinct) ... ok\ntest_uncovered_opportunity_stays_in_technical_population (test_phase2_1_1.Phase2111Tests.test_uncovered_opportunity_stays_in_technical_population) ... ok\ntest_warmup_cutoff_excludes_unclosed_and_future_bars (test_phase2_1_1.Phase2111Tests.test_warmup_cutoff_excludes_unclosed_and_future_bars) ... ok\ntest_warmup_insufficiency_and_predeclared_stability_criterion (test_phase2_1_1.Phase2111Tests.test_warmup_insufficiency_and_predeclared_stability_criterion) ... ok\n\n----------------------------------------------------------------------\nRan 121 tests in 4.985s\n\nOK (skipped=1)\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_deepseek_integration.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.857,
+        "tests_reported": null,
+        "output_tail": "OK: conmutador y DeepSeek Flash validados sin red ni coste API\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_historical_level_outcome_regression.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.331,
+        "tests_reported": null,
+        "output_tail": "OK: BREAK/HOLD requieren dos cierres M5; las mechas solas no cambian el resultado\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_event_context_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 5.85,
+        "tests_reported": null,
+        "output_tail": "USDCAD | USDCAD_Z000004 | 1.38527-1.38557\nAnalisis hasta: 2026-04-08T18:00:00+00:00\nRupturas historicas enriquecidas: 37\nEpisodio seleccionado: 2026-04-08T02:15:00+00:00 -> 2026-04-08T02:45:00+00:00\nPapel historico al llegar: SUPPORT\nM15: cierre=2026-04-08T02:45:00+00:00 EMA=BEARISH RSI=16.33 retorno5_pct=-0.2787 ATR_relativo=1.274\nH1: cierre=2026-04-08T02:00:00+00:00 EMA=MIXED RSI=20.27 retorno5_pct=-0.2877 ATR_relativo=1.357\nH4: cierre=2026-04-08T00:00:00+00:00 EMA=BULLISH RSI=39.29 retorno5_pct=-0.24 ATR_relativo=1.007\nD1: cierre=2026-04-08T00:00:00+00:00 EMA=MIXED RSI=61.47 retorno5_pct=-0.2005 ATR_relativo=0.892\nOK: contexto historico real confirmado, solo velas cerradas y sin futuro\nRegistro temporal eliminado al terminar\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_evidence.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.54,
+        "tests_reported": null,
+        "output_tail": "{'status': 'OK',\n 'symbol': 'USDCAD',\n 'analysis_time': '2026-04-08T18:00:00+00:00',\n 'market_structure': 'OPEN_SPACE',\n 'facts': {'current_price': 1.38399,\n           'reference_atr_m15': 0.001009,\n           'support': {'role': 'SUPPORT',\n                       'low': 1.38309,\n                       'high': 1.38368,\n                       'mid': 1.38339,\n                       'touches': 2,\n                       'pivot_count': 2,\n                       'recent_independent_touches_m15': 3,\n                       'recent_touch_times_m15': ['2026-04-08T03:15:00+00:00',\n                                                  '2026-04-08T07:30:00+00:00',\n                                                  '2026-04-08T16:00:00+00:00'],\n                       'timeframes': ['H1'],\n                       'pivot_types': ['LOW'],\n                       'last_touch': '2026-04-08T16:00:00+00:00',\n                       'last_pivot_time': '2026-04-08T16:00:00+00:00',\n                       'strength': 50,\n                       'distance': 0.00031,\n                       'distance_atr': 0.31,\n                       'strength_label': 'WEAK',\n                       'distance_label': 'NEAR'},\n           'resistance': {'role': 'RESISTANCE',\n                          'low': 1.38527,\n                          'high': 1.38557,\n                          'mid': 1.38542,\n                          'touches': 1,\n                          'pivot_count': 1,\n                          'recent_independent_touches_m15': 3,\n                          'recent_touch_times_m15': ['2026-04-08T02:15:00+00:00',\n                                                     '2026-04-08T10:15:00+00:00',\n                                                     '2026-04-08T14:45:00+00:00'],\n                          'timeframes': ['D1'],\n                          'pivot_types': ['LOW'],\n                          'last_touch': '2026-01-14T00:00:00+00:00',\n                          'last_pivot_time': '2026-01-14T00:00:00+00:00',\n                          'strength': 33,\n                          'distance': 0.00128,\n                          'distance_atr': 1.27,\n                          'strength_label': 'WEAK',\n                          'distance_label': 'MODERATE'},\n           'distance_between_nearest_levels_atr': 1.58,\n           'strength_difference_support_minus_resistance': 17},\n 'available_evidence_ids': ['NEAREST_SUPPORT_PRESENT',\n                            'SUPPORT_WEAK',\n                            'SUPPORT_DISTANCE_NEAR',\n                            'NEAREST_RESISTANCE_PRESENT',\n                            'RESISTANCE_WEAK',\n                            'RESISTANCE_DISTANCE_MODERATE',\n                            'SUPPORT_STRONGER_THAN_RESISTANCE'],\n 'source': 'DETERMINISTIC_PYTHON'}\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_evidence_price_action.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.791,
+        "tests_reported": null,
+        "output_tail": "\n====================================================================================================\nTIME: 2026-04-08T07:30:00+00:00\nMARKET STRUCTURE: OPEN_SPACE\nACTIVE LEVEL: None\n\nPRICE ACTION:\n{}\n\nPRICE ACTION EVIDENCE:\n[]\n\nIDS PRESENT IN AVAILABLE_EVIDENCE:\n[]\n\n====================================================================================================\nTIME: 2026-04-08T08:00:00+00:00\nMARKET STRUCTURE: OPEN_SPACE\nACTIVE LEVEL: None\n\nPRICE ACTION:\n{}\n\nPRICE ACTION EVIDENCE:\n[]\n\nIDS PRESENT IN AVAILABLE_EVIDENCE:\n[]\n\n====================================================================================================\nTIME: 2026-04-08T09:45:00+00:00\nMARKET STRUCTURE: OPEN_SPACE\nACTIVE LEVEL: None\n\nPRICE ACTION:\n{}\n\nPRICE ACTION EVIDENCE:\n[]\n\nIDS PRESENT IN AVAILABLE_EVIDENCE:\n[]\n\n====================================================================================================\nTIME: 2026-04-08T15:00:00+00:00\nMARKET STRUCTURE: AT_RESISTANCE\nACTIVE LEVEL: RESISTANCE\n\nPRICE ACTION:\n{'active_level': 'RESISTANCE',\n 'level_low': 1.38647,\n 'level_high': 1.38669,\n 'atr_m15': 0.000723,\n 'M5': {'bars': 12,\n        'approach_move_atr': -0.913,\n        'bars_toward_level': 7,\n        'zone_touches': 6,\n        'closes_inside_zone': 2,\n        'closes_through_level': 3,\n        'max_breach_atr': 0.692,\n        'last_close_distance_from_zone_atr': 0.221,\n        'recent_volume_ratio': 1.195,\n        'last_bar': {'body_atr': 0.249,\n                     'range_atr': 0.415,\n                     'body_fraction': 0.6,\n                     'upper_wick_fraction': 0.133,\n                     'lower_wick_fraction': 0.267,\n                     'close_location': 0.867}},\n 'M15': {'bars': 6,\n         'approach_move_atr': -0.138,\n         'bars_toward_level': 3,\n         'zone_touches': 5,\n         'closes_inside_zone': 0,\n         'closes_through_level': 2,\n         'max_breach_atr': 0.692,\n         'last_close_distance_from_zone_atr': 0.221,\n         'recent_volume_ratio': 1.496,\n         'last_bar': {'body_atr': 0.194,\n                      'range_atr': 0.664,\n                      'body_fraction': 0.292,\n                      'upper_wick_fraction': 0.083,\n                      'lower_wick_fraction': 0.625,\n                      'close_location': 0.917}}}\n\nPRICE ACTION EVIDENCE:\n['M5_LEVEL_MOVING_AWAY_AFTER_INTERACTION',\n 'M5_LEVEL_MOVING_AWAY',\n 'M5_LEVEL_REPEATED_TESTS',\n 'M5_LEVEL_CLOSE_INSIDE_ZONE',\n 'M5_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M5_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M5_LEVEL_MEANINGFUL_BREACH',\n 'M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE',\n 'M15_LEVEL_REPEATED_TESTS',\n 'M15_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M15_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M15_LEVEL_MEANINGFUL_BREACH',\n 'M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE']\n\nIDS PRESENT IN AVAILABLE_EVIDENCE:\n['M5_LEVEL_MOVING_AWAY_AFTER_INTERACTION',\n 'M5_LEVEL_MOVING_AWAY',\n 'M5_LEVEL_REPEATED_TESTS',\n 'M5_LEVEL_CLOSE_INSIDE_ZONE',\n 'M5_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M5_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M5_LEVEL_MEANINGFUL_BREACH',\n 'M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE',\n 'M15_LEVEL_REPEATED_TESTS',\n 'M15_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M15_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M15_LEVEL_MEANINGFUL_BREACH',\n 'M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE']\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_history_batch_payload.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 4.306,
+        "tests_reported": null,
+        "output_tail": "====================================================================================================\nLEVEL THESIS HISTORICAL BATCH\n====================================================================================================\nSymbol: USDCAD\nPeriodo: 2026-04-08 00:00:00+00:00 -> 2026-04-09 00:00:00+00:00\n[LEVEL HISTORY] time=2026-04-08T10:15:00+00:00 zone=USDCAD_Z000004 role=SUPPORT as_of=2026-04-08T10:15:00+00:00\n\nOK: informe historico recibido por LevelHypothesisComparison\nHora: 2026-04-08T10:15:00+00:00\nZona: USDCAD_Z000004\nFuncion: SUPPORT\nPrecio: 1.38531 - 1.38553\nEpisodios recientes: 3\nOK: zona, rol y fecha coinciden; Ollama no se ha ejecutado\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_history_events_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 6.025,
+        "tests_reported": null,
+        "output_tail": "USDCAD | episodios historicos hasta 2026-04-08T18:00:00+00:00\n\nSOPORTE MAS CERCANO: USDCAD_Z000014 (SUPPORT)\nZona: 1.38309 - 1.38368\nPrimera deteccion: 2026-04-08T18:00:00+00:00\n  ANTES DE DETECTARSE (RETROSPECTIVO):\n    contactos=116 rechazos=76 rupturas=37 pendientes=0 sin_resolver=3\n  DESDE SU DETECCION:\n    contactos=0 rechazos=0 rupturas=0 pendientes=0 sin_resolver=0\n  Ultimos 5 episodios:\n    2026-03-26T11:00:00+00:00 RESISTANCE -> REJECTION resuelto: 2026-03-26T13:15:00+00:00\n    2026-03-26T23:15:00+00:00 SUPPORT -> REJECTION resuelto: 2026-03-26T23:30:00+00:00\n    2026-04-08T03:15:00+00:00 SUPPORT -> REJECTION resuelto: 2026-04-08T03:30:00+00:00\n    2026-04-08T07:30:00+00:00 SUPPORT -> REJECTION resuelto: 2026-04-08T09:30:00+00:00\n    2026-04-08T16:00:00+00:00 SUPPORT -> REJECTION resuelto: 2026-04-08T16:15:00+00:00\nOK: recuentos consistentes y sin informacion futura\n\nRESISTENCIA MAS CERCANA: USDCAD_Z000004 (RESISTANCE)\nZona: 1.38527 - 1.38557\nPrimera deteccion: 2026-04-08T00:00:00+00:00\n  ANTES DE DETECTARSE (RETROSPECTIVO):\n    contactos=98 rechazos=62 rupturas=36 pendientes=0 sin_resolver=0\n  DESDE SU DETECCION:\n    contactos=3 rechazos=2 rupturas=1 pendientes=0 sin_resolver=0\n  Ultimos 5 episodios:\n    2026-03-27T06:00:00+00:00 RESISTANCE -> REJECTION resuelto: 2026-03-27T08:00:00+00:00\n    2026-03-27T17:15:00+00:00 SUPPORT -> REJECTION resuelto: 2026-03-27T17:30:00+00:00\n    2026-04-08T02:15:00+00:00 SUPPORT -> BREAK resuelto: 2026-04-08T02:45:00+00:00\n    2026-04-08T10:15:00+00:00 RESISTANCE -> REJECTION resuelto: 2026-04-08T10:45:00+00:00\n    2026-04-08T14:45:00+00:00 SUPPORT -> REJECTION resuelto: 2026-04-08T15:00:00+00:00\nOK: recuentos consistentes y sin informacion futura\n\nOK: episodios reales clasificados, sin Ollama ni operaciones\nRegistro temporal eliminado al terminar\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_history_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 5.853,
+        "tests_reported": null,
+        "output_tail": "USDCAD | informe de contactos hasta 2026-04-08T18:00:00+00:00\nInstantes M15 del replay: 73\n\nSOPORTE: USDCAD_Z000014 (SUPPORT)\nPrecio: 1.38309 - 1.38368\nOrigen: H1\nPrimera deteccion: 2026-04-08T18:00:00+00:00\nM15 cerradas revisadas: 38155\nContactos anteriores (retrospectivos): 116\nUltimos anteriores: ['2026-03-26T11:00:00+00:00', '2026-03-26T23:15:00+00:00', '2026-04-08T03:15:00+00:00', '2026-04-08T07:30:00+00:00', '2026-04-08T16:00:00+00:00']\nContactos desde deteccion: 0\nUltimos posteriores: []\nOK: clasificacion temporal y filtro de velas futuras\n\nRESISTENCIA: USDCAD_Z000004 (RESISTANCE)\nPrecio: 1.38527 - 1.38557\nOrigen: D1\nPrimera deteccion: 2026-04-08T00:00:00+00:00\nM15 cerradas revisadas: 38155\nContactos anteriores (retrospectivos): 98\nUltimos anteriores: ['2026-01-20T05:45:00+00:00', '2026-03-26T18:45:00+00:00', '2026-03-27T03:00:00+00:00', '2026-03-27T06:00:00+00:00', '2026-03-27T17:15:00+00:00']\nContactos desde deteccion: 3\nUltimos posteriores: ['2026-04-08T02:15:00+00:00', '2026-04-08T10:15:00+00:00', '2026-04-08T14:45:00+00:00']\nOK: clasificacion temporal y filtro de velas futuras\n\nOK: LevelHistoryAnalyzer probado sobre niveles reales, sin Ollama\nRegistro temporal eliminado al terminar.\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_history_llm_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 6.169,
+        "tests_reported": null,
+        "output_tail": "USDCAD | payload historico para Qwen hasta 2026-04-08T18:00:00+00:00\n\nSOPORTE: USDCAD_Z000014 (SUPPORT)\nZona: 1.38309-1.38368\nOrigen: ['H1']\nAntes deteccion: contactos=116 rechazos=76 rupturas=37\nDesde deteccion: contactos=0 rechazos=0 rupturas=0\nTamano JSON compacto: 2854 caracteres\nEpisodios recientes: 3\nEjemplos ruptura: 2\n  ruptura: 2026-01-22T02:45:00+00:00 -> 2026-01-22T03:15:00+00:00 RSI_M15_contacto= 50.01 RSI_M15_confirmacion= 47.64\n  ruptura: 2026-01-21T04:45:00+00:00 -> 2026-01-21T06:30:00+00:00 RSI_M15_contacto= 45.79 RSI_M15_confirmacion= 60.59\nOK: datos reales compactados sin informacion futura\n\nRESISTENCIA: USDCAD_Z000004 (RESISTANCE)\nZona: 1.38527-1.38557\nOrigen: ['D1']\nAntes deteccion: contactos=98 rechazos=62 rupturas=36\nDesde deteccion: contactos=3 rechazos=2 rupturas=1\nTamano JSON compacto: 2851 caracteres\nEpisodios recientes: 3\nEjemplos ruptura: 2\n  ruptura: 2026-03-27T03:00:00+00:00 -> 2026-03-27T03:30:00+00:00 RSI_M15_contacto= 52.91 RSI_M15_confirmacion= 59.64\n  ruptura: 2026-04-08T02:15:00+00:00 -> 2026-04-08T02:45:00+00:00 RSI_M15_contacto= 19.4 RSI_M15_confirmacion= 16.33\nOK: datos reales compactados sin informacion futura\n\nOK: resumenes historicos reales listos para integrar, sin Ollama\nRegistro temporal eliminado al terminar.\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_history_prompt_payload.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 4.33,
+        "tests_reported": null,
+        "output_tail": "====================================================================================================\nLEVEL THESIS HISTORICAL BATCH\n====================================================================================================\nSymbol: USDCAD\nPeriodo: 2026-04-08 00:00:00+00:00 -> 2026-04-09 00:00:00+00:00\n[LEVEL HISTORY] time=2026-04-08T10:15:00+00:00 zone=USDCAD_Z000004 role=SUPPORT as_of=2026-04-08T10:15:00+00:00\n[PROMPT CHECK] Instrucciones de historia: 7/7 presentes\n[PROMPT CHECK] Caracteres del prompt: 5653\n[PROMPT CHECK] Caracteres de la memoria: 3046\n[PROMPT CHECK] Rupturas en memoria: 2\n[PROMPT CHECK] No se ha llamado a Ollama\n\nOK: informe historico recibido por LevelHypothesisComparison\nHora: 2026-04-08T10:15:00+00:00\nZona: USDCAD_Z000004\nFuncion: SUPPORT\nPrecio: 1.38531 - 1.38553\nEpisodios recientes: 3\nOK: zona, rol y fecha coinciden; Ollama no se ha ejecutado\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_history_report_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 6.333,
+        "tests_reported": null,
+        "output_tail": "USDCAD | informes historicos hasta 2026-04-08T18:00:00+00:00\n\nSOPORTE MAS CERCANO: USDCAD_Z000014 (SUPPORT)\nZona: 1.38309 - 1.38368\nPrimera deteccion: 2026-04-08T18:00:00+00:00\nTemporalidades: ['H1']\nRETROSPECTIVO: contactos=116 rechazos=76 rupturas=37\nDESDE DETECCION: contactos=0 rechazos=0 rupturas=0\nUltimos episodios:\n  2026-04-08T03:15:00+00:00 SUPPORT -> REJECTION\n  2026-04-08T07:30:00+00:00 SUPPORT -> REJECTION\n  2026-04-08T16:00:00+00:00 SUPPORT -> REJECTION\nEjemplos recientes de ruptura:\n  2026-01-21T04:45:00+00:00 -> 2026-01-21T06:30:00+00:00 RSI_M15_contacto=45.79 RSI_M15_confirmacion=60.59\n  2026-01-22T02:45:00+00:00 -> 2026-01-22T03:15:00+00:00 RSI_M15_contacto=50.01 RSI_M15_confirmacion=47.64\nOK: informe compacto consistente y sin velas futuras\n\nRESISTENCIA MAS CERCANA: USDCAD_Z000004 (RESISTANCE)\nZona: 1.38527 - 1.38557\nPrimera deteccion: 2026-04-08T00:00:00+00:00\nTemporalidades: ['D1']\nRETROSPECTIVO: contactos=98 rechazos=62 rupturas=36\nDESDE DETECCION: contactos=3 rechazos=2 rupturas=1\nUltimos episodios:\n  2026-04-08T02:15:00+00:00 SUPPORT -> BREAK\n  2026-04-08T10:15:00+00:00 RESISTANCE -> REJECTION\n  2026-04-08T14:45:00+00:00 SUPPORT -> REJECTION\nEjemplos recientes de ruptura:\n  2026-03-27T03:00:00+00:00 -> 2026-03-27T03:30:00+00:00 RSI_M15_contacto=52.91 RSI_M15_confirmacion=59.64\n  2026-04-08T02:15:00+00:00 -> 2026-04-08T02:45:00+00:00 RSI_M15_contacto=19.4 RSI_M15_confirmacion=16.33\nOK: informe compacto consistente y sin velas futuras\n\nOK: informes reales listos para revisar, sin Ollama ni operaciones\nRegistro temporal eliminado al terminar\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_outcome_touch.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.473,
+        "tests_reported": null,
+        "output_tail": "\nRECENT TOUCH DEBUG\n                     time                 bar_close    high     low  touch\n2026-04-08 07:15:00+00:00 2026-04-08 07:20:00+00:00 1.38386 1.38347   True\n2026-04-08 07:20:00+00:00 2026-04-08 07:25:00+00:00 1.38370 1.38348   True\n2026-04-08 07:25:00+00:00 2026-04-08 07:30:00+00:00 1.38367 1.38356   True\n\n====================================================================================================\n07:30 - antes BREAK\n====================================================================================================\n{'status': 'OK',\n 'analysis_time': '2026-04-08T07:30:00+00:00',\n 'thesis': 'SUPPORT_HOLD',\n 'level_type': 'SUPPORT',\n 'expected_outcome': 'HOLD',\n 'actual_outcome': 'HOLD',\n 'correct': True,\n 'horizon_minutes': 180,\n 'atr': 0.000646,\n 'break_buffer_atr': 0.1,\n 'hold_confirmation_atr': 0.1,\n 'confirmation_closures': 2,\n 'outcome_confirmation_basis': 'TWO_CONSECUTIVE_M15_CLOSES',\n 'touch_required_for_hold': True,\n 'touch_lookback_minutes': 15,\n 'level_touched_before_future': True,\n 'touch_time': '2026-04-08T07:30:00+00:00',\n 'level_low': 1.38314,\n 'level_high': 1.38356,\n 'break_threshold': 1.38308,\n 'hold_threshold': 1.38362,\n 'event_time': '2026-04-08T09:30:00+00:00',\n 'event_bar': {'bar_open_time': '2026-04-08T09:15:00+00:00',\n               'bar_close_time': '2026-04-08T09:30:00+00:00',\n               'open': 1.38452,\n               'high': 1.38471,\n               'low': 1.38411,\n               'close': 1.3842},\n 'future_min_low': 1.38238,\n 'future_max_high': 1.38572}\n\nRECENT TOUCH DEBUG\n                     time                 bar_close    high     low  touch\n2026-04-08 07:45:00+00:00 2026-04-08 07:50:00+00:00 1.38355 1.38335  False\n2026-04-08 07:50:00+00:00 2026-04-08 07:55:00+00:00 1.38346 1.38335  False\n2026-04-08 07:55:00+00:00 2026-04-08 08:00:00+00:00 1.38364 1.38341  False\n\n====================================================================================================\n08:00 - antes HOLD\n====================================================================================================\n{'status': 'OK',\n 'analysis_time': '2026-04-08T08:00:00+00:00',\n 'thesis': 'SUPPORT_HOLD',\n 'level_type': 'SUPPORT',\n 'expected_outcome': 'HOLD',\n 'actual_outcome': 'HOLD',\n 'correct': True,\n 'horizon_minutes': 180,\n 'atr': 0.0006,\n 'break_buffer_atr': 0.1,\n 'hold_confirmation_atr': 0.1,\n 'confirmation_closures': 2,\n 'outcome_confirmation_basis': 'TWO_CONSECUTIVE_M15_CLOSES',\n 'touch_required_for_hold': True,\n 'touch_lookback_minutes': 15,\n 'level_touched_before_future': False,\n 'touch_time': '2026-04-08T08:15:00+00:00',\n 'level_low': 1.38315,\n 'level_high': 1.38333,\n 'break_threshold': 1.38309,\n 'hold_threshold': 1.38339,\n 'event_time': '2026-04-08T09:30:00+00:00',\n 'event_bar': {'bar_open_time': '2026-04-08T09:15:00+00:00',\n               'bar_close_time': '2026-04-08T09:30:00+00:00',\n               'open': 1.38452,\n               'high': 1.38471,\n               'low': 1.38411,\n               'close': 1.3842},\n 'future_min_low': 1.38238,\n 'future_max_high': 1.38572}\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_price_action.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.539,
+        "tests_reported": null,
+        "output_tail": "  'close_location': 0.13}},\n 'M15': {'bars': 6,\n         'approach_move_atr': 1.033,\n         'bars_toward_level': 6,\n         'zone_touches': 0,\n         'closes_inside_zone': 0,\n         'closes_through_level': 0,\n         'max_breach_atr': 0.0,\n         'last_close_distance_from_zone_atr': 0.183,\n         'recent_volume_ratio': 0.913,\n         'last_bar': {'body_atr': 0.15,\n                      'range_atr': 0.483,\n                      'body_fraction': 0.31,\n                      'upper_wick_fraction': 0.379,\n                      'lower_wick_fraction': 0.31,\n                      'close_location': 0.31}}}\n\nPRICE ACTION EVIDENCE:\n - M5_LEVEL_APPROACH_UNTESTED\n - M5_LEVEL_APPROACH_MODERATE\n - M5_LEVEL_UNTESTED_RECENTLY\n - M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n - M15_LEVEL_APPROACH_UNTESTED\n - M15_LEVEL_APPROACH_STRONG\n - M15_LEVEL_UNTESTED_RECENTLY\n - M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n\n====================================================================================================\nTIME: 2026-04-08T09:45:00+00:00\nACTIVE LEVEL: RESISTANCE\nACTUAL OUTCOME: BREAK\n====================================================================================================\n{'active_level': 'RESISTANCE',\n 'level_low': 1.38413,\n 'level_high': 1.38443,\n 'atr_m15': 0.000675,\n 'M5': {'bars': 12,\n        'approach_move_atr': 1.778,\n        'bars_toward_level': 7,\n        'zone_touches': 9,\n        'closes_inside_zone': 3,\n        'closes_through_level': 4,\n        'max_breach_atr': 0.415,\n        'last_close_distance_from_zone_atr': 0.163,\n        'recent_volume_ratio': 0.858,\n        'last_bar': {'body_atr': 0.059,\n                     'range_atr': 0.489,\n                     'body_fraction': 0.121,\n                     'upper_wick_fraction': 0.485,\n                     'lower_wick_fraction': 0.394,\n                     'close_location': 0.515}},\n 'M15': {'bars': 6,\n         'approach_move_atr': 1.141,\n         'bars_toward_level': 2,\n         'zone_touches': 3,\n         'closes_inside_zone': 1,\n         'closes_through_level': 1,\n         'max_breach_atr': 0.415,\n         'last_close_distance_from_zone_atr': 0.163,\n         'recent_volume_ratio': 1.161,\n         'last_bar': {'body_atr': 0.267,\n                      'range_atr': 1.23,\n                      'body_fraction': 0.217,\n                      'upper_wick_fraction': 0.542,\n                      'lower_wick_fraction': 0.241,\n                      'close_location': 0.241}}}\n\nPRICE ACTION EVIDENCE:\n - M5_LEVEL_APPROACH_WITH_REPEATED_TESTS\n - M5_LEVEL_APPROACH_STRONG\n - M5_LEVEL_REPEATED_TESTS\n - M5_LEVEL_CLOSE_INSIDE_ZONE\n - M5_LEVEL_CLOSE_THROUGH_LEVEL\n - M5_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL\n - M5_LEVEL_MEANINGFUL_BREACH\n - M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n - M15_LEVEL_APPROACH_WITH_REPEATED_TESTS\n - M15_LEVEL_APPROACH_STRONG\n - M15_LEVEL_REPEATED_TESTS\n - M15_LEVEL_CLOSE_INSIDE_ZONE\n - M15_LEVEL_CLOSE_THROUGH_LEVEL\n - M15_LEVEL_MEANINGFUL_BREACH\n - M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n\n====================================================================================================\nTIME: 2026-04-08T15:00:00+00:00\nACTIVE LEVEL: RESISTANCE\nACTUAL OUTCOME: HOLD\n====================================================================================================\n{'active_level': 'RESISTANCE',\n 'level_low': 1.38647,\n 'level_high': 1.38669,\n 'atr_m15': 0.000723,\n 'M5': {'bars': 12,\n        'approach_move_atr': -0.913,\n        'bars_toward_level': 7,\n        'zone_touches': 6,\n        'closes_inside_zone': 2,\n        'closes_through_level': 3,\n        'max_breach_atr': 0.692,\n        'last_close_distance_from_zone_atr': 0.221,\n        'recent_volume_ratio': 1.195,\n        'last_bar': {'body_atr': 0.249,\n                     'range_atr': 0.415,\n                     'body_fraction': 0.6,\n                     'upper_wick_fraction': 0.133,\n                     'lower_wick_fraction': 0.267,\n                     'close_location': 0.867}},\n 'M15': {'bars': 6,\n         'approach_move_atr': -0.138,\n         'bars_toward_level': 3,\n         'zone_touches': 5,\n         'closes_inside_zone': 0,\n         'closes_through_level': 2,\n         'max_breach_atr': 0.692,\n         'last_close_distance_from_zone_atr': 0.221,\n         'recent_volume_ratio': 1.496,\n         'last_bar': {'body_atr': 0.194,\n                      'range_atr': 0.664,\n                      'body_fraction': 0.292,\n                      'upper_wick_fraction': 0.083,\n                      'lower_wick_fraction': 0.625,\n                      'close_location': 0.917}}}\n\nPRICE ACTION EVIDENCE:\n - M5_LEVEL_MOVING_AWAY_AFTER_INTERACTION\n - M5_LEVEL_MOVING_AWAY\n - M5_LEVEL_REPEATED_TESTS\n - M5_LEVEL_CLOSE_INSIDE_ZONE\n - M5_LEVEL_CLOSE_THROUGH_LEVEL\n - M5_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL\n - M5_LEVEL_MEANINGFUL_BREACH\n - M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n - M15_LEVEL_REPEATED_TESTS\n - M15_LEVEL_CLOSE_THROUGH_LEVEL\n - M15_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL\n - M15_LEVEL_MEANINGFUL_BREACH\n - M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_registry_full_day.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 7.716,
+        "tests_reported": null,
+        "output_tail": "\n2026-04-08T17:45:00+00:00\nSoporte:     USDCAD_Z000009 (SUPPORT) 1.38042-1.38070 desde=2026-04-08T01:45:00+00:00\nResistencia: USDCAD_Z000003 (RESISTANCE) 1.38644-1.38707 desde=2026-04-08T00:00:00+00:00\n\n2026-04-08T18:00:00+00:00\nSoporte:     USDCAD_Z000014 (SUPPORT) 1.38309-1.38368 desde=2026-04-08T18:00:00+00:00\nResistencia: USDCAD_Z000004 (RESISTANCE) 1.38527-1.38557 desde=2026-04-08T00:00:00+00:00\n\nRESUMEN REPLAY REGISTRO\nVelas M15 evaluadas: 96\nZonas distintas registradas: 15\nReobservaciones con ID conservado: 768\nCambios de rol observados: 37\nOK: registro cronologico del dia completo, sin Ollama\nRegistro temporal eliminado al terminar.\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_registry_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.639,
+        "tests_reported": null,
+        "output_tail": "\n2026-04-08T17:45:00+00:00\nSoporte:     USDCAD_Z000001 | SUPPORT | 1.38042-1.38070 | detectada=2026-04-08T17:45:00+00:00\nResistencia: USDCAD_Z000005 | RESISTANCE | 1.38644-1.38707 | detectada=2026-04-08T17:45:00+00:00\n\n2026-04-08T18:00:00+00:00\nSoporte:     USDCAD_Z000010 | SUPPORT | 1.38309-1.38368 | detectada=2026-04-08T18:00:00+00:00\nResistencia: USDCAD_Z000009 | RESISTANCE | 1.38527-1.38557 | detectada=2026-04-08T17:45:00+00:00\n\nOK: 7 zonas conservan su ID entre ambos análisis\nRegistro temporal eliminado al terminar la prueba.\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_thesis_direction.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.671,
+        "tests_reported": null,
+        "output_tail": "\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: SUPPORT\nHOLD score: 0.8\nBREAK score: 0.2\nConfidence: 0.8\nHOLD evidence: ['SUPPORT_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']\nBREAK evidence: ['M5_RETURN5_NEGATIVE']\nOK ACEPTADA: SUPPORT_HOLD / M5_RETURN5_POSITIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: SUPPORT\nHOLD score: 0.8\nBREAK score: 0.2\nConfidence: 0.8\nHOLD evidence: ['SUPPORT_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']\nBREAK evidence: ['M5_RETURN5_POSITIVE']\n\n[LEVEL THESIS INVALID RAW]\nTime: TEST_DIRECTION\nMarket structure: AT_SUPPORT\nRaw assessment: {'thesis': 'SUPPORT_HOLD', 'target_level': 'SUPPORT', 'operation': 'BUY', 'confidence': 0.8, 'evidence_used': ['SUPPORT_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']}\nValidation errors: ['THESIS_WITHOUT_TECHNICAL_EVIDENCE']\nOK RECHAZADA: SUPPORT_HOLD / M5_RETURN5_NEGATIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: SUPPORT\nHOLD score: 0.2\nBREAK score: 0.8\nConfidence: 0.8\nHOLD evidence: ['M5_RETURN5_POSITIVE']\nBREAK evidence: ['SUPPORT_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']\nOK ACEPTADA: SUPPORT_BREAK / M5_RETURN5_NEGATIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: SUPPORT\nHOLD score: 0.2\nBREAK score: 0.8\nConfidence: 0.8\nHOLD evidence: ['M5_RETURN5_NEGATIVE']\nBREAK evidence: ['SUPPORT_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']\n\n[LEVEL THESIS INVALID RAW]\nTime: TEST_DIRECTION\nMarket structure: AT_SUPPORT\nRaw assessment: {'thesis': 'SUPPORT_BREAK', 'target_level': 'SUPPORT', 'operation': 'SELL', 'confidence': 0.8, 'evidence_used': ['SUPPORT_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']}\nValidation errors: ['THESIS_WITHOUT_TECHNICAL_EVIDENCE']\nOK RECHAZADA: SUPPORT_BREAK / M5_RETURN5_POSITIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: RESISTANCE\nHOLD score: 0.8\nBREAK score: 0.2\nConfidence: 0.8\nHOLD evidence: ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']\nBREAK evidence: ['M5_RETURN5_POSITIVE']\nOK ACEPTADA: RESISTANCE_HOLD / M5_RETURN5_NEGATIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: RESISTANCE\nHOLD score: 0.8\nBREAK score: 0.2\nConfidence: 0.8\nHOLD evidence: ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']\nBREAK evidence: ['M5_RETURN5_NEGATIVE']\n\n[LEVEL THESIS INVALID RAW]\nTime: TEST_DIRECTION\nMarket structure: AT_RESISTANCE\nRaw assessment: {'thesis': 'RESISTANCE_HOLD', 'target_level': 'RESISTANCE', 'operation': 'SELL', 'confidence': 0.8, 'evidence_used': ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']}\nValidation errors: ['THESIS_WITHOUT_TECHNICAL_EVIDENCE']\nOK RECHAZADA: RESISTANCE_HOLD / M5_RETURN5_POSITIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: RESISTANCE\nHOLD score: 0.2\nBREAK score: 0.8\nConfidence: 0.8\nHOLD evidence: ['M5_RETURN5_NEGATIVE']\nBREAK evidence: ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']\nOK ACEPTADA: RESISTANCE_BREAK / M5_RETURN5_POSITIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: RESISTANCE\nHOLD score: 0.2\nBREAK score: 0.8\nConfidence: 0.8\nHOLD evidence: ['M5_RETURN5_POSITIVE']\nBREAK evidence: ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']\n\n[LEVEL THESIS INVALID RAW]\nTime: TEST_DIRECTION\nMarket structure: AT_RESISTANCE\nRaw assessment: {'thesis': 'RESISTANCE_BREAK', 'target_level': 'RESISTANCE', 'operation': 'BUY', 'confidence': 0.8, 'evidence_used': ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']}\nValidation errors: ['THESIS_WITHOUT_TECHNICAL_EVIDENCE']\nOK RECHAZADA: RESISTANCE_BREAK / M5_RETURN5_NEGATIVE\nOK: las 8 comprobaciones direccionales han superado la prueba.\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_thesis_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 1.308,
+        "tests_reported": null,
+        "output_tail": "MA_STRUCTURE_BEARISH',\n                         'M15_RSI_WEAK',\n                         'M15_RETURN5_NEGATIVE',\n                         'H1_PRICE_BELOW_EMA20',\n                         'H1_PRICE_BELOW_EMA50',\n                         'H1_PRICE_BELOW_EMA200',\n                         'H1_EMA_STRUCTURE_BEARISH',\n                         'H1_RSI_WEAK',\n                         'H1_RETURN5_NEGATIVE',\n                         'H4_PRICE_BELOW_EMA20',\n                         'H4_PRICE_BELOW_EMA50',\n                         'H4_RSI_WEAK',\n                         'H4_RETURN5_NEGATIVE',\n                         'D1_RETURN5_NEGATIVE'],\n 'conflicting_evidence': ['H4_PRICE_ABOVE_EMA200',\n                          'H4_EMA_STRUCTURE_BULLISH',\n                          'D1_PRICE_ABOVE_EMA20',\n                          'D1_PRICE_ABOVE_EMA50',\n                          'D1_PRICE_ABOVE_EMA200',\n                          'D1_RSI_STRONG'],\n 'source': 'DETERMINISTIC_PYTHON'}\n\n================================================================================\nREGIME\n================================================================================\n{'regime': 'UNCLEAR',\n 'confidence': 0.0,\n 'evidence_used': [],\n 'caution_flags': [],\n 'reason_codes': ['INSUFFICIENT_EVIDENCE'],\n 'valid': False,\n 'validation_errors': ['LLM_ERROR: LLM_PROVIDER_CONNECTION_FAILED'],\n 'source': 'LLM'}\n\n================================================================================\nLEVEL STRUCTURE\n================================================================================\n{'status': 'OK',\n 'symbol': 'USDCAD',\n 'analysis_time': '2026-04-08T18:00:00+00:00',\n 'market_structure': 'OPEN_SPACE',\n 'facts': {'current_price': 1.38399,\n           'reference_atr_m15': 0.001009,\n           'support': {'role': 'SUPPORT',\n                       'low': 1.38309,\n                       'high': 1.38368,\n                       'mid': 1.38339,\n                       'touches': 2,\n                       'pivot_count': 2,\n                       'recent_independent_touches_m15': 3,\n                       'recent_touch_times_m15': ['2026-04-08T03:15:00+00:00',\n                                                  '2026-04-08T07:30:00+00:00',\n                                                  '2026-04-08T16:00:00+00:00'],\n                       'timeframes': ['H1'],\n                       'pivot_types': ['LOW'],\n                       'last_touch': '2026-04-08T16:00:00+00:00',\n                       'last_pivot_time': '2026-04-08T16:00:00+00:00',\n                       'strength': 50,\n                       'distance': 0.00031,\n                       'distance_atr': 0.31,\n                       'strength_label': 'WEAK',\n                       'distance_label': 'NEAR'},\n           'resistance': {'role': 'RESISTANCE',\n                          'low': 1.38527,\n                          'high': 1.38557,\n                          'mid': 1.38542,\n                          'touches': 1,\n                          'pivot_count': 1,\n                          'recent_independent_touches_m15': 3,\n                          'recent_touch_times_m15': ['2026-04-08T02:15:00+00:00',\n                                                     '2026-04-08T10:15:00+00:00',\n                                                     '2026-04-08T14:45:00+00:00'],\n                          'timeframes': ['D1'],\n                          'pivot_types': ['LOW'],\n                          'last_touch': '2026-01-14T00:00:00+00:00',\n                          'last_pivot_time': '2026-01-14T00:00:00+00:00',\n                          'strength': 33,\n                          'distance': 0.00128,\n                          'distance_atr': 1.27,\n                          'strength_label': 'WEAK',\n                          'distance_label': 'MODERATE'},\n           'distance_between_nearest_levels_atr': 1.58,\n           'strength_difference_support_minus_resistance': 17},\n 'available_evidence_ids': ['NEAREST_SUPPORT_PRESENT',\n                            'SUPPORT_WEAK',\n                            'SUPPORT_DISTANCE_NEAR',\n                            'NEAREST_RESISTANCE_PRESENT',\n                            'RESISTANCE_WEAK',\n                            'RESISTANCE_DISTANCE_MODERATE',\n                            'SUPPORT_STRONGER_THAN_RESISTANCE'],\n 'source': 'DETERMINISTIC_PYTHON'}\n\n================================================================================\nLEVEL THESIS\n================================================================================\n{'thesis': 'UNCLEAR',\n 'target_level': 'NONE',\n 'operation': 'NONE',\n 'confidence': 0.0,\n 'evidence_used': [],\n 'reason_codes': ['INSUFFICIENT_EVIDENCE'],\n 'valid': False,\n 'validation_errors': ['REGIME_INVALID'],\n 'source': 'LLM'}\n\n================================================================================\nLEVEL OUTCOME\n================================================================================\n{'status': 'NOT_EVALUATED', 'reason': 'NO_ACTIVE_LEVEL_FOR_UNCLEAR_THESIS'}\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_level_thesis_unclear.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.609,
+        "tests_reported": null,
+        "output_tail": "\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_UNCLEAR\nActive level: SUPPORT\nHOLD score: 0.7\nBREAK score: 0.3\nConfidence: 0.3\nHOLD evidence: ['SUPPORT_MEDIUM']\nBREAK evidence: ['M5_RETURN5_NEGATIVE']\nOK: UNCLEAR es una abstencion valida, sin operacion ni evidencias de tesis.\nOK: error de API registrado por tipo y replay puede continuar sin reintentos.\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_multiagent_second_stage.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.074,
+        "tests_reported": null,
+        "output_tail": "\nFINAL DECISION\n\n{'status': 'DRY_RUN_APPROVED', 'approved': True, 'errors': [], 'symbol': 'USDCAD', 'strategy': 'PULLBACK', 'direction': 'BUY', 'order_request': {'symbol': 'USDCAD', 'volume': 0.01, 'price': 1.42, 'sl': 1.418, 'tp': 1.4242}, 'trade_authorized': False, 'source': 'DETERMINISTIC_PYTHON'}\n\n[OK] SECOND STAGE TEST PASSED\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_no_lookahead.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 1.278,
+        "tests_reported": null,
+        "output_tail": "================================================================================\nBACKTEST - NO LOOKAHEAD TEST\n================================================================================\n\nEURUSD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 1.158379725816395\n [OK] sin look-ahead\n\nUSDCAD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 1.3815670652387981\n [OK] sin look-ahead\n\nAUDUSD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 0.6753688010223463\n [OK] sin look-ahead\n\n[OK] Checks realizados: 375\n"
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "/workspace/AgentTrading-phase2-1-1/test_support_resistance_historical.py"
+        ],
+        "status": "PASS",
+        "return_code": 0,
+        "duration_seconds": 0.701,
+        "tests_reported": null,
+        "output_tail": "ole': 'SUPPORT',\n 'low': 1.38309,\n 'high': 1.38368,\n 'mid': 1.38339,\n 'touches': 2,\n 'pivot_count': 2,\n 'recent_independent_touches_m15': 3,\n 'recent_touch_times_m15': ['2026-04-08T03:15:00+00:00',\n                            '2026-04-08T07:30:00+00:00',\n                            '2026-04-08T16:00:00+00:00'],\n 'timeframes': ['H1'],\n 'pivot_types': ['LOW'],\n 'last_touch': '2026-04-08T16:00:00+00:00',\n 'last_pivot_time': '2026-04-08T16:00:00+00:00',\n 'strength': 50,\n 'distance': 0.00031,\n 'distance_atr': 0.31}\n\nRESISTENCIA MAS CERCANA\n{'role': 'RESISTANCE',\n 'low': 1.38527,\n 'high': 1.38557,\n 'mid': 1.38542,\n 'touches': 1,\n 'pivot_count': 1,\n 'recent_independent_touches_m15': 3,\n 'recent_touch_times_m15': ['2026-04-08T02:15:00+00:00',\n                            '2026-04-08T10:15:00+00:00',\n                            '2026-04-08T14:45:00+00:00'],\n 'timeframes': ['D1'],\n 'pivot_types': ['LOW'],\n 'last_touch': '2026-01-14T00:00:00+00:00',\n 'last_pivot_time': '2026-01-14T00:00:00+00:00',\n 'strength': 33,\n 'distance': 0.00128,\n 'distance_atr': 1.27}\n\nZONAS ACTIVAS\n[]\n\nTODOS LOS SOPORTES\n[{'role': 'SUPPORT',\n  'low': 1.38309,\n  'high': 1.38368,\n  'mid': 1.38339,\n  'touches': 2,\n  'pivot_count': 2,\n  'recent_independent_touches_m15': 3,\n  'recent_touch_times_m15': ['2026-04-08T03:15:00+00:00',\n                             '2026-04-08T07:30:00+00:00',\n                             '2026-04-08T16:00:00+00:00'],\n  'timeframes': ['H1'],\n  'pivot_types': ['LOW'],\n  'last_touch': '2026-04-08T16:00:00+00:00',\n  'last_pivot_time': '2026-04-08T16:00:00+00:00',\n  'strength': 50,\n  'distance': 0.00031,\n  'distance_atr': 0.31},\n {'role': 'SUPPORT',\n  'low': 1.38041,\n  'high': 1.38071,\n  'mid': 1.38056,\n  'touches': 1,\n  'pivot_count': 1,\n  'recent_independent_touches_m15': 0,\n  'recent_touch_times_m15': [],\n  'timeframes': ['D1'],\n  'pivot_types': ['HIGH'],\n  'last_touch': '2025-12-20T00:00:00+00:00',\n  'last_pivot_time': '2025-12-20T00:00:00+00:00',\n  'strength': 33,\n  'distance': 0.00328,\n  'distance_atr': 3.25},\n {'role': 'SUPPORT',\n  'low': 1.3784,\n  'high': 1.3787,\n  'mid': 1.37855,\n  'touches': 1,\n  'pivot_count': 1,\n  'recent_independent_touches_m15': 0,\n  'recent_touch_times_m15': [],\n  'timeframes': ['H4'],\n  'pivot_types': ['HIGH'],\n  'last_touch': '2026-03-25T00:00:00+00:00',\n  'last_pivot_time': '2026-03-25T00:00:00+00:00',\n  'strength': 28,\n  'distance': 0.00529,\n  'distance_atr': 5.24},\n {'role': 'SUPPORT',\n  'low': 1.37515,\n  'high': 1.37562,\n  'mid': 1.37539,\n  'touches': 2,\n  'pivot_count': 2,\n  'recent_independent_touches_m15': 0,\n  'recent_touch_times_m15': [],\n  'timeframes': ['H4', 'D1'],\n  'pivot_types': ['HIGH'],\n  'last_touch': '2026-03-23T16:00:00+00:00',\n  'last_pivot_time': '2026-03-23T16:00:00+00:00',\n  'strength': 51,\n  'distance': 0.00837,\n  'distance_atr': 8.29}]\n\nTODAS LAS RESISTENCIAS\n[{'role': 'RESISTANCE',\n  'low': 1.38527,\n  'high': 1.38557,\n  'mid': 1.38542,\n  'touches': 1,\n  'pivot_count': 1,\n  'recent_independent_touches_m15': 3,\n  'recent_touch_times_m15': ['2026-04-08T02:15:00+00:00',\n                             '2026-04-08T10:15:00+00:00',\n                             '2026-04-08T14:45:00+00:00'],\n  'timeframes': ['D1'],\n  'pivot_types': ['LOW'],\n  'last_touch': '2026-01-14T00:00:00+00:00',\n  'last_pivot_time': '2026-01-14T00:00:00+00:00',\n  'strength': 33,\n  'distance': 0.00128,\n  'distance_atr': 1.27},\n {'role': 'RESISTANCE',\n  'low': 1.38643,\n  'high': 1.38708,\n  'mid': 1.38675,\n  'touches': 5,\n  'pivot_count': 5,\n  'recent_independent_touches_m15': 2,\n  'recent_touch_times_m15': ['2026-04-08T01:45:00+00:00',\n                             '2026-04-08T11:45:00+00:00'],\n  'timeframes': ['H1', 'H4', 'D1'],\n  'pivot_types': ['HIGH', 'LOW'],\n  'last_touch': '2026-04-03T00:00:00+00:00',\n  'last_pivot_time': '2026-04-03T00:00:00+00:00',\n  'strength': 80,\n  'distance': 0.00244,\n  'distance_atr': 2.42},\n {'role': 'RESISTANCE',\n  'low': 1.38706,\n  'high': 1.38762,\n  'mid': 1.38734,\n  'touches': 3,\n  'pivot_count': 3,\n  'recent_independent_touches_m15': 3,\n  'recent_touch_times_m15': ['2026-04-08T01:45:00+00:00',\n                             '2026-04-08T13:00:00+00:00',\n                             '2026-04-08T15:30:00+00:00'],\n  'timeframes': ['H1', 'D1'],\n  'pivot_types': ['HIGH', 'LOW'],\n  'last_touch': '2026-04-08T14:00:00+00:00',\n  'last_pivot_time': '2026-04-08T14:00:00+00:00',\n  'strength': 79,\n  'distance': 0.00307,\n  'distance_atr': 3.04},\n {'role': 'RESISTANCE',\n  'low': 1.38983,\n  'high': 1.3904,\n  'mid': 1.39011,\n  'touches': 4,\n  'pivot_count': 4,\n  'recent_independent_touches_m15': 3,\n  'recent_touch_times_m15': ['2026-04-07T17:30:00+00:00',\n                             '2026-04-07T19:15:00+00:00',\n                             '2026-04-08T01:45:00+00:00'],\n  'timeframes': ['H1', 'H4'],\n  'pivot_types': ['HIGH', 'LOW'],\n  'last_touch': '2026-04-08T02:00:00+00:00',\n  'last_pivot_time': '2026-04-08T02:00:00+00:00',\n  'strength': 81,\n  'distance': 0.00584,\n  'distance_atr': 5.78}]\n"
+      }
+    ],
+    "test_count_reported_by_unittest": 121,
+    "unittest_passed": 120,
+    "unittest_failed": 0,
+    "unittest_skipped": 1,
+    "standalone_assertion_scripts": 21,
+    "standalone_assertion_scripts_passed": 21,
+    "standalone_assertion_scripts_failed": 0,
+    "total_standalone_and_unit_checks_passed": 141,
+    "total_duration_seconds": 61.407,
+    "scripts_without_unittest_count": [
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_deepseek_integration.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_historical_level_outcome_regression.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_event_context_historical.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_evidence.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_evidence_price_action.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_history_batch_payload.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_history_events_historical.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_history_historical.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_history_llm_historical.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_history_prompt_payload.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_history_report_historical.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_outcome_touch.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_price_action.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_registry_full_day.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_registry_historical.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_thesis_direction.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_thesis_historical.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_level_thesis_unclear.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_multiagent_second_stage.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_no_lookahead.py"
+      ],
+      [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "/workspace/AgentTrading-phase2-1-1/test_support_resistance_historical.py"
+      ]
+    ],
+    "skipped": {
+      "test_ollama.py": "Requires a local Ollama service; not invoked automatically.",
+      "test_order_request.py": "Requires MT5 initialization; not invoked in this phase.",
+      "test_trade_planner.py": "Requires MT5 initialization; not invoked in this phase."
+    },
+    "skipped_count": 4,
+    "pending_count": 3,
+    "pytest": {
+      "status": "NOT_APPLICABLE",
+      "reason": "All discovered project tests use unittest or standalone assertions; pytest is not required for these files."
+    },
+    "pending_external": [
+      "MT5 live/demo safety integration",
+      "local Ollama provider integration",
+      "DeepSeek live integration (no billed request made)"
+    ]
+  },
+  "spread_sensitivity_runs": [
+    {
+      "engine": "portfolio",
+      "floor_points": 0.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_portfolio_backtest.py",
+        "--scan",
+        "technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "0.0",
+        "--name",
+        "phase211_portfolio_base_floor0",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 19.708,
+      "output_tail": "====================================================================================================\nBACKTEST - PORTFOLIO\n====================================================================================================\n\nMax slots globales: 2\nPendientes reservan slot: SI\nMax 1 reserva por simbolo: SI\nMacro historico: NO\nLLM: NO\nCost scenario: BASE\n\nScan: /workspace/AgentTrading-phase2-1-1/data/backtest/technical_candidate_scan.csv\nPeriodo: 2026-04-07 18:15:00+00:00 -> 2026-10-07 18:15:00+00:00\n\nPreparando historiales...\n>=65 LIMIT | taken=1737 | resolved= 628 | win=0.3519 | expEUR=0.041 | pnlEUR=25.62 | PF=1.118 | DD=10.94 | globalBlocked= 1616\n        EURUSD=573 USDCAD=612 AUDUSD=552\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor0_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor0_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor0_metadata.json\n"
+    },
+    {
+      "engine": "portfolio",
+      "floor_points": 5.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_portfolio_backtest.py",
+        "--scan",
+        "technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "5.0",
+        "--name",
+        "phase211_portfolio_base_floor5",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 18.442,
+      "output_tail": "====================================================================================================\nBACKTEST - PORTFOLIO\n====================================================================================================\n\nMax slots globales: 2\nPendientes reservan slot: SI\nMax 1 reserva por simbolo: SI\nMacro historico: NO\nLLM: NO\nCost scenario: BASE\n\nScan: /workspace/AgentTrading-phase2-1-1/data/backtest/technical_candidate_scan.csv\nPeriodo: 2026-04-07 18:15:00+00:00 -> 2026-10-07 18:15:00+00:00\n\nPreparando historiales...\n>=65 LIMIT | taken=1777 | resolved= 622 | win=0.3392 | expEUR=0.026 | pnlEUR=16.04 | PF=1.074 | DD=11.44 | globalBlocked= 1609\n        EURUSD=580 USDCAD=629 AUDUSD=568\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor5_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor5_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor5_metadata.json\n"
+    },
+    {
+      "engine": "portfolio",
+      "floor_points": 10.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_portfolio_backtest.py",
+        "--scan",
+        "technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "10.0",
+        "--name",
+        "phase211_portfolio_base_floor10",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 18.627,
+      "output_tail": "====================================================================================================\nBACKTEST - PORTFOLIO\n====================================================================================================\n\nMax slots globales: 2\nPendientes reservan slot: SI\nMax 1 reserva por simbolo: SI\nMacro historico: NO\nLLM: NO\nCost scenario: BASE\n\nScan: /workspace/AgentTrading-phase2-1-1/data/backtest/technical_candidate_scan.csv\nPeriodo: 2026-04-07 18:15:00+00:00 -> 2026-10-07 18:15:00+00:00\n\nPreparando historiales...\n>=65 LIMIT | taken=1822 | resolved= 617 | win=0.3225 | expEUR=0.003 | pnlEUR=2.01 | PF=1.009 | DD=17.66 | globalBlocked= 1602\n        EURUSD=587 USDCAD=657 AUDUSD=578\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor10_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor10_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor10_metadata.json\n"
+    },
+    {
+      "engine": "portfolio",
+      "floor_points": 20.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_portfolio_backtest.py",
+        "--scan",
+        "technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "20.0",
+        "--name",
+        "phase211_portfolio_base_floor20",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 19.168,
+      "output_tail": "====================================================================================================\nBACKTEST - PORTFOLIO\n====================================================================================================\n\nMax slots globales: 2\nPendientes reservan slot: SI\nMax 1 reserva por simbolo: SI\nMacro historico: NO\nLLM: NO\nCost scenario: BASE\n\nScan: /workspace/AgentTrading-phase2-1-1/data/backtest/technical_candidate_scan.csv\nPeriodo: 2026-04-07 18:15:00+00:00 -> 2026-10-07 18:15:00+00:00\n\nPreparando historiales...\n>=65 LIMIT | taken=1904 | resolved= 573 | win=0.2688 | expEUR=-0.061 | pnlEUR=-35.17 | PF=0.84 | DD=41.08 | globalBlocked= 1586\n        EURUSD=606 USDCAD=693 AUDUSD=605\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor20_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor20_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_portfolio_base_floor20_metadata.json\n"
+    },
+    {
+      "engine": "stateful",
+      "floor_points": 0.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_stateful_backtest.py",
+        "--scan",
+        "data/backtest/technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "0.0",
+        "--name",
+        "phase211_stateful_base_floor0",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 22.354,
+      "output_tail": "==========================================================================================\nBACKTEST - STATEFUL EXECUTION\n==========================================================================================\n\nModo: TECHNICAL_ONLY\nLLM: NO\nMacro historico: NO\nCost scenario: BASE\nUnidad de rendimiento: R\n\nPreparando historiales...\n\n======================================================================\nEURUSD\n======================================================================\n>=65 LIMIT | signals= 710 | resolved= 251 | riskReject=   0 | win=0.3586 | expR=0.1116 | totalR=28.0 | PF=1.174 | DD=22.6 | grossEUR=15.05\n\n======================================================================\nUSDCAD\n======================================================================\n>=65 LIMIT | signals= 729 | resolved= 257 | riskReject=   0 | win=0.3969 | expR=0.2304 | totalR=59.2 | PF=1.382 | DD=13.5 | grossEUR=20.93\n\n======================================================================\nAUDUSD\n======================================================================\n>=65 LIMIT | signals= 685 | resolved= 245 | riskReject=   0 | win=0.2816 | expR=-0.1269 | totalR=-31.1 | PF=0.823 | DD=39.0 | grossEUR=-14.89\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor0_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor0_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor0_metadata.json\n"
+    },
+    {
+      "engine": "stateful",
+      "floor_points": 5.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_stateful_backtest.py",
+        "--scan",
+        "data/backtest/technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "5.0",
+        "--name",
+        "phase211_stateful_base_floor5",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 23.131,
+      "output_tail": "==========================================================================================\nBACKTEST - STATEFUL EXECUTION\n==========================================================================================\n\nModo: TECHNICAL_ONLY\nLLM: NO\nMacro historico: NO\nCost scenario: BASE\nUnidad de rendimiento: R\n\nPreparando historiales...\n\n======================================================================\nEURUSD\n======================================================================\n>=65 LIMIT | signals= 719 | resolved= 246 | riskReject=   0 | win=0.3374 | expR=0.0459 | totalR=11.3 | PF=1.069 | DD=23.9 | grossEUR=6.37\n\n======================================================================\nUSDCAD\n======================================================================\n>=65 LIMIT | signals= 743 | resolved= 253 | riskReject=   0 | win=0.3834 | expR=0.1885 | totalR=47.7 | PF=1.306 | DD=13.5 | grossEUR=16.78\n\n======================================================================\nAUDUSD\n======================================================================\n>=65 LIMIT | signals= 701 | resolved= 241 | riskReject=   0 | win=0.2739 | expR=-0.151 | totalR=-36.4 | PF=0.792 | DD=37.7 | grossEUR=-15.52\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor5_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor5_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor5_metadata.json\n"
+    },
+    {
+      "engine": "stateful",
+      "floor_points": 10.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_stateful_backtest.py",
+        "--scan",
+        "data/backtest/technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "10.0",
+        "--name",
+        "phase211_stateful_base_floor10",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 23.152,
+      "output_tail": "==========================================================================================\nBACKTEST - STATEFUL EXECUTION\n==========================================================================================\n\nModo: TECHNICAL_ONLY\nLLM: NO\nMacro historico: NO\nCost scenario: BASE\nUnidad de rendimiento: R\n\nPreparando historiales...\n\n======================================================================\nEURUSD\n======================================================================\n>=65 LIMIT | signals= 729 | resolved= 241 | riskReject=   0 | win=0.3278 | expR=0.0162 | totalR=3.9 | PF=1.024 | DD=25.0 | grossEUR=3.8\n\n======================================================================\nUSDCAD\n======================================================================\n>=65 LIMIT | signals= 766 | resolved= 250 | riskReject=   0 | win=0.372 | expR=0.1532 | totalR=38.3 | PF=1.244 | DD=14.2 | grossEUR=15.18\n\n======================================================================\nAUDUSD\n======================================================================\n>=65 LIMIT | signals= 710 | resolved= 240 | riskReject=   0 | win=0.2458 | expR=-0.2379 | totalR=-57.1 | PF=0.685 | DD=57.2 | grossEUR=-26.37\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor10_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor10_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor10_metadata.json\n"
+    },
+    {
+      "engine": "stateful",
+      "floor_points": 20.0,
+      "command": [
+        "/workspace/.venvs/AgentTrading/bin/python",
+        "run_stateful_backtest.py",
+        "--scan",
+        "data/backtest/technical_candidate_scan.csv",
+        "--cost-scenario",
+        "BASE",
+        "--threshold",
+        "65",
+        "--mode",
+        "LIMIT",
+        "--spread-floor-points",
+        "20.0",
+        "--name",
+        "phase211_stateful_base_floor20",
+        "--output-dir",
+        "/workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests"
+      ],
+      "status": "PASS",
+      "return_code": 0,
+      "duration_seconds": 23.016,
+      "output_tail": "==========================================================================================\nBACKTEST - STATEFUL EXECUTION\n==========================================================================================\n\nModo: TECHNICAL_ONLY\nLLM: NO\nMacro historico: NO\nCost scenario: BASE\nUnidad de rendimiento: R\n\nPreparando historiales...\n\n======================================================================\nEURUSD\n======================================================================\n>=65 LIMIT | signals= 747 | resolved= 226 | riskReject=   0 | win=0.2832 | expR=-0.1221 | totalR=-27.6 | PF=0.83 | DD=39.3 | grossEUR=-11.28\n\n======================================================================\nUSDCAD\n======================================================================\n>=65 LIMIT | signals= 794 | resolved= 227 | riskReject=   0 | win=0.3128 | expR=-0.0304 | totalR=-6.9 | PF=0.956 | DD=20.7 | grossEUR=1.3\n\n======================================================================\nAUDUSD\n======================================================================\n>=65 LIMIT | signals= 731 | resolved= 220 | riskReject=   0 | win=0.2136 | expR=-0.3377 | totalR=-74.3 | PF=0.571 | DD=74.4 | grossEUR=-33.01\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor20_trades.csv\nSummary: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor20_summary.csv\nMetadata: /workspace/AgentTrading-phase2-1-1/reports/phase2_1_1/backtests/phase211_stateful_base_floor20_metadata.json\n"
+    }
+  ],
+  "checks": [
+    {
+      "name": "offline_tests",
+      "status": "PASS"
+    },
+    {
+      "name": "baseline_integrity",
+      "status": "PASS"
+    },
+    {
+      "name": "spread_quality",
+      "status": "PASS"
+    },
+    {
+      "name": "warmup_audit",
+      "status": "PASS"
+    },
+    {
+      "name": "spread_sensitivity",
+      "status": "PASS"
+    },
+    {
+      "name": "event_ledger_and_pairing",
+      "status": "PASS"
+    },
+    {
+      "name": "execution_safety",
+      "status": "PASS"
+    },
+    {
+      "name": "no_external_calls",
+      "status": "PASS"
+    }
+  ],
+  "external_integrations": {
+    "mt5": {
+      "status": "NOT_APPLICABLE",
+      "reason": "Explicitly excluded from this offline phase; no terminal/account access."
+    },
+    "ollama_live": {
+      "status": "NOT_APPLICABLE",
+      "reason": "No live service call; all logger tests used mocks."
+    },
+    "deepseek_live": {
+      "status": "NOT_APPLICABLE",
+      "reason": "No billed API call; value-add remains a research conclusion."
+    },
+    "orders_sent": 0
+  },
+  "security": {
+    "order_execution_references": [],
+    "provider_calls_by_validator": 0,
+    "mt5_calls_by_validator": 0,
+    "orders_sent": 0
+  },
+  "limitations": [
+    "Phase 1 MT5 demo and live provider checks remain separate operational dependencies.",
+    "Zero spreads in the exported MT5 history have no archived broker quote context; they remain unverified observations.",
+    "The warmup comparison is a fixed timestamp sample and its production signal gate is not changed; any gate requires a separate impact review.",
+    "There are no verified historical DeepSeek decisions paired to frozen opportunities; no economic DeepSeek comparison is possible yet.",
+    "Raw bid/ask ticks and broker-specific symbol metadata are unavailable in the archived historical source."
+  ],
+  "reproduce": [
+    "python scripts/validate_phase2_1_1.py",
+    "python -m unittest discover -s tests -p 'test_*.py' -v",
+    "python test_no_lookahead.py"
+  ],
+  "code_fingerprints_sha256": {
+    "src/historical_execution.py": "6c648843c3056b36baec803f38f17a561a7634ba574ca208bd134840f103f0da",
+    "src/spread_quality.py": "d7c9287cf65d33e8e5ed7ed38ed3720a54c066264055547f20a38d09b3d5972c",
+    "src/warmup_audit.py": "3ae5e0cd33032c18d698588115ce2a4bea0a39d8aae146ac1b705f98c8afe1ce",
+    "src/event_ledger.py": "c2ef0985f2fbd5e12686ee4d2677b719f53c5fcb011c1cbebdd16243bc0bb0d1",
+    "src/llm_evaluation.py": "179dd25ed314db65f84f2a86fae0905afe574b29634c05fa0c83a5e0f4454134",
+    "src/agents/llm_client.py": "87c73b36c86b34d2fa05b3b2806b217ead85614b330c5c793038796b6e958eb1",
+    "run_portfolio_backtest.py": "5521d032f899e32a60df013870ed2fe0da81b9f2d8368430410c0912197fb62a",
+    "run_stateful_backtest.py": "a71615abb6980c4b90426396b1c1435efc85eeb2ff082cfbe65a2e7ed057745d",
+    "scripts/validate_phase2_1.py": "3ea1b336b4685c9e70e1ec763d0148d1a4dab3c1d74bee390ef0cee27b6106fa",
+    "scripts/validate_phase2_1_1.py": "869b1dc84704f4677f9fa7122797f36faeb5427dc84cbc7e93c1a11f44127cc6",
+    "config/agent_config.py": "0034a2664f3b5dcd0d9a8a702ac76e6d24c195971c3fcd31b68694fafee0957b",
+    "config/backtest_config.py": "38967598f48e677245dc07529cf25f6e73ac0d1f23ca307ae3d88d04cc39a36f",
+    "config/backtest_cost_config.py": "01cfb3671cc47ff72dd2a3072c02c9cc91a001b2ab89b7dca65ab3195938cd72",
+    "config/calendar_config.py": "16b585c8b0f4e92dda77de90ced8912e4cdabcc6d24a443908235862021a924f",
+    "config/execution_config.py": "1b3a64735ed24bd98dda408373e095443596d8334db5082326beef143e01604a",
+    "config/market_config.py": "81e09dac07a656c41c0189f1bf8dfd146eddac6f166c295bc441211269c19583",
+    "config/operational_config.py": "6a89ce38238ca7fbad4ffa2645bc6c9ec9441b76978a4cf2d1a46a516e20c9c4",
+    "config/risk_config.py": "0beeaa0a3328d71c8d52272ea2d6dfa89e7d5a8ad145e00aa4c6cc81f3f26c1d",
+    "config/trade_planner_config.py": "eedfc22f77be6f2f5ead8427c13de0a58434e41ca789506b2cc6807a1518ab65"
+  },
+  "phase2_1_framework": {
+    "status": "PHASE2_1_COMPLETE",
+    "engineering_status": "COMPLETE",
+    "strategy_conclusion": "INCONCLUSIVE",
+    "deepseek_value_add": "INCONCLUSIVE_INSUFFICIENT_DATA",
+    "phase1_operational_readiness": {
+      "status": "INCOMPLETE_PENDING_MANUAL",
+      "blocks_phase2_1_engineering": false
+    },
+    "independent_validation_report": "reports/phase2_1_1/phase2_1_framework/validation_summary.json",
+    "legacy_phase2_1_report_preserved": "reports/phase2_1/validation_summary.json",
+    "lookahead_checks": 375
+  },
+  "phase2_1_deepseek_value_add": "INCONCLUSIVE_INSUFFICIENT_DATA",
+  "working_tree_provenance_refreshed_at_utc": "2026-11-06T09:51:00.774888Z"
+}

@@ -15,6 +15,9 @@ from config.market_config import (
 from src.orchestration.orchestrator import (
     MultiAgentOrchestrator,
 )
+from src.event_ledger import bind_event, record_opportunity, record_system_decision
+from src.market_snapshot import build_compact_snapshot
+from src.technical_evaluator import evaluate_technical_state
 
 
 BASE_DIR = (
@@ -112,22 +115,42 @@ def main():
     orchestrator = (
         MultiAgentOrchestrator()
     )
-
-    context = (
-        orchestrator.run(
-            symbol=
-                symbol,
-
-            market_state=
-                market_state,
-
-            runtime_state=
-                runtime_state,
-
-            calendar_state=
-                calendar_state,
-        )
-    )
+    event_id = None
+    try:
+        timestamp = market_state.get("analysis_time") or market_state.get("timestamp")
+        if timestamp:
+            technical = evaluate_technical_state(build_compact_snapshot(market_state, candles_per_timeframe=4))
+            technical_decision = "NO_TRADE"
+            if technical["setup_quality"] >= 65 and technical["alignment"] != "CONFLICT" and technical["bias"] != "NEUTRAL":
+                technical_decision = "WATCH_LONG" if technical["bias"] == "BULLISH" else "WATCH_SHORT"
+            snapshot = {
+                **market_state,
+                "technical_decision": technical_decision,
+                "technical_evaluation": {key: technical[key] for key in ("bias", "overall_score", "setup_quality", "alignment", "timeframe_scores")},
+            }
+            event_id = record_opportunity(symbol, timestamp, snapshot)
+    except Exception:
+        event_id = None
+    call_args = dict(symbol=symbol, market_state=market_state, runtime_state=runtime_state, calendar_state=calendar_state)
+    if event_id:
+        with bind_event(event_id):
+            context = orchestrator.run(**call_args)
+    else:
+        context = orchestrator.run(**call_args)
+    if event_id:
+        try:
+            result_message = next((message for message in reversed(context.messages) if message.get("type") == "ORCHESTRATION_RESULT"), None)
+            result_payload = (result_message or {}).get("payload", {})
+            final_decision = result_payload.get("direction") if result_payload.get("final_approved") else "NO_TRADE"
+            record_system_decision(
+                event_id,
+                final_decision or "NO_TRADE",
+                decision_stage="MARKET_ANALYSIS",
+                validation_status="VALID" if result_payload.get("final_approved") else "REJECTED",
+                rejection_code=";".join(result_payload.get("final_errors", [])) or None,
+            )
+        except Exception:
+            pass
 
     print()
     print("=" * 90)
@@ -199,7 +222,7 @@ def main():
     ) as file:
 
         json.dump(
-            context.to_dict(),
+        {**context.to_dict(), "event_id": event_id},
             file,
             indent=2,
             ensure_ascii=False,

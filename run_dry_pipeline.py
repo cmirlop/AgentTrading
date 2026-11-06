@@ -31,6 +31,7 @@ from src.risk_validator import (
     validate_dry_run,
 )
 from src.risk_preflight import evaluate_plan_risk, release_plan_risk_reservation
+from src.event_ledger import record_system_decision
 
 
 BASE_DIR = (
@@ -99,6 +100,22 @@ def latest_analysis(
         load_json(latest),
         latest,
     )
+
+
+def record_research_decision(event_id, decision, status, errors=None):
+    """Best-effort append-only observability; never authorizes order execution."""
+    if not event_id:
+        return
+    try:
+        record_system_decision(
+            event_id,
+            str(decision),
+            validation_status=str(status),
+            decision_stage="DRY_RUN_VALIDATION",
+            rejection_code=";".join(str(item) for item in (errors or []))[:240] or None,
+        )
+    except Exception:
+        return
 
 
 def order_check_to_dict(
@@ -240,6 +257,7 @@ def main():
                     "analysis"
                 ]
             )
+            event_id = analysis_document.get("event_id")
 
             candidate = (
                 evaluate_candidate(
@@ -265,6 +283,7 @@ def main():
             )
 
             symbol_result = {
+                "event_id": event_id,
                 "technical_source":
                     str(source),
 
@@ -318,6 +337,10 @@ def main():
                             "rejection_reasons"
                         ],
                 }
+                record_research_decision(
+                    event_id, candidate.get("direction") or "HOLD", "REJECTED",
+                    candidate.get("rejection_reasons", []),
+                )
 
                 output[
                     "symbols"
@@ -398,6 +421,7 @@ def main():
                             "errors"
                         ],
                 }
+                record_research_decision(event_id, candidate.get("direction") or "HOLD", "REJECTED", plan.get("errors", []))
 
                 output[
                     "symbols"
@@ -441,6 +465,7 @@ def main():
                     "approved": False,
                     "errors": portfolio_risk.get("errors", ["PORTFOLIO_RISK_CHECK_REJECTED"]),
                 }
+                record_research_decision(event_id, candidate.get("direction") or "HOLD", "REJECTED", portfolio_risk.get("errors", []))
                 output["symbols"][symbol] = symbol_result
                 print("Final: REJECTED by portfolio/daily risk")
                 continue
@@ -519,6 +544,11 @@ def main():
                 "final_validation"
             ] = (
                 final_validation
+            )
+            record_research_decision(
+                event_id, candidate.get("direction") or "HOLD",
+                "VALID" if final_validation.get("approved") else "REJECTED",
+                final_validation.get("errors", []),
             )
 
             output[

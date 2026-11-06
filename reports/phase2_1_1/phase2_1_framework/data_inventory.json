@@ -1,0 +1,5284 @@
+{
+  "generated_at_utc": "2026-11-06T09:45:32.743695+00:00",
+  "dataset_policy": "separate sources; no silent concatenation or external downloads",
+  "primary_dataset": {
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "expected_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "matches_reference": true,
+    "records": 22011,
+    "instruments": [
+      "AUDUSD",
+      "EURUSD",
+      "USDCAD"
+    ],
+    "unique_event_ids": 22011,
+    "duplicate_symbol_timestamp_event_ids": 0
+  },
+  "sources": [
+    {
+      "path": "data/analysis/2026-10-06/07-19-59_EURUSD.json",
+      "format": "JSON",
+      "sha256": "ee7a1dc6a78cb1d902149ce6e26b5654fa4bf2134e56a417b2b50b97d92f1264",
+      "bytes": 2503,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-20-19_USDCAD.json",
+      "format": "JSON",
+      "sha256": "d2eca48a5ad7008f845694ed1883aba4d838d4f783c225809f4cb0598ce60ed2",
+      "bytes": 1516,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD",
+          "USDCAD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-20-37_AUDUSD.json",
+      "format": "JSON",
+      "sha256": "94a0affd43a02f62d8b3f3d9fa8c0f3dd36dfeb7fc3f0f3ad4956bf7f41155d8",
+      "bytes": 1357,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD",
+          "EURUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-33-16_EURUSD.json",
+      "format": "JSON",
+      "sha256": "4ac0fa4d5c23cdd38436d3891e3b5a778afad82695c457202508266ac04af5c8",
+      "bytes": 1465,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-35-07_EURUSD.json",
+      "format": "JSON",
+      "sha256": "489bc98913c59c21c046e5efd76815943fbcbaea5469b53f6e962c5ab9545158",
+      "bytes": 1493,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-35-31_USDCAD.json",
+      "format": "JSON",
+      "sha256": "676a20ca4c2330ffef99ba6df0d03523de138b1c2417c580b504b3dc2edf64a2",
+      "bytes": 2337,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-35-48_AUDUSD.json",
+      "format": "JSON",
+      "sha256": "7de7818be8344b9a1cd3190d85dc0d60d2207fe62f18ea837b36c74cf28c6638",
+      "bytes": 1500,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-58-16_EURUSD.json",
+      "format": "JSON",
+      "sha256": "5390db62965824944f2718751f228fab094dfe9895b042f8accae0bd72435750",
+      "bytes": 3491,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-58-40_USDCAD.json",
+      "format": "JSON",
+      "sha256": "521ac88ec7a5f5597e724a63fd6c6a8de53742d6c6191bd5649af101083ad53f",
+      "bytes": 3430,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "decision": [
+          "WATCH_LONG"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-06/07-58-58_AUDUSD.json",
+      "format": "JSON",
+      "sha256": "be3d4e0a362d0182860acf35d8c04aac636817c6581c3f30681bae56fd1bf12a",
+      "bytes": 2665,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/07-23-55_EURUSD.json",
+      "format": "JSON",
+      "sha256": "aafa59d9dda46ee3e17b890551f9184f81651d2689ae65714dc53829a096c8d0",
+      "bytes": 3072,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/07-24-12_USDCAD.json",
+      "format": "JSON",
+      "sha256": "cfafb5688f2e73980ff18ca8365e1df02d662ec20f0f4f8e3a5537fc85eac083",
+      "bytes": 2318,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/07-24-30_AUDUSD.json",
+      "format": "JSON",
+      "sha256": "b919a4fcffe2e6ecd6729bc555913d183366fc1b879c657d854eedb887e817f1",
+      "bytes": 2359,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/07-40-35_EURUSD.json",
+      "format": "JSON",
+      "sha256": "19ed6d1673bf772093f12a23d5312bb725703f0833d599af55600f943c76ffa7",
+      "bytes": 2115,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/07-40-52_USDCAD.json",
+      "format": "JSON",
+      "sha256": "412a3092e0a955e996faaef06528afca92fc2bccc1870b338b60f14c6777c7a7",
+      "bytes": 2321,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/07-41-07_AUDUSD.json",
+      "format": "JSON",
+      "sha256": "c543c617b790a3919f976c14deb1bbef069d375e1eb3639238c91e7a2d004442",
+      "bytes": 2105,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/17-27-32_EURUSD.json",
+      "format": "JSON",
+      "sha256": "be025f711b2ceb4f55c3b3fd0e387979d0e149cfad6587588ffb23f2a68d766e",
+      "bytes": 2449,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "decision": [
+          "WATCH_SHORT"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/17-27-49_USDCAD.json",
+      "format": "JSON",
+      "sha256": "e03b52813618a9fe972a7f767a8b31ccdf939248d2cc0a7cbf78569e806ab76f",
+      "bytes": 2356,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "decision": [
+          "WATCH_LONG"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/analysis/2026-10-07/17-28-13_AUDUSD.json",
+      "format": "JSON",
+      "sha256": "41ab27bc047fad3bc7c2ea422cb3a85e04ad336454a9aebf9a34c56ea46b4147",
+      "bytes": 3179,
+      "records": 1,
+      "top_level_keys": [
+        "analysis",
+        "generated_at",
+        "performance",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD"
+        ],
+        "decision": [
+          "WATCH_SHORT"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/backtest/level_thesis/20250715_USDCAD_level_thesis.csv",
+      "format": "CSV",
+      "sha256": "395c19915bff3ab95c740ca30a10e7de682b68ac33e10c8a1ad22da02f279fca",
+      "bytes": 10287,
+      "records": 19,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 19
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 19
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2025-07-15T08:00:00+00:00",
+      "max_timestamp_utc": "2025-07-15T19:00:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "analysis_time",
+        "market_structure",
+        "technical_bias",
+        "technical_score",
+        "setup_quality",
+        "alignment",
+        "regime",
+        "regime_confidence",
+        "regime_valid",
+        "support_strength",
+        "support_distance_atr",
+        "support_touches",
+        "resistance_strength",
+        "resistance_distance_atr",
+        "resistance_touches",
+        "thesis",
+        "operation",
+        "thesis_confidence",
+        "comparison_hold_score",
+        "comparison_break_score",
+        "comparison_confidence",
+        "comparison_hold_evidence",
+        "comparison_break_evidence",
+        "thesis_valid",
+        "reason_codes",
+        "validation_errors",
+        "expected_outcome",
+        "actual_outcome",
+        "correct",
+        "event_time",
+        "future_min_low",
+        "future_max_high",
+        "outcome_confirmation_closures",
+        "outcome_confirmation_basis",
+        "outcome_break_buffer_atr",
+        "outcome_hold_confirmation_atr",
+        "active_level_zone_id",
+        "active_level_low",
+        "active_level_high",
+        "comparison_score_margin",
+        "comparison_score_prediction",
+        "trade_plan_status",
+        "trade_plan_error",
+        "trade_entry",
+        "trade_stop_loss",
+        "trade_take_profit",
+        "trade_target_rr",
+        "trade_order_type",
+        "trade_execution_result",
+        "trade_r",
+        "trade_fill_time",
+        "trade_exit_time",
+        "trade_simulation_only"
+      ],
+      "missing_cells": 282,
+      "missing_cell_fraction": 0.28003972,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20250715_USDCAD_level_thesis_summary.json",
+      "format": "JSON",
+      "sha256": "5e055fa2714d511c2f823d7bae42e6e706c0272fc1a6a0f053796f13bf3bc801",
+      "bytes": 1836,
+      "records": 1,
+      "top_level_keys": [
+        "accuracy_resolved",
+        "actual_outcomes",
+        "baseline_always_break_accuracy",
+        "baseline_always_hold_accuracy",
+        "end",
+        "execution_scope",
+        "funnel",
+        "horizon_minutes",
+        "limitations",
+        "llm_configuration",
+        "model_edge_over_always_hold",
+        "outcome_method",
+        "raw_score_baseline_always_hold_accuracy",
+        "raw_score_prediction_accuracy",
+        "raw_score_prediction_count",
+        "resolved",
+        "scope",
+        "simulated_trade_outcomes",
+        "start",
+        "symbol",
+        "validated_thesis_accuracy",
+        "validated_thesis_count_with_resolved_outcome",
+        "validated_thesis_coverage"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "provider": [
+          "deepseek"
+        ],
+        "model": [
+          "deepseek-flash"
+        ]
+      },
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20251015_USDCAD_level_thesis.csv",
+      "format": "CSV",
+      "sha256": "4e6e75a1ef8bd7e56b0d876e49ac1798a290225c1d3a7412df43c1fef5a8555f",
+      "bytes": 11209,
+      "records": 19,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 19
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 19
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2025-10-15T08:30:00+00:00",
+      "max_timestamp_utc": "2025-10-15T20:00:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "analysis_time",
+        "market_structure",
+        "technical_bias",
+        "technical_score",
+        "setup_quality",
+        "alignment",
+        "regime",
+        "regime_confidence",
+        "regime_valid",
+        "regime_reason_codes",
+        "regime_validation_errors",
+        "support_strength",
+        "support_distance_atr",
+        "support_touches",
+        "resistance_strength",
+        "resistance_distance_atr",
+        "resistance_touches",
+        "thesis",
+        "operation",
+        "thesis_confidence",
+        "active_level_zone_id",
+        "active_level_low",
+        "active_level_high",
+        "comparison_hold_score",
+        "comparison_break_score",
+        "comparison_confidence",
+        "comparison_score_margin",
+        "comparison_score_prediction",
+        "comparison_hold_evidence",
+        "comparison_break_evidence",
+        "thesis_valid",
+        "reason_codes",
+        "validation_errors",
+        "expected_outcome",
+        "actual_outcome",
+        "trade_plan_status",
+        "trade_plan_error",
+        "trade_entry",
+        "trade_stop_loss",
+        "trade_take_profit",
+        "trade_target_rr",
+        "trade_order_type",
+        "trade_execution_result",
+        "trade_r",
+        "trade_fill_time",
+        "trade_exit_time",
+        "correct",
+        "event_time",
+        "future_min_low",
+        "future_max_high",
+        "outcome_confirmation_closures",
+        "outcome_confirmation_basis",
+        "outcome_break_buffer_atr",
+        "outcome_hold_confirmation_atr",
+        "trade_simulation_only"
+      ],
+      "missing_cells": 290,
+      "missing_cell_fraction": 0.27751196,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20251015_USDCAD_level_thesis_summary.json",
+      "format": "JSON",
+      "sha256": "935c7765ffc3429c98b81e3305e40e80c875d6f01f5f710357e2f9ab571f3a6c",
+      "bytes": 1904,
+      "records": 1,
+      "top_level_keys": [
+        "accuracy_resolved",
+        "actual_outcomes",
+        "baseline_always_break_accuracy",
+        "baseline_always_hold_accuracy",
+        "end",
+        "execution_scope",
+        "funnel",
+        "horizon_minutes",
+        "limitations",
+        "llm_configuration",
+        "model_edge_over_always_hold",
+        "outcome_method",
+        "raw_score_baseline_always_hold_accuracy",
+        "raw_score_prediction_accuracy",
+        "raw_score_prediction_count",
+        "resolved",
+        "scope",
+        "simulated_trade_outcomes",
+        "start",
+        "symbol",
+        "validated_baseline_always_hold_accuracy",
+        "validated_thesis_accuracy",
+        "validated_thesis_count_with_resolved_outcome",
+        "validated_thesis_coverage"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "provider": [
+          "deepseek"
+        ],
+        "model": [
+          "deepseek-flash"
+        ]
+      },
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20260115_USDCAD_level_thesis.csv",
+      "format": "CSV",
+      "sha256": "97a3df5448f9444c42fa5f3c14e70e1ad878d321262b8e8bec2ba39d0ff89ca7",
+      "bytes": 7651,
+      "records": 11,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 11
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 11
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-01-15T10:00:00+00:00",
+      "max_timestamp_utc": "2026-01-15T21:30:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "analysis_time",
+        "market_structure",
+        "technical_bias",
+        "technical_score",
+        "setup_quality",
+        "alignment",
+        "regime",
+        "regime_confidence",
+        "regime_valid",
+        "regime_reason_codes",
+        "regime_validation_errors",
+        "support_strength",
+        "support_distance_atr",
+        "support_touches",
+        "resistance_strength",
+        "resistance_distance_atr",
+        "resistance_touches",
+        "thesis",
+        "operation",
+        "thesis_confidence",
+        "active_level_zone_id",
+        "active_level_low",
+        "active_level_high",
+        "comparison_hold_score",
+        "comparison_break_score",
+        "comparison_confidence",
+        "comparison_score_margin",
+        "comparison_score_prediction",
+        "comparison_hold_evidence",
+        "comparison_break_evidence",
+        "thesis_valid",
+        "reason_codes",
+        "validation_errors",
+        "expected_outcome",
+        "actual_outcome",
+        "outcome_confirmation_closures",
+        "outcome_confirmation_basis",
+        "outcome_break_buffer_atr",
+        "outcome_hold_confirmation_atr",
+        "trade_plan_status",
+        "trade_simulation_only",
+        "trade_plan_error",
+        "trade_entry",
+        "trade_stop_loss",
+        "trade_take_profit",
+        "trade_target_rr",
+        "trade_order_type",
+        "trade_execution_result",
+        "trade_r",
+        "trade_fill_time",
+        "trade_exit_time",
+        "correct",
+        "event_time",
+        "future_min_low",
+        "future_max_high"
+      ],
+      "missing_cells": 111,
+      "missing_cell_fraction": 0.18347107,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20260115_USDCAD_level_thesis_summary.json",
+      "format": "JSON",
+      "sha256": "a7ad58c6e4182949b5fe8e24912e243d4de597b7e2b31fbaca8067704ccd77c7",
+      "bytes": 1931,
+      "records": 1,
+      "top_level_keys": [
+        "accuracy_resolved",
+        "actual_outcomes",
+        "baseline_always_break_accuracy",
+        "baseline_always_hold_accuracy",
+        "end",
+        "execution_scope",
+        "funnel",
+        "horizon_minutes",
+        "limitations",
+        "llm_configuration",
+        "model_edge_over_always_hold",
+        "outcome_method",
+        "raw_score_baseline_always_hold_accuracy",
+        "raw_score_prediction_accuracy",
+        "raw_score_prediction_count",
+        "resolved",
+        "scope",
+        "simulated_trade_outcomes",
+        "start",
+        "symbol",
+        "validated_baseline_always_hold_accuracy",
+        "validated_thesis_accuracy",
+        "validated_thesis_count_with_resolved_outcome",
+        "validated_thesis_coverage"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "provider": [
+          "deepseek"
+        ],
+        "model": [
+          "deepseek-flash"
+        ]
+      },
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20260316_USDCAD_level_thesis.csv",
+      "format": "CSV",
+      "sha256": "a588829285d39e3803ba3e241cc411c827cecbbb6b4a9999ebca0bfa7bb757d4",
+      "bytes": 13851,
+      "records": 23,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 23
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 23
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-03-16T08:00:00+00:00",
+      "max_timestamp_utc": "2026-03-16T20:30:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "analysis_time",
+        "market_structure",
+        "technical_bias",
+        "technical_score",
+        "setup_quality",
+        "alignment",
+        "regime",
+        "regime_confidence",
+        "regime_valid",
+        "regime_reason_codes",
+        "regime_validation_errors",
+        "support_strength",
+        "support_distance_atr",
+        "support_touches",
+        "resistance_strength",
+        "resistance_distance_atr",
+        "resistance_touches",
+        "thesis",
+        "operation",
+        "thesis_confidence",
+        "active_level_zone_id",
+        "active_level_low",
+        "active_level_high",
+        "comparison_hold_score",
+        "comparison_break_score",
+        "comparison_confidence",
+        "comparison_score_margin",
+        "comparison_score_prediction",
+        "comparison_hold_evidence",
+        "comparison_break_evidence",
+        "thesis_valid",
+        "reason_codes",
+        "validation_errors",
+        "expected_outcome",
+        "actual_outcome",
+        "trade_plan_status",
+        "trade_plan_error",
+        "trade_entry",
+        "trade_stop_loss",
+        "trade_take_profit",
+        "trade_target_rr",
+        "trade_order_type",
+        "trade_execution_result",
+        "trade_r",
+        "trade_fill_time",
+        "trade_exit_time",
+        "correct",
+        "event_time",
+        "future_min_low",
+        "future_max_high",
+        "outcome_confirmation_closures",
+        "outcome_confirmation_basis",
+        "outcome_break_buffer_atr",
+        "outcome_hold_confirmation_atr",
+        "trade_simulation_only"
+      ],
+      "missing_cells": 341,
+      "missing_cell_fraction": 0.26956522,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20260316_USDCAD_level_thesis_summary.json",
+      "format": "JSON",
+      "sha256": "fb7366d271e7afa1ef7568783c17d24c560506b7cabe86eed4dffd71fc729cc5",
+      "bytes": 1877,
+      "records": 1,
+      "top_level_keys": [
+        "accuracy_resolved",
+        "actual_outcomes",
+        "baseline_always_break_accuracy",
+        "baseline_always_hold_accuracy",
+        "end",
+        "execution_scope",
+        "funnel",
+        "horizon_minutes",
+        "limitations",
+        "llm_configuration",
+        "model_edge_over_always_hold",
+        "outcome_method",
+        "raw_score_baseline_always_hold_accuracy",
+        "raw_score_prediction_accuracy",
+        "raw_score_prediction_count",
+        "resolved",
+        "scope",
+        "simulated_trade_outcomes",
+        "start",
+        "symbol",
+        "validated_baseline_always_hold_accuracy",
+        "validated_thesis_accuracy",
+        "validated_thesis_count_with_resolved_outcome",
+        "validated_thesis_coverage"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "provider": [
+          "deepseek"
+        ],
+        "model": [
+          "deepseek-flash"
+        ]
+      },
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20260408_USDCAD_level_thesis.csv",
+      "format": "CSV",
+      "sha256": "53ec3bfdf26d0d90dfbd67a537893f04cd5428c39f4fe85bdb9675e9f2e2e8ce",
+      "bytes": 10380,
+      "records": 19,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 19
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 19
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-08T10:15:00+00:00",
+      "max_timestamp_utc": "2026-04-08T19:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "analysis_time",
+        "market_structure",
+        "technical_bias",
+        "technical_score",
+        "setup_quality",
+        "alignment",
+        "regime",
+        "regime_confidence",
+        "regime_valid",
+        "support_strength",
+        "support_distance_atr",
+        "support_touches",
+        "resistance_strength",
+        "resistance_distance_atr",
+        "resistance_touches",
+        "thesis",
+        "operation",
+        "thesis_confidence",
+        "comparison_hold_score",
+        "comparison_break_score",
+        "comparison_confidence",
+        "comparison_hold_evidence",
+        "comparison_break_evidence",
+        "thesis_valid",
+        "reason_codes",
+        "validation_errors",
+        "expected_outcome",
+        "actual_outcome",
+        "correct",
+        "event_time",
+        "future_min_low",
+        "future_max_high",
+        "outcome_confirmation_closures",
+        "outcome_confirmation_basis",
+        "outcome_break_buffer_atr",
+        "outcome_hold_confirmation_atr",
+        "active_level_zone_id",
+        "active_level_low",
+        "active_level_high",
+        "comparison_score_margin",
+        "comparison_score_prediction",
+        "trade_plan_status",
+        "trade_plan_error",
+        "trade_entry",
+        "trade_stop_loss",
+        "trade_take_profit",
+        "trade_target_rr",
+        "trade_order_type",
+        "trade_execution_result",
+        "trade_r",
+        "trade_fill_time",
+        "trade_exit_time",
+        "trade_simulation_only"
+      ],
+      "missing_cells": 264,
+      "missing_cell_fraction": 0.26216485,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/20260408_USDCAD_level_thesis_summary.json",
+      "format": "JSON",
+      "sha256": "bcda06117db4349d9bfb60052cfec95512e18135b69a716a8a021e45e5607e59",
+      "bytes": 1842,
+      "records": 1,
+      "top_level_keys": [
+        "accuracy_resolved",
+        "actual_outcomes",
+        "baseline_always_break_accuracy",
+        "baseline_always_hold_accuracy",
+        "end",
+        "execution_scope",
+        "funnel",
+        "horizon_minutes",
+        "limitations",
+        "llm_configuration",
+        "model_edge_over_always_hold",
+        "outcome_method",
+        "raw_score_baseline_always_hold_accuracy",
+        "raw_score_prediction_accuracy",
+        "raw_score_prediction_count",
+        "resolved",
+        "scope",
+        "simulated_trade_outcomes",
+        "start",
+        "symbol",
+        "validated_thesis_accuracy",
+        "validated_thesis_count_with_resolved_outcome",
+        "validated_thesis_coverage"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "provider": [
+          "deepseek"
+        ],
+        "model": [
+          "deepseek-flash"
+        ]
+      },
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/level_thesis/multi_day_validation_summary.json",
+      "format": "JSON",
+      "sha256": "f248f4137daa698770245ccffa43e13fb7dc5ca834c5f2d3343d5def0bf0c722",
+      "bytes": 6032,
+      "records": 1,
+      "top_level_keys": [
+        "2026_04_08_exploration_diagnostic",
+        "limitations",
+        "model",
+        "outcome_method",
+        "per_day",
+        "period_classification",
+        "raw_score_results",
+        "replay_consistency",
+        "same_zone_3h_deduplicated",
+        "simulated_execution",
+        "symbol",
+        "threshold_scenarios",
+        "validated_theses",
+        "validation_dates"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "provider": [
+          "deepseek"
+        ],
+        "model": [
+          "deepseek-flash"
+        ]
+      },
+      "role": "diagnostic_level_outcome_artifact",
+      "eligible_for_features": false,
+      "excluded_reason": "contains post-decision outcomes/future extrema and is not a comparable portfolio trade dataset"
+    },
+    {
+      "path": "data/backtest/monetary_summary.csv",
+      "format": "CSV",
+      "sha256": "91713cd9d302e7a67584a2016d9be333236d8d207926d7a2e37c2289a4586032",
+      "bytes": 2264,
+      "records": 24,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "AUDUSD": 8,
+        "EURUSD": 8,
+        "USDCAD": 8
+      },
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "resolved",
+        "wins",
+        "losses",
+        "win_rate",
+        "gross_pnl_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "avg_risk_eur",
+        "avg_risk_win_eur",
+        "avg_risk_loss_eur",
+        "p95_risk_eur",
+        "max_risk_eur"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/multiagent_cache/multiagent_replay.jsonl",
+      "format": "JSONL",
+      "sha256": "8defe8f87d3f55aa772212a8f95ad780e45300bec44c285b946feba7a539efff",
+      "bytes": 23604,
+      "records": 44,
+      "top_level_keys": [
+        "key",
+        "payload"
+      ],
+      "parse_error": null,
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/multiagent_replay/20260408_20260409_USDCAD_events.csv",
+      "format": "CSV",
+      "sha256": "a423ee8a1fccaef464f5a24aeb14ad5ef4b15256d8b42afc3373d57f20a7b697",
+      "bytes": 8096,
+      "records": 11,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 11
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 11
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-08T16:00:00+00:00",
+      "max_timestamp_utc": "2026-04-08T20:45:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "analysis_time",
+        "symbol",
+        "technical_bias",
+        "setup_quality",
+        "technical_alignment",
+        "sessions_open",
+        "stage",
+        "regime_cache_hit",
+        "regime",
+        "regime_valid",
+        "regime_confidence",
+        "regime_evidence_count",
+        "regime_evidence_used",
+        "regime_reason_codes",
+        "regime_validation_errors",
+        "strategy_valid",
+        "strategy_confidence",
+        "strategy_evidence_count",
+        "strategy_evidence_used",
+        "strategy_reason_codes",
+        "strategy_validation_errors",
+        "strategy_source",
+        "strategy_cache_hit",
+        "strategy_action",
+        "strategy",
+        "direction"
+      ],
+      "missing_cells": 22,
+      "missing_cell_fraction": 0.07692308,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/multiagent_replay/20260408_20260409_USDCAD_summary.json",
+      "format": "JSON",
+      "sha256": "da25318369c4b62f8656eb73ed6b73517199a81ce54a9fcc0c0a518e6fffd59a",
+      "bytes": 886,
+      "records": 1,
+      "top_level_keys": [
+        "cache_version",
+        "end",
+        "funnel",
+        "limitations",
+        "llm_model",
+        "results",
+        "scope",
+        "start",
+        "symbols"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/portfolio_metadata.json",
+      "format": "JSON",
+      "sha256": "b75856a289c78dbfcb7ff40f85ca2904df2550100243dab0d6abecada9857bbc",
+      "bytes": 401,
+      "records": 1,
+      "top_level_keys": [
+        "commission_included",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "max_global_slots",
+        "one_active_reservation_per_symbol",
+        "pending_orders_reserve_slot",
+        "simultaneous_signal_priority",
+        "slippage_included"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/portfolio_monthly_stability.csv",
+      "format": "CSV",
+      "sha256": "7be156527c01967b72652cccf0f4c71fc77f90cd9f9ef2fbb80ea28379fddf62",
+      "bytes": 4775,
+      "records": 56,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "threshold",
+        "mode",
+        "month",
+        "signals_taken",
+        "resolved",
+        "wins",
+        "losses",
+        "expired",
+        "win_rate",
+        "gross_pnl_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "EURUSD_pnl",
+        "USDCAD_pnl",
+        "AUDUSD_pnl"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/portfolio_summary.csv",
+      "format": "CSV",
+      "sha256": "d1a74c42291fb8f452d57ecb20e12db64aff39ae450863a747d1bb129efa880e",
+      "bytes": 950,
+      "records": 8,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "threshold",
+        "mode",
+        "signals_taken",
+        "resolved",
+        "wins",
+        "losses",
+        "expired",
+        "ambiguous",
+        "win_rate",
+        "gross_pnl_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "skipped_symbol_busy",
+        "skipped_global_slots",
+        "plan_rejections",
+        "risk_rejections",
+        "EURUSD_taken",
+        "USDCAD_taken",
+        "AUDUSD_taken"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/portfolio_trades.csv",
+      "format": "CSV",
+      "sha256": "656da6190250d555d5d888149dd25d6083480cf104f1589f19c37a8a2bd2acfa",
+      "bytes": 1286560,
+      "records": 7712,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 2756,
+        "EURUSD": 2485,
+        "AUDUSD": 2471
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 7712
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T18:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "overall_score",
+        "direction",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "estimated_risk_eur",
+        "result",
+        "r",
+        "gross_pnl_eur",
+        "fill_time",
+        "exit_time",
+        "release_time"
+      ],
+      "missing_cells": 4673,
+      "missing_cell_fraction": 0.03564346,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 4381,
+      "timestamps_monotonic_by_instrument": false,
+      "spread_data_audit": null,
+      "role": "historical_trade_output",
+      "eligible_for_reproduction": false,
+      "excluded_reason": "legacy output; current simulator is rerun separately"
+    },
+    {
+      "path": "data/backtest/stateful_metadata.json",
+      "format": "JSON",
+      "sha256": "315bbd97b4664ee1ded516192f5c7e1c135ae77769e05a9dc6e58355944b03e2",
+      "bytes": 266,
+      "records": 1,
+      "top_level_keys": [
+        "account_currency_pnl_included",
+        "ambiguous_intrabar_excluded",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "portfolio_constraints_included",
+        "technical_only"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/stateful_summary.csv",
+      "format": "CSV",
+      "sha256": "5d1cd6260801b71769539322249a10a572e74d8740106747a837502a9c5e4ef5",
+      "bytes": 2277,
+      "records": 24,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 8,
+        "USDCAD": 8,
+        "AUDUSD": 8
+      },
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signals_taken",
+        "wins",
+        "losses",
+        "expired",
+        "ambiguous_entry_bar",
+        "ambiguous_both",
+        "open_at_end",
+        "resolved_trades",
+        "win_rate",
+        "expectancy_r",
+        "total_r",
+        "profit_factor",
+        "max_drawdown_r",
+        "gross_pnl_eur",
+        "max_drawdown_eur",
+        "plan_rejections",
+        "risk_rejections"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/stateful_trades.csv",
+      "format": "CSV",
+      "sha256": "9f7c0f0e7f0e6d93c9d582dedc5bf49fc004e4761cec105824b0b98c79e6fa9e",
+      "bytes": 1238457,
+      "records": 8974,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 3060,
+        "AUDUSD": 2964,
+        "EURUSD": 2950
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 8974
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T18:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "bias",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "result",
+        "r",
+        "fill_time",
+        "exit_time",
+        "estimated_risk_eur",
+        "gross_pnl_eur"
+      ],
+      "missing_cells": 5419,
+      "missing_cell_fraction": 0.04025704,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 5140,
+      "timestamps_monotonic_by_instrument": false,
+      "spread_data_audit": null,
+      "role": "historical_trade_output",
+      "eligible_for_reproduction": false,
+      "excluded_reason": "legacy output; current simulator is rerun separately"
+    },
+    {
+      "path": "data/backtest/technical_candidate_scan.csv",
+      "format": "CSV",
+      "sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+      "bytes": 2333785,
+      "records": 22011,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 7337,
+        "USDCAD": 7337,
+        "AUDUSD": 7337
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 22011
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T18:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "analysis_time",
+        "session",
+        "bias",
+        "overall_score",
+        "alignment",
+        "setup_quality",
+        "candidate_65",
+        "m5_score",
+        "m15_score",
+        "h1_score",
+        "h4_score",
+        "d1_score"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "primary_technical_opportunities",
+      "eligible_for_features": true,
+      "generation": "candidate scan; exact source command/settings not embedded in the CSV"
+    },
+    {
+      "path": "data/backtest/technical_candidate_summary.json",
+      "format": "JSON",
+      "sha256": "5cc720315943294e738b95ca88debb401ec813273ecd58781e8b6c7922cb2243",
+      "bytes": 2058,
+      "records": 1,
+      "top_level_keys": [
+        "current_live_threshold",
+        "evaluation_days",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "mode",
+        "rows_in_sessions",
+        "setup_quality_distribution",
+        "thresholds"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/validation_candidate_scan.csv",
+      "format": "CSV",
+      "sha256": "8c5bd365d54545e34fb1c46340a8a3173d98e4aaa5ed8cf47d772251dc042a52",
+      "bytes": 3780769,
+      "records": 35679,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 11893,
+        "USDCAD": 11893,
+        "AUDUSD": 11893
+      },
+      "timestamp_column": "analysis_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 35679
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2025-06-10T07:00:00+00:00",
+      "max_timestamp_utc": "2026-04-07T18:00:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "analysis_time",
+        "session",
+        "bias",
+        "overall_score",
+        "alignment",
+        "setup_quality",
+        "candidate_65",
+        "m5_score",
+        "m15_score",
+        "h1_score",
+        "h4_score",
+        "d1_score"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "separate_prior_validation_period",
+      "eligible_for_features": true,
+      "generation": "candidate scan; exact source command/settings not embedded in the CSV"
+    },
+    {
+      "path": "data/backtest/validation_candidate_summary.json",
+      "format": "JSON",
+      "sha256": "16761c241f28a38ee8e549df44a99858a8ff365b18f98dae1a9db4122d7c2b47",
+      "bytes": 2064,
+      "records": 1,
+      "top_level_keys": [
+        "current_live_threshold",
+        "evaluation_days",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "mode",
+        "rows_in_sessions",
+        "setup_quality_distribution",
+        "thresholds"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/validation_portfolio_metadata.json",
+      "format": "JSON",
+      "sha256": "a410cc801ad1bcf28a1a32bb4eb06535978e6c1289c9c8642e19cc4d5cf0d7e1",
+      "bytes": 665,
+      "records": 1,
+      "top_level_keys": [
+        "commission_included",
+        "execution_capped_at_period_end",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "max_global_slots",
+        "one_active_reservation_per_symbol",
+        "pending_orders_reserve_slot",
+        "period_end",
+        "period_start",
+        "simultaneous_signal_priority",
+        "slippage_included",
+        "source_scan"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/validation_portfolio_summary.csv",
+      "format": "CSV",
+      "sha256": "362b38e3d65850aa76ab7bad8ede97363844a9cde3b82186fd3a9edbbac7f699",
+      "bytes": 974,
+      "records": 8,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "threshold",
+        "mode",
+        "signals_taken",
+        "resolved",
+        "wins",
+        "losses",
+        "expired",
+        "ambiguous",
+        "win_rate",
+        "gross_pnl_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "skipped_symbol_busy",
+        "skipped_global_slots",
+        "plan_rejections",
+        "risk_rejections",
+        "EURUSD_taken",
+        "USDCAD_taken",
+        "AUDUSD_taken"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "historical_backtest_artifact",
+      "eligible_for_reproduction": false,
+      "generation": "metadata varies by file; use current simulator outputs for primary comparison"
+    },
+    {
+      "path": "data/backtest/validation_portfolio_trades.csv",
+      "format": "CSV",
+      "sha256": "a42ab7924d3188aa53f66871ff8601b908fc95a7f1fda1e8c2650938a54939e9",
+      "bytes": 1909255,
+      "records": 11426,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 3940,
+        "AUDUSD": 3815,
+        "EURUSD": 3671
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 11426
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2025-06-10T07:00:00+00:00",
+      "max_timestamp_utc": "2026-04-07T18:00:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "overall_score",
+        "direction",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "estimated_risk_eur",
+        "result",
+        "r",
+        "gross_pnl_eur",
+        "fill_time",
+        "exit_time",
+        "release_time"
+      ],
+      "missing_cells": 6750,
+      "missing_cell_fraction": 0.03475047,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 6410,
+      "timestamps_monotonic_by_instrument": false,
+      "spread_data_audit": null,
+      "role": "historical_trade_output",
+      "eligible_for_reproduction": false,
+      "excluded_reason": "legacy output; current simulator is rerun separately"
+    },
+    {
+      "path": "data/decisions/2026-10-08/15-50-33_EURUSD.json",
+      "format": "JSON",
+      "sha256": "e69b1a87b8736ae30f2f89426b0fe1453dc4b682dd62c17e4f5f3ca23e6a2aa2",
+      "bytes": 14714,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "analysis_time": [
+          "2026-10-08T15:45:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-08T15:49:27.957311+00:00",
+          "2026-10-08T15:49:27.957373+00:00",
+          "2026-10-08T15:49:27.957379+00:00",
+          "2026-10-08T15:49:27.957384+00:00",
+          "2026-10-08T15:50:33.637767+00:00",
+          "2026-10-08T15:50:33.637781+00:00",
+          "2026-10-08T15:50:33.637787+00:00",
+          "2026-10-08T15:50:33.637801+00:00",
+          "2026-10-08T15:50:33.637805+00:00",
+          "2026-10-08T15:50:33.637812+00:00"
+        ],
+        "valid": [
+          "False",
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-08/15-53-48_USDCAD.json",
+      "format": "JSON",
+      "sha256": "7f293c10ad8b0c37d093670c3154ed4691701fd7420597c361cae2e526c9a75f",
+      "bytes": 17338,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-08T15:45:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-08T15:53:15.518989+00:00",
+          "2026-10-08T15:53:15.519057+00:00",
+          "2026-10-08T15:53:15.519063+00:00",
+          "2026-10-08T15:53:15.519068+00:00",
+          "2026-10-08T15:53:36.723239+00:00",
+          "2026-10-08T15:53:36.723253+00:00",
+          "2026-10-08T15:53:36.723259+00:00",
+          "2026-10-08T15:53:48.459192+00:00",
+          "2026-10-08T15:53:48.459207+00:00",
+          "2026-10-08T15:53:48.459217+00:00"
+        ],
+        "valid": [
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-08/15-55-51_AUDUSD.json",
+      "format": "JSON",
+      "sha256": "de593666715c169ebc4f04393fb5506ba189541972dc15425e81efdab886d21f",
+      "bytes": 17021,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD"
+        ],
+        "analysis_time": [
+          "2026-10-08T15:45:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-08T15:55:07.243502+00:00",
+          "2026-10-08T15:55:07.243566+00:00",
+          "2026-10-08T15:55:07.243572+00:00",
+          "2026-10-08T15:55:07.243576+00:00",
+          "2026-10-08T15:55:29.581796+00:00",
+          "2026-10-08T15:55:29.581810+00:00",
+          "2026-10-08T15:55:29.581816+00:00",
+          "2026-10-08T15:55:51.915071+00:00",
+          "2026-10-08T15:55:51.915107+00:00",
+          "2026-10-08T15:55:51.915118+00:00"
+        ],
+        "valid": [
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-08/16-41-21_USDCAD.json",
+      "format": "JSON",
+      "sha256": "4d51cbff1df7333fa15b8b443ab42539c2156edd694e56f2eb45fb3bd69b4816",
+      "bytes": 17441,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-08T15:45:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-08T16:40:14.204338+00:00",
+          "2026-10-08T16:40:14.204739+00:00",
+          "2026-10-08T16:40:14.204761+00:00",
+          "2026-10-08T16:40:14.204766+00:00",
+          "2026-10-08T16:41:04.942133+00:00",
+          "2026-10-08T16:41:04.942149+00:00",
+          "2026-10-08T16:41:04.942158+00:00",
+          "2026-10-08T16:41:21.140679+00:00",
+          "2026-10-08T16:41:21.140694+00:00",
+          "2026-10-08T16:41:21.140705+00:00"
+        ],
+        "valid": [
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-08/16-43-30_USDCAD.json",
+      "format": "JSON",
+      "sha256": "0f7db45a5b99ce72e8892a1aa36a7dfc9a9e8a9f4156301cfe62c0bb68b9b437",
+      "bytes": 17556,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-08T16:30:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-08T16:42:51.272111+00:00",
+          "2026-10-08T16:42:51.272183+00:00",
+          "2026-10-08T16:42:51.272189+00:00",
+          "2026-10-08T16:42:51.272195+00:00",
+          "2026-10-08T16:43:13.458811+00:00",
+          "2026-10-08T16:43:13.458850+00:00",
+          "2026-10-08T16:43:13.458856+00:00",
+          "2026-10-08T16:43:30.536402+00:00",
+          "2026-10-08T16:43:30.536416+00:00",
+          "2026-10-08T16:43:30.536427+00:00"
+        ],
+        "valid": [
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-08/17-11-03_USDCAD.json",
+      "format": "JSON",
+      "sha256": "d9ebb6bf5e61c28b30cc9600d46468c3f61ac4a7bd071e3f8ea51624871f1e55",
+      "bytes": 17616,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-08T17:00:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-08T17:10:48.353435+00:00",
+          "2026-10-08T17:10:48.353469+00:00",
+          "2026-10-08T17:10:48.353531+00:00",
+          "2026-10-08T17:10:48.353536+00:00",
+          "2026-10-08T17:10:48.353541+00:00",
+          "2026-10-08T17:10:48.353559+00:00",
+          "2026-10-08T17:10:48.353563+00:00",
+          "2026-10-08T17:10:48.353567+00:00",
+          "2026-10-08T17:10:48.353584+00:00",
+          "2026-10-08T17:10:48.353589+00:00",
+          "2026-10-08T17:10:48.353593+00:00",
+          "2026-10-08T17:11:03.064554+00:00",
+          "2026-10-08T17:11:03.064568+00:00",
+          "2026-10-08T17:11:03.064573+00:00",
+          "2026-10-08T17:11:03.064588+00:00",
+          "2026-10-08T17:11:03.064592+00:00",
+          "2026-10-08T17:11:03.064602+00:00"
+        ],
+        "valid": [
+          "False",
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-08/17-30-09_USDCAD.json",
+      "format": "JSON",
+      "sha256": "1c5caaf7e19cfb22852870bebce738ba9301b00327ca2fc3c63b01e1c2f9421e",
+      "bytes": 17166,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-08T17:15:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-08T17:30:03.600595+00:00",
+          "2026-10-08T17:30:03.600631+00:00",
+          "2026-10-08T17:30:03.600695+00:00",
+          "2026-10-08T17:30:03.600700+00:00",
+          "2026-10-08T17:30:03.600705+00:00",
+          "2026-10-08T17:30:03.600722+00:00",
+          "2026-10-08T17:30:03.600728+00:00",
+          "2026-10-08T17:30:03.600732+00:00",
+          "2026-10-08T17:30:03.600745+00:00",
+          "2026-10-08T17:30:03.600750+00:00",
+          "2026-10-08T17:30:03.600754+00:00",
+          "2026-10-08T17:30:09.597577+00:00",
+          "2026-10-08T17:30:09.597593+00:00",
+          "2026-10-08T17:30:09.597599+00:00",
+          "2026-10-08T17:30:09.597619+00:00",
+          "2026-10-08T17:30:09.597624+00:00",
+          "2026-10-08T17:30:09.597633+00:00"
+        ],
+        "valid": [
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-09/17-28-06_USDCAD.json",
+      "format": "JSON",
+      "sha256": "95d290daa9375a5d849dffdd4c5b4e952d4493c23d90a0aff3e5178856e1482f",
+      "bytes": 15706,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-09T17:15:00+00:00"
+        ],
+        "status": [
+          "OK",
+          "WAIT"
+        ],
+        "timestamp": [
+          "2026-10-09T17:28:06.724351+00:00",
+          "2026-10-09T17:28:06.724387+00:00",
+          "2026-10-09T17:28:06.724447+00:00",
+          "2026-10-09T17:28:06.724453+00:00",
+          "2026-10-09T17:28:06.724457+00:00",
+          "2026-10-09T17:28:06.724475+00:00",
+          "2026-10-09T17:28:06.724479+00:00",
+          "2026-10-09T17:28:06.724485+00:00",
+          "2026-10-09T17:28:06.724500+00:00",
+          "2026-10-09T17:28:06.724504+00:00",
+          "2026-10-09T17:28:06.724515+00:00",
+          "2026-10-09T17:28:06.724520+00:00"
+        ],
+        "valid": [
+          "True"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-09/17-31-49_USDCAD.json",
+      "format": "JSON",
+      "sha256": "3b70c86d2eca68dd6eda3f3421136fd69a90e36790ccb45f67a8be63df2d68c0",
+      "bytes": 15906,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-09T17:30:00+00:00"
+        ],
+        "status": [
+          "OK"
+        ],
+        "timestamp": [
+          "2026-10-09T17:30:55.885022+00:00",
+          "2026-10-09T17:30:55.885059+00:00",
+          "2026-10-09T17:30:55.885119+00:00",
+          "2026-10-09T17:30:55.885124+00:00",
+          "2026-10-09T17:30:55.885129+00:00",
+          "2026-10-09T17:30:55.885145+00:00",
+          "2026-10-09T17:30:55.885150+00:00",
+          "2026-10-09T17:30:55.885155+00:00",
+          "2026-10-09T17:30:55.885169+00:00",
+          "2026-10-09T17:30:55.885173+00:00",
+          "2026-10-09T17:30:55.885185+00:00",
+          "2026-10-09T17:31:49.567665+00:00",
+          "2026-10-09T17:31:49.567693+00:00"
+        ],
+        "valid": [
+          "False",
+          "True"
+        ],
+        "action": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-03-44_USDCAD.json",
+      "format": "JSON",
+      "sha256": "a043c5f4aa978b8beeaea80c0df0e2f152f09c01306027e3cfde00ae3ba50088",
+      "bytes": 938,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-10T00:00:00+00:00"
+        ],
+        "timestamp": [
+          "2026-10-10T06:03:44.918495+00:00",
+          "2026-10-10T06:03:44.918502+00:00"
+        ],
+        "valid": [
+          "False"
+        ],
+        "status": [
+          "WAIT"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-08-19_USDCAD.json",
+      "format": "JSON",
+      "sha256": "ed5d8686f21c6817aa2af4fd0bbdc78dcc1a6f959dec30fdc131a7ec197524b5",
+      "bytes": 1053,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-10T00:00:00+00:00"
+        ],
+        "timestamp": [
+          "2026-10-10T06:08:19.723257+00:00",
+          "2026-10-10T06:08:19.723264+00:00"
+        ],
+        "status": [
+          "CLOSED",
+          "MARKET_CLOSED"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-27-06_USDCAD.json",
+      "format": "JSON",
+      "sha256": "07d496dd41d1bcbf61ec608f0bc938855a2e7af093c15938dbf0c93fea51eb78",
+      "bytes": 1053,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-10T00:00:00+00:00"
+        ],
+        "timestamp": [
+          "2026-10-10T06:27:06.981307+00:00",
+          "2026-10-10T06:27:06.981316+00:00"
+        ],
+        "status": [
+          "CLOSED",
+          "MARKET_CLOSED"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/decisions/2026-10-10/06-50-01_USDCAD.json",
+      "format": "JSON",
+      "sha256": "f59f19e7268e3972ee6b458e459d487e2e2030b305debc795f4135076531a826",
+      "bytes": 1053,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "architecture_version",
+        "created_at",
+        "messages",
+        "snapshot",
+        "symbol"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-10-10T00:00:00+00:00"
+        ],
+        "timestamp": [
+          "2026-10-10T06:50:01.985128+00:00",
+          "2026-10-10T06:50:01.985134+00:00"
+        ],
+        "status": [
+          "CLOSED",
+          "MARKET_CLOSED"
+        ]
+      },
+      "role": "saved_agent_decision_log",
+      "eligible_for_deepseek_comparison": false,
+      "generation": "agent message log; model/provider provenance is not stored in a verifiable form"
+    },
+    {
+      "path": "data/dry_run/2026-10-07/16-56-32_pipeline.json",
+      "format": "JSON",
+      "sha256": "a9da1cc765bdf1bf8458af8673f7f304dbbd5491ef89664fa24507d90d009524",
+      "bytes": 13799,
+      "records": 1,
+      "top_level_keys": [
+        "generated_at",
+        "mode",
+        "python_trading_disabled",
+        "session",
+        "symbols"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ],
+        "status": [
+          "REJECTED"
+        ],
+        "decision": [
+          "NO_TRADE"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/dry_run/2026-10-07/17-28-16_pipeline.json",
+      "format": "JSON",
+      "sha256": "7cd8d029f2a8b1149bd28506812fa8b3dccb2e99f5e94d044ef04dc8d4a3e9a1",
+      "bytes": 13234,
+      "records": 1,
+      "top_level_keys": [
+        "generated_at",
+        "mode",
+        "python_trading_disabled",
+        "session",
+        "symbols"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ],
+        "status": [
+          "CANDIDATE_LONG",
+          "CANDIDATE_SHORT",
+          "REJECTED"
+        ],
+        "decision": [
+          "WATCH_LONG",
+          "WATCH_SHORT"
+        ]
+      },
+      "role": "saved_analysis_or_dry_run",
+      "eligible_for_deepseek_comparison": false,
+      "excluded_reason": "no complete model provenance and not paired with the frozen evaluation outcomes"
+    },
+    {
+      "path": "data/market/AUDUSD/D1.csv",
+      "format": "CSV",
+      "sha256": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148",
+      "bytes": 60085,
+      "records": 839,
+      "instruments": [
+        "AUDUSD"
+      ],
+      "records_by_instrument": {
+        "AUDUSD": 839
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 839
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2023-07-17T00:00:00+00:00",
+      "max_timestamp_utc": "2026-10-09T00:00:00+00:00",
+      "timeframe": "D1",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 1.0,
+        "positive_fraction": 0.0,
+        "median_points": 0.0,
+        "p95_points": 0.0,
+        "p99_points": 0.0,
+        "max_points": 0.0,
+        "values_at_least_20_points": 0,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/AUDUSD/H1.csv",
+      "format": "CSV",
+      "sha256": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2",
+      "bytes": 914729,
+      "records": 12990,
+      "instruments": [
+        "AUDUSD"
+      ],
+      "records_by_instrument": {
+        "AUDUSD": 12990
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 12990
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-09-09T00:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T05:00:00+00:00",
+      "timeframe": "H1",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.9582756,
+        "positive_fraction": 0.0417244,
+        "median_points": 0.0,
+        "p95_points": 0.0,
+        "p99_points": 27.0,
+        "max_points": 157.0,
+        "values_at_least_20_points": 287,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/AUDUSD/H4.csv",
+      "format": "CSV",
+      "sha256": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b",
+      "bytes": 248694,
+      "records": 3503,
+      "instruments": [
+        "AUDUSD"
+      ],
+      "records_by_instrument": {
+        "AUDUSD": 3503
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 3503
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-07-10T08:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T00:00:00+00:00",
+      "timeframe": "H4",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.99942906,
+        "positive_fraction": 0.00057094,
+        "median_points": 0.0,
+        "p95_points": 0.0,
+        "p99_points": 0.0,
+        "max_points": 2.0,
+        "values_at_least_20_points": 0,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/AUDUSD/M15.csv",
+      "format": "CSV",
+      "sha256": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273",
+      "bytes": 3544662,
+      "records": 50877,
+      "instruments": [
+        "AUDUSD"
+      ],
+      "records_by_instrument": {
+        "AUDUSD": 50877
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 50877
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-09-24T07:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T06:15:00+00:00",
+      "timeframe": "M15",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.9483067,
+        "positive_fraction": 0.0516933,
+        "median_points": 0.0,
+        "p95_points": 2.0,
+        "p99_points": 38.0,
+        "max_points": 234.0,
+        "values_at_least_20_points": 1639,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/AUDUSD/M5.csv",
+      "format": "CSV",
+      "sha256": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0",
+      "bytes": 6977026,
+      "records": 100538,
+      "instruments": [
+        "AUDUSD"
+      ],
+      "records_by_instrument": {
+        "AUDUSD": 100538
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 100538
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2025-06-06T03:45:00+00:00",
+      "max_timestamp_utc": "2026-10-12T06:35:00+00:00",
+      "timeframe": "M5",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.92914122,
+        "positive_fraction": 0.07085878,
+        "median_points": 0.0,
+        "p95_points": 5.0,
+        "p99_points": 52.0,
+        "max_points": 300.0,
+        "values_at_least_20_points": 4103,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/EURUSD/D1.csv",
+      "format": "CSV",
+      "sha256": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539",
+      "bytes": 60086,
+      "records": 839,
+      "instruments": [
+        "EURUSD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 839
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 839
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2023-07-17T00:00:00+00:00",
+      "max_timestamp_utc": "2026-10-09T00:00:00+00:00",
+      "timeframe": "D1",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 1.0,
+        "positive_fraction": 0.0,
+        "median_points": 0.0,
+        "p95_points": 0.0,
+        "p99_points": 0.0,
+        "max_points": 0.0,
+        "values_at_least_20_points": 0,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/EURUSD/H1.csv",
+      "format": "CSV",
+      "sha256": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b",
+      "bytes": 915473,
+      "records": 12990,
+      "instruments": [
+        "EURUSD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 12990
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 12990
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-09-09T00:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T05:00:00+00:00",
+      "timeframe": "H1",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.95873749,
+        "positive_fraction": 0.04126251,
+        "median_points": 0.0,
+        "p95_points": 0.0,
+        "p99_points": 21.0,
+        "max_points": 81.0,
+        "values_at_least_20_points": 190,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/EURUSD/H4.csv",
+      "format": "CSV",
+      "sha256": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92",
+      "bytes": 248725,
+      "records": 3503,
+      "instruments": [
+        "EURUSD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 3503
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 3503
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-07-10T08:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T00:00:00+00:00",
+      "timeframe": "H4",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.99942906,
+        "positive_fraction": 0.00057094,
+        "median_points": 0.0,
+        "p95_points": 0.0,
+        "p99_points": 0.0,
+        "max_points": 2.0,
+        "values_at_least_20_points": 0,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/EURUSD/M15.csv",
+      "format": "CSV",
+      "sha256": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b",
+      "bytes": 3548019,
+      "records": 50878,
+      "instruments": [
+        "EURUSD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 50878
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 50878
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-09-24T07:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T06:15:00+00:00",
+      "timeframe": "M15",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.94903495,
+        "positive_fraction": 0.05096505,
+        "median_points": 0.0,
+        "p95_points": 2.0,
+        "p99_points": 28.0,
+        "max_points": 200.0,
+        "values_at_least_20_points": 1387,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/EURUSD/M5.csv",
+      "format": "CSV",
+      "sha256": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67",
+      "bytes": 6977697,
+      "records": 100538,
+      "instruments": [
+        "EURUSD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 100538
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 100538
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2025-06-06T04:15:00+00:00",
+      "max_timestamp_utc": "2026-10-12T06:35:00+00:00",
+      "timeframe": "M5",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.94341443,
+        "positive_fraction": 0.05658557,
+        "median_points": 0.0,
+        "p95_points": 5.0,
+        "p99_points": 40.0,
+        "max_points": 200.0,
+        "values_at_least_20_points": 3675,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/USDCAD/D1.csv",
+      "format": "CSV",
+      "sha256": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326",
+      "bytes": 60145,
+      "records": 839,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 839
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 839
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2023-07-17T00:00:00+00:00",
+      "max_timestamp_utc": "2026-10-09T00:00:00+00:00",
+      "timeframe": "D1",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.62097735,
+        "positive_fraction": 0.37902265,
+        "median_points": 0.0,
+        "p95_points": 1.0,
+        "p99_points": 1.0,
+        "max_points": 1.0,
+        "values_at_least_20_points": 0,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/USDCAD/H1.csv",
+      "format": "CSV",
+      "sha256": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175",
+      "bytes": 916249,
+      "records": 12990,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 12990
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 12990
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-09-09T00:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T05:00:00+00:00",
+      "timeframe": "H1",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.31385681,
+        "positive_fraction": 0.68614319,
+        "median_points": 1.0,
+        "p95_points": 1.0,
+        "p99_points": 35.0,
+        "max_points": 136.0,
+        "values_at_least_20_points": 385,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/USDCAD/H4.csv",
+      "format": "CSV",
+      "sha256": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da",
+      "bytes": 248876,
+      "records": 3503,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 3503
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 3503
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-07-10T08:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T00:00:00+00:00",
+      "timeframe": "H4",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.41735655,
+        "positive_fraction": 0.58264345,
+        "median_points": 1.0,
+        "p95_points": 1.0,
+        "p99_points": 1.0,
+        "max_points": 3.0,
+        "values_at_least_20_points": 0,
+        "quality_warning": null
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/USDCAD/M15.csv",
+      "format": "CSV",
+      "sha256": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e",
+      "bytes": 3548271,
+      "records": 50877,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 50877
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 50877
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2024-09-24T07:00:00+00:00",
+      "max_timestamp_utc": "2026-10-12T06:15:00+00:00",
+      "timeframe": "M15",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.2311457,
+        "positive_fraction": 0.7688543,
+        "median_points": 1.0,
+        "p95_points": 4.0,
+        "p99_points": 52.0,
+        "max_points": 268.0,
+        "values_at_least_20_points": 1880,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/market/USDCAD/M5.csv",
+      "format": "CSV",
+      "sha256": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52",
+      "bytes": 6980429,
+      "records": 100538,
+      "instruments": [
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 100538
+      },
+      "timestamp_column": "time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 100538
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2025-06-06T04:10:00+00:00",
+      "max_timestamp_utc": "2026-10-12T06:35:00+00:00",
+      "timeframe": "M5",
+      "variables": [
+        "time",
+        "open",
+        "high",
+        "low",
+        "close",
+        "tick_volume",
+        "spread",
+        "real_volume"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": {
+        "unit_from_csv": "broker points (as interpreted by the existing simulator; broker-specific semantics unverified)",
+        "zero_fraction": 0.13881319,
+        "positive_fraction": 0.86118681,
+        "median_points": 1.0,
+        "p95_points": 7.0,
+        "p99_points": 68.0,
+        "max_points": 300.0,
+        "values_at_least_20_points": 4166,
+        "quality_warning": "ZERO_DOMINANT_OR_EXTREME_VALUES_UNVERIFIED"
+      },
+      "role": "historical_market_bars",
+      "eligible_for_price_execution": true,
+      "generation": "OHLCV export; original tick-by-tick source and retrieval provenance unavailable"
+    },
+    {
+      "path": "data/state/AUDUSD.json",
+      "format": "JSON",
+      "sha256": "37e131c7e0256b81b714c580cae790798937eb193d07d613daf844edbc11808e",
+      "bytes": 19911,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "analysis_timeframe",
+        "data_quality",
+        "symbol",
+        "timeframes"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD"
+        ],
+        "status": [
+          "OK"
+        ],
+        "analysis_time": [
+          "2026-10-12T06:30:00+00:00"
+        ]
+      },
+      "role": "mutable_runtime_snapshot",
+      "eligible_for_historical_evaluation": false,
+      "excluded_reason": "current state, not a timestamped historical observation"
+    },
+    {
+      "path": "data/state/EURUSD.json",
+      "format": "JSON",
+      "sha256": "efa9f699eb07811cdb9a3ffb3fa8124f688785aa24284aeeee74b90e3597ebb1",
+      "bytes": 19905,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "analysis_timeframe",
+        "data_quality",
+        "symbol",
+        "timeframes"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "EURUSD"
+        ],
+        "status": [
+          "OK"
+        ],
+        "analysis_time": [
+          "2026-10-12T06:30:00+00:00"
+        ]
+      },
+      "role": "mutable_runtime_snapshot",
+      "eligible_for_historical_evaluation": false,
+      "excluded_reason": "current state, not a timestamped historical observation"
+    },
+    {
+      "path": "data/state/USDCAD.json",
+      "format": "JSON",
+      "sha256": "e41d201e1277b373cdf4c82fdcd7a650f705c41ddfe040828c73c434910d43e4",
+      "bytes": 19845,
+      "records": 1,
+      "top_level_keys": [
+        "analysis_time",
+        "analysis_timeframe",
+        "data_quality",
+        "symbol",
+        "timeframes"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "USDCAD"
+        ],
+        "status": [
+          "OK"
+        ],
+        "analysis_time": [
+          "2026-10-12T06:30:00+00:00"
+        ]
+      },
+      "role": "mutable_runtime_snapshot",
+      "eligible_for_historical_evaluation": false,
+      "excluded_reason": "current state, not a timestamped historical observation"
+    },
+    {
+      "path": "data/state/calendar.json",
+      "format": "JSON",
+      "sha256": "4cf87f09223cec8890a6a6e978c375e6368b03e326ea9be82eb95354a4d7b014",
+      "bytes": 1395,
+      "records": 1,
+      "top_level_keys": [
+        "calendar_age_seconds",
+        "calendar_fresh",
+        "calendar_generated_utc",
+        "generated_at",
+        "server_utc_offset_seconds",
+        "symbols"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "mutable_runtime_snapshot",
+      "eligible_for_historical_evaluation": false,
+      "excluded_reason": "current state, not a timestamped historical observation"
+    },
+    {
+      "path": "data/state/candidates.json",
+      "format": "JSON",
+      "sha256": "17cc4d0a82e8858c5d0f4f466e534272e93fc5e971b9673609190bb613515acc",
+      "bytes": 435,
+      "records": 1,
+      "top_level_keys": [
+        "generated_at",
+        "session",
+        "symbols"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "mutable_runtime_snapshot",
+      "eligible_for_historical_evaluation": false,
+      "excluded_reason": "current state, not a timestamped historical observation"
+    },
+    {
+      "path": "data/state/runtime.json",
+      "format": "JSON",
+      "sha256": "936f878122546e04803dd8629c71e1ab704c30840f3351afcc6d1b2c79b67b34",
+      "bytes": 963,
+      "records": 1,
+      "top_level_keys": [
+        "account",
+        "generated_at",
+        "pending_orders",
+        "positions",
+        "positions_by_symbol",
+        "risk_config",
+        "risk_status"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "mutable_runtime_snapshot",
+      "eligible_for_historical_evaluation": false,
+      "excluded_reason": "current state, not a timestamped historical observation"
+    },
+    {
+      "path": "reports/phase1_baseline_metrics.json",
+      "format": "JSON",
+      "sha256": "9ff1e94600b489c0c2a9d90318fe4ffc096c9ed131d746bc336b74537305fa3b",
+      "bytes": 21273,
+      "records": 1,
+      "top_level_keys": [
+        "base_commit",
+        "baseline_tests",
+        "collected_before_phase1_changes",
+        "dataset",
+        "portfolio_summary",
+        "stateful_summary"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "status": [
+          "FAIL",
+          "PASS",
+          "PENDING"
+        ],
+        "symbol": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase1_llm_live_deepseek.json",
+      "format": "JSON",
+      "sha256": "00bda91f4e2dbf69efcc352fec2822e0d355ef85920bcad4de240526564e8717",
+      "bytes": 10351,
+      "records": 1,
+      "top_level_keys": [
+        "api_key_logged",
+        "calls_made",
+        "command_executed",
+        "configuration",
+        "generated_at_utc",
+        "invalid_response_guard",
+        "market_order_sent",
+        "model_matches_configuration",
+        "operational_signal_created",
+        "phase",
+        "provider",
+        "provider_metadata",
+        "response",
+        "status",
+        "traceability"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "provider": [
+          "deepseek"
+        ],
+        "status": [
+          "PASS"
+        ],
+        "model": [
+          "deepseek-flash"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase1_llm_live_ollama.json",
+      "format": "JSON",
+      "sha256": "c18d0574d15839c5adecee644013cb6fb2ba281a30cb3db7e8558343af8ee84b",
+      "bytes": 9441,
+      "records": 1,
+      "top_level_keys": [
+        "api_key_logged",
+        "calls_made",
+        "command_executed",
+        "configuration",
+        "generated_at_utc",
+        "invalid_response_guard",
+        "market_order_sent",
+        "model_available",
+        "model_matches_configuration",
+        "operational_signal_created",
+        "phase",
+        "previous_report_archive",
+        "provider",
+        "provider_metadata",
+        "response",
+        "status",
+        "traceability"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "provider": [
+          "ollama"
+        ],
+        "status": [
+          "PASS"
+        ],
+        "model": [
+          "qwen3:4b"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase1_mt5_validation.json",
+      "format": "JSON",
+      "sha256": "511427eaed5731b13ca969404a219102228f98e153c7203e1d158047bea2d444",
+      "bytes": 8316,
+      "records": 1,
+      "top_level_keys": [
+        "account_identifiers_stored",
+        "checks",
+        "generated_at_utc",
+        "order_send_calls",
+        "phase",
+        "previous_public_summary_archive",
+        "private_detail_report_stored",
+        "real_execution_authorized",
+        "reason",
+        "reason_code",
+        "schema_version",
+        "status",
+        "traceability"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "status": [
+          "PENDING"
+        ],
+        "provider": [
+          "mt5"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase1_pre_finalization_validation.json",
+      "format": "JSON",
+      "sha256": "38cf0e0cc63c4b211e39e9027a230c01ea8290c7f7221a19097636aa02388dbb",
+      "bytes": 116938,
+      "records": 1,
+      "top_level_keys": [
+        "baseline_summary",
+        "baseline_tests",
+        "checks",
+        "generated_at_utc",
+        "notes",
+        "overall_status",
+        "pending_manual",
+        "phase",
+        "test_runs",
+        "traceability",
+        "validation_mode"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "status": [
+          "FAIL",
+          "PASS",
+          "PENDING"
+        ],
+        "symbol": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase1_validation.json",
+      "format": "JSON",
+      "sha256": "aade5abe8631e79cf87d7af53cbb97698f61d1c99e21167d7ed034febd550c0a",
+      "bytes": 1768506,
+      "records": 1,
+      "top_level_keys": [
+        "checks",
+        "generated_at_utc",
+        "integration_results",
+        "notes",
+        "offline_failure_names",
+        "omitted_tests",
+        "overall_status",
+        "pending_manual",
+        "phase",
+        "test_runs",
+        "traceability",
+        "validation_mode",
+        "validation_states"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "status": [
+          "FAIL",
+          "PASS",
+          "PENDING"
+        ],
+        "symbol": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor0_metadata.json",
+      "format": "JSON",
+      "sha256": "3aaadb5fa159a2bc07b5d62bcb3132fc4a4c988c9017935251ed9d10206b384b",
+      "bytes": 974,
+      "records": 1,
+      "top_level_keys": [
+        "commission_included",
+        "cost_assumptions",
+        "cost_scenario",
+        "execution_capped_at_period_end",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "max_global_slots",
+        "one_active_reservation_per_symbol",
+        "pending_orders_reserve_slot",
+        "period_end",
+        "period_start",
+        "simultaneous_signal_priority",
+        "slippage_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor0_summary.csv",
+      "format": "CSV",
+      "sha256": "b477cbf0b714ca42f94784efc89e5a7207c2cb4ac7fd1812af4288ad55cd908a",
+      "bytes": 2089,
+      "records": 1,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "closed_trades",
+        "resolved",
+        "wins",
+        "losses",
+        "expired",
+        "expired_at_end",
+        "open_at_end",
+        "pending_at_end",
+        "ambiguous",
+        "win_rate",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_win_rate",
+        "net_expectancy_eur",
+        "net_profit_factor",
+        "net_max_drawdown_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "by_symbol_metrics",
+        "by_session_metrics",
+        "by_setup_metrics",
+        "skipped_symbol_busy",
+        "skipped_global_slots",
+        "plan_rejections",
+        "plan_rejection_reasons",
+        "risk_rejection_reasons",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "cost_scenario",
+        "risk_rejections",
+        "EURUSD_taken",
+        "USDCAD_taken",
+        "AUDUSD_taken"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor0_trades.csv",
+      "format": "CSV",
+      "sha256": "dbe4da806cd59056fe007bb6055a83ce8ccbe1205bdee050f4e271cb07e542c4",
+      "bytes": 405414,
+      "records": 1737,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 612,
+        "EURUSD": 573,
+        "AUDUSD": 552
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 1737
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T18:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "overall_score",
+        "direction",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "estimated_risk_eur",
+        "result",
+        "r",
+        "gross_pnl_eur",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "release_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality"
+      ],
+      "missing_cells": 1346,
+      "missing_cell_fraction": 0.02672066,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor10_metadata.json",
+      "format": "JSON",
+      "sha256": "0e744ba88dd584fdff358bb6e5cbf4538c6147832b6714bfa9db2d56049cefd5",
+      "bytes": 975,
+      "records": 1,
+      "top_level_keys": [
+        "commission_included",
+        "cost_assumptions",
+        "cost_scenario",
+        "execution_capped_at_period_end",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "max_global_slots",
+        "one_active_reservation_per_symbol",
+        "pending_orders_reserve_slot",
+        "period_end",
+        "period_start",
+        "simultaneous_signal_priority",
+        "slippage_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor10_summary.csv",
+      "format": "CSV",
+      "sha256": "c0f18539035109bd8b8a02d4a77f5f3b28ad09d297e7fc4777457e564a8edb13",
+      "bytes": 2084,
+      "records": 1,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "closed_trades",
+        "resolved",
+        "wins",
+        "losses",
+        "expired",
+        "expired_at_end",
+        "open_at_end",
+        "pending_at_end",
+        "ambiguous",
+        "win_rate",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_win_rate",
+        "net_expectancy_eur",
+        "net_profit_factor",
+        "net_max_drawdown_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "by_symbol_metrics",
+        "by_session_metrics",
+        "by_setup_metrics",
+        "skipped_symbol_busy",
+        "skipped_global_slots",
+        "plan_rejections",
+        "plan_rejection_reasons",
+        "risk_rejection_reasons",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "cost_scenario",
+        "risk_rejections",
+        "EURUSD_taken",
+        "USDCAD_taken",
+        "AUDUSD_taken"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor10_trades.csv",
+      "format": "CSV",
+      "sha256": "835347869c7d809b5b692f65b6ffc8cf750fe32097b3bd9f6148b23e9e9a01c9",
+      "bytes": 419335,
+      "records": 1822,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 657,
+        "EURUSD": 587,
+        "AUDUSD": 578
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 1822
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T18:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "overall_score",
+        "direction",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "estimated_risk_eur",
+        "result",
+        "r",
+        "gross_pnl_eur",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "release_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality"
+      ],
+      "missing_cells": 1462,
+      "missing_cell_fraction": 0.02766948,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor20_metadata.json",
+      "format": "JSON",
+      "sha256": "b10083f7fd1a4794dd4ae579ffc8b4a7621b17f3a776500ec7d0f28d5e27efaa",
+      "bytes": 975,
+      "records": 1,
+      "top_level_keys": [
+        "commission_included",
+        "cost_assumptions",
+        "cost_scenario",
+        "execution_capped_at_period_end",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "max_global_slots",
+        "one_active_reservation_per_symbol",
+        "pending_orders_reserve_slot",
+        "period_end",
+        "period_start",
+        "simultaneous_signal_priority",
+        "slippage_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor20_summary.csv",
+      "format": "CSV",
+      "sha256": "dbccf8992ee4639143b5d42a87d2420a41b0b523f3baedc84401e04ece18f257",
+      "bytes": 2093,
+      "records": 1,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "closed_trades",
+        "resolved",
+        "wins",
+        "losses",
+        "expired",
+        "expired_at_end",
+        "open_at_end",
+        "pending_at_end",
+        "ambiguous",
+        "win_rate",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_win_rate",
+        "net_expectancy_eur",
+        "net_profit_factor",
+        "net_max_drawdown_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "by_symbol_metrics",
+        "by_session_metrics",
+        "by_setup_metrics",
+        "skipped_symbol_busy",
+        "skipped_global_slots",
+        "plan_rejections",
+        "plan_rejection_reasons",
+        "risk_rejection_reasons",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "cost_scenario",
+        "risk_rejections",
+        "EURUSD_taken",
+        "USDCAD_taken",
+        "AUDUSD_taken"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor20_trades.csv",
+      "format": "CSV",
+      "sha256": "c399e506925dbcf2ac9145d44e7ffff3519485eb8ab4d3a5506f739a5a4080a2",
+      "bytes": 435914,
+      "records": 1904,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 693,
+        "EURUSD": 606,
+        "AUDUSD": 605
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 1904
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T18:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "overall_score",
+        "direction",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "estimated_risk_eur",
+        "result",
+        "r",
+        "gross_pnl_eur",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "release_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality"
+      ],
+      "missing_cells": 1668,
+      "missing_cell_fraction": 0.03020864,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor5_metadata.json",
+      "format": "JSON",
+      "sha256": "e25b7428c337026a22c4a4e49e0933830a39b67ca0baebf7fbf7ee8524cb4a0f",
+      "bytes": 974,
+      "records": 1,
+      "top_level_keys": [
+        "commission_included",
+        "cost_assumptions",
+        "cost_scenario",
+        "execution_capped_at_period_end",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "max_global_slots",
+        "one_active_reservation_per_symbol",
+        "pending_orders_reserve_slot",
+        "period_end",
+        "period_start",
+        "simultaneous_signal_priority",
+        "slippage_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor5_summary.csv",
+      "format": "CSV",
+      "sha256": "b23d8c61e90e745157c7e898fe30b27f46ece0ae44de6f09dde23f21b18f56f3",
+      "bytes": 2090,
+      "records": 1,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "closed_trades",
+        "resolved",
+        "wins",
+        "losses",
+        "expired",
+        "expired_at_end",
+        "open_at_end",
+        "pending_at_end",
+        "ambiguous",
+        "win_rate",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_win_rate",
+        "net_expectancy_eur",
+        "net_profit_factor",
+        "net_max_drawdown_eur",
+        "expectancy_eur",
+        "profit_factor_eur",
+        "max_drawdown_eur",
+        "by_symbol_metrics",
+        "by_session_metrics",
+        "by_setup_metrics",
+        "skipped_symbol_busy",
+        "skipped_global_slots",
+        "plan_rejections",
+        "plan_rejection_reasons",
+        "risk_rejection_reasons",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "cost_scenario",
+        "risk_rejections",
+        "EURUSD_taken",
+        "USDCAD_taken",
+        "AUDUSD_taken"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_portfolio_base_floor5_trades.csv",
+      "format": "CSV",
+      "sha256": "97ddad33d0e54fefae96cea0db6661ed703ee9992aa2a6d3728cc8cf726c4012",
+      "bytes": 408000,
+      "records": 1777,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 629,
+        "EURUSD": 580,
+        "AUDUSD": 568
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 1777
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T18:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "overall_score",
+        "direction",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "estimated_risk_eur",
+        "result",
+        "r",
+        "gross_pnl_eur",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "release_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality"
+      ],
+      "missing_cells": 1412,
+      "missing_cell_fraction": 0.02739992,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor0_metadata.json",
+      "format": "JSON",
+      "sha256": "f149505c9befbdb5fd3ed26363257c1968ef48450108bc87e182ca1d4f4a75bd",
+      "bytes": 670,
+      "records": 1,
+      "top_level_keys": [
+        "account_currency_pnl_included",
+        "ambiguous_intrabar_excluded",
+        "cost_assumptions",
+        "cost_scenario",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "portfolio_constraints_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote",
+        "technical_only"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor0_summary.csv",
+      "format": "CSV",
+      "sha256": "5a8add7ea384a94e12ed238de7f9cdb7bb36c841a90fffd170ca38eadbb9d4e6",
+      "bytes": 1397,
+      "records": 3,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 1,
+        "USDCAD": 1,
+        "AUDUSD": 1
+      },
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "wins",
+        "losses",
+        "expired",
+        "ambiguous_entry_bar",
+        "ambiguous_both",
+        "open_at_end",
+        "pending_at_end",
+        "resolved_trades",
+        "win_rate",
+        "expectancy_r",
+        "total_r",
+        "profit_factor",
+        "max_drawdown_r",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_expectancy_eur",
+        "net_expectancy_r",
+        "net_total_r",
+        "net_win_rate",
+        "net_profit_factor",
+        "ambiguous_total",
+        "open_at_end_total",
+        "max_drawdown_eur",
+        "net_max_drawdown_eur",
+        "plan_rejections",
+        "risk_rejections",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "plan_rejection_reasons",
+        "cost_scenario",
+        "by_session_net_pnl_eur"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor0_trades.csv",
+      "format": "CSV",
+      "sha256": "6bd393bd275baa4845198a62f3712a401839ad3d3e34bd199efe452daa6e3aec",
+      "bytes": 433902,
+      "records": 2124,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 729,
+        "EURUSD": 710,
+        "AUDUSD": 685
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 2124
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T17:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "bias",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "result",
+        "r",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality",
+        "estimated_risk_eur",
+        "gross_pnl_eur"
+      ],
+      "missing_cells": 1623,
+      "missing_cell_fraction": 0.0283009,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor10_metadata.json",
+      "format": "JSON",
+      "sha256": "c5f4345384a1c699e2c323df593dd882b523466baae8ac587f318626438b75df",
+      "bytes": 671,
+      "records": 1,
+      "top_level_keys": [
+        "account_currency_pnl_included",
+        "ambiguous_intrabar_excluded",
+        "cost_assumptions",
+        "cost_scenario",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "portfolio_constraints_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote",
+        "technical_only"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor10_summary.csv",
+      "format": "CSV",
+      "sha256": "4bee3d6e37754cddf2183c6feb2bb483e0091aa5e5cdc12faf85ed728e06c326",
+      "bytes": 1393,
+      "records": 3,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 1,
+        "USDCAD": 1,
+        "AUDUSD": 1
+      },
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "wins",
+        "losses",
+        "expired",
+        "ambiguous_entry_bar",
+        "ambiguous_both",
+        "open_at_end",
+        "pending_at_end",
+        "resolved_trades",
+        "win_rate",
+        "expectancy_r",
+        "total_r",
+        "profit_factor",
+        "max_drawdown_r",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_expectancy_eur",
+        "net_expectancy_r",
+        "net_total_r",
+        "net_win_rate",
+        "net_profit_factor",
+        "ambiguous_total",
+        "open_at_end_total",
+        "max_drawdown_eur",
+        "net_max_drawdown_eur",
+        "plan_rejections",
+        "risk_rejections",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "plan_rejection_reasons",
+        "cost_scenario",
+        "by_session_net_pnl_eur"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor10_trades.csv",
+      "format": "CSV",
+      "sha256": "ee31aad3fce21ccf20dd4f1c5796ce5c30f58a9f4cf2e06e21ed248c746aba17",
+      "bytes": 443325,
+      "records": 2205,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 766,
+        "EURUSD": 729,
+        "AUDUSD": 710
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 2205
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T17:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "bias",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "result",
+        "r",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality",
+        "estimated_risk_eur",
+        "gross_pnl_eur"
+      ],
+      "missing_cells": 1762,
+      "missing_cell_fraction": 0.02959604,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor20_metadata.json",
+      "format": "JSON",
+      "sha256": "920c5dbd69cafa744cbf1eef6a868f3877a6ba355ff7c5627a65eabf6edeb213",
+      "bytes": 671,
+      "records": 1,
+      "top_level_keys": [
+        "account_currency_pnl_included",
+        "ambiguous_intrabar_excluded",
+        "cost_assumptions",
+        "cost_scenario",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "portfolio_constraints_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote",
+        "technical_only"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor20_summary.csv",
+      "format": "CSV",
+      "sha256": "e68a23a8bc8d0596b55c9fbf96ece3f7aadb2b4c8f8c16df0f6a0da0282d594c",
+      "bytes": 1401,
+      "records": 3,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 1,
+        "USDCAD": 1,
+        "AUDUSD": 1
+      },
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "wins",
+        "losses",
+        "expired",
+        "ambiguous_entry_bar",
+        "ambiguous_both",
+        "open_at_end",
+        "pending_at_end",
+        "resolved_trades",
+        "win_rate",
+        "expectancy_r",
+        "total_r",
+        "profit_factor",
+        "max_drawdown_r",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_expectancy_eur",
+        "net_expectancy_r",
+        "net_total_r",
+        "net_win_rate",
+        "net_profit_factor",
+        "ambiguous_total",
+        "open_at_end_total",
+        "max_drawdown_eur",
+        "net_max_drawdown_eur",
+        "plan_rejections",
+        "risk_rejections",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "plan_rejection_reasons",
+        "cost_scenario",
+        "by_session_net_pnl_eur"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor20_trades.csv",
+      "format": "CSV",
+      "sha256": "aa23842b65692b0eec40f8bfa27e7571e139e9e890e84d306f8c31f98e425d34",
+      "bytes": 454360,
+      "records": 2272,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 794,
+        "EURUSD": 747,
+        "AUDUSD": 731
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 2272
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T17:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "bias",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "result",
+        "r",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality",
+        "estimated_risk_eur",
+        "gross_pnl_eur"
+      ],
+      "missing_cells": 1987,
+      "missing_cell_fraction": 0.03239111,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor5_metadata.json",
+      "format": "JSON",
+      "sha256": "3d9ec0ce5f5f0cde3ed8bc47398eb4e62afd1e196280c8407b16a2d8d00f9dc7",
+      "bytes": 670,
+      "records": 1,
+      "top_level_keys": [
+        "account_currency_pnl_included",
+        "ambiguous_intrabar_excluded",
+        "cost_assumptions",
+        "cost_scenario",
+        "generated_at",
+        "llm_included",
+        "macro_history_included",
+        "portfolio_constraints_included",
+        "source_scan",
+        "spread_floor_assumption_points",
+        "spread_floor_is_broker_quote",
+        "technical_only"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor5_summary.csv",
+      "format": "CSV",
+      "sha256": "41f71175aa76ce50443e2dc39d6dd350d82b7724d56ad678efe6d6924ed59e15",
+      "bytes": 1396,
+      "records": 3,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "EURUSD": 1,
+        "USDCAD": 1,
+        "AUDUSD": 1
+      },
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signals_taken",
+        "orders_executed",
+        "wins",
+        "losses",
+        "expired",
+        "ambiguous_entry_bar",
+        "ambiguous_both",
+        "open_at_end",
+        "pending_at_end",
+        "resolved_trades",
+        "win_rate",
+        "expectancy_r",
+        "total_r",
+        "profit_factor",
+        "max_drawdown_r",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "costs_incurred_eur",
+        "net_pnl_eur",
+        "net_expectancy_eur",
+        "net_expectancy_r",
+        "net_total_r",
+        "net_win_rate",
+        "net_profit_factor",
+        "ambiguous_total",
+        "open_at_end_total",
+        "max_drawdown_eur",
+        "net_max_drawdown_eur",
+        "plan_rejections",
+        "risk_rejections",
+        "opportunities_detected",
+        "accepted_plans",
+        "rejected_plans",
+        "plan_rejection_reasons",
+        "cost_scenario",
+        "by_session_net_pnl_eur"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/backtests/phase211_stateful_base_floor5_trades.csv",
+      "format": "CSV",
+      "sha256": "06cc36f7f10dbbe7f03cfed3a438722c69c1b8e30b7be1f5ae5a113b357f52fe",
+      "bytes": 433557,
+      "records": 2163,
+      "instruments": [
+        "AUDUSD",
+        "EURUSD",
+        "USDCAD"
+      ],
+      "records_by_instrument": {
+        "USDCAD": 743,
+        "EURUSD": 719,
+        "AUDUSD": 701
+      },
+      "timestamp_column": "signal_time",
+      "timezone_representation": "UTC_explicit_offset",
+      "timestamp_value_kinds": {
+        "explicit_offset": 2163
+      },
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": "2026-04-07T18:15:00+00:00",
+      "max_timestamp_utc": "2026-10-07T17:15:00+00:00",
+      "timeframe": null,
+      "variables": [
+        "symbol",
+        "threshold",
+        "mode",
+        "signal_time",
+        "setup_quality",
+        "bias",
+        "entry",
+        "stop_loss",
+        "take_profit",
+        "result",
+        "r",
+        "gross_r",
+        "net_r",
+        "transaction_cost_r",
+        "transaction_cost_eur",
+        "net_pnl_eur",
+        "cost_scenario",
+        "session_utc",
+        "fill_time",
+        "exit_time",
+        "spread_floor_assumption_points",
+        "spread_bars_examined",
+        "unverified_zero_spread_bar_count",
+        "spread_floor_applied_bar_count",
+        "spread_data_quality",
+        "estimated_risk_eur",
+        "gross_pnl_eur"
+      ],
+      "missing_cells": 1703,
+      "missing_cell_fraction": 0.02916046,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": 0,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/baseline_integrity.json",
+      "format": "JSON",
+      "sha256": "7ece7ba3583bfeffca0cf80ec72f5f610144374505a0e8ac14ffbc22197e7759",
+      "bytes": 1300,
+      "records": 1,
+      "top_level_keys": [
+        "baseline",
+        "generated_at_utc",
+        "git"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {},
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/llm_logging_validation.json",
+      "format": "JSON",
+      "sha256": "f94c065990fe1e3752fa0ef8c20d2d7161c9049709acc2dc7c187611ce44727c",
+      "bytes": 2448,
+      "records": 1,
+      "top_level_keys": [
+        "actions_logged",
+        "counts",
+        "live_provider_calls",
+        "orders_executed",
+        "policy_comparison_fixture",
+        "policy_interface_status",
+        "provider_errors_and_invalid_responses_tested_by_unit_suite",
+        "secrets_persisted",
+        "status",
+        "synthetic_fixture"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "status": [
+          "DESCRIPTIVE_PAIRED_POLICY_COMPARISON",
+          "PASS"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/phase2_1_framework/reconstruction_diff.json",
+      "format": "JSON",
+      "sha256": "d60f29500cbe1ededf5dc6d9ff9ade7ed942500c68b06c00eafa3539abbf408d",
+      "bytes": 287,
+      "records": 1,
+      "top_level_keys": [
+        "frozen_dataset_sha256",
+        "reconstruction_invocation",
+        "reproducible_command",
+        "status"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "status": [
+          "NOT_REQUESTED",
+          "NOT_RUN"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/spread_quality.json",
+      "format": "JSON",
+      "sha256": "1df30cbf387412e5670c9c45dcd4b2514961eb472ea2bd10a62c5a0d9ec7c840",
+      "bytes": 65502,
+      "records": 1,
+      "top_level_keys": [
+        "all_sources_present",
+        "classification",
+        "diagnostics",
+        "generated_at_utc",
+        "sources"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ],
+        "status": [
+          "PASS"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/spread_sensitivity.csv",
+      "format": "CSV",
+      "sha256": "82fe6f4631ee6908e8f116213009a8fbc89c89d51352a18ce52702c00eebeaac",
+      "bytes": 3107,
+      "records": 8,
+      "instruments": [],
+      "records_by_instrument": {},
+      "timestamp_column": null,
+      "timezone_representation": "not_available",
+      "timestamp_value_kinds": {},
+      "invalid_or_missing_timestamps": 0,
+      "min_timestamp_utc": null,
+      "max_timestamp_utc": null,
+      "timeframe": null,
+      "variables": [
+        "engine",
+        "scenario",
+        "spread_floor_points_assumption",
+        "is_verified_broker_cost",
+        "proposed",
+        "executed",
+        "closed",
+        "expired",
+        "ambiguous",
+        "open_or_pending",
+        "gross_pnl_eur",
+        "transaction_costs_eur",
+        "net_pnl_eur",
+        "expectancy_net_eur",
+        "profit_factor_net",
+        "max_drawdown_net_eur",
+        "operations_touching_unverified_zero_spread_pct",
+        "operations_with_floor_applied_pct",
+        "fill_time_hash",
+        "results_file",
+        "results_file_sha256"
+      ],
+      "missing_cells": 0,
+      "missing_cell_fraction": 0.0,
+      "duplicate_rows": 0,
+      "duplicate_symbol_timestamp_keys": null,
+      "timestamps_monotonic_by_instrument": true,
+      "spread_data_audit": null,
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/validation_summary.json",
+      "format": "JSON",
+      "sha256": "d61d54885ab68fe8abe3639c7317e495740c718700280e7727ff89d42a96859b",
+      "bytes": 79987,
+      "records": 1,
+      "top_level_keys": [
+        "checks",
+        "code_fingerprints_sha256",
+        "datasets",
+        "deepseek_value_add",
+        "external_integrations",
+        "generated_at_utc",
+        "git",
+        "limitations",
+        "phase1_operational_readiness",
+        "phase2_1_1_status",
+        "phase2_1_engineering_status",
+        "phase2_1_strategy_conclusion",
+        "python",
+        "reproduce",
+        "security",
+        "spread_sensitivity_runs",
+        "tests"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "status": [
+          "INCOMPLETE_PENDING_MANUAL",
+          "NOT_APPLICABLE",
+          "PASS"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    },
+    {
+      "path": "reports/phase2_1_1/warmup_comparison.json",
+      "format": "JSON",
+      "sha256": "fadef96cc0e865f22ce4c58d748c9b0da932640109d1f0b159380b10a018096d",
+      "bytes": 218566,
+      "records": 1,
+      "top_level_keys": [
+        "baseline_scan_sha256",
+        "criterion",
+        "events",
+        "fixed_windows_bars",
+        "generated_at_utc",
+        "indicator_stability_by_timeframe_window",
+        "longest_window_reconstruction_vs_frozen_sample",
+        "production_signal_gate_status",
+        "production_signal_logic_modified",
+        "sampling",
+        "technical_reconstruction_differences_vs_longest_window"
+      ],
+      "parse_error": null,
+      "safe_metadata_values": {
+        "symbol": [
+          "AUDUSD",
+          "EURUSD",
+          "USDCAD"
+        ],
+        "analysis_time": [
+          "2026-04-07T18:15:00+00:00",
+          "2026-04-16T16:45:00+00:00",
+          "2026-04-27T15:15:00+00:00",
+          "2026-05-06T13:45:00+00:00",
+          "2026-05-15T12:15:00+00:00",
+          "2026-05-26T10:45:00+00:00",
+          "2026-06-04T09:15:00+00:00",
+          "2026-06-15T07:45:00+00:00",
+          "2026-06-23T20:15:00+00:00",
+          "2026-07-02T18:45:00+00:00",
+          "2026-07-13T17:30:00+00:00",
+          "2026-07-22T16:00:00+00:00",
+          "2026-07-31T14:30:00+00:00",
+          "2026-08-11T13:00:00+00:00",
+          "2026-08-20T11:30:00+00:00",
+          "2026-08-31T10:00:00+00:00",
+          "2026-09-09T08:30:00+00:00",
+          "2026-09-18T07:00:00+00:00",
+          "2026-09-28T19:30:00+00:00",
+          "2026-10-07T18:15:00+00:00"
+        ],
+        "status": [
+          "READY"
+        ]
+      },
+      "role": "prior_report",
+      "eligible_as_source_data": false,
+      "excluded_reason": "derived report; not raw event data"
+    }
+  ],
+  "source_count": 121,
+  "market_tick_data_available": false,
+  "data_generation_provenance_complete": false,
+  "notes": [
+    "Market CSVs contain UTC-offset OHLCV bars; source broker/server and raw ticks are not identified.",
+    "Candidate scan and historical validation scan are different time ranges and remain separate.",
+    "Backtest trade CSVs contain labels/outcomes and are not used to build features.",
+    "Current data/state snapshots are inventoried but excluded from historical prediction tests."
+  ]
+}

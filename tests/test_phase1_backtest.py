@@ -9,6 +9,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.historical_execution import simulate_trade
+from config.backtest_cost_config import COST_SCENARIOS
 
 
 class HistoricalExecutionTests(unittest.TestCase):
@@ -119,6 +120,26 @@ class HistoricalExecutionTests(unittest.TestCase):
         self.assertEqual(result["result"], "PENDING_AT_END")
         self.assertEqual(result["spread_model"], "HISTORICAL_BID_ASK_EMBEDDED")
         self.assertEqual(result["transaction_cost_eur"], 0.0)
+
+    def test_spread_floor_is_explicit_assumption_and_changes_ask_fill_only(self):
+        plan = dict(self.plan, order_type="BUY_LIMIT", entry=1.1)
+        bars = pd.DataFrame([
+            {"time": pd.Timestamp("2026-04-08T10:00:00Z"), "bar_close": pd.Timestamp("2026-04-08T10:05:00Z"), "high": 1.101, "low": 1.09995, "spread": 0},
+        ])
+        observed = simulate_trade(plan, "2026-04-08T10:00:00Z", bars, spread_floor_points=0)
+        assumed = simulate_trade(plan, "2026-04-08T10:00:00Z", bars, spread_floor_points=10)
+        self.assertEqual(observed["result"], "OPEN_AT_END")
+        self.assertEqual(observed["spread_data_quality"], "OBSERVED_ZERO_UNVERIFIED")
+        self.assertEqual(observed["unverified_zero_spread_bar_count"], 1)
+        self.assertEqual(assumed["result"], "PENDING_AT_END")
+        self.assertEqual(assumed["spread_data_quality"], "IMPUTED_ASSUMPTION")
+        self.assertEqual(assumed["spread_floor_applied_bar_count"], 1)
+        self.assertFalse(COST_SCENARIOS["BASE"].get("spread_floor_points"))
+
+    def test_spread_floor_rejects_non_finite_or_negative_assumptions(self):
+        for value in (-1, float("nan"), float("inf")):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "SPREAD_ASSUMPTION_INVALID"):
+                simulate_trade(self.plan, "2026-04-08T10:00:00Z", self.bars, spread_floor_points=value)
 
     def test_sell_limit_uses_bid_not_ask(self):
         plan = {

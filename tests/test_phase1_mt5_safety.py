@@ -1,5 +1,6 @@
 import sys
 import json
+import importlib.util
 import subprocess
 import unittest
 from datetime import datetime, timezone
@@ -151,6 +152,10 @@ class MT5SafetyTests(unittest.TestCase):
         self.assertNotIn("do not publish account details", encoded)
         self.assertNotIn("account_snapshot", encoded)
 
+    @unittest.skipUnless(
+        importlib.util.find_spec("MetaTrader5"),
+        "MetaTrader5 package unavailable; provider-specific provenance cannot be verified here",
+    )
     def test_public_mt5_pending_summary_is_reusable_with_verified_provenance(self):
         relative = "reports/_test_mt5_public_provenance.json"
         path = ROOT / relative

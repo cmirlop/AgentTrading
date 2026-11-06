@@ -298,6 +298,7 @@ def run_scenario(
     prepared,
     period_end,
     cost_scenario="BASE",
+    spread_floor_points=0.0,
 ):
 
     eligible = signals[
@@ -537,6 +538,7 @@ def run_scenario(
                     ],
                 cost_scenario=cost_scenario,
                 risk_amount_eur=estimated_loss,
+                spread_floor_points=spread_floor_points,
             )
         )
 
@@ -657,6 +659,11 @@ def run_scenario(
 
                 "release_time":
                     release_time,
+                "spread_floor_assumption_points": execution.get("spread_floor_assumption_points", 0.0),
+                "spread_bars_examined": execution.get("spread_bars_examined", 0),
+                "unverified_zero_spread_bar_count": execution.get("unverified_zero_spread_bar_count", 0),
+                "spread_floor_applied_bar_count": execution.get("spread_floor_applied_bar_count", 0),
+                "spread_data_quality": execution.get("spread_data_quality"),
             }
         )
 
@@ -738,6 +745,12 @@ def main():
         "--output-dir",
         default=str(BACKTEST_DIR),
     )
+    parser.add_argument("--spread-floor-points", type=float, choices=[0.0, 5.0, 10.0, 20.0], default=0.0,
+                        help="Research-only minimum spread assumption in MT5 points; 0 preserves existing scenario behavior.")
+    parser.add_argument("--threshold", type=int, choices=list(STATEFUL_THRESHOLDS), default=None,
+                        help="Optional single pre-existing threshold for focused research runs.")
+    parser.add_argument("--mode", choices=list(STATEFUL_ENTRY_MODES), default=None,
+                        help="Optional single existing entry mode for focused research runs.")
 
     args = parser.parse_args()
 
@@ -835,13 +848,11 @@ def main():
     all_trades = []
     summaries = []
 
-    for threshold in (
-        STATEFUL_THRESHOLDS
-    ):
+    selected_thresholds = [args.threshold] if args.threshold is not None else STATEFUL_THRESHOLDS
+    selected_modes = [args.mode] if args.mode is not None else STATEFUL_ENTRY_MODES
+    for threshold in selected_thresholds:
 
-        for mode in (
-            STATEFUL_ENTRY_MODES
-        ):
+        for mode in selected_modes:
 
             trades, summary = (
                 run_scenario(
@@ -862,6 +873,7 @@ def main():
 
                     cost_scenario=
                         args.cost_scenario,
+                    spread_floor_points=args.spread_floor_points,
                 )
             )
 
@@ -979,6 +991,8 @@ def main():
 
         "cost_scenario":
             args.cost_scenario,
+        "spread_floor_assumption_points": args.spread_floor_points,
+        "spread_floor_is_broker_quote": False,
 
         "commission_included":
             args.cost_scenario != "BASE",
