@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-11-06T07:54:07.137012+00:00",
+  "max_global_slots": 2,
+  "pending_orders_reserve_slot": true,
+  "one_active_reservation_per_symbol": true,
+  "simultaneous_signal_priority": [
+    "setup_quality_desc",
+    "abs_overall_score_desc",
+    "symbol_asc"
+  ],
+  "macro_history_included": false,
+  "llm_included": false,
+  "cost_scenario": "BASE",
+  "commission_included": false,
+  "slippage_included": false,
+  "cost_assumptions": {
+    "historical_spread_multiplier": 1.0,
+    "commission_eur_per_lot_round_turn": 0.0,
+    "slippage_points_per_side": 0.0,
+    "assumptions_unverified": [
+      "commission=0",
+      "slippage=0"
+    ]
+  },
+  "period_start": "2025-06-10T07:00:00+00:00",
+  "period_end": "2026-04-07T18:00:00+00:00",
+  "execution_capped_at_period_end": true,
+  "source_scan": "/workspace/AgentTrading-phase2/data/backtest/validation_candidate_scan.csv"
+}

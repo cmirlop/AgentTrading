@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-11-06T07:18:56.229661+00:00",
+  "technical_only": true,
+  "llm_included": false,
+  "macro_history_included": false,
+  "portfolio_constraints_included": false,
+  "account_currency_pnl_included": false,
+  "ambiguous_intrabar_excluded": true,
+  "cost_scenario": "CONSERVATIVE",
+  "cost_assumptions": {
+    "historical_spread_multiplier": 1.25,
+    "commission_eur_per_lot_round_turn": 7.0,
+    "slippage_points_per_side": 1.0,
+    "assumptions_unverified": [
+      "spread_multiplier=1.25",
+      "commission=7 EUR/lot",
+      "slippage=1 point/side"
+    ]
+  },
+  "source_scan": "data/backtest/technical_candidate_scan.csv"
+}
