@@ -1,0 +1,27 @@
+{
+  "confirmatory_eligible": false,
+  "counts": {
+    "eligible_without_trade_context": 0,
+    "events_without_traceability": 0,
+    "opportunities_detected": 4,
+    "opportunities_eligible": 4,
+    "opportunities_excluded": 0,
+    "outcomes_pending": 0,
+    "outcomes_persisted": 4,
+    "provider_errors": 2,
+    "queries_planned": 9,
+    "queries_sent": 9,
+    "responses_persisted": 9,
+    "responses_received": 7,
+    "responses_valid": 7,
+    "sent_queries_without_response": 0,
+    "system_decisions_persisted": 4,
+    "trade_contexts_persisted": 4,
+    "valid_filter_responses_without_system_decision": 0
+  },
+  "discrepancies": [],
+  "eligibility_reason": "SYNTHETIC_FIXTURE_IS_ENGINEERING_EVIDENCE_ONLY",
+  "provider_calls_or_orders_created_by_reconciliation": 0,
+  "status": "PASS",
+  "validator_status": "PASS"
+}

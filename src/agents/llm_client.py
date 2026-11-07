@@ -23,6 +23,7 @@ from pydantic import ValidationError
 
 from config.agent_config import OLLAMA_CONTEXT, OLLAMA_KEEP_ALIVE, OLLAMA_MODEL, OLLAMA_TEMPERATURE
 from src.agents import deepseek_client
+from src.research_policy import CANONICAL_FILTER_ROLE, POLICY_VERSION, schema_role
 
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=False)
@@ -210,17 +211,25 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
 
     def record_failure(code: str) -> None:
         try:
-            from src.event_ledger import record_llm_call
+            from src.event_ledger import record_llm_call, research_log_required
             provider = config.provider if config else os.environ.get("LLM_PROVIDER", "ollama").strip().lower()
             model = config.model if config else os.environ.get("DEEPSEEK_MODEL" if provider == "deepseek" else "OLLAMA_MODEL", "unavailable")
-            record_llm_call(
+            role, stage, _ = schema_role(schema)
+            saved = record_llm_call(
                 schema_name=schema.__name__, provider=provider, model=model,
                 prompt=system_prompt, payload=payload, allowed_evidence=allowed_ids,
                 requested_at=requested_at, error_code=code, rejection_code=code,
                 elapsed_seconds=perf_counter() - started,
+                metadata={"schema_module": schema.__module__},
+                agent_role=role, agent_stage=stage,
+                decision_policy_id=POLICY_VERSION if provider == "deepseek" and role == CANONICAL_FILTER_ROLE else None,
             )
-        except Exception:
-            pass
+            if research_log_required() and not saved.persisted:
+                raise LLMProviderError("LLM_RESEARCH_LOG_PERSISTENCE_FAILED") from None
+        except Exception as exc:
+            if os.environ.get("RESEARCH_LOG_REQUIRED", "0").strip().lower() in {"1", "true", "yes", "on"}:
+                raise LLMProviderError("LLM_RESEARCH_LOG_PERSISTENCE_FAILED") from None
+            LOGGER.error("research ledger write failed while recording provider error schema=%s", schema.__name__)
 
     try:
         config = get_llm_configuration(schema)
@@ -234,6 +243,23 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
         output_schema = _schema_with_evidence(schema, allowed_ids, evidence_fields)
     except Exception as exc:
         code = _failure_code(exc)
+        record_failure(code)
+        raise LLMProviderError(code) from None
+
+    role, role_stage, _is_filter = schema_role(schema)
+    policy_id = POLICY_VERSION if config.provider == "deepseek" and role == CANONICAL_FILTER_ROLE else None
+    try:
+        from src.event_ledger import LedgerPersistenceError, record_llm_query_started
+        query_result = record_llm_query_started(
+            role=role, policy_id=policy_id,
+            payload=payload,
+        )
+        if os.environ.get("RESEARCH_LOG_REQUIRED", "0").strip().lower() in {"1", "true", "yes", "on"} and not query_result.persisted:
+            raise LedgerPersistenceError(query_result.error_code or "LEDGER_QUERY_START_NOT_PERSISTED")
+    except Exception as exc:
+        code = "LLM_RESEARCH_LOG_PERSISTENCE_FAILED" if "LedgerPersistenceError" in type(exc).__name__ else _failure_code(exc)
+        if code not in {"LLM_RESEARCH_LOG_PERSISTENCE_FAILED", "LLM_API_ERROR"}:
+            code = "LLM_RESEARCH_LOG_PERSISTENCE_FAILED"
         record_failure(code)
         raise LLMProviderError(code) from None
 
@@ -327,15 +353,20 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
 
     elapsed = perf_counter() - started
     try:
-        from src.event_ledger import record_llm_call
-        record_llm_call(
+        from src.event_ledger import record_llm_call, research_log_required
+        saved = record_llm_call(
             schema_name=schema.__name__, provider=config.provider, model=config.model,
             prompt=system_prompt, payload=payload, allowed_evidence=allowed_ids,
             requested_at=requested_at, result=result, elapsed_seconds=elapsed,
-            metadata=metadata,
+            metadata={**metadata, "schema_module": schema.__module__},
+            agent_role=role, agent_stage=role_stage, decision_policy_id=policy_id,
         )
-    except Exception:
-        pass
+        if research_log_required() and not saved.persisted:
+            raise LLMProviderError("LLM_RESEARCH_LOG_PERSISTENCE_FAILED")
+    except Exception as exc:
+        LOGGER.error("research ledger write failed after provider response schema=%s", schema.__name__)
+        if os.environ.get("RESEARCH_LOG_REQUIRED", "0").strip().lower() in {"1", "true", "yes", "on"}:
+            raise LLMProviderError("LLM_RESEARCH_LOG_PERSISTENCE_FAILED") from None
     LOGGER.info(
         "LLM call complete provider=%s model=%s schema=%s elapsed_seconds=%.3f",
         config.provider,

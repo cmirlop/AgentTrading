@@ -2,7 +2,8 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from src.event_ledger import bind_event, record_opportunity, record_system_decision
+from src.event_ledger import bind_event, record_opportunity, record_system_decision, research_log_required
+from src.research_policy import CANONICAL_FILTER_ROLE, POLICY_VERSION
 from src.market_snapshot import build_compact_snapshot
 from src.technical_evaluator import evaluate_technical_state
 
@@ -53,6 +54,7 @@ def save_analysis(
     analysis,
     metrics,
     event_id=None,
+    decision_time_utc=None,
 ):
 
     now = datetime.now(
@@ -90,6 +92,8 @@ def save_analysis(
             symbol,
 
         "event_id": event_id,
+
+        "decision_time_utc": decision_time_utc,
 
         "analysis":
             analysis.model_dump(),
@@ -289,6 +293,7 @@ def main():
             symbol
         )
         event_id = None
+        timestamp = None
         try:
             timestamp = state.get("analysis_time") or state.get("timestamp")
             if timestamp:
@@ -303,11 +308,15 @@ def main():
                 }
                 event_id = record_opportunity(
                     symbol, timestamp, opportunity_snapshot,
+                    eligible=technical_decision != "NO_TRADE",
+                    exclusion_reason="NO_TECHNICAL_CANDIDATE" if technical_decision == "NO_TRADE" else None,
                 )
         except Exception:
+            if research_log_required():
+                raise
             event_id = None
         if event_id:
-            with bind_event(event_id):
+            with bind_event(event_id, agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION):
                 analysis, metrics = agent.analyze(state)
         else:
             analysis, metrics = agent.analyze(state)
@@ -318,15 +327,19 @@ def main():
                     validation_status="VALID" if analysis.validation_ok else "INVALID",
                     decision_stage="MARKET_ANALYSIS",
                     rejection_code=None if analysis.validation_ok else "ANALYSIS_VALIDATION_FAILED",
+                    agent_role=CANONICAL_FILTER_ROLE,
+                    decision_policy_id=POLICY_VERSION if analysis.llm_provider == "deepseek" else None,
                 )
             except Exception:
-                pass
+                if research_log_required():
+                    raise
 
         path = save_analysis(
             symbol,
             analysis,
             metrics,
             event_id=event_id,
+            decision_time_utc=timestamp,
         )
 
         print_analysis(
