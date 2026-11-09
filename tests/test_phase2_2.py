@@ -16,8 +16,9 @@ from src.agents.llm_client import LLMProviderError, structured_chat
 from src.daily_risk_guard import evaluate_daily_risk
 from src.event_ledger import (
     LedgerPersistenceError, append_outcome, bind_event, export_anonymized_ledger,
-    initialize_ledger, record_coverage_event, record_llm_call, record_llm_query_started,
-    record_opportunity, record_system_decision, record_trade_context, reconcile_ledger,
+    canonical_hash, initialize_ledger, record_coverage_event, record_llm_call,
+    record_llm_query_started, record_opportunity, record_system_decision,
+    record_technical_plan, record_trade_context, reconcile_ledger,
 )
 from src.llm_evaluation import compare_paired_policies, pair_ledger
 from src.paired_policy_simulator import simulate_paired_policies
@@ -28,6 +29,7 @@ from src.research_policy import (
 )
 from src.risk_engine import calculate_currency_exposure, evaluate_portfolio_limits
 from src.risk_preflight import evaluate_plan_risk
+from src.technical_reference import POLICY_SHA256 as TECHNICAL_REFERENCE_POLICY_SHA256
 
 
 class _Decision(BaseModel):
@@ -57,15 +59,23 @@ def _event(event_id="e1", *, minute=0, symbol="EURUSD", action="WATCH_LONG", str
     stop_loss = price + distance if direction == "SELL" else price - distance
     take_profit = price - distance * 2 if direction == "SELL" else price + distance * 2
     release = now + timedelta(minutes=release_minutes) if release_minutes is not None else None
+    plan = {"symbol": symbol, "direction": direction, "entry": price, "stop_loss": stop_loss,
+        "take_profit": take_profit, "order_type": "BUY_LIMIT" if direction == "BUY" else "SELL_LIMIT",
+        "mode": "LIMIT", "target_rr": 2.1}
     outcome = {
         "filled": filled, "fill_time_utc": now.isoformat() if filled else None,
         "release_time_utc": release.isoformat() if release and filled else None,
+        "economic_close_time_utc": release.isoformat() if release and filled else None,
         "known_at_utc": release.isoformat() if release and filled else None,
+        "outcome_observed_at_utc": release.isoformat() if release and filled else None,
+        "persisted_at_utc": (release + timedelta(seconds=1)).isoformat() if release and filled else None,
+        "accepted_at_utc": now.isoformat(), "placed_at_utc": now.isoformat(),
         "expires_at_utc": (now + timedelta(minutes=expiry_minutes)).isoformat() if expiry_minutes is not None else None,
         "outcome_status": "RESOLVED" if release and filled else "UNRESOLVED",
         "result": "WIN" if net > 0 else "LOSS" if net < 0 else "FLAT",
         "net_pnl_eur": net, "gross_pnl_eur": net + cost, "costs_eur": cost,
         "net_r": net / 5.0, "base_volume": .05, "cost_scenario": "CONSERVATIVE",
+        "plan_sha256": canonical_hash(plan),
     }
     return {
         "event_id": event_id, "symbol": symbol, "decision_time_utc": now.isoformat(),
@@ -79,10 +89,35 @@ def _event(event_id="e1", *, minute=0, symbol="EURUSD", action="WATCH_LONG", str
         "llm_coverage_status": coverage,
         "plan_strategy_source": "TECHNICAL_ONLY_REFERENCE",
         "risk_context": risk_context or _risk_context(),
-        "plan": {"direction": direction, "entry": price, "stop_loss": stop_loss,
-                 "take_profit": take_profit, "order_type": "MARKET"},
+        "technical_plan_status": "TECHNICAL_PLAN_VALID",
+        "technical_plan_version": "TECHNICAL_REFERENCE_V1",
+        "technical_plan_policy_sha256": TECHNICAL_REFERENCE_POLICY_SHA256,
+        "plan": plan, "plan_sha256": canonical_hash(plan),
         "outcome": outcome,
     }
+
+
+def _record_reference_plan(event_id, decision_time, *, plan=None, status="TECHNICAL_PLAN_VALID", path):
+    decision = datetime.fromisoformat(str(decision_time).replace("Z", "+00:00")).astimezone(timezone.utc)
+    result = {
+        "schema_version": "1.0", "policy_version": "TECHNICAL_REFERENCE_V1",
+        "policy_sha256": TECHNICAL_REFERENCE_POLICY_SHA256,
+        "plan_source": "TECHNICAL_ONLY_REFERENCE", "status": status,
+        "symbol": (plan or {}).get("symbol", "EURUSD"),
+        "decision_time_utc": decision.isoformat().replace("+00:00", "Z"),
+        "constructed_at_utc": (decision + timedelta(seconds=5)).isoformat().replace("+00:00", "Z"),
+        "maximum_market_data_time_utc": decision.isoformat().replace("+00:00", "Z"),
+        "technical_decision": "WATCH_LONG" if plan else "NO_TRADE",
+        "direction": (plan or {}).get("direction"), "plan": plan,
+        "plan_sha256": canonical_hash(plan) if plan else None,
+        "reason": "SYNTHETIC_TEST_PLAN", "missing_fields": [],
+        "spread_quality": "OBSERVED_VALID",
+        "confirmatory_eligible": bool(plan),
+        "technical_snapshot": {"bias": "BULLISH", "alignment": "ALIGNED",
+                               "setup_quality": 80, "overall_score": 40,
+                               "available_evidence_ids": ["E1"]},
+    }
+    return record_technical_plan(event_id, result, path=path)
 
 
 def _write_concurrent_call(args):
@@ -186,13 +221,15 @@ class Phase22Tests(unittest.TestCase):
 
     def test_ledger_reconciles_all_events_and_outcome_idempotently(self):
         event_id = record_opportunity("EURUSD", "2026-01-01T00:00:00Z", {"technical_decision": "WATCH_LONG"}, eligible=True, path=self.db)
+        plan = {"symbol": "EURUSD", "direction": "BUY", "order_type": "BUY_LIMIT", "entry": 1.1,
+                "stop_loss": 1.099, "take_profit": 1.102, "mode": "LIMIT", "target_rr": 2.1}
+        self.assertTrue(_record_reference_plan(event_id, "2026-01-01T00:00:00Z", plan=plan, path=self.db).persisted)
         record_trade_context(event_id, {"candidate_status": "ELIGIBLE", "plan_status": "VALID",
-            "plan": {"symbol": "EURUSD", "direction": "BUY", "order_type": "MARKET", "entry": 1.1,
-                     "stop_loss": 1.099, "take_profit": 1.102}, "risk_context": _risk_context(),
+            "plan": plan, "risk_context": _risk_context(),
             "plan_strategy_source": "TECHNICAL_ONLY_REFERENCE",
             "market_data_time_utc": "2026-01-01T00:00:00Z",
-            "context_known_at_utc": "2026-01-01T00:00:00Z",
-            "risk_context_known_at_utc": "2026-01-01T00:00:00Z"}, path=self.db)
+            "context_known_at_utc": "2026-01-01T00:00:10Z",
+            "risk_context_known_at_utc": "2026-01-01T00:00:10Z"}, path=self.db)
         payload = {"allowed_evidence_ids": ["E1"]}
         model_result = type("R", (), {"model_dump": lambda self, **kwargs: {"strategy": "PULLBACK", "evidence_used": ["E1"]}})()
         with bind_event(event_id, self.db, agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION):
@@ -202,9 +239,13 @@ class Phase22Tests(unittest.TestCase):
                 requested_at="2026-01-01T00:00:01Z", result=model_result,
                 metadata={"schema_module": "src.agents.market_analyst"}, agent_role=CANONICAL_FILTER_ROLE,
                 agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION)
+            record_system_decision(event_id, "WATCH_LONG", validation_status="VALID", decision_stage="MARKET_ANALYSIS", agent_role=CANONICAL_FILTER_ROLE, decision_policy_id=POLICY_VERSION, path=self.db)
         self.assertTrue(saved.persisted)
-        record_system_decision(event_id, "WATCH_LONG", validation_status="VALID", decision_stage="MARKET_ANALYSIS", agent_role=CANONICAL_FILTER_ROLE, decision_policy_id=POLICY_VERSION, path=self.db)
-        outcome = {"policy_id": "TECHNICAL_CANDIDATE", "cost_scenario": "CONSERVATIVE", "result": "WIN", "known_at_utc": "2026-01-01T00:30:00Z", "release_time_utc": "2026-01-01T00:30:00Z", "net_pnl_eur": 1, "gross_pnl_eur": 1.25, "costs_eur": .25}
+        outcome = {"policy_id": "COMMON_PLAN_COUNTERFACTUAL", "cost_scenario": "CONSERVATIVE", "result": "WIN",
+                   "known_at_utc": "2026-01-01T00:30:00Z", "outcome_observed_at_utc": "2026-01-01T00:30:00Z",
+                   "persisted_at_utc": "2026-01-01T00:30:01Z", "release_time_utc": "2026-01-01T00:30:00Z",
+                   "economic_close_time_utc": "2026-01-01T00:30:00Z", "plan_sha256": canonical_hash(plan),
+                   "net_pnl_eur": 1, "gross_pnl_eur": 1.25, "costs_eur": .25}
         one = append_outcome(event_id, "2026-01-01T00:30:00Z", outcome, path=self.db)
         two = append_outcome(event_id, "2026-01-01T00:30:00Z", outcome, path=self.db)
         self.assertEqual(one, two)
@@ -261,6 +302,9 @@ class Phase22Tests(unittest.TestCase):
         opportunity_time = "2026-01-01T00:00:00Z"
         event_id = record_opportunity("EURUSD", opportunity_time,
             {"technical_decision": "WATCH_LONG", "technical_evaluation": {"setup_quality": 80}}, path=self.db)
+        plan = {"symbol": "EURUSD", "direction": "BUY", "order_type": "BUY_LIMIT", "entry": 1.1,
+                "stop_loss": 1.09, "take_profit": 1.12, "mode": "LIMIT", "target_rr": 2.1}
+        _record_reference_plan(event_id, opportunity_time, plan=plan, path=self.db)
         payload = {"allowed_evidence_ids": ["E1"]}
         result = type("R", (), {"model_dump": lambda self, **kwargs: {"strategy": "PULLBACK", "evidence_used": ["E1"]}})()
         with bind_event(event_id, self.db, agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION):
@@ -270,8 +314,8 @@ class Phase22Tests(unittest.TestCase):
                 requested_at="2026-01-01T00:00:01Z", result=result,
                 metadata={"schema_module": "src.agents.market_analyst", "provider_reported_model": CANONICAL_MODEL},
                 agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION)
-        record_system_decision(event_id, "WATCH_LONG", validation_status="VALID", decision_stage="MARKET_ANALYSIS",
-            agent_role=CANONICAL_FILTER_ROLE, decision_policy_id=POLICY_VERSION, path=self.db)
+            record_system_decision(event_id, "WATCH_LONG", validation_status="VALID", decision_stage="MARKET_ANALYSIS",
+                agent_role=CANONICAL_FILTER_ROLE, decision_policy_id=POLICY_VERSION, path=self.db)
         now = datetime.now(timezone.utc).isoformat()
         record_trade_context(event_id, {"candidate_status": "ELIGIBLE", "plan_status": "VALID",
             "plan_strategy_source": "TECHNICAL_ONLY_REFERENCE",
@@ -280,7 +324,7 @@ class Phase22Tests(unittest.TestCase):
             "context_known_at_utc": now, "risk_context_known_at_utc": now}, path=self.db)
         row = pair_ledger(self.db)["population"][0]
         self.assertEqual(row["trade_context_status"], "MISSING_OR_FUTURE_DATA_CONTEXT")
-        self.assertIsNone(row["plan"])
+        self.assertIsNotNone(row["plan"])
         self.assertIsNone(row["risk_context"])
 
     def test_duplicate_event_ids_are_no_evaluable(self):
@@ -296,10 +340,11 @@ class Phase22Tests(unittest.TestCase):
         self.assertEqual(result["reason_code"], "POPULATION_PROVENANCE_REQUIRED")
 
     def test_economic_comparator_accepts_full_population_report_including_uncovered_events(self):
-        record_opportunity("EURUSD", "2026-01-01T00:00:00Z", {"technical_decision": "NO_TRADE"},
+        event_id = record_opportunity("EURUSD", "2026-01-01T00:00:00Z", {"technical_decision": "NO_TRADE"},
                            eligible=False, exclusion_reason="NO_TECHNICAL_CANDIDATE", path=self.db)
+        _record_reference_plan(event_id, "2026-01-01T00:00:00Z", status="NO_TECHNICAL_CANDIDATE", path=self.db)
         population_report = pair_ledger(self.db)
-        compared = compare_paired_policies(population_report)
+        compared = compare_paired_policies(population_report, ledger_path=self.db)
         self.assertEqual(compared["status"], "OFFLINE_RISK_PARITY_SIMULATION")
         self.assertEqual(compared["policies"]["TECHNICAL_ONLY"]["opportunities"], 1)
         self.assertEqual(compared["policies"]["TECHNICAL_ONLY"]["eligible"], 0)

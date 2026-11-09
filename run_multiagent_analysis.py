@@ -15,9 +15,10 @@ from config.market_config import (
 from src.orchestration.orchestrator import (
     MultiAgentOrchestrator,
 )
-from src.event_ledger import bind_event, record_opportunity, record_system_decision, research_log_required
+from src.event_ledger import bind_event, record_opportunity, record_system_decision, record_technical_plan, research_log_required
 from src.market_snapshot import build_compact_snapshot
 from src.technical_evaluator import evaluate_technical_state
+from src.technical_reference import build_technical_reference_plan
 
 
 BASE_DIR = (
@@ -119,20 +120,36 @@ def main():
     try:
         timestamp = market_state.get("analysis_time") or market_state.get("timestamp")
         if timestamp:
-            technical = evaluate_technical_state(build_compact_snapshot(market_state, candles_per_timeframe=4))
             technical_decision = "NO_TRADE"
-            if technical["setup_quality"] >= 65 and technical["alignment"] != "CONFLICT" and technical["bias"] != "NEUTRAL":
-                technical_decision = "WATCH_LONG" if technical["bias"] == "BULLISH" else "WATCH_SHORT"
+            try:
+                technical = evaluate_technical_state(build_compact_snapshot(market_state, candles_per_timeframe=4))
+                if technical["setup_quality"] >= 65 and technical["alignment"] != "CONFLICT" and technical["bias"] != "NEUTRAL":
+                    technical_decision = "WATCH_LONG" if technical["bias"] == "BULLISH" else "WATCH_SHORT"
+                safe_technical = {key: technical[key] for key in ("bias", "overall_score", "setup_quality", "alignment", "timeframe_scores")}
+            except Exception as exc:
+                technical = None
+                safe_technical = {"validation_error_code": f"TECHNICAL_EVALUATION_{type(exc).__name__.upper()}"}
+            reference = build_technical_reference_plan(
+                symbol, market_state, timestamp,
+                constructed_at_utc=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                technical_evaluation=technical,
+            )
             snapshot = {
                 **market_state,
                 "technical_decision": technical_decision,
-                "technical_evaluation": {key: technical[key] for key in ("bias", "overall_score", "setup_quality", "alignment", "timeframe_scores")},
+                "technical_evaluation": safe_technical,
+                "technical_plan_status": reference["status"],
+                "technical_plan_sha256": reference["plan_sha256"],
+                "technical_policy_version": reference["policy_version"],
             }
             event_id = record_opportunity(
                 symbol, timestamp, snapshot,
                 eligible=technical_decision != "NO_TRADE",
                 exclusion_reason="NO_TECHNICAL_CANDIDATE" if technical_decision == "NO_TRADE" else None,
             )
+            plan_write = record_technical_plan(event_id, reference)
+            if research_log_required() and not plan_write.persisted:
+                raise RuntimeError(plan_write.error_code or "TECHNICAL_PLAN_NOT_PERSISTED")
     except Exception:
         if research_log_required():
             raise

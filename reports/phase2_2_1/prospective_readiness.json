@@ -1,0 +1,13 @@
+{
+  "automatic_collection_started": false,
+  "blockers": [
+    "Fase 1 permanece INCOMPLETE_PENDING_MANUAL para comprobaciones locales MT5 demo y proveedores.",
+    "El periodo prospectivo UTC y el presupuesto de API siguen pendientes de congelar/autorizar.",
+    "La calidad de spreads cero no verificados limita la elegibilidad confirmatoria.",
+    "La demo y reconstrucción histórica son ingeniería/sintéticas o exploratorias, no evidencia predictiva."
+  ],
+  "experiment_can_start": false,
+  "orders_sent": 0,
+  "provider_calls": 0,
+  "status": "PROSPECTIVE_EXPERIMENT_BLOCKED"
+}

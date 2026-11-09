@@ -1,0 +1,321 @@
+{
+  "baseline_signal_differences_are_recorded_not_forced_to_match": true,
+  "compatibility_with_saved_stateful_65_limit_trades": {
+    "economic_results_compared": false,
+    "first_differences": [],
+    "matched_entry_sl_tp_and_mode": 2094,
+    "unavailable_or_mismatched": 0,
+    "unavailable_plan_count": 0
+  },
+  "confirmatory_status": "NOT_CONFIRMATORY_EXPLORATORY_HISTORY_ONLY",
+  "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "duration_seconds": 97.845,
+  "economic_conclusion": "INCONCLUSIVE_NOT_A_CONFIRMATORY_BACKTEST",
+  "input": {
+    "candidate_65_rows": 10284,
+    "expected_scan_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "scan_path": "data/backtest/technical_candidate_scan.csv",
+    "scan_rows": 22011,
+    "scan_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "stateful_trade_rows": 2094,
+    "stateful_trades_path": "data/backtest/stateful_trades.csv",
+    "stateful_trades_sha256": "9f7c0f0e7f0e6d93c9d582dedc5bf49fc004e4761cec105824b0b98c79e6fa9e"
+  },
+  "outcomes_used_for_plan_construction": false,
+  "plan_construction_uses_future_outcomes": false,
+  "reconstruction": {
+    "alignment_disagreements": 0,
+    "baseline_candidate_disagreements": 13,
+    "bias_disagreements": 34,
+    "by_symbol": {
+      "AUDUSD": {
+        "NO_TECHNICAL_CANDIDATE": 3969,
+        "TECHNICAL_PLAN_NOT_EVALUABLE": 391,
+        "TECHNICAL_PLAN_VALID": 2977
+      },
+      "EURUSD": {
+        "NO_TECHNICAL_CANDIDATE": 4069,
+        "TECHNICAL_PLAN_NOT_EVALUABLE": 338,
+        "TECHNICAL_PLAN_VALID": 2930
+      },
+      "USDCAD": {
+        "NO_TECHNICAL_CANDIDATE": 3686,
+        "TECHNICAL_PLAN_NOT_EVALUABLE": 366,
+        "TECHNICAL_PLAN_VALID": 3285
+      }
+    },
+    "candidate_plans_with_unverified_zero_spread": 7004,
+    "data_reconstruction_errors": 0,
+    "first_candidate_disagreements": [
+      {
+        "analysis_time": "2026-05-25T12:15:00Z",
+        "baseline_candidate_65": true,
+        "reason": "TECHNICAL_65_LIMIT_CANDIDATE_RULE_NOT_MET",
+        "reference_status": "NO_TECHNICAL_CANDIDATE",
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-25T15:15:00Z",
+        "baseline_candidate_65": true,
+        "reason": "TECHNICAL_65_LIMIT_CANDIDATE_RULE_NOT_MET",
+        "reference_status": "NO_TECHNICAL_CANDIDATE",
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-25T16:15:00Z",
+        "baseline_candidate_65": true,
+        "reason": "TECHNICAL_65_LIMIT_CANDIDATE_RULE_NOT_MET",
+        "reference_status": "NO_TECHNICAL_CANDIDATE",
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-06-17T09:00:00Z",
+        "baseline_candidate_65": true,
+        "reason": "TECHNICAL_65_LIMIT_CANDIDATE_RULE_NOT_MET",
+        "reference_status": "NO_TECHNICAL_CANDIDATE",
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-09-17T18:30:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-06-17T12:45:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "USDCAD"
+      },
+      {
+        "analysis_time": "2026-09-02T20:30:00Z",
+        "baseline_candidate_65": true,
+        "reason": "TECHNICAL_65_LIMIT_CANDIDATE_RULE_NOT_MET",
+        "reference_status": "NO_TECHNICAL_CANDIDATE",
+        "symbol": "USDCAD"
+      },
+      {
+        "analysis_time": "2026-10-07T08:30:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "AUDUSD"
+      },
+      {
+        "analysis_time": "2026-10-07T09:30:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "AUDUSD"
+      },
+      {
+        "analysis_time": "2026-10-07T12:45:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "AUDUSD"
+      },
+      {
+        "analysis_time": "2026-10-07T13:45:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "AUDUSD"
+      },
+      {
+        "analysis_time": "2026-10-07T14:00:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "AUDUSD"
+      },
+      {
+        "analysis_time": "2026-10-07T14:30:00Z",
+        "baseline_candidate_65": false,
+        "reason": "TECHNICAL_65_LIMIT_REFERENCE",
+        "reference_status": "TECHNICAL_PLAN_VALID",
+        "symbol": "AUDUSD"
+      }
+    ],
+    "first_data_errors": [],
+    "first_setup_quality_differences": [
+      {
+        "analysis_time": "2026-05-05T07:00:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 91.0,
+        "reconstructed_setup_quality": 96.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-05T07:15:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 90.0,
+        "reconstructed_setup_quality": 95.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-05T07:30:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 83.0,
+        "reconstructed_setup_quality": 88.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-05T07:45:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 91.0,
+        "reconstructed_setup_quality": 96.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T07:00:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 73.0,
+        "reconstructed_setup_quality": 74.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T07:15:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 70.0,
+        "reconstructed_setup_quality": 71.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T07:30:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 72.0,
+        "reconstructed_setup_quality": 73.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T09:15:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 83.0,
+        "reconstructed_setup_quality": 84.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T09:30:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 53.0,
+        "reconstructed_setup_quality": 54.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T09:45:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 84.0,
+        "reconstructed_setup_quality": 85.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T10:00:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 90.0,
+        "reconstructed_setup_quality": 91.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T10:15:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 84.0,
+        "reconstructed_setup_quality": 85.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T10:30:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 95.0,
+        "reconstructed_setup_quality": 96.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T11:45:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 98.0,
+        "reconstructed_setup_quality": 99.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T12:15:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 93.0,
+        "reconstructed_setup_quality": 94.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T12:30:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 90.0,
+        "reconstructed_setup_quality": 91.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T12:45:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 91.0,
+        "reconstructed_setup_quality": 92.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T13:15:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 83.0,
+        "reconstructed_setup_quality": 84.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T13:30:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 71.0,
+        "reconstructed_setup_quality": 72.0,
+        "symbol": "EURUSD"
+      },
+      {
+        "analysis_time": "2026-05-20T13:45:00Z",
+        "bias_frozen": "BEARISH",
+        "bias_reconstructed": "BEARISH",
+        "frozen_setup_quality": 53.0,
+        "reconstructed_setup_quality": 54.0,
+        "symbol": "EURUSD"
+      }
+    ],
+    "plan_rejection_reasons": {
+      "BUY_LIMIT_NOT_BELOW_MARKET": 607,
+      "SELL_LIMIT_NOT_ABOVE_MARKET": 488
+    },
+    "setup_quality_disagreements": 1200,
+    "source_timestamp_violations": 0,
+    "status_counts": {
+      "NO_TECHNICAL_CANDIDATE": 11724,
+      "TECHNICAL_PLAN_NOT_EVALUABLE": 1095,
+      "TECHNICAL_PLAN_VALID": 9192
+    }
+  },
+  "reconstruction_sha256": "e67133032323496842941d4f4464bbba98bd112be09ab4cee6f07408252becd4",
+  "reference_policy": "TECHNICAL_REFERENCE_V1",
+  "schema_version": "2.2.1",
+  "status": "PASS"
+}
