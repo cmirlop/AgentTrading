@@ -5,9 +5,12 @@ reports/*_private.json
 data/state/daily_risk_guard.json
 data/state/daily_risk_guard.json.lock
 data/state/daily_risk_guard.json.*.tmp
+
 data/events/*.sqlite
 data/events/*.sqlite-shm
 data/events/*.sqlite-wal
 data/events/*.sqlite3
 data/events/*.sqlite3-shm
 data/events/*.sqlite3-wal
+/reports/private/
+

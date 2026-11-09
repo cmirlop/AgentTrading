@@ -1,0 +1,141 @@
+{
+  "account_type": "REAL",
+  "broker_data": "PASS",
+  "connection": "PASS",
+  "daily_history_status": "PASS",
+  "daily_loss_control": "PASS",
+  "demo_validation": "PENDING_NOT_APPLICABLE_NO_DEMO_ACCOUNT",
+  "errors": [],
+  "generated_utc": "2026-11-09T20:21:12.171333+00:00",
+  "history_root": "data/market_history/mt5_real_readonly/20261109T202112.171333Z",
+  "open_position_count": 0,
+  "orders_sent_by_process": 0,
+  "pending_order_count": 0,
+  "read_only_safety": {
+    "status": "PASS",
+    "tradeapi_disabled": true
+  },
+  "risk_engine": "PARTIAL",
+  "schema_version": 1,
+  "status": "MT5_REAL_READ_ONLY_PENDING",
+  "symbols": {
+    "AUDUSD": {
+      "history": {
+        "D1": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-06T00:00:00+00:00",
+          "new_bars": 20,
+          "status": "PASS"
+        },
+        "H1": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T19:00:00+00:00",
+          "new_bars": 494,
+          "status": "PASS"
+        },
+        "H4": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T16:00:00+00:00",
+          "new_bars": 124,
+          "status": "PASS"
+        },
+        "M15": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T20:00:00+00:00",
+          "new_bars": 991,
+          "status": "PASS"
+        },
+        "M5": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T20:15:00+00:00",
+          "new_bars": 975,
+          "status": "PASS"
+        }
+      },
+      "metadata_valid": true,
+      "risk_status": "PASS",
+      "spread_points": null,
+      "spread_quality": "PASS",
+      "status": "PASS"
+    },
+    "EURUSD": {
+      "history": {
+        "D1": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-06T00:00:00+00:00",
+          "new_bars": 20,
+          "status": "PASS"
+        },
+        "H1": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T19:00:00+00:00",
+          "new_bars": 494,
+          "status": "PASS"
+        },
+        "H4": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T16:00:00+00:00",
+          "new_bars": 124,
+          "status": "PASS"
+        },
+        "M15": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T20:00:00+00:00",
+          "new_bars": 991,
+          "status": "PASS"
+        },
+        "M5": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T20:15:00+00:00",
+          "new_bars": 975,
+          "status": "PASS"
+        }
+      },
+      "metadata_valid": true,
+      "risk_status": "PASS",
+      "spread_points": null,
+      "spread_quality": "PASS",
+      "status": "PASS"
+    },
+    "USDCAD": {
+      "history": {
+        "D1": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-06T00:00:00+00:00",
+          "new_bars": 20,
+          "status": "PASS"
+        },
+        "H1": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T19:00:00+00:00",
+          "new_bars": 494,
+          "status": "PASS"
+        },
+        "H4": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T16:00:00+00:00",
+          "new_bars": 124,
+          "status": "PASS"
+        },
+        "M15": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T20:00:00+00:00",
+          "new_bars": 991,
+          "status": "PASS"
+        },
+        "M5": {
+          "data_quality": "PASS",
+          "latest_closed_utc": "2026-11-09T20:15:00+00:00",
+          "new_bars": 975,
+          "status": "PASS"
+        }
+      },
+      "metadata_valid": true,
+      "risk_status": "PASS",
+      "spread_points": null,
+      "spread_quality": "PASS",
+      "status": "PASS"
+    }
+  },
+  "trades_executed_by_process": 0
+}

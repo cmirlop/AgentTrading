@@ -1,0 +1,166 @@
+{
+  "errors": [],
+  "generated_utc": "2026-11-09T20:21:12.171333+00:00",
+  "history_root": "data/market_history/mt5_real_readonly/20261109T202112.171333Z",
+  "orders_sent_by_process": 0,
+  "status": "PASS",
+  "symbols": {
+    "AUDUSD": {
+      "D1": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_D1.csv",
+        "latest_closed_utc": "2026-11-06T00:00:00+00:00",
+        "local_latest_utc": "2026-10-09T00:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 20,
+        "sha256": "82db89080e911827bd22327846e3010b5fd41f88c5e849a7a32f7042098a4226",
+        "status": "PASS"
+      },
+      "H1": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H1.csv",
+        "latest_closed_utc": "2026-11-09T19:00:00+00:00",
+        "local_latest_utc": "2026-10-12T05:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 494,
+        "sha256": "a7566d6731f632deb046fef0d849d504072edbf10f867812e47a060318e6bdd8",
+        "status": "PASS"
+      },
+      "H4": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H4.csv",
+        "latest_closed_utc": "2026-11-09T16:00:00+00:00",
+        "local_latest_utc": "2026-10-12T00:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 124,
+        "sha256": "a15e046824b79b5c9364e9987cdeb7e12cef1e2b6c7e0884e581d7b7e2b10ef3",
+        "status": "PASS"
+      },
+      "M15": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M15.csv",
+        "latest_closed_utc": "2026-11-09T20:00:00+00:00",
+        "local_latest_utc": "2026-10-12T06:15:00+00:00",
+        "market_gap_count": 2,
+        "new_bars": 991,
+        "sha256": "e25fbcb1d80b56a14a077d27a6e76814684f425476557c92da7f0006d13e736b",
+        "status": "PASS"
+      },
+      "M5": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M5.csv",
+        "latest_closed_utc": "2026-11-09T20:15:00+00:00",
+        "local_latest_utc": "2026-10-12T06:35:00+00:00",
+        "market_gap_count": 1,
+        "new_bars": 975,
+        "sha256": "5817b23009202ecdd6f604b282520563f8556be8743ae475a8d553a006b4b304",
+        "status": "PASS"
+      }
+    },
+    "EURUSD": {
+      "D1": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_D1.csv",
+        "latest_closed_utc": "2026-11-06T00:00:00+00:00",
+        "local_latest_utc": "2026-10-09T00:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 20,
+        "sha256": "23dde3355bc80c433e749913f8f28f08950e037c98a1f15490259e06519707e5",
+        "status": "PASS"
+      },
+      "H1": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H1.csv",
+        "latest_closed_utc": "2026-11-09T19:00:00+00:00",
+        "local_latest_utc": "2026-10-12T05:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 494,
+        "sha256": "746ac39cbf7bde25c3a6194e3cc97768e9edbb2f8c30f23aed89c0b8703c2320",
+        "status": "PASS"
+      },
+      "H4": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H4.csv",
+        "latest_closed_utc": "2026-11-09T16:00:00+00:00",
+        "local_latest_utc": "2026-10-12T00:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 124,
+        "sha256": "d79cb097ff58adfead7b38052bd536ee4cfa59f675746604a1a3626c36abe389",
+        "status": "PASS"
+      },
+      "M15": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv",
+        "latest_closed_utc": "2026-11-09T20:00:00+00:00",
+        "local_latest_utc": "2026-10-12T06:15:00+00:00",
+        "market_gap_count": 2,
+        "new_bars": 991,
+        "sha256": "dc8df6be0218c4b5d8dc92b81e74c3b56b808e1834e346d59ae534983b3b28cf",
+        "status": "PASS"
+      },
+      "M5": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv",
+        "latest_closed_utc": "2026-11-09T20:15:00+00:00",
+        "local_latest_utc": "2026-10-12T06:35:00+00:00",
+        "market_gap_count": 1,
+        "new_bars": 975,
+        "sha256": "5221f4992bac7c1bf971d715744f424d71dbfe559f6be1e722313493126e8818",
+        "status": "PASS"
+      }
+    },
+    "USDCAD": {
+      "D1": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_D1.csv",
+        "latest_closed_utc": "2026-11-06T00:00:00+00:00",
+        "local_latest_utc": "2026-10-09T00:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 20,
+        "sha256": "ccea8c6c80784d08e6753c7730adee690974a04302e3a70d8e38f1a7c50ccd53",
+        "status": "PASS"
+      },
+      "H1": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H1.csv",
+        "latest_closed_utc": "2026-11-09T19:00:00+00:00",
+        "local_latest_utc": "2026-10-12T05:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 494,
+        "sha256": "979dc095b6827241fc90abc96f703bd87aec15bcfe27807143b0a31e36ac9ce8",
+        "status": "PASS"
+      },
+      "H4": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H4.csv",
+        "latest_closed_utc": "2026-11-09T16:00:00+00:00",
+        "local_latest_utc": "2026-10-12T00:00:00+00:00",
+        "market_gap_count": 6,
+        "new_bars": 124,
+        "sha256": "032ed42869505a9eddbb7cce2d8d4fc7a5d2e757ac7fcbd8eebf6edc5b5a1cf1",
+        "status": "PASS"
+      },
+      "M15": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv",
+        "latest_closed_utc": "2026-11-09T20:00:00+00:00",
+        "local_latest_utc": "2026-10-12T06:15:00+00:00",
+        "market_gap_count": 2,
+        "new_bars": 991,
+        "sha256": "b363bd725ee5993f254654b94998cacf2ba2edfe98a1e6254304e18b37598bbc",
+        "status": "PASS"
+      },
+      "M5": {
+        "data_quality": "PASS",
+        "file": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv",
+        "latest_closed_utc": "2026-11-09T20:15:00+00:00",
+        "local_latest_utc": "2026-10-12T06:35:00+00:00",
+        "market_gap_count": 1,
+        "new_bars": 975,
+        "sha256": "f08e9d0d4c4ed22b579f77c6a5ef68bc66ae56f4eda064cabd7ff43b270915ca",
+        "status": "PASS"
+      }
+    }
+  },
+  "trades_executed_by_process": 0
+}
