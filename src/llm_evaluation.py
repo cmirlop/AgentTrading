@@ -11,13 +11,16 @@ import pandas as pd
 
 from src.phase2_1_evaluation import utc_timestamp
 from config import risk_config
+from src.event_ledger import canonical_hash, initialize_ledger, ledger_content_sha256, reconcile_ledger
+from src.technical_reference import POLICY_SHA256 as TECHNICAL_REFERENCE_POLICY_SHA256
 from src.research_policy import (
     CANONICAL_FILTER_ROLE, CANONICAL_MODEL, CANONICAL_PROVIDER, POLICY_VERSION,
     canonical_prompt_sha256, deepseek_filter_outcome,
 )
 
 
-def load_pairing_tables(path: str | Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def load_pairing_tables(path: str | Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    initialize_ledger(path)
     db = sqlite3.connect(str(path))
     try:
         opportunities = pd.read_sql_query("SELECT * FROM opportunities", db)
@@ -26,14 +29,15 @@ def load_pairing_tables(path: str | Path) -> tuple[pd.DataFrame, pd.DataFrame, p
         outcomes = pd.read_sql_query("SELECT * FROM outcomes", db)
         coverage = pd.read_sql_query("SELECT * FROM coverage_events", db)
         contexts = pd.read_sql_query("SELECT * FROM trade_contexts", db)
+        plans = pd.read_sql_query("SELECT * FROM technical_plans", db)
     finally:
         db.close()
-    return opportunities, llm, systems, outcomes, coverage, contexts
+    return opportunities, llm, systems, outcomes, coverage, contexts, plans
 
 
 def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.DataFrame,
                   outcomes: pd.DataFrame, coverage: pd.DataFrame,
-                  contexts: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
+                  contexts: pd.DataFrame, plans: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
     counts = {
         "technical_events_total": int(len(opportunities)),
         "llm_events_total": int(len(llm)),
@@ -48,6 +52,8 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
         "provider_errors": int(llm["error_code"].notna().sum()) if len(llm) else 0,
         "outcome_events": int(outcomes["event_id"].nunique()) if len(outcomes) else 0,
         "trade_contexts_missing_or_invalid": 0,
+        "technical_plans_missing_or_invalid": 0,
+        "llm_requests_unmatched": 0,
     }
     if not len(opportunities):
         return pd.DataFrame(), counts
@@ -70,6 +76,9 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
     contexts_by_event: dict[str, list[dict[str, Any]]] = {}
     for row in contexts.to_dict("records"):
         contexts_by_event.setdefault(str(row["event_id"]), []).append(row)
+    plans_by_event: dict[str, list[dict[str, Any]]] = {}
+    for row in plans.to_dict("records"):
+        plans_by_event.setdefault(str(row["event_id"]), []).append(row)
 
     population_rows = []
     for opportunity in opportunities.to_dict("records"):
@@ -77,27 +86,60 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
         technical = json.loads(opportunity["snapshot_json"])
         technical_decision = str(technical.get("technical_decision", technical.get("decision", ""))).upper()
         technical_evaluation = technical.get("technical_evaluation") or {}
-        context_rows = contexts_by_event.get(event_id, [])
+        all_context_rows = contexts_by_event.get(event_id, [])
+        context_rows = [row for row in all_context_rows if row.get("context_type") == "TRADE_PLAN_RISK_INPUT"]
         trade_context = {}
         if len(context_rows) == 1:
             try:
                 trade_context = json.loads(context_rows[0]["context_json"])
             except (TypeError, json.JSONDecodeError):
                 trade_context = {}
-        elif not context_rows:
-            trade_context = {
-                "plan": technical.get("plan"),
-                "risk_context": technical.get("risk_context"),
-            }
+        plan_rows = [row for row in plans_by_event.get(event_id, [])
+                     if row.get("policy_version") == "TECHNICAL_REFERENCE_V1"]
+        technical_plan: dict[str, Any] = {}
+        if len(plan_rows) == 1:
+            try:
+                technical_plan = dict(plan_rows[0])
+                technical_plan["plan"] = json.loads(technical_plan.get("plan_json") or "null")
+                technical_plan["market_data_quality"] = json.loads(technical_plan.get("market_data_quality_json") or "{}")
+                technical_plan["evidence_ids"] = json.loads(technical_plan.get("evidence_ids_json") or "[]")
+                technical_plan["missing_fields"] = json.loads(technical_plan.get("missing_fields_json") or "[]")
+                if technical_plan.get("plan") is not None and canonical_hash(technical_plan["plan"]) != technical_plan.get("plan_sha256"):
+                    raise ValueError("TECHNICAL_PLAN_HASH_MISMATCH")
+            except (TypeError, ValueError, json.JSONDecodeError):
+                technical_plan = {}
+        if technical_decision in {"WATCH_LONG", "WATCH_SHORT"} and (
+            len(plan_rows) != 1 or not technical_plan
+            or technical_plan.get("plan_source") != "TECHNICAL_ONLY_REFERENCE"
+            or technical_plan.get("policy_sha256") != TECHNICAL_REFERENCE_POLICY_SHA256
+            or technical_plan.get("plan_status") not in {"TECHNICAL_PLAN_VALID", "TECHNICAL_PLAN_NOT_EVALUABLE"}
+        ):
+            counts["technical_plans_missing_or_invalid"] += 1
         outcome_rows = outcomes[outcomes["event_id"].astype(str).eq(event_id)] if len(outcomes) else pd.DataFrame()
         event_outcomes = []
         decision_timestamp = utc_timestamp(opportunity["decision_time_utc"], field="decision_time")
         for outcome_row in outcome_rows.to_dict("records"):
             try:
-                known_at = utc_timestamp(outcome_row["known_at_utc"], field="known_at")
                 record = json.loads(outcome_row["outcome_json"])
-                release = record.get("release_time_utc")
-                if known_at < decision_timestamp or (release and utc_timestamp(release, field="release_time") < decision_timestamp):
+                release = record.get("economic_close_time_utc") or record.get("release_time_utc")
+                observed = record.get("outcome_observed_at_utc") or record.get("known_at_utc") or outcome_row["known_at_utc"]
+                persisted = record.get("persisted_at_utc") or outcome_row["known_at_utc"]
+                close_time = utc_timestamp(release, field="economic_close_time") if release else None
+                observed_time = utc_timestamp(observed, field="outcome_observed_at")
+                persisted_time = utc_timestamp(persisted, field="outcome_persisted_at")
+                fill_time = utc_timestamp(record["fill_time_utc"], field="fill_time") if record.get("fill_time_utc") else None
+                plan_matches = (
+                    record.get("policy_id") != "COMMON_PLAN_COUNTERFACTUAL"
+                    or record.get("plan_sha256") == technical_plan.get("plan_sha256")
+                )
+                chronology_ok = (
+                    observed_time >= decision_timestamp
+                    and (close_time is None or close_time >= decision_timestamp)
+                    and (close_time is None or observed_time >= close_time)
+                    and (fill_time is None or close_time is None or close_time >= fill_time)
+                    and persisted_time >= observed_time
+                )
+                if not chronology_ok or not plan_matches:
                     counts["unverified_provenance"] += 1
                     continue
                 event_outcomes.append(record)
@@ -119,13 +161,45 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
             "technical_decision": technical_decision or None,
             "technical_setup_quality": technical_evaluation.get("setup_quality", technical.get("setup_quality")),
             "technical_overall_score": technical_evaluation.get("overall_score", technical.get("overall_score")),
-            "plan": trade_context.get("plan"),
+            "plan": technical_plan.get("plan"),
+            "plan_sha256": technical_plan.get("plan_sha256"),
+            "technical_plan_status": technical_plan.get("plan_status", "MISSING_OR_INVALID"),
+            "technical_plan_version": technical_plan.get("policy_version"),
+            "technical_plan_policy_sha256": technical_plan.get("policy_sha256"),
+            "technical_plan_payload_sha256": technical_plan.get("payload_sha256"),
+            "technical_plan_created_at_utc": technical_plan.get("constructed_at_utc"),
+            "technical_plan_max_market_data_time_utc": technical_plan.get("maximum_market_data_time_utc"),
+            "technical_plan_data_quality": technical_plan.get("market_data_quality", {}),
+            "technical_plan_evidence_ids": technical_plan.get("evidence_ids", []),
             "risk_context": trade_context.get("risk_context"),
             "trade_context_sha256": context_rows[0].get("payload_sha256") if len(context_rows) == 1 else None,
-            "plan_strategy_source": trade_context.get("plan_strategy_source"),
-            "trade_context_status": "MISSING",
+            "plan_strategy_source": technical_plan.get("plan_source"),
+            "trade_context_status": "MISSING_RISK_CONTEXT",
             "outcomes": event_outcomes,
         }
+        context_times_valid = False
+        plan_built = context_known = risk_known = None
+        if len(context_rows) == 1 and technical_plan:
+            try:
+                market_time = utc_timestamp(trade_context["market_data_time_utc"], field="market_data_time")
+                context_known = utc_timestamp(trade_context["context_known_at_utc"], field="context_known_at")
+                risk_known = utc_timestamp(trade_context["risk_context_known_at_utc"], field="risk_context_known_at")
+                plan_built = utc_timestamp(technical_plan["constructed_at_utc"], field="technical_plan_created_at")
+                plan_market = utc_timestamp(technical_plan["maximum_market_data_time_utc"], field="technical_plan_market_data_time")
+                context_times_valid = (
+                    market_time <= decision_timestamp and plan_market <= decision_timestamp
+                    and context_known >= market_time and risk_known >= market_time
+                    and plan_built >= decision_timestamp
+                )
+            except (ValueError, TypeError, KeyError):
+                context_times_valid = False
+        if context_times_valid:
+            base["decision_time_utc"] = max(plan_built, context_known, risk_known).isoformat().replace("+00:00", "Z")
+            base["trade_context_status"] = "TIMESTAMPS_VERIFIED"
+        elif technical_decision in {"WATCH_LONG", "WATCH_SHORT"}:
+            counts["trade_contexts_missing_or_invalid"] += 1
+            base["risk_context"] = None
+            base["trade_context_status"] = "MISSING_OR_FUTURE_DATA_CONTEXT"
         if len(role_events) != 1:
             counts["events_without_llm_coverage"] += 1
             if len(role_events) > 1:
@@ -146,7 +220,7 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
             population_rows.append({**base, "llm_decision": None, "llm_model_output": None,
                 "llm_role": CANONICAL_FILTER_ROLE, "provider": None, "model": None,
                 "prompt_sha256": None, "payload_sha256": None, "llm_validation": validation,
-                "llm_coverage_status": coverage_status, "llm_covered": False,
+                "llm_coverage_status": coverage_status, "llm_covered": False, "request_id": None,
                 "decision_match": None})
             continue
 
@@ -158,6 +232,12 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
             decision = json.loads(event["decision_json"] or "{}")
             used = decision.get("evidence_used", decision.get("evidence_ids", []))
             model_strategy = str(decision.get("strategy", "")).upper()
+            sent_requests = [row for row in coverage_rows
+                             if row.get("event_type") == "LLM_QUERY_SENT"
+                             and row.get("agent_role") == CANONICAL_FILTER_ROLE]
+            persisted_responses = [row for row in coverage_rows
+                                   if row.get("event_type") == "LLM_RESPONSE_PERSISTED"
+                                   and row.get("agent_role") == CANONICAL_FILTER_ROLE]
             provenance_ok = (
                 event["provider"] == CANONICAL_PROVIDER
                 and event["configured_model"] == CANONICAL_MODEL
@@ -167,8 +247,11 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
                 and len(event["payload_sha256"]) == 64
                 and request >= decision_timestamp and response >= request
                 and event["pydantic_status"] == "VALID"
-                and any(row.get("event_type") == "LLM_QUERY_SENT" and row.get("payload_sha256") == event["payload_sha256"] for row in coverage_rows)
-                and any(row.get("event_type") == "LLM_RESPONSE_PERSISTED" and row.get("payload_sha256") == event["payload_sha256"] for row in coverage_rows)
+                and bool(event.get("request_id"))
+                and len(sent_requests) == 1 and sent_requests[0].get("request_id") == event.get("request_id")
+                and sent_requests[0].get("payload_sha256") == event["payload_sha256"]
+                and len(persisted_responses) == 1 and persisted_responses[0].get("request_id") == event.get("request_id")
+                and persisted_responses[0].get("payload_sha256") == event["payload_sha256"]
                 and isinstance(used, list) and all(item in allowed for item in used)
                 and bool(model_strategy)
             )
@@ -183,7 +266,7 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
                 "llm_role": CANONICAL_FILTER_ROLE, "provider": event.get("provider"),
                 "model": event.get("configured_model"), "prompt_sha256": event.get("prompt_sha256"),
                 "payload_sha256": event.get("payload_sha256"), "llm_validation": "INVALID_OR_UNVERIFIED",
-                "llm_coverage_status": "CANONICAL_RESPONSE_INVALID_OR_UNVERIFIED",
+                "llm_coverage_status": "CANONICAL_RESPONSE_INVALID_OR_UNVERIFIED", "request_id": event.get("request_id"),
                 "llm_covered": False, "decision_match": None})
             continue
 
@@ -193,6 +276,8 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
             try:
                 system_valid = (
                     system_rows[0]["validation_status"] == "VALID"
+                    and bool(event.get("request_id"))
+                    and system_rows[0].get("request_id") == event.get("request_id")
                     and utc_timestamp(system_rows[0]["created_at_utc"], field="system_decision_time") >= response
                 )
             except (ValueError, TypeError, KeyError):
@@ -205,34 +290,21 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
                 "model": event["configured_model"], "prompt_sha256": event["prompt_sha256"],
                 "payload_sha256": event["payload_sha256"], "llm_validation": "NO_VALID_SYSTEM_DECISION",
                 "llm_coverage_status": "SYSTEM_DECISION_MISSING_OR_INVALID", "llm_covered": False,
+                "request_id": event.get("request_id"),
                 "decision_match": None})
             continue
 
         # The source candle must not be newer than the opportunity. Market
         # metadata and plan inputs must be timestamped and known before the
         # common simulated decision time.
-        context_times_valid = False
-        market_time = context_known = risk_known = None
-        if len(context_rows) == 1:
-            try:
-                market_time = utc_timestamp(trade_context["market_data_time_utc"], field="market_data_time")
-                context_known = utc_timestamp(trade_context["context_known_at_utc"], field="context_known_at")
-                risk_known = utc_timestamp(trade_context["risk_context_known_at_utc"], field="risk_context_known_at")
-                context_times_valid = market_time <= decision_timestamp and context_known >= market_time and risk_known >= market_time
-            except (ValueError, TypeError, KeyError):
-                context_times_valid = False
         if context_times_valid:
             effective_decision = max(
                 response, utc_timestamp(system_rows[0]["created_at_utc"], field="system_decision_time"),
-                context_known, risk_known,
+                utc_timestamp(base["decision_time_utc"], field="risk_context_effective_time"),
             )
             base["decision_time_utc"] = effective_decision.isoformat().replace("+00:00", "Z")
-            base["trade_context_status"] = "TIMESTAMPS_VERIFIED"
         else:
-            counts["trade_contexts_missing_or_invalid"] += 1
-            base["plan"] = None
             base["risk_context"] = None
-            base["plan_strategy_source"] = "UNVERIFIED_CONTEXT"
             base["trade_context_status"] = "MISSING_OR_FUTURE_DATA_CONTEXT"
 
         llm_decision = str(system_rows[0]["final_decision"]).upper()
@@ -257,6 +329,7 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
             "provider": event["provider"], "model": event["configured_model"],
             "reported_model": event.get("reported_model"),
             "prompt_sha256": event["prompt_sha256"], "payload_sha256": event["payload_sha256"],
+            "request_id": event.get("request_id"),
             "llm_validation": event["pydantic_status"],
             "llm_coverage_status": "VALID_CANONICAL_RESPONSE" if final_consistent else "SYSTEM_DECISION_MISMATCH",
             "llm_covered": bool(final_consistent), "decision_match": bool(same)})
@@ -264,11 +337,11 @@ def _event_checks(opportunities: pd.DataFrame, llm: pd.DataFrame, systems: pd.Da
 
 
 def pair_ledger(path: str | Path) -> dict[str, Any]:
-    opportunities, llm, systems, outcomes, coverage, contexts = load_pairing_tables(path)
-    population, counts = _event_checks(opportunities, llm, systems, outcomes, coverage, contexts)
+    opportunities, llm, systems, outcomes, coverage, contexts, plans = load_pairing_tables(path)
+    population, counts = _event_checks(opportunities, llm, systems, outcomes, coverage, contexts, plans)
     paired = population.loc[population["llm_covered"]] if len(population) else population
-    return {
-        "schema_version": "2.0",
+    report = {
+        "schema_version": "2.1",
         "status": "PAIRING_COVERAGE_AVAILABLE" if len(paired) else "NO_VERIFIABLE_PAIRS",
         "counts": counts,
         "pairs": paired.to_dict("records"),
@@ -276,18 +349,31 @@ def pair_ledger(path: str | Path) -> dict[str, Any]:
         "system_events_total": int(len(systems)),
         "coverage_events_total": int(len(coverage)),
         "trade_contexts_total": int(len(contexts)),
+        "technical_plans_total": int(len(plans)),
+        "source_ledger_path": str(Path(path).resolve()),
+        "source_ledger_sha256": ledger_content_sha256(path),
+        "reconciliation": reconcile_ledger(path),
         "limitations": [
             "Only events carrying valid provider, model, prompt, payload, evidence and UTC provenance are eligible.",
-            "Multiple valid LLM calls for one opportunity are excluded until a preregistered decision role is supplied.",
+            "Every response is joined by unique request_id; duplicate or absent request identifiers are not paired.",
             "No missing historical model decisions are synthesized.",
-            "Economic comparison requires independently recorded policy outcomes for both policies and portfolio constraints.",
+            "Both policies use the single append-only TECHNICAL_REFERENCE_V1 plan attached to each opportunity.",
+            "Economic comparison requires causal outcomes, complete risk context and a PASS reconciliation.",
         ],
     }
+    report["pairing_snapshot_sha256"] = canonical_hash({
+        key: report[key] for key in (
+            "schema_version", "counts", "population", "system_events_total", "coverage_events_total",
+            "trade_contexts_total", "technical_plans_total", "source_ledger_sha256", "reconciliation",
+        )
+    })
+    return report
 
 
 def compare_paired_policies(paired_events: list[dict[str, Any]] | dict[str, Any], *, cost_scenario: str = "CONSERVATIVE",
                             max_open_positions: int | None = None, initial_equity_eur: float = 10_000.0,
-                            state_dir: str | Path | None = None) -> dict[str, Any]:
+                            state_dir: str | Path | None = None,
+                            ledger_path: str | Path | None = None) -> dict[str, Any]:
     """Run the complete paired population through independent risk states.
 
     ``max_open_positions`` is accepted only for compatibility; overrides are
@@ -307,11 +393,31 @@ def compare_paired_policies(paired_events: list[dict[str, Any]] | dict[str, Any]
         return {
             "status": "NO_EVALUABLE",
             "reason_code": "POPULATION_PROVENANCE_REQUIRED",
-            "reason": "Pass the full pair_ledger report, including population and reconciliation counts.",
+            "reason": "Pass a pair_ledger report and the source SQLite ledger path.",
             "economic_inference_allowed": False,
         }
-    population = paired_events.get("population")
-    counts = paired_events.get("counts")
+    if ledger_path is None:
+        return {
+            "status": "NO_EVALUABLE_SOURCE_LEDGER_REQUIRED",
+            "reason": "A report status field is not proof of reconciliation; the source ledger must be revalidated.",
+            "economic_inference_allowed": False,
+        }
+    try:
+        current = pair_ledger(ledger_path)
+    except Exception:
+        return {"status": "NO_EVALUABLE_SOURCE_LEDGER_INVALID", "economic_inference_allowed": False}
+    if (paired_events.get("source_ledger_sha256") != current.get("source_ledger_sha256")
+            or paired_events.get("pairing_snapshot_sha256") != current.get("pairing_snapshot_sha256")):
+        return {"status": "NO_EVALUABLE_SOURCE_OR_REPORT_MISMATCH", "economic_inference_allowed": False}
+    reconciliation = current.get("reconciliation") or {}
+    if reconciliation.get("status") != "PASS":
+        return {
+            "status": "NO_EVALUABLE_RECONCILIATION_FAILED",
+            "reconciliation": reconciliation,
+            "economic_inference_allowed": False,
+        }
+    population = current.get("population")
+    counts = current.get("counts")
     if (not isinstance(population, list) or not isinstance(counts, dict)
             or counts.get("technical_events_total") != len(population)
             or not population
@@ -335,7 +441,11 @@ def compare_paired_policies(paired_events: list[dict[str, Any]] | dict[str, Any]
             elif len(common) > 1:
                 normalized["outcome"] = None
         normalized_events.append(normalized)
-    return simulate_paired_policies(
+    result = simulate_paired_policies(
         normalized_events, cost_scenario=cost_scenario,
         initial_equity_eur=initial_equity_eur, state_dir=state_dir,
     )
+    result["source_ledger_sha256"] = current["source_ledger_sha256"]
+    result["pairing_snapshot_sha256"] = current["pairing_snapshot_sha256"]
+    result["reconciliation"] = reconciliation
+    return result

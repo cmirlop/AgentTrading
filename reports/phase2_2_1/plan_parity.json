@@ -1,0 +1,15 @@
+{
+  "common_plan_sha256_by_event": {
+    "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54": "a98cbfffcf10bc2433a86e83ce2d0cbc2bd734af1bba0b02b1b6ac4ea3196612",
+    "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13": "9d2a89e63c09d5a96c9411255e9db4ff2e42914db0c21a7e6dcff08d34e3e9c2",
+    "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177": "8e6d72027fee3726f31db124946a0dd72b7a646b34b4a9f1f26a9cbedf98a3ee",
+    "53bd0da2a161876b8edcbe2182e92df06a84941d967bea9a8683c69de60d05ba": "fc8bd47321ea1790ab478ec52c04ac8b3f9b61c68afc87e8b399625ec24dbadc",
+    "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71": "c6f6fdabf5f6da5bfec4d5a681224f354f57f52f3cc6f945e81ac4e4b53c2bd3"
+  },
+  "demo_status": "PASS",
+  "opportunities": 5,
+  "policy_plan_source": "TECHNICAL_ONLY_REFERENCE",
+  "portfolio_states_independent": true,
+  "same_plan_used_for_both_policies": true,
+  "status": "PASS"
+}

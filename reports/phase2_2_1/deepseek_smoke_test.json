@@ -1,0 +1,11 @@
+{
+  "api_key_read_or_logged": false,
+  "calls_authorized_but_not_used": {
+    "max_cost_usd": 1.0,
+    "max_requests": 3
+  },
+  "estimated_cost_usd": 0,
+  "reason": "Offline mocks and the ledger demo validate integration shape; no live request was needed.",
+  "requests": 0,
+  "status": "NOT_RUN_NOT_NEEDED"
+}

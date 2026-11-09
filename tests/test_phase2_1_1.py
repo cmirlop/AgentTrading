@@ -231,7 +231,7 @@ class Phase2111Tests(unittest.TestCase):
             with bind_event(event_id, self.db_path, agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION):
                 record_llm_query_started(role=CANONICAL_FILTER_ROLE, policy_id=POLICY_VERSION, payload=payload)
                 record_llm_call(schema_name="StrategyAssessment", provider="deepseek", model="deepseek-flash", prompt=MARKET_ANALYST_FILTER_PROMPT, payload=payload, allowed_evidence=["E1"], requested_at=f"2026-01-01T00:0{idx}:01Z", result=type("R", (), {"model_dump": lambda self, **kwargs: {"strategy": model_strategy, "evidence_used": ["E1"]}})(), metadata={"schema_module": "src.agents.market_analyst", "provider_reported_model": "deepseek-flash"}, agent_role=CANONICAL_FILTER_ROLE, agent_stage="STRATEGY_FAMILY_ASSESSMENT", decision_policy_id=POLICY_VERSION)
-            record_system_decision(event_id, system, validation_status="VALID", decision_stage="MARKET_ANALYSIS", agent_role=CANONICAL_FILTER_ROLE, decision_policy_id=POLICY_VERSION, path=self.db_path)
+                record_system_decision(event_id, system, validation_status="VALID", decision_stage="MARKET_ANALYSIS", agent_role=CANONICAL_FILTER_ROLE, decision_policy_id=POLICY_VERSION, path=self.db_path)
             append_outcome(event_id, "2026-01-02T00:00:00Z", {"policy_id": "TRADE_CANDIDATE", "result": "WIN" if pnl > 0 else "LOSS", "net_pnl_eur": pnl, "net_r": pnl / 10, "release_time_utc": f"2026-01-01T01:0{idx}:00Z", "cost_scenario": "BASE"}, path=self.db_path)
         joined = pair_ledger(self.db_path)
         self.assertEqual(joined["counts"]["matching_decisions"], 1)

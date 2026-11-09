@@ -1,0 +1,9 @@
+{
+  "actual_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "baseline_report_dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "expected_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "original_dataset_written": false,
+  "path": "data/backtest/technical_candidate_scan.csv",
+  "source_dataset_modified": false,
+  "status": "PASS"
+}

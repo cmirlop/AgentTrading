@@ -1,0 +1,41 @@
+{
+  "fresh_source_ledger_revalidated_before_simulation": true,
+  "reconciliation": {
+    "confirmatory_eligible": false,
+    "counts": {
+      "eligible_candidates": 5,
+      "eligible_without_canonical_query": 0,
+      "eligible_without_canonical_response": 0,
+      "eligible_without_common_plan_outcome": 0,
+      "eligible_without_trade_context": 0,
+      "events_without_traceability": 0,
+      "opportunities_detected": 5,
+      "opportunities_eligible": 5,
+      "opportunities_excluded": 0,
+      "opportunities_without_reference_plan": 0,
+      "outcomes_pending": 0,
+      "outcomes_persisted": 5,
+      "provider_errors": 2,
+      "queries_planned": 5,
+      "queries_sent": 5,
+      "responses_persisted": 5,
+      "responses_received": 3,
+      "responses_valid": 3,
+      "sent_queries_without_matching_plan": 0,
+      "sent_queries_without_response": 0,
+      "system_decisions_persisted": 5,
+      "technical_plans_persisted": 5,
+      "trade_contexts_persisted": 5,
+      "valid_filter_responses_without_exactly_one_system_decision": 0,
+      "valid_filter_responses_without_system_decision": 0
+    },
+    "discrepancies": [],
+    "eligibility_reason": "SYNTHETIC_FIXTURE_IS_ENGINEERING_EVIDENCE_ONLY",
+    "ledger_content_sha256": "cd2f6e5726866fb77462a9f27e53aaa7c00ae91ae433192b9eff185e13b1bb42",
+    "provider_calls_or_orders_created_by_reconciliation": 0,
+    "status": "PASS"
+  },
+  "request_ids_are_join_keys": true,
+  "source_ledger_sha256": "cd2f6e5726866fb77462a9f27e53aaa7c00ae91ae433192b9eff185e13b1bb42",
+  "status": "PASS"
+}

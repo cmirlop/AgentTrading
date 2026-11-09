@@ -1,0 +1,376 @@
+{
+  "behavior_fixtures": [
+    {
+      "detected_behavior": "IMPROVEMENT_FIXTURE",
+      "difference_eur": 5.0,
+      "economic_evidence": false,
+      "scenario": "filter-avoids-loss",
+      "technical_only_net_eur": -5.0,
+      "technical_plus_deepseek_net_eur": 0.0
+    },
+    {
+      "detected_behavior": "DEGRADATION_FIXTURE",
+      "difference_eur": -5.0,
+      "economic_evidence": false,
+      "scenario": "filter-rejects-winner",
+      "technical_only_net_eur": 5.0,
+      "technical_plus_deepseek_net_eur": 0.0
+    },
+    {
+      "detected_behavior": "NO_CHANGE_FIXTURE",
+      "difference_eur": 0.0,
+      "economic_evidence": false,
+      "scenario": "filter-approves",
+      "technical_only_net_eur": 3.0,
+      "technical_plus_deepseek_net_eur": 3.0
+    }
+  ],
+  "coverage_reconciliation": {
+    "confirmatory_eligible": false,
+    "counts": {
+      "eligible_candidates": 5,
+      "eligible_without_canonical_query": 0,
+      "eligible_without_canonical_response": 0,
+      "eligible_without_common_plan_outcome": 0,
+      "eligible_without_trade_context": 0,
+      "events_without_traceability": 0,
+      "opportunities_detected": 5,
+      "opportunities_eligible": 5,
+      "opportunities_excluded": 0,
+      "opportunities_without_reference_plan": 0,
+      "outcomes_pending": 0,
+      "outcomes_persisted": 5,
+      "provider_errors": 2,
+      "queries_planned": 5,
+      "queries_sent": 5,
+      "responses_persisted": 5,
+      "responses_received": 3,
+      "responses_valid": 3,
+      "sent_queries_without_matching_plan": 0,
+      "sent_queries_without_response": 0,
+      "system_decisions_persisted": 5,
+      "technical_plans_persisted": 5,
+      "trade_contexts_persisted": 5,
+      "valid_filter_responses_without_exactly_one_system_decision": 0,
+      "valid_filter_responses_without_system_decision": 0
+    },
+    "discrepancies": [],
+    "eligibility_reason": "SYNTHETIC_FIXTURE_IS_ENGINEERING_EVIDENCE_ONLY",
+    "ledger_content_sha256": "cd2f6e5726866fb77462a9f27e53aaa7c00ae91ae433192b9eff185e13b1bb42",
+    "provider_calls_or_orders_created_by_reconciliation": 0,
+    "status": "PASS"
+  },
+  "fixture_only": true,
+  "mock_cases": [
+    "APPROVE",
+    "REJECT",
+    "TIMEOUT",
+    "INVALID_RESPONSE"
+  ],
+  "mt5_connections": 0,
+  "opportunities": 5,
+  "orders_sent": 0,
+  "prompt_sha256": "4e54929356d993a6b633904d28c73dc1a2b70b591ee7498906dc0b44dfe198a3",
+  "real_deepseek_calls": 0,
+  "real_ollama_calls": 0,
+  "reproducibility": {
+    "provider_calls": 0,
+    "same_input_same_output": true,
+    "status": "PASS"
+  },
+  "risk_policy_simulation": {
+    "common_plan_parity": {
+      "all_technical_candidates_share_one_plan_record": true,
+      "plan_sha256_by_event": {
+        "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54": "a98cbfffcf10bc2433a86e83ce2d0cbc2bd734af1bba0b02b1b6ac4ea3196612",
+        "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13": "9d2a89e63c09d5a96c9411255e9db4ff2e42914db0c21a7e6dcff08d34e3e9c2",
+        "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177": "8e6d72027fee3726f31db124946a0dd72b7a646b34b4a9f1f26a9cbedf98a3ee",
+        "53bd0da2a161876b8edcbe2182e92df06a84941d967bea9a8683c69de60d05ba": "fc8bd47321ea1790ab478ec52c04ac8b3f9b61c68afc87e8b399625ec24dbadc",
+        "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71": "c6f6fdabf5f6da5bfec4d5a681224f354f57f52f3cc6f945e81ac4e4b53c2bd3"
+      }
+    },
+    "cost_scenario": "CONSERVATIVE",
+    "economic_inference_allowed": false,
+    "event_results": {
+      "ALWAYS_HOLD": [
+        {
+          "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "53bd0da2a161876b8edcbe2182e92df06a84941d967bea9a8683c69de60d05ba",
+          "reason": "POLICY_ALWAYS_HOLD",
+          "status": "POLICY_REJECTED"
+        }
+      ],
+      "TECHNICAL_ONLY": [
+        {
+          "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+          "reasons": [
+            "NO_GLOBAL_SLOT_AVAILABLE",
+            "CURRENCY_EXPOSURE_LIMIT_EXCEEDED_USD"
+          ],
+          "status": "RISK_REJECTED"
+        },
+        {
+          "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+          "reasons": [
+            "POSITION_ALREADY_OPEN_FOR_SYMBOL",
+            "NO_GLOBAL_SLOT_AVAILABLE",
+            "CURRENCY_EXPOSURE_LIMIT_EXCEEDED_USD"
+          ],
+          "status": "RISK_REJECTED"
+        },
+        {
+          "event_id": "53bd0da2a161876b8edcbe2182e92df06a84941d967bea9a8683c69de60d05ba",
+          "reasons": [
+            "POSITION_ALREADY_OPEN_FOR_SYMBOL",
+            "NO_GLOBAL_SLOT_AVAILABLE",
+            "CURRENCY_EXPOSURE_LIMIT_EXCEEDED_USD"
+          ],
+          "status": "RISK_REJECTED"
+        }
+      ],
+      "TECHNICAL_PLUS_DEEPSEEK": [
+        {
+          "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+          "reason": "MODEL_DECLINED_STRATEGY",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+          "risk_amount_account": 5.0,
+          "status": "SIMULATED_ACCEPTED",
+          "volume": 0.05
+        },
+        {
+          "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+          "reason": "LLM_PROVENANCE_UNVERIFIED",
+          "status": "POLICY_REJECTED"
+        },
+        {
+          "event_id": "53bd0da2a161876b8edcbe2182e92df06a84941d967bea9a8683c69de60d05ba",
+          "reason": "LLM_PROVENANCE_UNVERIFIED",
+          "status": "POLICY_REJECTED"
+        }
+      ]
+    },
+    "external_api_calls": 0,
+    "incomplete_events": [],
+    "initial_equity_eur": 10000.0,
+    "limitations": [
+      "This deterministic simulator uses the production risk-sizing and portfolio preflight functions with synthetic or verified supplied snapshots.",
+      "MT5 margin checks and broker order validation are not reproducible offline and remain PENDING.",
+      "NO_EVALUABLE inputs are retained in the population and block confirmatory inference.",
+      "All fills and outcomes are hypothetical; no order is sent."
+    ],
+    "paired_descriptive_delta": {
+      "confidence_interval": null,
+      "descriptive_only": true,
+      "net_expectancy_eur_per_opportunity_difference": 0.6,
+      "net_pnl_eur_difference": 3.0,
+      "net_r_sum_difference": 0.6,
+      "opportunities": 5,
+      "technical_only_net_pnl_eur": 0.0,
+      "technical_plus_deepseek_net_pnl_eur": 3.0
+    },
+    "pairing_snapshot_sha256": "a6123a50dc072042a1b4e37159de9c03a3f7655f568424d0c610fe80bf69454f",
+    "policies": {
+      "ALWAYS_HOLD": {
+        "ambiguous": 0,
+        "closed": 0,
+        "costs_eur": 0.0,
+        "eligible": 0,
+        "expectancy_net_eur_per_closed_trade": null,
+        "expectancy_net_eur_per_opportunity": 0.0,
+        "expired": 0,
+        "filled": 0,
+        "gross_pnl_eur": 0.0,
+        "llm_approved": 0,
+        "llm_rejected_or_uncovered": 0,
+        "max_drawdown_eur": 0.0,
+        "negative_net_pnl_eur": 0.0,
+        "net_pnl_eur": 0.0,
+        "net_r_sum": 0.0,
+        "no_evaluable": 0,
+        "open_or_unresolved": 0,
+        "opportunities": 5,
+        "positive_net_pnl_eur": 0.0,
+        "profit_factor_net": null,
+        "rejection_reasons": {
+          "POLICY_ALWAYS_HOLD": 5
+        },
+        "risk_accepted": 0,
+        "risk_rejected": 0
+      },
+      "TECHNICAL_ONLY": {
+        "ambiguous": 0,
+        "closed": 2,
+        "costs_eur": 0.5,
+        "eligible": 5,
+        "expectancy_net_eur_per_closed_trade": 0.0,
+        "expectancy_net_eur_per_opportunity": 0.0,
+        "expired": 0,
+        "filled": 2,
+        "gross_pnl_eur": 0.5,
+        "llm_approved": 0,
+        "llm_rejected_or_uncovered": 0,
+        "max_drawdown_eur": 2.0,
+        "negative_net_pnl_eur": 2.0,
+        "net_pnl_eur": 0.0,
+        "net_r_sum": 0.0,
+        "no_evaluable": 0,
+        "open_or_unresolved": 0,
+        "opportunities": 5,
+        "positive_net_pnl_eur": 2.0,
+        "profit_factor_net": 1.0,
+        "rejection_reasons": {
+          "CURRENCY_EXPOSURE_LIMIT_EXCEEDED_USD": 3,
+          "NO_GLOBAL_SLOT_AVAILABLE": 3,
+          "POSITION_ALREADY_OPEN_FOR_SYMBOL": 2
+        },
+        "risk_accepted": 2,
+        "risk_rejected": 3
+      },
+      "TECHNICAL_PLUS_DEEPSEEK": {
+        "ambiguous": 0,
+        "closed": 2,
+        "costs_eur": 0.5,
+        "eligible": 2,
+        "expectancy_net_eur_per_closed_trade": 1.5,
+        "expectancy_net_eur_per_opportunity": 0.6,
+        "expired": 0,
+        "filled": 2,
+        "gross_pnl_eur": 3.5,
+        "llm_approved": 2,
+        "llm_rejected_or_uncovered": 3,
+        "max_drawdown_eur": 0.0,
+        "negative_net_pnl_eur": 0.0,
+        "net_pnl_eur": 3.0,
+        "net_r_sum": 0.6,
+        "no_evaluable": 0,
+        "open_or_unresolved": 0,
+        "opportunities": 5,
+        "positive_net_pnl_eur": 3.0,
+        "profit_factor_net": null,
+        "rejection_reasons": {
+          "LLM_PROVENANCE_UNVERIFIED": 2,
+          "MODEL_DECLINED_STRATEGY": 1
+        },
+        "risk_accepted": 2,
+        "risk_rejected": 0
+      }
+    },
+    "real_orders_sent": 0,
+    "reconciliation": {
+      "confirmatory_eligible": true,
+      "counts": {
+        "eligible_candidates": 5,
+        "eligible_without_canonical_query": 0,
+        "eligible_without_canonical_response": 0,
+        "eligible_without_common_plan_outcome": 0,
+        "eligible_without_trade_context": 0,
+        "events_without_traceability": 0,
+        "opportunities_detected": 5,
+        "opportunities_eligible": 5,
+        "opportunities_excluded": 0,
+        "opportunities_without_reference_plan": 0,
+        "outcomes_pending": 0,
+        "outcomes_persisted": 5,
+        "provider_errors": 2,
+        "queries_planned": 5,
+        "queries_sent": 5,
+        "responses_persisted": 5,
+        "responses_received": 3,
+        "responses_valid": 3,
+        "sent_queries_without_matching_plan": 0,
+        "sent_queries_without_response": 0,
+        "system_decisions_persisted": 5,
+        "technical_plans_persisted": 5,
+        "trade_contexts_persisted": 5,
+        "valid_filter_responses_without_exactly_one_system_decision": 0,
+        "valid_filter_responses_without_system_decision": 0
+      },
+      "discrepancies": [],
+      "ledger_content_sha256": "cd2f6e5726866fb77462a9f27e53aaa7c00ae91ae433192b9eff185e13b1bb42",
+      "provider_calls_or_orders_created_by_reconciliation": 0,
+      "status": "PASS"
+    },
+    "risk_config": {
+      "daily_loss_timezone": "UTC",
+      "max_currency_exposure_equity_multiple": 1.0,
+      "max_daily_loss_percent": 2.0,
+      "max_loss_per_trade_eur": 5.0,
+      "max_open_positions": 2,
+      "max_portfolio_risk_percent": 2.0,
+      "max_risk_per_trade_percent": 0.5,
+      "reservation_ttl_minutes": 15,
+      "source": "config.risk_config + src.risk_engine + src.risk_preflight"
+    },
+    "sequence": [
+      {
+        "decision_time_utc": "2026-03-02T12:00:12Z",
+        "event_id": "37ca4969b5b2e02055700344f7111fb023b2eee2d2a3813baa64fbaf9bb2bd13",
+        "symbol": "EURUSD"
+      },
+      {
+        "decision_time_utc": "2026-03-02T12:01:12Z",
+        "event_id": "1b86b809a76aaf47b5a4f3615aa03e95136dfd02b342aeb21e9de32da5b6ca54",
+        "symbol": "USDCAD"
+      },
+      {
+        "decision_time_utc": "2026-03-02T12:02:12Z",
+        "event_id": "d2e34562d42569994ebb947521743be68457f5b7d5d5f88947bf0928ba5a3c71",
+        "symbol": "AUDUSD"
+      },
+      {
+        "decision_time_utc": "2026-03-02T12:03:12Z",
+        "event_id": "3823493103d0932eeb4992b6fc7807879b9ff994941a95b566a6d71d023f7177",
+        "symbol": "EURUSD"
+      },
+      {
+        "decision_time_utc": "2026-03-02T12:04:12Z",
+        "event_id": "53bd0da2a161876b8edcbe2182e92df06a84941d967bea9a8683c69de60d05ba",
+        "symbol": "USDCAD"
+      }
+    ],
+    "source_ledger_sha256": "cd2f6e5726866fb77462a9f27e53aaa7c00ae91ae433192b9eff185e13b1bb42",
+    "status": "OFFLINE_RISK_PARITY_SIMULATION"
+  },
+  "same_plan_sha256_for_both_policies": true,
+  "status": "PASS"
+}

@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-11-09T07:19:10.191975+00:00",
+  "technical_only": true,
+  "llm_included": false,
+  "macro_history_included": false,
+  "portfolio_constraints_included": false,
+  "account_currency_pnl_included": false,
+  "ambiguous_intrabar_excluded": true,
+  "cost_scenario": "BASE",
+  "spread_floor_assumption_points": 0.0,
+  "spread_floor_is_broker_quote": false,
+  "cost_assumptions": {
+    "historical_spread_multiplier": 1.0,
+    "commission_eur_per_lot_round_turn": 0.0,
+    "slippage_points_per_side": 0.0,
+    "assumptions_unverified": [
+      "commission=0",
+      "slippage=0"
+    ]
+  },
+  "source_scan": "/workspace/AgentTrading-phase2-1-1/data/backtest/technical_candidate_scan.csv"
+}

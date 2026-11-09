@@ -1,0 +1,29 @@
+{
+  "candidate_rule": "existing 65 threshold, alignment != CONFLICT, bias != NEUTRAL",
+  "entry_mode": "LIMIT",
+  "module_import_audit": {
+    "forbidden_provider_imports": [],
+    "imports": [
+      "__future__",
+      "config.backtest_config",
+      "config.trade_planner_config",
+      "datetime",
+      "hashlib",
+      "inspect",
+      "json",
+      "math",
+      "src.historical_trade_planner",
+      "src.market_snapshot",
+      "src.technical_evaluator",
+      "typing"
+    ],
+    "provider_calls": 0,
+    "status": "PASS"
+  },
+  "no_llm_calls": true,
+  "plan_builder": "src.historical_trade_planner.build_historical_trade_plan",
+  "plan_source": "TECHNICAL_ONLY_REFERENCE",
+  "policy_sha256": "6e70ade9793d0467e8456aee9749dddd0b36e62bd96f94d37eff86146dd9d94c",
+  "policy_version": "TECHNICAL_REFERENCE_V1",
+  "status": "PASS"
+}

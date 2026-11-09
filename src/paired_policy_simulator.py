@@ -13,8 +13,10 @@ import tempfile
 from typing import Any
 
 from config import risk_config
+from src.event_ledger import canonical_hash
 from src.risk_engine import calculate_position_size, convert_currency
 from src.risk_preflight import evaluate_plan_risk, release_plan_risk_reservation
+from src.technical_reference import POLICY_SHA256 as TECHNICAL_REFERENCE_POLICY_SHA256
 from src.research_policy import (
     CANONICAL_FILTER_ROLE, CANONICAL_MODEL, CANONICAL_PROVIDER, POLICY_VERSION,
     canonical_prompt_sha256, deepseek_filter_outcome, normalize_technical_action,
@@ -67,11 +69,13 @@ def _select_candidate(event: dict[str, Any], policy: str) -> tuple[bool, str | N
 
 
 def _scale_outcome(outcome: dict[str, Any] | None, *, volume: float, scenario: str,
-                   decision_time: datetime) -> tuple[dict[str, Any] | None, str | None]:
+                   decision_time: datetime, expected_plan_sha256: str) -> tuple[dict[str, Any] | None, str | None]:
     if not isinstance(outcome, dict):
         return None, "OUTCOME_MISSING"
     if str(outcome.get("cost_scenario", "")).upper() != scenario:
         return None, "COST_SCENARIO_MISMATCH"
+    if not expected_plan_sha256 or outcome.get("plan_sha256") != expected_plan_sha256:
+        return None, "OUTCOME_PLAN_HASH_MISSING_OR_MISMATCH"
     base_volume = outcome.get("base_volume")
     try:
         base_volume = float(base_volume)
@@ -94,8 +98,11 @@ def _scale_outcome(outcome: dict[str, Any] | None, *, volume: float, scenario: s
     values["ambiguous"] = bool(outcome.get("ambiguous")) or values["result"].startswith("AMBIGUOUS")
     values["filled"] = outcome.get("filled")
     values["fill_time_utc"] = outcome.get("fill_time_utc")
-    values["release_time_utc"] = outcome.get("release_time_utc")
-    values["known_at_utc"] = outcome.get("known_at_utc")
+    values["release_time_utc"] = outcome.get("economic_close_time_utc") or outcome.get("release_time_utc")
+    values["known_at_utc"] = outcome.get("outcome_observed_at_utc") or outcome.get("known_at_utc")
+    values["persisted_at_utc"] = outcome.get("persisted_at_utc") or outcome.get("known_at_utc")
+    values["accepted_at_utc"] = outcome.get("accepted_at_utc")
+    values["placed_at_utc"] = outcome.get("placed_at_utc")
     values["expires_at_utc"] = outcome.get("expires_at_utc")
     values["outcome_status"] = str(outcome.get("outcome_status", "RESOLVED" if values["net_pnl_eur"] is not None else "UNRESOLVED")).upper()
     try:
@@ -103,10 +110,19 @@ def _scale_outcome(outcome: dict[str, Any] | None, *, volume: float, scenario: s
         release_time = _utc(values["release_time_utc"]) if values["release_time_utc"] else None
         expiry = _utc(values["expires_at_utc"]) if values["expires_at_utc"] else None
         known_at = _utc(values["known_at_utc"]) if values["known_at_utc"] else None
+        persisted_at = _utc(values["persisted_at_utc"]) if values["persisted_at_utc"] else None
+        accepted_at = _utc(values["accepted_at_utc"]) if values["accepted_at_utc"] else decision_time
+        placed_at = _utc(values["placed_at_utc"]) if values["placed_at_utc"] else accepted_at
     except (TypeError, ValueError):
         return None, "OUTCOME_TIMESTAMP_INVALID"
     if fill_time is not None and fill_time < decision_time:
         return None, "OUTCOME_FILL_PRECEDES_DECISION"
+    if accepted_at < decision_time:
+        return None, "OUTCOME_ACCEPTANCE_PRECEDES_DECISION"
+    if placed_at < accepted_at:
+        return None, "OUTCOME_PLACEMENT_PRECEDES_ACCEPTANCE"
+    if fill_time is not None and fill_time < placed_at:
+        return None, "OUTCOME_FILL_PRECEDES_PLACEMENT"
     if release_time is not None and values.get("filled") is not False and (fill_time is None or release_time < fill_time):
         return None, "OUTCOME_RELEASE_PRECEDES_FILL"
     if expiry is not None and expiry < decision_time:
@@ -114,7 +130,9 @@ def _scale_outcome(outcome: dict[str, Any] | None, *, volume: float, scenario: s
     if values.get("outcome_status") == "RESOLVED" and (release_time is None or known_at is None):
         return None, "OUTCOME_RESOLUTION_TIMESTAMP_MISSING"
     if known_at is not None and (known_at < decision_time or (release_time is not None and known_at < release_time)):
-        return None, "OUTCOME_KNOWN_BEFORE_RESOLUTION"
+        return None, "OUTCOME_OBSERVED_BEFORE_RESOLUTION"
+    if persisted_at is not None and known_at is not None and persisted_at < known_at:
+        return None, "OUTCOME_PERSISTED_BEFORE_OBSERVATION"
     if all(values.get(key) is not None for key in ("net_pnl_eur", "gross_pnl_eur", "costs_eur")):
         if abs(values["net_pnl_eur"] - (values["gross_pnl_eur"] - values["costs_eur"])) > 0.0100001:
             return None, "OUTCOME_COST_RECONCILIATION_FAILED"
@@ -158,11 +176,14 @@ class _PolicyRun:
             fill_time = _utc(outcome["fill_time_utc"]) if outcome.get("fill_time_utc") else None
             expiry_value = outcome.get("expires_at_utc") or (outcome.get("release_time_utc") if outcome.get("filled") is False else None)
             expiry = _utc(expiry_value) if expiry_value else None
+            ambiguous = bool(outcome.get("ambiguous")) or outcome.get("outcome_status") in {"AMBIGUOUS", "UNRESOLVED", "OPEN", "PENDING"}
             if outcome.get("filled") is True and fill_time is not None and fill_time <= now:
                 position = dict(order)
                 position["filled_at"] = fill_time
                 self.positions.append(position)
                 self.metrics["filled"] += 1
+            elif ambiguous:
+                still_pending.append(order)
             elif outcome.get("filled") is False and expiry is not None and expiry <= now:
                 self.metrics["expired"] += 1
             elif expiry is not None and expiry <= now and outcome.get("filled") is not True:
@@ -172,11 +193,14 @@ class _PolicyRun:
         self.pending = still_pending
 
         still_open = []
+        realized_by_observation: dict[datetime, float] = {}
         for position in self.positions:
             outcome = position["outcome"]
             release = _utc(outcome["release_time_utc"]) if outcome.get("release_time_utc") else None
             known = _utc(outcome["known_at_utc"]) if outcome.get("known_at_utc") else None
-            resolved_at = max(release, known) if release is not None and known is not None else release
+            # Slot/exposure release requires the economic close to be observable.
+            # Database persistence time is intentionally excluded from this clock.
+            resolved_at = max(release, known) if release is not None and known is not None else None
             if resolved_at is None or resolved_at > now:
                 still_open.append(position)
                 continue
@@ -200,8 +224,11 @@ class _PolicyRun:
                 self.metrics["positive_net_pnl_eur"] += net
             elif net < 0:
                 self.metrics["negative_net_pnl_eur"] += abs(net)
+            pnl_day = known.date().isoformat()
+            self.daily_pnl_eur[pnl_day] = self.daily_pnl_eur.get(pnl_day, 0.0) + net
+            realized_by_observation[known] = realized_by_observation.get(known, 0.0) + net
+        for observed_at, net in sorted(realized_by_observation.items()):
             self.cumulative_pnl_eur += net
-            self.daily_pnl_eur[release.date().isoformat()] = self.daily_pnl_eur.get(release.date().isoformat(), 0.0) + net
             self.equity_curve.append(self.initial_equity + self.cumulative_pnl_eur)
         self.positions = still_open
 
@@ -242,12 +269,25 @@ class _PolicyRun:
         self.metrics["opportunities"] += 1
         now = _utc(event["decision_time_utc"])
         self._advance(now)
-        if (_technical_direction(event.get("technical_decision"))
-                and event.get("plan_strategy_source") != "TECHNICAL_ONLY_REFERENCE"):
-            self.metrics["no_evaluable"] += 1
-            self._reject("COUNTERFACTUAL_PLAN_NOT_INDEPENDENT_OF_LLM")
-            return {"event_id": event.get("event_id"), "status": "NO_EVALUABLE",
-                    "reason": "COUNTERFACTUAL_PLAN_NOT_INDEPENDENT_OF_LLM"}
+        if _technical_direction(event.get("technical_decision")):
+            if event.get("plan_strategy_source") != "TECHNICAL_ONLY_REFERENCE":
+                self.metrics["no_evaluable"] += 1
+                self._reject("COUNTERFACTUAL_PLAN_NOT_INDEPENDENT_OF_LLM")
+                return {"event_id": event.get("event_id"), "status": "NO_EVALUABLE",
+                        "reason": "COUNTERFACTUAL_PLAN_NOT_INDEPENDENT_OF_LLM"}
+            if event.get("technical_plan_status") != "TECHNICAL_PLAN_VALID" or not isinstance(event.get("plan"), dict):
+                self.metrics["no_evaluable"] += 1
+                self._reject("TECHNICAL_PLAN_NOT_VALID")
+                return {"event_id": event.get("event_id"), "status": "NO_EVALUABLE",
+                        "reason": "TECHNICAL_PLAN_NOT_VALID"}
+            if (event.get("technical_plan_version") != "TECHNICAL_REFERENCE_V1"
+                    or event.get("technical_plan_policy_sha256") != TECHNICAL_REFERENCE_POLICY_SHA256
+                    or event["plan"].get("symbol") != str(event.get("symbol", "")).upper()
+                    or canonical_hash(event["plan"]) != event.get("plan_sha256")):
+                self.metrics["no_evaluable"] += 1
+                self._reject("COMMON_TECHNICAL_PLAN_HASH_OR_SOURCE_INVALID")
+                return {"event_id": event.get("event_id"), "status": "NO_EVALUABLE",
+                        "reason": "COMMON_TECHNICAL_PLAN_HASH_OR_SOURCE_INVALID"}
         eligible, rejection = _select_candidate(event, self.name)
         if not eligible:
             if self.name == "TECHNICAL_PLUS_DEEPSEEK" and _technical_direction(event.get("technical_decision")):
@@ -317,6 +357,7 @@ class _PolicyRun:
         self.metrics["risk_accepted"] += 1
         outcome, outcome_error = _scale_outcome(
             event.get("outcome"), volume=sizing["volume"], scenario=self.scenario, decision_time=now,
+            expected_plan_sha256=event["plan_sha256"],
         )
         if outcome_error and outcome_error != "OUTCOME_MISSING":
             self.metrics["no_evaluable"] += 1
@@ -399,6 +440,17 @@ def simulate_paired_policies(events: list[dict[str, Any]], *, cost_scenario: str
             "incomplete_events": [{"event_id": event_id, "reason": "DUPLICATE_EVENT_ID"} for event_id in duplicate_ids],
             "real_orders_sent": 0, "external_api_calls": 0,
         }
+    plan_parity = all(
+        not _technical_direction(event.get("technical_decision"))
+        or (event.get("plan_strategy_source") == "TECHNICAL_ONLY_REFERENCE"
+            and event.get("technical_plan_status") == "TECHNICAL_PLAN_VALID"
+            and event.get("technical_plan_version") == "TECHNICAL_REFERENCE_V1"
+            and event.get("technical_plan_policy_sha256") == TECHNICAL_REFERENCE_POLICY_SHA256
+            and isinstance(event.get("plan"), dict)
+                and event["plan"].get("symbol") == str(event.get("symbol", "")).upper()
+            and canonical_hash(event["plan"]) == event.get("plan_sha256"))
+        for event in ordered
+    )
     if state_dir is None:
         temporary = tempfile.TemporaryDirectory(prefix="agenttrading-phase22-risk-")
         root = Path(temporary.name)
@@ -421,6 +473,8 @@ def simulate_paired_policies(events: list[dict[str, Any]], *, cost_scenario: str
             for value in (
                 (event.get("outcome") or {}).get("release_time_utc"),
                 (event.get("outcome") or {}).get("known_at_utc"),
+                (event.get("outcome") or {}).get("economic_close_time_utc"),
+                (event.get("outcome") or {}).get("outcome_observed_at_utc"),
                 (event.get("outcome") or {}).get("expires_at_utc"),
             ) if value
         ]
@@ -435,6 +489,12 @@ def simulate_paired_policies(events: list[dict[str, Any]], *, cost_scenario: str
                 incomplete.append({"event_id": event.get("event_id"), "reason": "RISK_CONTEXT_MISSING"})
             if _technical_direction(event.get("technical_decision")) and not event.get("plan"):
                 incomplete.append({"event_id": event.get("event_id"), "reason": "TRADE_PLAN_MISSING"})
+            if (_technical_direction(event.get("technical_decision"))
+                    and event.get("technical_plan_status") != "TECHNICAL_PLAN_VALID"):
+                incomplete.append({"event_id": event.get("event_id"), "reason": "TECHNICAL_PLAN_NOT_VALID"})
+            if (_technical_direction(event.get("technical_decision")) and event.get("plan")
+                    and canonical_hash(event["plan"]) != event.get("plan_sha256")):
+                incomplete.append({"event_id": event.get("event_id"), "reason": "COMMON_PLAN_HASH_MISMATCH"})
             if (_technical_direction(event.get("technical_decision"))
                     and event.get("plan_strategy_source") != "TECHNICAL_ONLY_REFERENCE"):
                 incomplete.append({"event_id": event.get("event_id"), "reason": "COUNTERFACTUAL_PLAN_NOT_INDEPENDENT_OF_LLM"})
@@ -485,6 +545,11 @@ def simulate_paired_policies(events: list[dict[str, Any]], *, cost_scenario: str
                 "source": "config.risk_config + src.risk_engine + src.risk_preflight",
             },
             "sequence": [{"event_id": item.get("event_id"), "symbol": item.get("symbol"), "decision_time_utc": item.get("decision_time_utc")} for item in ordered],
+            "common_plan_parity": {
+                "all_technical_candidates_share_one_plan_record": plan_parity,
+                "plan_sha256_by_event": {str(event.get("event_id")): event.get("plan_sha256") for event in ordered
+                                          if _technical_direction(event.get("technical_decision"))},
+            },
             "policies": outputs,
             "paired_descriptive_delta": paired_delta,
             "event_results": event_results,

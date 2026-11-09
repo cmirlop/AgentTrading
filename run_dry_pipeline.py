@@ -357,6 +357,7 @@ def main():
                     "plan_status": "NOT_BUILT",
                     "plan_strategy_source": "NO_PLAN_AVAILABLE",
                     "plan": None,
+                    "market_data_time_utc": analysis_document.get("decision_time_utc"),
                     "context_known_at_utc": datetime.now(timezone.utc).isoformat(),
                     "risk_context_known_at_utc": runtime.get("generated_at"),
                     "risk_context": _research_market_risk_context(runtime, runtime.get("account")),

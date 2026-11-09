@@ -27,6 +27,7 @@ from src.phase2_1_evaluation import utc_timestamp
 LEDGER_SCHEMA_VERSION = "2.0"
 OPPORTUNITY_ID_VERSION = "agenttrading-opportunity-v1"
 _CONTEXT: ContextVar[tuple[str, str, str | None, str | None, str | None] | None] = ContextVar("agenttrading_event_context", default=None)
+_REQUEST_CONTEXT: ContextVar[str | None] = ContextVar("agenttrading_request_context", default=None)
 LOGGER = logging.getLogger("agenttrading.ledger")
 _SAFE_SNAPSHOT_FIELDS = {
     "symbol", "analysis_time", "timestamp", "direction", "bias", "decision",
@@ -69,6 +70,7 @@ class LedgerWriteResult:
     eligible: bool
     event_id: str | None = None
     error_code: str | None = None
+    request_id: str | None = None
 
 
 class LedgerPersistenceError(RuntimeError):
@@ -193,6 +195,7 @@ def initialize_ledger(path: str | Path | None = None) -> Path:
         CREATE TABLE IF NOT EXISTS llm_events (
             llm_event_id TEXT PRIMARY KEY,
             event_id TEXT NOT NULL REFERENCES opportunities(event_id),
+            request_id TEXT,
             schema_name TEXT NOT NULL,
             requested_at_utc TEXT NOT NULL,
             responded_at_utc TEXT NOT NULL,
@@ -227,6 +230,7 @@ def initialize_ledger(path: str | Path | None = None) -> Path:
             rejection_code TEXT,
             agent_role TEXT,
             decision_policy_id TEXT,
+            request_id TEXT,
             order_executed INTEGER NOT NULL DEFAULT 0 CHECK(order_executed=0)
         );
         CREATE TABLE IF NOT EXISTS outcomes (
@@ -240,6 +244,7 @@ def initialize_ledger(path: str | Path | None = None) -> Path:
         CREATE TABLE IF NOT EXISTS coverage_events (
             coverage_event_id TEXT PRIMARY KEY,
             event_id TEXT REFERENCES opportunities(event_id),
+            request_id TEXT,
             event_type TEXT NOT NULL,
             created_at_utc TEXT NOT NULL,
             agent_role TEXT,
@@ -258,6 +263,35 @@ def initialize_ledger(path: str | Path | None = None) -> Path:
             created_at_utc TEXT NOT NULL,
             UNIQUE(event_id, context_type)
         );
+        CREATE TABLE IF NOT EXISTS technical_plans (
+            plan_id TEXT PRIMARY KEY,
+            event_id TEXT NOT NULL REFERENCES opportunities(event_id),
+            policy_version TEXT NOT NULL,
+            schema_version TEXT NOT NULL,
+            plan_source TEXT NOT NULL,
+            plan_status TEXT NOT NULL,
+            eligibility_reason TEXT NOT NULL,
+            missing_fields_json TEXT NOT NULL,
+            decision_time_utc TEXT NOT NULL,
+            constructed_at_utc TEXT NOT NULL,
+            maximum_market_data_time_utc TEXT,
+            direction TEXT,
+            order_type TEXT,
+            entry REAL,
+            stop_loss REAL,
+            take_profit REAL,
+            plan_json TEXT,
+            plan_sha256 TEXT,
+            policy_sha256 TEXT NOT NULL,
+            config_json TEXT NOT NULL,
+            config_sha256 TEXT NOT NULL,
+            code_revision TEXT,
+            market_data_quality_json TEXT NOT NULL,
+            evidence_ids_json TEXT NOT NULL,
+            payload_sha256 TEXT NOT NULL,
+            created_at_utc TEXT NOT NULL,
+            UNIQUE(event_id, policy_version)
+        );
         CREATE TRIGGER IF NOT EXISTS opportunities_no_update BEFORE UPDATE ON opportunities BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
         CREATE TRIGGER IF NOT EXISTS opportunities_no_delete BEFORE DELETE ON opportunities BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
         CREATE TRIGGER IF NOT EXISTS llm_events_no_update BEFORE UPDATE ON llm_events BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
@@ -270,18 +304,23 @@ def initialize_ledger(path: str | Path | None = None) -> Path:
         CREATE TRIGGER IF NOT EXISTS coverage_events_no_delete BEFORE DELETE ON coverage_events BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
         CREATE TRIGGER IF NOT EXISTS trade_contexts_no_update BEFORE UPDATE ON trade_contexts BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
         CREATE TRIGGER IF NOT EXISTS trade_contexts_no_delete BEFORE DELETE ON trade_contexts BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
+        CREATE TRIGGER IF NOT EXISTS technical_plans_no_update BEFORE UPDATE ON technical_plans BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
+        CREATE TRIGGER IF NOT EXISTS technical_plans_no_delete BEFORE DELETE ON technical_plans BEGIN SELECT RAISE(ABORT, 'APPEND_ONLY'); END;
         """)
         migrations = {
             "llm_events": {
+                "request_id": "TEXT",
                 "agent_role": "TEXT NOT NULL DEFAULT 'UNREGISTERED_SCHEMA'",
                 "agent_stage": "TEXT NOT NULL DEFAULT 'UNCLASSIFIED'",
                 "decision_policy_id": "TEXT",
                 "schema_version": "TEXT NOT NULL DEFAULT '2.0'",
             },
             "system_events": {
+                "request_id": "TEXT",
                 "agent_role": "TEXT",
                 "decision_policy_id": "TEXT",
             },
+            "coverage_events": {"request_id": "TEXT"},
         }
         for table, definitions in migrations.items():
             columns = {row[1] for row in db.execute(f"PRAGMA table_info({table})")}
@@ -388,12 +427,15 @@ def sanitize_trade_context(context: dict[str, Any]) -> dict[str, Any]:
 def _insert_coverage(db: sqlite3.Connection, *, event_id: str | None, event_type: str,
                      agent_role: str | None = None, decision_policy_id: str | None = None,
                      payload_sha256: str | None = None, status_code: str | None = None,
-                     eligible: bool = False) -> str:
+                     eligible: bool = False, request_id: str | None = None) -> str:
     coverage_id = str(uuid4())
     db.execute(
-        "INSERT INTO coverage_events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (coverage_id, event_id, event_type, utc_now(), agent_role, decision_policy_id,
-         payload_sha256, status_code, int(bool(eligible))),
+        """INSERT INTO coverage_events (
+            coverage_event_id,event_id,request_id,event_type,created_at_utc,agent_role,
+            decision_policy_id,payload_sha256,status_code,eligible
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (coverage_id, event_id, request_id, event_type, utc_now(), agent_role,
+         decision_policy_id, payload_sha256, status_code, int(bool(eligible))),
     )
     return coverage_id
 
@@ -483,20 +525,154 @@ def record_trade_context(event_id: str, context: dict[str, Any], *, context_type
         return _write_failed(event_id, exc)
 
 
+def record_technical_plan(event_id: str, result: dict[str, Any], *, path: str | Path | None = None) -> LedgerWriteResult:
+    """Persist one immutable plan/status per event and technical policy version."""
+    db_path = Path(path) if path is not None else default_ledger_path()
+    try:
+        from config import risk_config
+
+        if not isinstance(result, dict):
+            raise ValueError("TECHNICAL_PLAN_RESULT_INVALID")
+        status = str(result.get("status", ""))
+        allowed_statuses = {"TECHNICAL_PLAN_VALID", "TECHNICAL_PLAN_NOT_EVALUABLE", "NO_TECHNICAL_CANDIDATE"}
+        if status not in allowed_statuses or result.get("plan_source") != "TECHNICAL_ONLY_REFERENCE":
+            raise ValueError("TECHNICAL_PLAN_PROVENANCE_INVALID")
+        plan = result.get("plan")
+        if plan is not None and not isinstance(plan, dict):
+            raise ValueError("TECHNICAL_PLAN_PAYLOAD_INVALID")
+        plan = {key: plan[key] for key in (
+            "symbol", "direction", "order_type", "entry", "stop_loss", "take_profit", "mode", "target_rr",
+        ) if key in plan} if isinstance(plan, dict) else None
+        if (status == "TECHNICAL_PLAN_VALID") != (plan is not None):
+            raise ValueError("TECHNICAL_PLAN_STATUS_PAYLOAD_MISMATCH")
+        plan_hash = canonical_hash(plan) if plan is not None else None
+        claimed_plan_hash = result.get("plan_sha256")
+        if plan_hash != claimed_plan_hash:
+            raise ValueError("TECHNICAL_PLAN_HASH_MISMATCH")
+        policy_version = str(result.get("policy_version", ""))
+        policy_hash = str(result.get("policy_sha256", ""))
+        if not policy_version or len(policy_hash) != 64:
+            raise ValueError("TECHNICAL_PLAN_POLICY_PROVENANCE_MISSING")
+        config = {
+            "risk_reference": risk_config.RISK_REFERENCE,
+            "max_risk_per_trade_percent": risk_config.MAX_RISK_PER_TRADE_PERCENT,
+            "max_loss_per_trade_eur": risk_config.MAX_LOSS_PER_TRADE_EUR,
+            "max_portfolio_risk_percent": risk_config.MAX_PORTFOLIO_RISK_PERCENT,
+            "max_daily_loss_percent": risk_config.MAX_DAILY_LOSS_PERCENT,
+            "max_currency_exposure_equity_multiple": risk_config.MAX_CURRENCY_EXPOSURE_EQUITY_MULTIPLE,
+            "max_open_positions": risk_config.MAX_OPEN_POSITIONS,
+            "daily_loss_timezone": risk_config.DAILY_LOSS_TIMEZONE,
+        }
+        config_json = json.dumps(config, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        config_hash = sha256(config_json.encode("utf-8")).hexdigest()
+        decision_time = utc_timestamp(result.get("decision_time_utc"), field="decision_time").isoformat().replace("+00:00", "Z")
+        constructed = result.get("constructed_at_utc") or utc_now()
+        constructed = utc_timestamp(constructed, field="constructed_at").isoformat().replace("+00:00", "Z")
+        maximum_data = result.get("maximum_market_data_time_utc")
+        maximum_data = utc_timestamp(maximum_data, field="maximum_market_data_time").isoformat().replace("+00:00", "Z") if maximum_data else None
+        if constructed < decision_time:
+            raise ValueError("TECHNICAL_PLAN_CONSTRUCTION_PRECEDES_DECISION")
+        if maximum_data and maximum_data > decision_time:
+            raise ValueError("TECHNICAL_PLAN_USES_FUTURE_DATA")
+        technical = result.get("technical_snapshot") or {}
+        evidence_ids = technical.get("available_evidence_ids", []) if isinstance(technical, dict) else []
+        if not isinstance(evidence_ids, list) or any(not isinstance(item, str) for item in evidence_ids):
+            raise ValueError("TECHNICAL_PLAN_EVIDENCE_INVALID")
+        quality = {"spread": str(result.get("spread_quality") or "MISSING"),
+                   "confirmatory_eligible": bool(result.get("confirmatory_eligible"))}
+        payload = {
+            "event_id": str(event_id), "policy_version": policy_version,
+            "schema_version": "1.0", "plan_source": "TECHNICAL_ONLY_REFERENCE",
+            "plan_status": status, "eligibility_reason": str(result.get("reason") or status)[:200],
+            "missing_fields": sorted(set(str(item)[:120] for item in result.get("missing_fields", []))),
+            "decision_time_utc": decision_time, "constructed_at_utc": constructed,
+            "maximum_market_data_time_utc": maximum_data, "technical_decision": str(result.get("technical_decision") or "NO_TRADE"),
+            "direction": plan.get("direction") if plan else result.get("direction"),
+            "order_type": plan.get("order_type") if plan else None,
+            "entry": plan.get("entry") if plan else None,
+            "stop_loss": plan.get("stop_loss") if plan else None,
+            "take_profit": plan.get("take_profit") if plan else None,
+            "plan": plan, "plan_sha256": plan_hash, "policy_sha256": policy_hash,
+            "config": config, "config_sha256": config_hash, "code_revision": runtime_code_revision(),
+            "market_data_quality": quality, "evidence_ids": sorted(set(evidence_ids)),
+            "technical_snapshot": {key: technical.get(key) for key in (
+                "bias", "alignment", "setup_quality", "overall_score", "timeframe_scores",
+            )} if isinstance(technical, dict) else {},
+        }
+        encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, default=str)
+        payload_hash = sha256(encoded.encode("utf-8")).hexdigest()
+        plan_id = canonical_hash({"event_id": event_id, "policy_version": policy_version})
+        with _open_db(initialize_ledger(db_path)) as db:
+            db.execute("BEGIN IMMEDIATE")
+            event_row = db.execute("SELECT decision_time_utc FROM opportunities WHERE event_id=?", (event_id,)).fetchone()
+            if event_row is None:
+                db.rollback()
+                return LedgerWriteResult("MISSING_EVENT", False, False, event_id, "LEDGER_EVENT_CONTEXT_MISSING")
+            if utc_timestamp(event_row[0], field="opportunity_time").isoformat().replace("+00:00", "Z") != decision_time:
+                db.rollback()
+                raise ValueError("TECHNICAL_PLAN_EVENT_TIME_MISMATCH")
+            previous = db.execute("""SELECT plan_status,eligibility_reason,missing_fields_json,
+                    decision_time_utc,maximum_market_data_time_utc,direction,order_type,entry,stop_loss,
+                    take_profit,plan_json,plan_sha256,policy_sha256,config_json,config_sha256,code_revision,
+                    market_data_quality_json,evidence_ids_json
+                FROM technical_plans WHERE event_id=? AND policy_version=?""", (event_id, policy_version)).fetchone()
+            if previous:
+                stable_previous = tuple(previous)
+                stable_current = (
+                    payload["plan_status"], payload["eligibility_reason"],
+                    json.dumps(payload["missing_fields"], separators=(",", ":")),
+                    decision_time, maximum_data, payload["direction"], payload["order_type"],
+                    payload["entry"], payload["stop_loss"], payload["take_profit"],
+                    json.dumps(plan, sort_keys=True, separators=(",", ":")) if plan is not None else None,
+                    plan_hash, policy_hash, config_json, config_hash, payload["code_revision"],
+                    json.dumps(quality, sort_keys=True, separators=(",", ":")),
+                    json.dumps(payload["evidence_ids"], separators=(",", ":")),
+                )
+                if stable_previous != stable_current:
+                    db.rollback()
+                    raise ValueError("TECHNICAL_PLAN_APPEND_ONLY_CONFLICT")
+                db.commit()
+                return LedgerWriteResult("DUPLICATE_IDENTICAL", True, status == "TECHNICAL_PLAN_VALID", event_id)
+            db.execute("""INSERT INTO technical_plans (
+                plan_id,event_id,policy_version,schema_version,plan_source,plan_status,eligibility_reason,
+                missing_fields_json,decision_time_utc,constructed_at_utc,maximum_market_data_time_utc,
+                direction,order_type,entry,stop_loss,take_profit,plan_json,plan_sha256,policy_sha256,
+                config_json,config_sha256,code_revision,market_data_quality_json,evidence_ids_json,
+                payload_sha256,created_at_utc
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", (
+                plan_id, event_id, policy_version, "1.0", "TECHNICAL_ONLY_REFERENCE", status,
+                payload["eligibility_reason"], json.dumps(payload["missing_fields"], separators=(",", ":")),
+                decision_time, constructed, maximum_data, payload["direction"], payload["order_type"],
+                payload["entry"], payload["stop_loss"], payload["take_profit"],
+                json.dumps(plan, sort_keys=True, separators=(",", ":")) if plan is not None else None,
+                plan_hash, policy_hash, config_json, config_hash, payload["code_revision"],
+                json.dumps(quality, sort_keys=True, separators=(",", ":")),
+                json.dumps(payload["evidence_ids"], separators=(",", ":")), payload_hash, utc_now(),
+            ))
+            _insert_coverage(db, event_id=event_id, event_type="TECHNICAL_PLAN_PERSISTED",
+                             status_code=status, eligible=status == "TECHNICAL_PLAN_VALID")
+            db.commit()
+        return LedgerWriteResult("SAVED", True, status == "TECHNICAL_PLAN_VALID", event_id)
+    except Exception as exc:
+        return _write_failed(event_id, exc)
+
+
 @contextmanager
 def bind_event(event_id: str, path: str | Path | None = None, *, agent_role: str | None = None,
                agent_stage: str | None = None, decision_policy_id: str | None = None) -> Iterator[None]:
     token = _CONTEXT.set((str(event_id), str(path or default_ledger_path()), agent_role, agent_stage, decision_policy_id))
+    request_token = _REQUEST_CONTEXT.set(None)
     try:
         yield
     finally:
+        _REQUEST_CONTEXT.reset(request_token)
         _CONTEXT.reset(token)
 
 
 def record_coverage_event(event_type: str, *, event_id: str | None = None, agent_role: str | None = None,
                           decision_policy_id: str | None = None, payload: Any = None,
                           status_code: str | None = None, eligible: bool = False,
-                          path: str | Path | None = None) -> LedgerWriteResult:
+                          path: str | Path | None = None, request_id: str | None = None) -> LedgerWriteResult:
     db_path = Path(path) if path is not None else default_ledger_path()
     try:
         initialize_ledger(db_path)
@@ -508,7 +684,7 @@ def record_coverage_event(event_type: str, *, event_id: str | None = None, agent
             _insert_coverage(db, event_id=event_id, event_type=str(event_type), agent_role=agent_role,
                              decision_policy_id=decision_policy_id,
                              payload_sha256=canonical_hash(payload) if payload is not None else None,
-                             status_code=status_code, eligible=eligible)
+                             status_code=status_code, eligible=eligible, request_id=request_id)
             db.commit()
         return LedgerWriteResult("SAVED", True, bool(eligible), event_id)
     except Exception as exc:
@@ -531,17 +707,20 @@ def record_llm_query_started(*, role: str, policy_id: str | None, payload: Any =
     if research_log_required() and bound_role in {None, "UNREGISTERED_SCHEMA"}:
         raise LedgerPersistenceError("LEDGER_AGENT_ROLE_MISSING") from None
     effective_policy = bound_policy or policy_id
+    request_id = str(uuid4())
+    _REQUEST_CONTEXT.set(request_id)
     planned = record_coverage_event("LLM_QUERY_PLANNED", event_id=event_id, agent_role=bound_role,
                                     decision_policy_id=effective_policy, payload=payload,
-                                    status_code="PLANNED", path=raw_path)
+                                    status_code="PLANNED", path=raw_path, request_id=request_id)
     if research_log_required() and not planned.persisted:
         raise LedgerPersistenceError(planned.error_code or "LEDGER_QUERY_PLAN_NOT_PERSISTED") from None
     result = record_coverage_event("LLM_QUERY_SENT", event_id=event_id, agent_role=bound_role,
                                    decision_policy_id=effective_policy, payload=payload,
-                                   status_code="SENT", path=raw_path)
+                                   status_code="SENT", path=raw_path, request_id=request_id)
     if research_log_required() and not result.persisted:
         raise LedgerPersistenceError(result.error_code or "LEDGER_QUERY_START_NOT_PERSISTED") from None
-    return result
+    return LedgerWriteResult(result.status, result.persisted, result.eligible, result.event_id,
+                             result.error_code, request_id)
 
 
 def _safe_decision(result: Any) -> dict[str, Any]:
@@ -575,13 +754,14 @@ def record_llm_call(*, schema_name: str, provider: str, model: str, prompt: Any,
                 return LedgerWriteResult("MISSING_EVENT", False, False, event_id, "LEDGER_EVENT_CONTEXT_MISSING")
             payload_hash = canonical_hash(payload)
             response_status = "VALID" if result is not None and error_code is None else "INVALID"
+            request_id = _REQUEST_CONTEXT.get()
             db.execute("""INSERT INTO llm_events (
-                llm_event_id,event_id,schema_name,requested_at_utc,responded_at_utc,provider,configured_model,
+                llm_event_id,event_id,request_id,schema_name,requested_at_utc,responded_at_utc,provider,configured_model,
                 reported_model,prompt_sha256,payload_sha256,allowed_evidence_json,decision_json,pydantic_status,
                 rejection_code,latency_ms,prompt_tokens,completion_tokens,error_code,final_system_decision,
                 agent_role,agent_stage,decision_policy_id,schema_version,order_executed,created_at_utc
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)""", (
-                str(uuid4()), event_id, schema_name, requested_at, utc_now(), provider, model,
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)""", (
+                str(uuid4()), event_id, request_id, schema_name, requested_at, utc_now(), provider, model,
                 metadata.get("provider_reported_model"), canonical_hash(prompt), canonical_hash(payload),
                 json.dumps(sorted(set(allowed_evidence))), json.dumps(_safe_decision(result), sort_keys=True) if result is not None else None,
                 response_status, rejection_code or error_code,
@@ -589,16 +769,19 @@ def record_llm_call(*, schema_name: str, provider: str, model: str, prompt: Any,
                 metadata.get("prompt_tokens"), metadata.get("completion_tokens"), error_code,
                 metadata.get("final_system_decision"), role, stage, policy, LEDGER_SCHEMA_VERSION, utc_now(),
             ))
-            _insert_coverage(db, event_id=event_id, event_type="LLM_RESPONSE_RECEIVED" if result is not None else "LLM_ERROR_RECEIVED",
+            _insert_coverage(db, event_id=event_id, request_id=request_id,
+                             event_type="LLM_RESPONSE_RECEIVED" if result is not None else "LLM_ERROR_RECEIVED",
                              agent_role=role, decision_policy_id=policy, payload_sha256=payload_hash,
                              status_code=response_status if result is not None else (error_code or "LLM_ERROR"),
                              eligible=response_status == "VALID" and role != "UNREGISTERED_SCHEMA")
-            _insert_coverage(db, event_id=event_id, event_type="LLM_RESPONSE_PERSISTED", agent_role=role,
+            _insert_coverage(db, event_id=event_id, request_id=request_id,
+                             event_type="LLM_RESPONSE_PERSISTED", agent_role=role,
                              decision_policy_id=policy, payload_sha256=payload_hash,
                              status_code=response_status,
                              eligible=response_status == "VALID" and role != "UNREGISTERED_SCHEMA")
             db.commit()
-        return LedgerWriteResult("SAVED", True, response_status == "VALID" and role != "UNREGISTERED_SCHEMA", event_id)
+        return LedgerWriteResult("SAVED", True, response_status == "VALID" and role != "UNREGISTERED_SCHEMA",
+                                 event_id, request_id=request_id)
     except Exception as exc:
         return _write_failed(event_id, exc)
 
@@ -607,7 +790,7 @@ def record_system_decision(event_id: str, final_decision: str, *, validation_sta
                            decision_stage: str = "FINAL_SYSTEM",
                            rejection_code: str | None = None, agent_role: str | None = None,
                            decision_policy_id: str | None = None,
-                           path: str | Path | None = None) -> LedgerWriteResult:
+                           path: str | Path | None = None, request_id: str | None = None) -> LedgerWriteResult:
     db_path = Path(path) if path is not None else default_ledger_path()
     try:
         initialize_ledger(db_path)
@@ -616,16 +799,18 @@ def record_system_decision(event_id: str, final_decision: str, *, validation_sta
             if db.execute("SELECT 1 FROM opportunities WHERE event_id=?", (event_id,)).fetchone() is None:
                 db.rollback()
                 return LedgerWriteResult("MISSING_EVENT", False, False, event_id, "LEDGER_EVENT_CONTEXT_MISSING")
+            request_id = request_id or _REQUEST_CONTEXT.get()
             db.execute("""INSERT INTO system_events (
                 system_event_id,event_id,created_at_utc,final_decision,decision_stage,
-                validation_status,rejection_code,agent_role,decision_policy_id,order_executed
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)""", (
+                validation_status,rejection_code,agent_role,decision_policy_id,request_id,order_executed
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)""", (
                 str(uuid4()), event_id, utc_now(), str(final_decision), str(decision_stage),
-                str(validation_status), rejection_code, agent_role, decision_policy_id,
+                str(validation_status), rejection_code, agent_role, decision_policy_id, request_id,
             ))
             _insert_coverage(db, event_id=event_id, event_type="SYSTEM_DECISION_PERSISTED",
                              agent_role=agent_role, decision_policy_id=decision_policy_id,
-                             status_code=str(validation_status), eligible=str(validation_status).upper() == "VALID")
+                             status_code=str(validation_status), eligible=str(validation_status).upper() == "VALID",
+                             request_id=request_id)
             db.commit()
         return LedgerWriteResult("SAVED", True, str(validation_status).upper() == "VALID", event_id)
     except Exception as exc:
@@ -639,9 +824,12 @@ def append_outcome(event_id: str, known_at: Any, outcome: dict[str, Any], *, pat
         "cost_scenario", "ambiguous", "policy_id", "release_time_utc", "known_at_utc",
         "portfolio_accepted", "expired", "filled", "fill_time_utc", "expires_at_utc",
         "base_volume", "risk_context_sha256", "plan_sha256",
+        "accepted_at_utc", "placed_at_utc", "economic_close_time_utc",
+        "outcome_observed_at_utc", "persisted_at_utc", "order_type",
     )
     safe = {key: outcome[key] for key in safe_fields if key in outcome}
     safe["known_at_utc"] = timestamp
+    safe.setdefault("persisted_at_utc", timestamp)
     outcome_id = canonical_hash({"event_id": event_id, "known_at_utc": timestamp,
                                  "policy_id": safe.get("policy_id"), "cost_scenario": safe.get("cost_scenario")})
     db_path = initialize_ledger(path)
@@ -679,6 +867,22 @@ def append_outcome(event_id: str, known_at: Any, outcome: dict[str, Any], *, pat
     return outcome_id
 
 
+def ledger_content_sha256(path: str | Path | None = None) -> str:
+    """Hash the logical append-only contents, independent of SQLite/WAL layout."""
+    db_path = Path(path) if path is not None else default_ledger_path()
+    tables = ("opportunities", "technical_plans", "trade_contexts", "llm_events", "system_events", "outcomes", "coverage_events")
+    snapshot = []
+    with _open_db(initialize_ledger(db_path)) as db:
+        for table in tables:
+            columns = [row[1] for row in db.execute(f"PRAGMA table_info({table})")]
+            if not columns:
+                raise ValueError("LEDGER_REQUIRED_TABLE_MISSING")
+            ordering = ",".join('"' + name.replace('"', '""') + '"' for name in columns)
+            rows = db.execute(f'SELECT * FROM "{table}" ORDER BY {ordering}').fetchall()
+            snapshot.append({"table": table, "columns": columns, "rows": [list(row) for row in rows]})
+    return canonical_hash(snapshot)
+
+
 def reconcile_ledger(path: str | Path | None = None) -> dict[str, Any]:
     """Reconcile detected population through responses, decisions and outcomes."""
     db_path = Path(path) if path is not None else default_ledger_path()
@@ -693,6 +897,7 @@ def reconcile_ledger(path: str | Path | None = None) -> dict[str, Any]:
             outcomes = int(db.execute("SELECT COUNT(*) FROM outcomes").fetchone()[0])
             outcome_events = int(db.execute("SELECT COUNT(DISTINCT event_id) FROM outcomes").fetchone()[0])
             trade_contexts = int(db.execute("SELECT COUNT(*) FROM trade_contexts").fetchone()[0])
+            technical_plans = int(db.execute("SELECT COUNT(*) FROM technical_plans").fetchone()[0])
             eligible_without_trade_context = int(db.execute("""
                 SELECT COUNT(*) FROM coverage_events e
                 WHERE e.event_type='OPPORTUNITY_ELIGIBLE' AND NOT EXISTS (
@@ -700,22 +905,86 @@ def reconcile_ledger(path: str | Path | None = None) -> dict[str, Any]:
                       AND t.context_type='TRADE_PLAN_RISK_INPUT'
                 )
             """).fetchone()[0])
+            eligible_candidates = int(db.execute(
+                "SELECT COUNT(DISTINCT event_id) FROM coverage_events WHERE event_type='OPPORTUNITY_ELIGIBLE'"
+            ).fetchone()[0])
+            eligible_without_llm_response = int(db.execute("""
+                SELECT COUNT(DISTINCT e.event_id) FROM coverage_events e
+                WHERE e.event_type='OPPORTUNITY_ELIGIBLE' AND EXISTS (
+                    SELECT 1 FROM coverage_events q WHERE q.event_id=e.event_id
+                      AND q.event_type='LLM_QUERY_SENT' AND q.agent_role='MARKET_ANALYST_STRATEGY_FAMILY'
+                ) AND NOT EXISTS (
+                    SELECT 1 FROM coverage_events r JOIN llm_events l
+                      ON l.request_id=r.request_id AND l.event_id=r.event_id
+                    WHERE r.event_id=e.event_id AND r.agent_role='MARKET_ANALYST_STRATEGY_FAMILY'
+                      AND r.event_type='LLM_RESPONSE_PERSISTED' AND r.request_id IS NOT NULL
+                )
+            """).fetchone()[0])
+            eligible_without_canonical_query = int(db.execute("""
+                SELECT COUNT(DISTINCT e.event_id) FROM coverage_events e
+                WHERE e.event_type='OPPORTUNITY_ELIGIBLE' AND NOT EXISTS (
+                    SELECT 1 FROM coverage_events q WHERE q.event_id=e.event_id
+                      AND q.event_type='LLM_QUERY_SENT' AND q.agent_role='MARKET_ANALYST_STRATEGY_FAMILY'
+                )
+            """).fetchone()[0])
+            eligible_event_ids = {row[0] for row in db.execute(
+                "SELECT DISTINCT event_id FROM coverage_events WHERE event_type='OPPORTUNITY_ELIGIBLE'"
+            )}
+            common_outcome_events = set()
+            for outcome_event_id, outcome_json in db.execute("SELECT event_id,outcome_json FROM outcomes"):
+                try:
+                    if json.loads(outcome_json).get("policy_id") == "COMMON_PLAN_COUNTERFACTUAL":
+                        common_outcome_events.add(outcome_event_id)
+                except (TypeError, json.JSONDecodeError):
+                    continue
+            eligible_without_outcome = len(eligible_event_ids - common_outcome_events)
             planned_queries = int(db.execute("SELECT COUNT(*) FROM coverage_events WHERE event_type='LLM_QUERY_PLANNED'").fetchone()[0])
             sent_queries = int(db.execute("SELECT COUNT(*) FROM coverage_events WHERE event_type='LLM_QUERY_SENT'").fetchone()[0])
             missing_request_response = int(db.execute("""
                 SELECT COUNT(*) FROM coverage_events c
-                WHERE c.event_type='LLM_QUERY_SENT' AND NOT EXISTS (
-                    SELECT 1 FROM llm_events l WHERE l.event_id=c.event_id AND l.agent_role=c.agent_role
-                      AND l.payload_sha256=c.payload_sha256
+                WHERE c.event_type='LLM_QUERY_SENT' AND (c.request_id IS NULL OR NOT EXISTS (
+                    SELECT 1 FROM llm_events l WHERE l.request_id=c.request_id AND l.event_id=c.event_id
+                      AND l.agent_role=c.agent_role AND l.payload_sha256=c.payload_sha256
+                ) OR (SELECT COUNT(*) FROM llm_events l WHERE l.request_id=c.request_id) != 1
+                  OR (SELECT COUNT(*) FROM coverage_events p WHERE p.event_type='LLM_RESPONSE_PERSISTED'
+                      AND p.request_id=c.request_id AND p.event_id=c.event_id
+                      AND p.agent_role=c.agent_role AND p.payload_sha256=c.payload_sha256) != 1)
+            """).fetchone()[0])
+            response_without_request = int(db.execute("""
+                SELECT COUNT(*) FROM llm_events l WHERE l.request_id IS NULL OR NOT EXISTS (
+                    SELECT 1 FROM coverage_events c WHERE c.request_id=l.request_id
+                      AND c.event_id=l.event_id AND c.event_type='LLM_QUERY_SENT'
                 )
             """).fetchone()[0])
             response_without_decision = int(db.execute("""
-                SELECT COUNT(DISTINCT l.event_id) FROM llm_events l
+                SELECT COUNT(*) FROM llm_events l
                 WHERE l.pydantic_status='VALID' AND l.agent_role=? AND NOT EXISTS (
                     SELECT 1 FROM system_events s WHERE s.event_id=l.event_id AND s.decision_stage='MARKET_ANALYSIS'
+                      AND s.request_id=l.request_id AND l.request_id IS NOT NULL
                 )
             """, ("MARKET_ANALYST_STRATEGY_FAMILY",)).fetchone()[0])
             orphan_coverage = int(db.execute("SELECT COUNT(*) FROM coverage_events WHERE event_id IS NULL").fetchone()[0])
+            duplicate_sent_ids = int(db.execute("""
+                SELECT COUNT(*) FROM coverage_events c WHERE c.event_type='LLM_QUERY_SENT'
+                  AND (c.request_id IS NULL OR (SELECT COUNT(*) FROM coverage_events x
+                       WHERE x.event_type='LLM_QUERY_SENT' AND x.request_id=c.request_id) != 1)
+            """).fetchone()[0])
+            sent_without_matching_plan = int(db.execute("""
+                SELECT COUNT(*) FROM coverage_events s WHERE s.event_type='LLM_QUERY_SENT'
+                  AND (SELECT COUNT(*) FROM coverage_events p WHERE p.event_type='LLM_QUERY_PLANNED'
+                       AND p.request_id=s.request_id AND p.event_id=s.event_id
+                       AND p.agent_role=s.agent_role AND p.payload_sha256=s.payload_sha256) != 1
+            """).fetchone()[0])
+            valid_filter_without_single_system_decision = int(db.execute("""
+                SELECT COUNT(*) FROM llm_events l
+                WHERE l.pydantic_status='VALID' AND l.agent_role=? AND l.request_id IS NOT NULL
+                  AND (SELECT COUNT(*) FROM system_events s WHERE s.event_id=l.event_id
+                       AND s.decision_stage='MARKET_ANALYSIS' AND s.request_id=l.request_id) != 1
+            """, ("MARKET_ANALYST_STRATEGY_FAMILY",)).fetchone()[0])
+            missing_reference_plan = int(db.execute("""
+                SELECT COUNT(*) FROM opportunities o WHERE (SELECT COUNT(*) FROM technical_plans t
+                    WHERE t.event_id=o.event_id AND t.policy_version='TECHNICAL_REFERENCE_V1') != 1
+            """).fetchone()[0])
         discrepancies = []
         if counts.get("OPPORTUNITY_DETECTED", 0) != opportunities:
             discrepancies.append("OPPORTUNITY_DETECTION_COUNT_MISMATCH")
@@ -723,14 +992,88 @@ def reconcile_ledger(path: str | Path | None = None) -> dict[str, Any]:
             discrepancies.append("LLM_PERSISTENCE_COUNT_MISMATCH")
         if missing_request_response:
             discrepancies.append("SENT_QUERY_WITHOUT_PERSISTED_RESPONSE")
-        if response_without_decision:
+        if response_without_request:
+            discrepancies.append("PERSISTED_RESPONSE_WITHOUT_MATCHED_REQUEST_ID")
+        if duplicate_sent_ids:
+            discrepancies.append("DUPLICATE_OR_MISSING_QUERY_ID")
+        if sent_without_matching_plan:
+            discrepancies.append("SENT_QUERY_WITHOUT_MATCHED_PLAN_ID")
+        if response_without_decision or valid_filter_without_single_system_decision:
             discrepancies.append("VALID_FILTER_RESPONSE_WITHOUT_SYSTEM_DECISION")
         if orphan_coverage:
             discrepancies.append("ORPHAN_COVERAGE_EVENTS")
         if eligible_without_trade_context:
             discrepancies.append("ELIGIBLE_OPPORTUNITY_WITHOUT_TRADE_CONTEXT")
+        if eligible_without_llm_response:
+            discrepancies.append("ELIGIBLE_CANDIDATE_WITHOUT_PERSISTED_RESPONSE")
         if planned_queries < sent_queries:
             discrepancies.append("SENT_QUERY_WITHOUT_PLANNED_COVERAGE")
+        if technical_plans != opportunities or missing_reference_plan:
+            discrepancies.append("TECHNICAL_REFERENCE_PLAN_MISSING_OR_DUPLICATE")
+        if technical_plans:
+            from src.technical_reference import POLICY_SHA256, POLICY_VERSION
+            with _open_db(db_path) as db:
+                plan_rows = db.execute("""
+                    SELECT t.event_id,t.policy_version,t.plan_source,t.plan_status,t.decision_time_utc,
+                           t.constructed_at_utc,t.maximum_market_data_time_utc,t.plan_json,t.plan_sha256,
+                           t.policy_sha256,t.config_json,t.config_sha256,t.missing_fields_json,
+                           t.market_data_quality_json,t.evidence_ids_json,o.symbol,o.decision_time_utc,
+                           o.snapshot_json
+                    FROM technical_plans t JOIN opportunities o USING(event_id)
+                """).fetchall()
+            bad_plans = 0
+            for row in plan_rows:
+                (event_id, version, source, plan_status, decision_time, constructed, maximum_data,
+                 plan_json, plan_hash, policy_hash, config_json, config_hash, missing_json,
+                 quality_json, evidence_json, symbol, opportunity_time, snapshot_json) = row
+                try:
+                    parsed_decision = utc_timestamp(decision_time, field="technical_plan_decision")
+                    parsed_opportunity = utc_timestamp(opportunity_time, field="opportunity_decision")
+                    parsed_constructed = utc_timestamp(constructed, field="technical_plan_constructed")
+                    parsed_maximum = utc_timestamp(maximum_data, field="technical_plan_market_data") if maximum_data else None
+                    config_bytes = json.dumps(json.loads(config_json), sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+                    valid = (
+                        version == POLICY_VERSION and source == "TECHNICAL_ONLY_REFERENCE"
+                        and plan_status in {"TECHNICAL_PLAN_VALID", "TECHNICAL_PLAN_NOT_EVALUABLE", "NO_TECHNICAL_CANDIDATE"}
+                        and parsed_decision == parsed_opportunity and parsed_constructed >= parsed_decision
+                        and (parsed_maximum is None or parsed_maximum <= parsed_decision)
+                        and policy_hash == POLICY_SHA256 and sha256(config_bytes).hexdigest() == config_hash
+                        and isinstance(json.loads(missing_json), list)
+                        and isinstance(json.loads(quality_json), dict)
+                        and isinstance(json.loads(evidence_json), list)
+                    )
+                    if plan_status == "TECHNICAL_PLAN_VALID":
+                        plan = json.loads(plan_json) if plan_json else None
+                        opportunity_snapshot = json.loads(snapshot_json)
+                        technical_decision = str(opportunity_snapshot.get("technical_decision", "")).upper()
+                        expected_direction = {"WATCH_LONG": "BUY", "WATCH_SHORT": "SELL"}.get(technical_decision)
+                        valid = valid and isinstance(plan, dict) and plan.get("symbol") == symbol
+                        valid = valid and canonical_hash(plan) == plan_hash
+                        direction = str((plan or {}).get("direction", "")).upper()
+                        valid = valid and direction == expected_direction
+                        valid = valid and plan.get("mode") == "LIMIT"
+                        valid = valid and plan.get("order_type") == ("BUY_LIMIT" if direction == "BUY" else "SELL_LIMIT")
+                        if direction == "BUY":
+                            valid = valid and float(plan["stop_loss"]) < float(plan["entry"]) < float(plan["take_profit"])
+                        elif direction == "SELL":
+                            valid = valid and float(plan["take_profit"]) < float(plan["entry"]) < float(plan["stop_loss"])
+                        else:
+                            valid = False
+                    elif plan_status == "NO_TECHNICAL_CANDIDATE":
+                        opportunity_snapshot = json.loads(snapshot_json)
+                        valid = valid and str(opportunity_snapshot.get("technical_decision", "NO_TRADE")).upper() == "NO_TRADE"
+                    else:
+                        valid = valid and plan_json is None and plan_hash is None
+                    bad_plans += int(not valid)
+                except (KeyError, TypeError, ValueError, OverflowError, json.JSONDecodeError):
+                    bad_plans += 1
+            if bad_plans:
+                discrepancies.append("TECHNICAL_REFERENCE_PLAN_PROVENANCE_INVALID")
+        try:
+            content_hash = ledger_content_sha256(db_path)
+        except Exception:
+            content_hash = None
+            discrepancies.append("LEDGER_CONTENT_HASH_FAILED")
         return {
             "status": "PASS" if not discrepancies else "FAIL",
             "counts": {
@@ -747,13 +1090,26 @@ def reconcile_ledger(path: str | Path | None = None) -> dict[str, Any]:
                 "outcomes_persisted": outcomes,
                 "outcomes_pending": max(0, opportunities - outcome_events),
                 "trade_contexts_persisted": trade_contexts,
+                "technical_plans_persisted": technical_plans,
+                "eligible_candidates": eligible_candidates,
+                "eligible_without_canonical_query": eligible_without_canonical_query,
+                "eligible_without_canonical_response": eligible_without_llm_response,
+                "eligible_without_common_plan_outcome": eligible_without_outcome,
                 "eligible_without_trade_context": eligible_without_trade_context,
                 "events_without_traceability": orphan_coverage,
                 "sent_queries_without_response": missing_request_response,
+                "sent_queries_without_matching_plan": sent_without_matching_plan,
                 "valid_filter_responses_without_system_decision": response_without_decision,
+                "valid_filter_responses_without_exactly_one_system_decision": valid_filter_without_single_system_decision,
+                "opportunities_without_reference_plan": missing_reference_plan,
             },
             "discrepancies": discrepancies,
-            "confirmatory_eligible": not bool(discrepancies) and orphan_coverage == 0 and outcome_events == opportunities,
+            "confirmatory_eligible": (
+                not bool(discrepancies) and orphan_coverage == 0
+                and eligible_without_trade_context == 0 and eligible_without_llm_response == 0
+                and eligible_without_outcome == 0
+            ),
+            "ledger_content_sha256": content_hash,
             "provider_calls_or_orders_created_by_reconciliation": 0,
         }
     except Exception as exc:

@@ -1,0 +1,8 @@
+{
+  "both_policies_share_plan_hashes": true,
+  "close_economic_time_distinguished_from_observation_and_persistence": true,
+  "persistence_time_changes_do_not_affect_prior_decisions_test": "PASS",
+  "status": "PASS",
+  "synthetic_demo_only": true,
+  "unobserved_close_does_not_release_slot_test": "PASS"
+}
