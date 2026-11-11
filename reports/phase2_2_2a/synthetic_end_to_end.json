@@ -1,0 +1,2008 @@
+{
+  "clean_recovery": {
+    "backfill_integrity_status": "PASS",
+    "backfill_manifest_status": "HISTORY_BACKFILL_DOWNLOADED_PENDING_REAUDIT",
+    "calendar_review_intervals": 0,
+    "continuity_status": "HISTORY_CONTINUITY_VERIFIED",
+    "originals_unchanged": true,
+    "remaining_recovery_intervals": 0,
+    "valid_chunks": 3
+  },
+  "conflict_recovery": {
+    "backfill_manifest_status": "HISTORY_BACKFILL_PREPARED_WITH_REVIEW",
+    "conflict_action": "BACKFILL_SOURCE_CONFLICT_REQUIRES_REVIEW",
+    "conflict_count": 2,
+    "conflict_status": "BACKFILL_SOURCE_CONFLICT_REQUIRES_REVIEW",
+    "continuity_status": "HISTORY_CONTINUITY_BLOCKED"
+  },
+  "data_provenance": "SYNTHETIC_TEST_DATA_NOT_REAL_RECOVERY",
+  "empty_response_recovery": {
+    "backfill_manifest_status": "HISTORY_BACKFILL_PREPARED_WITH_REVIEW",
+    "continuity_status": "HISTORY_CONTINUITY_PARTIAL",
+    "empty_chunks": 1,
+    "pending_chunk_count": 1
+  },
+  "initial_audit": {
+    "history_continuity_status": "HISTORY_CONTINUITY_NOT_AUDITED",
+    "large_gap_missing_bars": 1002,
+    "planned_intervals": 3,
+    "status": "PASS_WITH_PENDING_GAPS"
+  },
+  "interruption_and_resume": {
+    "first_chunk_files_after_interruption": 1,
+    "first_completed_chunk_not_refetched": true,
+    "interruption_observed": true,
+    "manifest_cumulative_provider_calls": 4,
+    "retry_provider_calls": 2
+  },
+  "llm_calls": 0,
+  "mock_market_read_calls": 10,
+  "orders_sent": 0,
+  "original_source_file_count": 8,
+  "original_sources_unchanged_after_all_scenarios": true,
+  "post_backfill_audit": {
+    "audit": {
+      "audit_as_of_utc": "2026-11-11T00:00:00+00:00",
+      "backfill_run": {
+        "accepted_chunk_count": 3,
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "chunks": [
+          {
+            "accepted": true,
+            "bar_count": 1000,
+            "canonical_sha256_actual": "10f39d8f5fcbedad224a6f56df036b6144ee2cd7855cd493a87cbdf45b0ee907",
+            "canonical_sha256_expected": "10f39d8f5fcbedad224a6f56df036b6144ee2cd7855cd493a87cbdf45b0ee907",
+            "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+            "chunk_id": "a2c9b86db04e4ae1feb46c5f",
+            "hash_status": "RAW_AND_CANONICAL_MATCH",
+            "raw_sha256_actual": "10f39d8f5fcbedad224a6f56df036b6144ee2cd7855cd493a87cbdf45b0ee907",
+            "raw_sha256_expected": "10f39d8f5fcbedad224a6f56df036b6144ee2cd7855cd493a87cbdf45b0ee907",
+            "status": "COMPLETED"
+          },
+          {
+            "accepted": true,
+            "bar_count": 10,
+            "canonical_sha256_actual": "633a201f8f3fc445085d71ba68b18194caafdd5b65570371169412d49007b273",
+            "canonical_sha256_expected": "633a201f8f3fc445085d71ba68b18194caafdd5b65570371169412d49007b273",
+            "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+            "chunk_id": "801ac326cd139e7dcc78e583",
+            "hash_status": "RAW_AND_CANONICAL_MATCH",
+            "raw_sha256_actual": "633a201f8f3fc445085d71ba68b18194caafdd5b65570371169412d49007b273",
+            "raw_sha256_expected": "633a201f8f3fc445085d71ba68b18194caafdd5b65570371169412d49007b273",
+            "status": "COMPLETED"
+          },
+          {
+            "accepted": true,
+            "bar_count": 6,
+            "canonical_sha256_actual": "e75a1cab05c87ded1cfe465b0c88bbdae24493d71c4e08803040cd838bb16b55",
+            "canonical_sha256_expected": "e75a1cab05c87ded1cfe465b0c88bbdae24493d71c4e08803040cd838bb16b55",
+            "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+            "chunk_id": "7d3f660e355e8589ec1a256b",
+            "hash_status": "RAW_AND_CANONICAL_MATCH",
+            "raw_sha256_actual": "e75a1cab05c87ded1cfe465b0c88bbdae24493d71c4e08803040cd838bb16b55",
+            "raw_sha256_expected": "e75a1cab05c87ded1cfe465b0c88bbdae24493d71c4e08803040cd838bb16b55",
+            "status": "COMPLETED"
+          }
+        ],
+        "empty_chunk_ids": [],
+        "errors": [],
+        "integrity_status": "PASS",
+        "manifest_status_untrusted": "HISTORY_BACKFILL_DOWNLOADED_PENDING_REAUDIT",
+        "pending_chunk_ids": [],
+        "plan_sha256": "2832772341b0470b18d958254a5493cb67af8b0ceec8ff0f771c3aa1b72692f2",
+        "planned_chunk_count": 3,
+        "row_count": 1016,
+        "run_id": "synthetic-clean",
+        "source_conflicts": []
+      },
+      "base_snapshot": "data/market_history/mt5_real_readonly/20261109T202112.171333Z",
+      "calendar_review_intervals": [],
+      "counts": {
+        "all_source_rows_audited": 1024,
+        "backfill_integrity_errors": 0,
+        "backfill_rows_in_union": 1016,
+        "backfill_source_conflicts": 0,
+        "calendar_review_intervals": 0,
+        "pending_recovery_intervals": 0,
+        "price_overlap_conflicts": 0
+      },
+      "critical_integrity_errors": [],
+      "generated_utc": "2026-11-11T10:02:10.764332+00:00",
+      "history_continuity_status": "HISTORY_CONTINUITY_VERIFIED",
+      "market_calendar_policy": {
+        "friday_utc": "PENDING_WEEKLY_CLOSE_HOURS",
+        "monday_to_thursday_utc": "PENDING_TRADING_CALENDAR_OR_DATA_GAP",
+        "note": "No broker holiday or DST session calendar is assumed. Friday/Sunday boundary slots remain pending until verified.",
+        "saturday_utc": "EXPECTED_WEEKEND_CLOSED_CANDIDATE",
+        "sunday_utc": "PENDING_WEEKLY_OPEN_HOURS"
+      },
+      "no_csv_source_was_written": true,
+      "pending_recovery_intervals": [],
+      "previous_source": "data/market",
+      "schema_version": 2,
+      "snapshot_file_inventory": {
+        "actual_csv_count": 4,
+        "expected_csv_count": 4,
+        "extra": [],
+        "manifest_file_hash_validation": {
+          "EURUSD_M15": {
+            "actual_canonical_sha256_lf": "6ad43b52d5436689b4f1ddc95ac86dcaba7e89d5bae9361083b8edda80262044",
+            "actual_sha256_raw": "6ad43b52d5436689b4f1ddc95ac86dcaba7e89d5bae9361083b8edda80262044",
+            "canonical_hash_matches_manifest": true,
+            "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+            "latest_closed_matches_manifest": true,
+            "legacy_crlf_variant_matches_manifest": false,
+            "legacy_crlf_variant_sha256": "35985577ff6cb0355c60371f1b80d67499d77676874c43645300224e9f3a3874",
+            "manifest_metadata_matches": true,
+            "manifest_sha256": "6ad43b52d5436689b4f1ddc95ac86dcaba7e89d5bae9361083b8edda80262044",
+            "raw_hash_matches_manifest": true,
+            "row_count_matches_manifest": true,
+            "status": "PASS_RAW_HASH_MATCH"
+          },
+          "EURUSD_M5": {
+            "actual_canonical_sha256_lf": "a53adbe93a3e70d3d9b96bff00ca0a0dc59e04e8de7a061a002b241875232f87",
+            "actual_sha256_raw": "a53adbe93a3e70d3d9b96bff00ca0a0dc59e04e8de7a061a002b241875232f87",
+            "canonical_hash_matches_manifest": true,
+            "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+            "latest_closed_matches_manifest": true,
+            "legacy_crlf_variant_matches_manifest": false,
+            "legacy_crlf_variant_sha256": "69eee75914317bfdf5b04466feb356ebd78ca854669f2a6cfba8640c1b5f835c",
+            "manifest_metadata_matches": true,
+            "manifest_sha256": "a53adbe93a3e70d3d9b96bff00ca0a0dc59e04e8de7a061a002b241875232f87",
+            "raw_hash_matches_manifest": true,
+            "row_count_matches_manifest": true,
+            "status": "PASS_RAW_HASH_MATCH"
+          },
+          "USDCAD_M15": {
+            "actual_canonical_sha256_lf": "985d318e2e6085ab3c84fbfe3eb7179c012b42e329cd0a4476f9d785bcfd13c5",
+            "actual_sha256_raw": "985d318e2e6085ab3c84fbfe3eb7179c012b42e329cd0a4476f9d785bcfd13c5",
+            "canonical_hash_matches_manifest": true,
+            "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+            "latest_closed_matches_manifest": true,
+            "legacy_crlf_variant_matches_manifest": false,
+            "legacy_crlf_variant_sha256": "45c2ff089c6cf02c341f5bbdb8716b1b29cdaa59938eac9435aca53f0e4f6f25",
+            "manifest_metadata_matches": true,
+            "manifest_sha256": "985d318e2e6085ab3c84fbfe3eb7179c012b42e329cd0a4476f9d785bcfd13c5",
+            "raw_hash_matches_manifest": true,
+            "row_count_matches_manifest": true,
+            "status": "PASS_RAW_HASH_MATCH"
+          },
+          "USDCAD_M5": {
+            "actual_canonical_sha256_lf": "a8ed6294019f7f30e7d987abac71d597f3959b8494d041f716177658b804d27b",
+            "actual_sha256_raw": "a8ed6294019f7f30e7d987abac71d597f3959b8494d041f716177658b804d27b",
+            "canonical_hash_matches_manifest": true,
+            "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+            "latest_closed_matches_manifest": true,
+            "legacy_crlf_variant_matches_manifest": false,
+            "legacy_crlf_variant_sha256": "4d0d574af0e5643a13a9e772eb1ad23d6d4660cbcdf48b85402b240bcb6a034c",
+            "manifest_metadata_matches": true,
+            "manifest_sha256": "a8ed6294019f7f30e7d987abac71d597f3959b8494d041f716177658b804d27b",
+            "raw_hash_matches_manifest": true,
+            "row_count_matches_manifest": true,
+            "status": "PASS_RAW_HASH_MATCH"
+          }
+        },
+        "manifest_sha256": "0ecdde11ee6222ef0e3c7acfd2b755ba1b81d00b8363343be6654779da2f851f",
+        "missing": [],
+        "previous_source_extra_csv_files": []
+      },
+      "source_files_unchanged": true,
+      "source_hashes_after": {
+        "data/market/EURUSD/M15.csv": "1c04050b8463d7b8b5ac94db0e951adbf39a9d5b4a72eeb17b041aa08f54605c",
+        "data/market/EURUSD/M5.csv": "697807d67251580ada96d726c2b48904d4b5548cd5da6ee359db9596ba79880b",
+        "data/market/USDCAD/M15.csv": "9cb852f10a351dc2d9deea46d5e3b8ba5aae0d3e7f05eb23cdb45dc7b9f7fdaf",
+        "data/market/USDCAD/M5.csv": "de2fa7df8671253cef2c9ffa0ce597e46d4e760a1d340a0265af28ed46f7889f",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv": "6ad43b52d5436689b4f1ddc95ac86dcaba7e89d5bae9361083b8edda80262044",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv": "a53adbe93a3e70d3d9b96bff00ca0a0dc59e04e8de7a061a002b241875232f87",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv": "985d318e2e6085ab3c84fbfe3eb7179c012b42e329cd0a4476f9d785bcfd13c5",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv": "a8ed6294019f7f30e7d987abac71d597f3959b8494d041f716177658b804d27b"
+      },
+      "source_hashes_before": {
+        "data/market/EURUSD/M15.csv": "1c04050b8463d7b8b5ac94db0e951adbf39a9d5b4a72eeb17b041aa08f54605c",
+        "data/market/EURUSD/M5.csv": "697807d67251580ada96d726c2b48904d4b5548cd5da6ee359db9596ba79880b",
+        "data/market/USDCAD/M15.csv": "9cb852f10a351dc2d9deea46d5e3b8ba5aae0d3e7f05eb23cdb45dc7b9f7fdaf",
+        "data/market/USDCAD/M5.csv": "de2fa7df8671253cef2c9ffa0ce597e46d4e760a1d340a0265af28ed46f7889f",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv": "6ad43b52d5436689b4f1ddc95ac86dcaba7e89d5bae9361083b8edda80262044",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv": "a53adbe93a3e70d3d9b96bff00ca0a0dc59e04e8de7a061a002b241875232f87",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv": "985d318e2e6085ab3c84fbfe3eb7179c012b42e329cd0a4476f9d785bcfd13c5",
+        "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv": "a8ed6294019f7f30e7d987abac71d597f3959b8494d041f716177658b804d27b"
+      },
+      "status": "PASS_WITH_PENDING_GAPS",
+      "symbols": {
+        "EURUSD": {
+          "M15": {
+            "previous_source": {
+              "bytes": 212,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-04T00:00:00+00:00",
+              "history_gap_interval_count": 1,
+              "history_gap_intervals": [
+                {
+                  "classification": "WEEKEND_CLOSURE_CANDIDATE_ONLY",
+                  "classification_ranges": [
+                    {
+                      "classification": "EXPECTED_WEEKEND_CLOSED_SATURDAY",
+                      "end_utc": "2025-01-04T00:15:00+00:00",
+                      "missing_bar_count": 1,
+                      "start_utc": "2025-01-04T00:15:00+00:00"
+                    }
+                  ],
+                  "elapsed_seconds": 1800,
+                  "missing_bar_count": 1,
+                  "missing_end_utc": "2025-01-04T00:15:00+00:00",
+                  "missing_start_utc": "2025-01-04T00:15:00+00:00",
+                  "next_bar_utc": "2025-01-04T00:30:00+00:00",
+                  "pending_bar_count": 0,
+                  "previous_bar_utc": "2025-01-04T00:00:00+00:00",
+                  "reason": "MISSING_SLOTS_FALL_ONLY_ON_SATURDAY_UTC",
+                  "recovery_candidate": false,
+                  "weekday_calendar_or_data_gap_bar_count": 0
+                }
+              ],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-04T00:30:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market/EURUSD/M15.csv",
+              "row_count": 2,
+              "sha256_raw": "1c04050b8463d7b8b5ac94db0e951adbf39a9d5b4a72eeb17b041aa08f54605c",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": true,
+                    "positive_observed_coverage_percent": 0.0,
+                    "positive_observed_records": 0,
+                    "records": 2,
+                    "zero_unverified_records": 2
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 0.0,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 2
+                    },
+                    "records": 2,
+                    "zero_percent": 100.0
+                  },
+                  "LONDON": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": null,
+                  "last_positive_utc": null,
+                  "months_with_positive_values": 0,
+                  "records_with_positive_value": 0,
+                  "total_months": 1
+                },
+                "positive_percent": 0.0,
+                "positive_points_percentiles": {
+                  "p0": null,
+                  "p100": null,
+                  "p50": null,
+                  "p90": null,
+                  "p95": null,
+                  "p99": null
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 0,
+                  "OBSERVED_ZERO_UNVERIFIED": 2
+                },
+                "records": 2,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 100.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 900,
+              "unique_timestamp_count": 2
+            },
+            "recent_source": {
+              "bytes": 134,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-04T00:30:00+00:00",
+              "history_gap_interval_count": 0,
+              "history_gap_intervals": [],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-04T00:30:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv",
+              "row_count": 1,
+              "sha256_raw": "6ad43b52d5436689b4f1ddc95ac86dcaba7e89d5bae9361083b8edda80262044",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": true,
+                    "positive_observed_coverage_percent": 0.0,
+                    "positive_observed_records": 0,
+                    "records": 1,
+                    "zero_unverified_records": 1
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 0.0,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 1
+                    },
+                    "records": 1,
+                    "zero_percent": 100.0
+                  },
+                  "LONDON": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": null,
+                  "last_positive_utc": null,
+                  "months_with_positive_values": 0,
+                  "records_with_positive_value": 0,
+                  "total_months": 1
+                },
+                "positive_percent": 0.0,
+                "positive_points_percentiles": {
+                  "p0": null,
+                  "p100": null,
+                  "p50": null,
+                  "p90": null,
+                  "p95": null,
+                  "p99": null
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 0,
+                  "OBSERVED_ZERO_UNVERIFIED": 1
+                },
+                "records": 1,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 100.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 900,
+              "unique_timestamp_count": 1
+            },
+            "timeframe_seconds": 900,
+            "transition": {
+              "backfill_row_count": 0,
+              "backfill_source_conflicts": [],
+              "bridge": {
+                "price_comparison_status": "PASS_ALL_OVERLAPPING_OHLC_MATCH",
+                "price_conflict_count": 0,
+                "price_conflicts_sample": [],
+                "shared_timestamp_count": 1,
+                "spread_value_conflict_count": 0,
+                "spread_value_conflicts_sample": [],
+                "status": "OVERLAP"
+              },
+              "combined_gap_interval_count": 1,
+              "combined_gap_intervals": [
+                {
+                  "classification": "WEEKEND_CLOSURE_CANDIDATE_ONLY",
+                  "classification_ranges": [
+                    {
+                      "classification": "EXPECTED_WEEKEND_CLOSED_SATURDAY",
+                      "end_utc": "2025-01-04T00:15:00+00:00",
+                      "missing_bar_count": 1,
+                      "start_utc": "2025-01-04T00:15:00+00:00"
+                    }
+                  ],
+                  "elapsed_seconds": 1800,
+                  "missing_bar_count": 1,
+                  "missing_end_utc": "2025-01-04T00:15:00+00:00",
+                  "missing_start_utc": "2025-01-04T00:15:00+00:00",
+                  "next_bar_utc": "2025-01-04T00:30:00+00:00",
+                  "pending_bar_count": 0,
+                  "previous_bar_utc": "2025-01-04T00:00:00+00:00",
+                  "reason": "MISSING_SLOTS_FALL_ONLY_ON_SATURDAY_UTC",
+                  "recovery_candidate": false,
+                  "weekday_calendar_or_data_gap_bar_count": 0
+                }
+              ],
+              "overlap": {
+                "price_comparison_status": "PASS_ALL_OVERLAPPING_OHLC_MATCH",
+                "price_conflict_count": 0,
+                "price_conflicts_sample": [],
+                "shared_timestamp_count": 1,
+                "spread_value_conflict_count": 0,
+                "spread_value_conflicts_sample": []
+              },
+              "previous_last_utc": "2025-01-04T00:30:00+00:00",
+              "recent_first_utc": "2025-01-04T00:30:00+00:00",
+              "source_price_conflicts_preserved": 0
+            }
+          },
+          "M5": {
+            "previous_source": {
+              "bytes": 212,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-06T09:50:00+00:00",
+              "history_gap_interval_count": 0,
+              "history_gap_intervals": [],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-06T09:55:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market/EURUSD/M5.csv",
+              "row_count": 2,
+              "sha256_raw": "697807d67251580ada96d726c2b48904d4b5548cd5da6ee359db9596ba79880b",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": true,
+                    "positive_observed_coverage_percent": 0.0,
+                    "positive_observed_records": 0,
+                    "records": 2,
+                    "zero_unverified_records": 2
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 0.0,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 2
+                    },
+                    "records": 2,
+                    "zero_percent": 100.0
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": null,
+                  "last_positive_utc": null,
+                  "months_with_positive_values": 0,
+                  "records_with_positive_value": 0,
+                  "total_months": 1
+                },
+                "positive_percent": 0.0,
+                "positive_points_percentiles": {
+                  "p0": null,
+                  "p100": null,
+                  "p50": null,
+                  "p90": null,
+                  "p95": null,
+                  "p99": null
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 0,
+                  "OBSERVED_ZERO_UNVERIFIED": 2
+                },
+                "records": 2,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 100.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 300,
+              "unique_timestamp_count": 2
+            },
+            "recent_source": {
+              "bytes": 134,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-09T21:30:00+00:00",
+              "history_gap_interval_count": 0,
+              "history_gap_intervals": [],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-09T21:30:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv",
+              "row_count": 1,
+              "sha256_raw": "a53adbe93a3e70d3d9b96bff00ca0a0dc59e04e8de7a061a002b241875232f87",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": true,
+                    "positive_observed_coverage_percent": 0.0,
+                    "positive_observed_records": 0,
+                    "records": 1,
+                    "zero_unverified_records": 1
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 0.0,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 1
+                    },
+                    "records": 1,
+                    "zero_percent": 100.0
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": null,
+                  "last_positive_utc": null,
+                  "months_with_positive_values": 0,
+                  "records_with_positive_value": 0,
+                  "total_months": 1
+                },
+                "positive_percent": 0.0,
+                "positive_points_percentiles": {
+                  "p0": null,
+                  "p100": null,
+                  "p50": null,
+                  "p90": null,
+                  "p95": null,
+                  "p99": null
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 0,
+                  "OBSERVED_ZERO_UNVERIFIED": 1
+                },
+                "records": 1,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 100.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 300,
+              "unique_timestamp_count": 1
+            },
+            "timeframe_seconds": 300,
+            "transition": {
+              "backfill_row_count": 1006,
+              "backfill_source_conflicts": [],
+              "bridge": {
+                "classification": "PENDING_MARKET_CALENDAR",
+                "classification_ranges": [
+                  {
+                    "classification": "PENDING_TRADING_CALENDAR_OR_DATA_GAP",
+                    "end_utc": "2025-01-09T21:25:00+00:00",
+                    "missing_bar_count": 1002,
+                    "start_utc": "2025-01-06T10:00:00+00:00"
+                  }
+                ],
+                "elapsed_seconds": 300900,
+                "missing_bar_count": 1002,
+                "missing_end_utc": "2025-01-09T21:25:00+00:00",
+                "missing_start_utc": "2025-01-06T10:00:00+00:00",
+                "next_bar_utc": "2025-01-09T21:30:00+00:00",
+                "pending_bar_count": 1002,
+                "previous_bar_utc": "2025-01-06T09:55:00+00:00",
+                "reason": "WEEKEND_AND_MARKET_HOURS_NOT_ASSUMED",
+                "recovery_candidate": true,
+                "weekday_calendar_or_data_gap_bar_count": 1002
+              },
+              "combined_gap_interval_count": 0,
+              "combined_gap_intervals": [],
+              "overlap": {
+                "price_comparison_status": "NO_OVERLAP_TO_COMPARE",
+                "price_conflict_count": 0,
+                "price_conflicts_sample": [],
+                "shared_timestamp_count": 0,
+                "spread_value_conflict_count": 0,
+                "spread_value_conflicts_sample": []
+              },
+              "previous_last_utc": "2025-01-06T09:55:00+00:00",
+              "recent_first_utc": "2025-01-09T21:30:00+00:00",
+              "source_price_conflicts_preserved": 0
+            }
+          }
+        },
+        "USDCAD": {
+          "M15": {
+            "previous_source": {
+              "bytes": 212,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-06T15:00:00+00:00",
+              "history_gap_interval_count": 0,
+              "history_gap_intervals": [],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-06T15:15:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market/USDCAD/M15.csv",
+              "row_count": 2,
+              "sha256_raw": "9cb852f10a351dc2d9deea46d5e3b8ba5aae0d3e7f05eb23cdb45dc7b9f7fdaf",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": false,
+                    "positive_observed_coverage_percent": 100.0,
+                    "positive_observed_records": 2,
+                    "records": 2,
+                    "zero_unverified_records": 0
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 100.0,
+                    "positive_points_percentiles": {
+                      "p0": 2.0,
+                      "p100": 2.0,
+                      "p50": 2.0,
+                      "p90": 2.0,
+                      "p95": 2.0,
+                      "p99": 2.0
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 2,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 2,
+                    "zero_percent": 0.0
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": "2025-01-06T15:00:00+00:00",
+                  "last_positive_utc": "2025-01-06T15:15:00+00:00",
+                  "months_with_positive_values": 1,
+                  "records_with_positive_value": 2,
+                  "total_months": 1
+                },
+                "positive_percent": 100.0,
+                "positive_points_percentiles": {
+                  "p0": 2.0,
+                  "p100": 2.0,
+                  "p50": 2.0,
+                  "p90": 2.0,
+                  "p95": 2.0,
+                  "p99": 2.0
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 2,
+                  "OBSERVED_ZERO_UNVERIFIED": 0
+                },
+                "records": 2,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 0.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 900,
+              "unique_timestamp_count": 2
+            },
+            "recent_source": {
+              "bytes": 134,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-06T15:15:00+00:00",
+              "history_gap_interval_count": 0,
+              "history_gap_intervals": [],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-06T15:15:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv",
+              "row_count": 1,
+              "sha256_raw": "985d318e2e6085ab3c84fbfe3eb7179c012b42e329cd0a4476f9d785bcfd13c5",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": false,
+                    "positive_observed_coverage_percent": 100.0,
+                    "positive_observed_records": 1,
+                    "records": 1,
+                    "zero_unverified_records": 0
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 100.0,
+                    "positive_points_percentiles": {
+                      "p0": 2.0,
+                      "p100": 2.0,
+                      "p50": 2.0,
+                      "p90": 2.0,
+                      "p95": 2.0,
+                      "p99": 2.0
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 1,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 1,
+                    "zero_percent": 0.0
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": "2025-01-06T15:15:00+00:00",
+                  "last_positive_utc": "2025-01-06T15:15:00+00:00",
+                  "months_with_positive_values": 1,
+                  "records_with_positive_value": 1,
+                  "total_months": 1
+                },
+                "positive_percent": 100.0,
+                "positive_points_percentiles": {
+                  "p0": 2.0,
+                  "p100": 2.0,
+                  "p50": 2.0,
+                  "p90": 2.0,
+                  "p95": 2.0,
+                  "p99": 2.0
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 1,
+                  "OBSERVED_ZERO_UNVERIFIED": 0
+                },
+                "records": 1,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 0.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 900,
+              "unique_timestamp_count": 1
+            },
+            "timeframe_seconds": 900,
+            "transition": {
+              "backfill_row_count": 0,
+              "backfill_source_conflicts": [],
+              "bridge": {
+                "price_comparison_status": "PASS_ALL_OVERLAPPING_OHLC_MATCH",
+                "price_conflict_count": 0,
+                "price_conflicts_sample": [],
+                "shared_timestamp_count": 1,
+                "spread_value_conflict_count": 0,
+                "spread_value_conflicts_sample": [],
+                "status": "OVERLAP"
+              },
+              "combined_gap_interval_count": 0,
+              "combined_gap_intervals": [],
+              "overlap": {
+                "price_comparison_status": "PASS_ALL_OVERLAPPING_OHLC_MATCH",
+                "price_conflict_count": 0,
+                "price_conflicts_sample": [],
+                "shared_timestamp_count": 1,
+                "spread_value_conflict_count": 0,
+                "spread_value_conflicts_sample": []
+              },
+              "previous_last_utc": "2025-01-06T15:15:00+00:00",
+              "recent_first_utc": "2025-01-06T15:15:00+00:00",
+              "source_price_conflicts_preserved": 0
+            }
+          },
+          "M5": {
+            "previous_source": {
+              "bytes": 212,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-06T12:50:00+00:00",
+              "history_gap_interval_count": 0,
+              "history_gap_intervals": [],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-06T12:55:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market/USDCAD/M5.csv",
+              "row_count": 2,
+              "sha256_raw": "de2fa7df8671253cef2c9ffa0ce597e46d4e760a1d340a0265af28ed46f7889f",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": false,
+                    "positive_observed_coverage_percent": 100.0,
+                    "positive_observed_records": 2,
+                    "records": 2,
+                    "zero_unverified_records": 0
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 100.0,
+                    "positive_points_percentiles": {
+                      "p0": 2.0,
+                      "p100": 2.0,
+                      "p50": 2.0,
+                      "p90": 2.0,
+                      "p95": 2.0,
+                      "p99": 2.0
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 2,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 2,
+                    "zero_percent": 0.0
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": "2025-01-06T12:50:00+00:00",
+                  "last_positive_utc": "2025-01-06T12:55:00+00:00",
+                  "months_with_positive_values": 1,
+                  "records_with_positive_value": 2,
+                  "total_months": 1
+                },
+                "positive_percent": 100.0,
+                "positive_points_percentiles": {
+                  "p0": 2.0,
+                  "p100": 2.0,
+                  "p50": 2.0,
+                  "p90": 2.0,
+                  "p95": 2.0,
+                  "p99": 2.0
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 2,
+                  "OBSERVED_ZERO_UNVERIFIED": 0
+                },
+                "records": 2,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 0.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 300,
+              "unique_timestamp_count": 2
+            },
+            "recent_source": {
+              "bytes": 134,
+              "columns": [
+                "time",
+                "open",
+                "high",
+                "low",
+                "close",
+                "tick_volume",
+                "spread",
+                "real_volume"
+              ],
+              "duplicate_conflict_count": 0,
+              "duplicate_identical_count": 0,
+              "first_utc": "2025-01-06T13:10:00+00:00",
+              "history_gap_interval_count": 0,
+              "history_gap_intervals": [],
+              "invalid_ohlc_count": 0,
+              "invalid_timestamp_count": 0,
+              "invalid_volume_count": 0,
+              "issues_sample": [],
+              "last_utc": "2025-01-06T13:10:00+00:00",
+              "malformed_row_count": 0,
+              "missing_column_names": [],
+              "missing_ohlc_column_names": [],
+              "missing_required_field_counts": {
+                "close": 0,
+                "high": 0,
+                "low": 0,
+                "open": 0,
+                "real_volume": 0,
+                "spread": 0,
+                "tick_volume": 0,
+                "time": 0
+              },
+              "non_utc_timestamp_count": 0,
+              "ohlc_integrity_status": "PASS",
+              "open_or_future_bar_count": 0,
+              "out_of_order_count": 0,
+              "path": "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv",
+              "row_count": 1,
+              "sha256_raw": "a8ed6294019f7f30e7d987abac71d597f3959b8494d041f716177658b804d27b",
+              "spread_audit": {
+                "by_utc_month": [
+                  {
+                    "month_utc": "2025-01",
+                    "period_has_no_observed_positive_spreads": false,
+                    "positive_observed_coverage_percent": 100.0,
+                    "positive_observed_records": 1,
+                    "records": 1,
+                    "zero_unverified_records": 0
+                  }
+                ],
+                "by_utc_session": {
+                  "ASIA": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "LONDON_NEW_YORK_OVERLAP": {
+                    "invalid_percent": 0.0,
+                    "missing_percent": 0.0,
+                    "positive_percent": 100.0,
+                    "positive_points_percentiles": {
+                      "p0": 2.0,
+                      "p100": 2.0,
+                      "p50": 2.0,
+                      "p90": 2.0,
+                      "p95": 2.0,
+                      "p99": 2.0
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 1,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 1,
+                    "zero_percent": 0.0
+                  },
+                  "NEW_YORK": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  },
+                  "ROLLOVER_OFF_HOURS": {
+                    "invalid_percent": null,
+                    "missing_percent": null,
+                    "positive_percent": null,
+                    "positive_points_percentiles": {
+                      "p0": null,
+                      "p100": null,
+                      "p50": null,
+                      "p90": null,
+                      "p95": null,
+                      "p99": null
+                    },
+                    "quality_counts": {
+                      "IMPUTED_ASSUMPTION": 0,
+                      "INVALID": 0,
+                      "MISSING": 0,
+                      "OBSERVED_VALID": 0,
+                      "OBSERVED_ZERO_UNVERIFIED": 0
+                    },
+                    "records": 0,
+                    "zero_percent": null
+                  }
+                },
+                "imputation_applied": false,
+                "invalid_percent": 0.0,
+                "missing_percent": 0.0,
+                "observed_positive_spread_coverage": {
+                  "first_positive_utc": "2025-01-06T13:10:00+00:00",
+                  "last_positive_utc": "2025-01-06T13:10:00+00:00",
+                  "months_with_positive_values": 1,
+                  "records_with_positive_value": 1,
+                  "total_months": 1
+                },
+                "positive_percent": 100.0,
+                "positive_points_percentiles": {
+                  "p0": 2.0,
+                  "p100": 2.0,
+                  "p50": 2.0,
+                  "p90": 2.0,
+                  "p95": 2.0,
+                  "p99": 2.0
+                },
+                "quality_counts": {
+                  "IMPUTED_ASSUMPTION": 0,
+                  "INVALID": 0,
+                  "MISSING": 0,
+                  "OBSERVED_VALID": 1,
+                  "OBSERVED_ZERO_UNVERIFIED": 0
+                },
+                "records": 1,
+                "source_values_modified": false,
+                "spread_units": "raw MT5 points; no point-to-price conversion",
+                "zero_percent": 0.0
+              },
+              "timeframe_grid_misalignment_count": 0,
+              "timeframe_seconds": 300,
+              "unique_timestamp_count": 1
+            },
+            "timeframe_seconds": 300,
+            "transition": {
+              "backfill_row_count": 6,
+              "backfill_source_conflicts": [],
+              "bridge": {
+                "classification": "PENDING_MARKET_CALENDAR",
+                "classification_ranges": [
+                  {
+                    "classification": "PENDING_TRADING_CALENDAR_OR_DATA_GAP",
+                    "end_utc": "2025-01-06T13:05:00+00:00",
+                    "missing_bar_count": 2,
+                    "start_utc": "2025-01-06T13:00:00+00:00"
+                  }
+                ],
+                "elapsed_seconds": 900,
+                "missing_bar_count": 2,
+                "missing_end_utc": "2025-01-06T13:05:00+00:00",
+                "missing_start_utc": "2025-01-06T13:00:00+00:00",
+                "next_bar_utc": "2025-01-06T13:10:00+00:00",
+                "pending_bar_count": 2,
+                "previous_bar_utc": "2025-01-06T12:55:00+00:00",
+                "reason": "WEEKEND_AND_MARKET_HOURS_NOT_ASSUMED",
+                "recovery_candidate": true,
+                "weekday_calendar_or_data_gap_bar_count": 2
+              },
+              "combined_gap_interval_count": 0,
+              "combined_gap_intervals": [],
+              "overlap": {
+                "price_comparison_status": "NO_OVERLAP_TO_COMPARE",
+                "price_conflict_count": 0,
+                "price_conflicts_sample": [],
+                "shared_timestamp_count": 0,
+                "spread_value_conflict_count": 0,
+                "spread_value_conflicts_sample": []
+              },
+              "previous_last_utc": "2025-01-06T12:55:00+00:00",
+              "recent_first_utc": "2025-01-06T13:10:00+00:00",
+              "source_price_conflicts_preserved": 0
+            }
+          }
+        }
+      },
+      "timeframe_grid_policy": "UTC fixed-duration steps; missing bars are candidate slots, not automatic market-data errors"
+    },
+    "data_provenance": "SYNTHETIC_TEST_DATA_NOT_REAL_RECOVERY",
+    "history_continuity_status": "HISTORY_CONTINUITY_VERIFIED",
+    "real_download_performed": false
+  },
+  "real_mt5_used": false
+}

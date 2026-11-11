@@ -1,0 +1,15 @@
+{
+  "audited_chunk_hash_statuses": [
+    "RAW_AND_CANONICAL_MATCH",
+    "RAW_AND_CANONICAL_MATCH",
+    "CANONICAL_MATCH_RAW_BYTES_DIFFER"
+  ],
+  "auditor_accepts_canonical_chunk_hash": true,
+  "chunk_line_endings_changed_after_write": true,
+  "data_provenance": "SYNTHETIC_TEST_DATA_NOT_REAL_RECOVERY",
+  "plan_accepted_on_crlf_sources": true,
+  "plan_generated_with_lf_source_files": true,
+  "policy": "CSV_LINE_ENDINGS_LF_V1",
+  "source_canonical_hashes_equal_after_crlf_conversion": true,
+  "source_raw_hashes_differ_after_crlf_conversion": true
+}

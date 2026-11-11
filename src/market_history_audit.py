@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from src.spread_quality import audit_spread_timeline
+from src.history_data_integrity import CANONICAL_HASH_POLICY, content_hashes, file_content_hashes
 
 
 SYMBOLS = ("EURUSD", "USDCAD", "AUDUSD")
@@ -47,6 +48,24 @@ def _number(row: dict[str, str], key: str) -> float:
 
 def _payload_signature(row: dict[str, str]) -> tuple[str | None, ...]:
     return tuple(row.get(key) for key in REQUIRED_COLUMNS[1:])
+
+
+def _material_signature(row: dict[str, Any]) -> tuple[str, ...]:
+    """Compare numeric CSV fields by value, not by display precision."""
+    values: list[str] = []
+    for key in REQUIRED_COLUMNS[1:]:
+        try:
+            if key in OHLC_COLUMNS:
+                # MT5 exposes prices as binary floats. Compare at 12 significant
+                # digits to remove representation noise while retaining precision
+                # far below normal FX quote increments. Hashes remain byte-exact.
+                value = Decimal(format(float(row.get(key)), ".12g")).normalize()
+            else:
+                value = Decimal(str(row.get(key))).normalize()
+            values.append(format(value, "f"))
+        except (InvalidOperation, TypeError, ValueError):
+            values.append(str(row.get(key)))
+    return tuple(values)
 
 
 def _load_csv(path: Path, timeframe: str, as_of_utc: datetime) -> dict[str, Any]:
@@ -285,25 +304,41 @@ def _manifest_hash_entry(manifest: dict[str, Any], symbol: str, timeframe: str) 
 
 def _hash_integrity(path: Path, expected: str | None) -> dict[str, Any]:
     raw = path.read_bytes()
-    raw_hash = sha256_bytes(raw)
-    canonical_crlf = raw.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
-    canonical_hash = sha256_bytes(canonical_crlf)
+    hashes = content_hashes(raw)
+    raw_hash = hashes["raw_sha256"]
+    canonical_hash = hashes["canonical_sha256"]
+    # The frozen 2026 snapshot manifest predates hash policy v1 and contains
+    # the CRLF byte digest. Accept only the exact CRLF/LF transformation.
+    legacy_crlf_hash = sha256_bytes(canonicalize_crlf(raw))
     if expected is None:
         status = "NO_MANIFEST_HASH"
     elif raw_hash == expected:
         status = "PASS_RAW_HASH_MATCH"
     elif canonical_hash == expected:
-        status = "PASS_LINE_ENDING_NORMALIZED_HASH_MATCH"
+        status = "PASS_CANONICAL_LF_HASH_MATCH"
+    elif legacy_crlf_hash == expected:
+        status = "PASS_LEGACY_CRLF_LINE_ENDING_MATCH"
     else:
         status = "FAIL_HASH_MISMATCH"
     return {
         "actual_sha256_raw": raw_hash,
         "manifest_sha256": expected,
-        "actual_sha256_after_crlf_canonicalization": canonical_hash,
+        "actual_canonical_sha256_lf": canonical_hash,
+        "legacy_crlf_variant_sha256": legacy_crlf_hash,
+        "canonicalization_policy": CANONICAL_HASH_POLICY,
         "raw_hash_matches_manifest": expected is not None and raw_hash == expected,
         "canonical_hash_matches_manifest": expected is not None and canonical_hash == expected,
+        "legacy_crlf_variant_matches_manifest": expected is not None and legacy_crlf_hash == expected,
         "status": status,
     }
+
+
+def canonicalize_crlf(raw: bytes) -> bytes:
+    """Legacy manifest compatibility: encode only LF/CRLF line-ending changes."""
+    normalized = raw.replace(b"\r\n", b"\n")
+    if b"\r" in normalized:
+        raise ValueError("CSV_CANONICALIZATION_UNSUPPORTED_LONE_CR")
+    return normalized.replace(b"\n", b"\r\n")
 
 
 def _compare_overlap(old: list[dict[str, Any]], recent: list[dict[str, Any]]) -> dict[str, Any]:
@@ -340,11 +375,22 @@ def _public_source(source: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in source.items() if key != "_records"}
 
 
-def _merge_record_variants(old: list[dict[str, Any]], recent: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _merge_record_variants(
+    old: list[dict[str, Any]],
+    recent: list[dict[str, Any]],
+    backfill: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     variants: dict[datetime, dict[tuple[str | None, ...], dict[str, Any]]] = {}
-    for source_name, records in (("data/market", old), ("mt5_real_readonly", recent)):
+    sources = [("data/market", old), ("mt5_real_readonly", recent)]
+    if backfill:
+        sources.append(("backfill_run", backfill))
+    for source_name, records in sources:
         for record in records:
-            variants.setdefault(record["time"], {}).setdefault(record["signature"], {**record, "sources": []})["sources"].append(source_name)
+            signature = _material_signature(record["row"])
+            variant = variants.setdefault(record["time"], {}).setdefault(signature, {**record, "sources": []})
+            source_label = record.get("source", source_name)
+            if source_label not in variant["sources"]:
+                variant["sources"].append(source_label)
     merged = []
     for timestamp in sorted(variants):
         for variant in variants[timestamp].values():
@@ -352,8 +398,15 @@ def _merge_record_variants(old: list[dict[str, Any]], recent: list[dict[str, Any
     return merged
 
 
-def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    """Return gap, spread and backfill-plan reports without modifying source files."""
+def audit_market_history(
+    root: Path,
+    *,
+    as_of_utc: datetime,
+    backfill_run: str | None = None,
+    symbols: tuple[str, ...] = SYMBOLS,
+    timeframes_seconds: dict[str, int] = TIMEFRAMES_SECONDS,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Audit original sources and, optionally, one explicitly selected backfill run."""
     if as_of_utc.tzinfo is None or as_of_utc.utcoffset() is None:
         raise ValueError("AS_OF_TIMESTAMP_MUST_BE_TIMEZONE_AWARE")
     as_of_utc = as_of_utc.astimezone(timezone.utc)
@@ -369,18 +422,36 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
     all_source_hashes_after: dict[str, str] = {}
     bridge_recovery_candidates: list[dict[str, Any]] = []
     calendar_review_items: list[dict[str, Any]] = []
-    expected_snapshot_files = {f"{symbol}_{timeframe}.csv" for symbol in SYMBOLS for timeframe in TIMEFRAMES_SECONDS}
+    run_validation: dict[str, Any] | None = None
+    if backfill_run is not None:
+        from src.market_history_backfill import validate_backfill_run
+
+        run_validation = validate_backfill_run(root, backfill_run, as_of_utc=as_of_utc)
+    expected_snapshot_files = {f"{symbol}_{timeframe}.csv" for symbol in symbols for timeframe in timeframes_seconds}
     actual_snapshot_files = {path.name for path in snapshot.glob("*.csv")}
     manifest_missing_files = sorted(expected_snapshot_files - actual_snapshot_files)
     extra_snapshot_files = sorted(actual_snapshot_files - expected_snapshot_files)
+    expected_old_files = {f"{symbol}/{timeframe}.csv" for symbol in symbols for timeframe in timeframes_seconds}
+    actual_old_files = {
+        path.relative_to(old_root).as_posix()
+        for symbol in symbols
+        for path in (old_root / symbol).glob("*.csv")
+    }
+    extra_old_files = sorted(actual_old_files - expected_old_files)
     manifest_file_hash_results: dict[str, Any] = {}
     critical_integrity_errors: list[str] = []
+    if manifest_missing_files:
+        critical_integrity_errors.append("SNAPSHOT_SOURCE_FILES_MISSING")
+    if extra_snapshot_files:
+        critical_integrity_errors.append("SNAPSHOT_SOURCE_FILES_UNEXPECTED")
+    if extra_old_files:
+        critical_integrity_errors.append("PREVIOUS_SOURCE_FILES_UNEXPECTED")
     combined_source_rows = 0
 
-    for symbol in SYMBOLS:
+    for symbol in symbols:
         gap_entries[symbol] = {}
         spread_entries[symbol] = {}
-        for timeframe, seconds in TIMEFRAMES_SECONDS.items():
+        for timeframe, seconds in timeframes_seconds.items():
             old_path = old_root / symbol / f"{timeframe}.csv"
             recent_path = snapshot / f"{symbol}_{timeframe}.csv"
             sources: dict[str, Any] = {}
@@ -413,6 +484,9 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
                 if not recent_hash["manifest_metadata_matches"]:
                     recent_hash["status"] = "FAIL_MANIFEST_METADATA_MISMATCH"
                     critical_integrity_errors.append(f"MANIFEST_METADATA_MISMATCH:{recent_path.as_posix()}")
+            else:
+                recent_hash["status"] = "FAIL_MANIFEST_ENTRY_MISSING"
+                critical_integrity_errors.append(f"MANIFEST_ENTRY_MISSING:{recent_path.as_posix()}")
             manifest_file_hash_results[f"{symbol}_{timeframe}"] = recent_hash
             if recent_hash.get("status") == "FAIL_HASH_MISMATCH":
                 critical_integrity_errors.append(f"MANIFEST_HASH_MISMATCH:{recent_path.as_posix()}")
@@ -420,7 +494,11 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
             overlap = _compare_overlap(old_records, recent_records)
             if overlap["price_conflict_count"]:
                 critical_integrity_errors.append(f"OVERLAP_PRICE_CONFLICT:{symbol}:{timeframe}")
-            merged_records = _merge_record_variants(old_records, recent_records)
+            backfill_records = []
+            if run_validation is not None:
+                backfill_records = run_validation.get("records_by_symbol_timeframe", {}).get(f"{symbol}|{timeframe}", [])
+                combined_source_rows += len(backfill_records)
+            merged_records = _merge_record_variants(old_records, recent_records, backfill_records)
             combined_gaps = [gap for left, right in zip(merged_records, merged_records[1:]) if left["time"] != right["time"] and (gap := _gap_record(left, right, seconds)) is not None]
 
             bridge = None
@@ -474,21 +552,38 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
                     "bridge": bridge,
                     "overlap": overlap,
                     "source_price_conflicts_preserved": overlap["price_conflict_count"],
+                    "backfill_row_count": len(backfill_records),
+                    "backfill_source_conflicts": [
+                        conflict for conflict in (run_validation or {}).get("source_conflicts", [])
+                        if conflict.get("symbol") == symbol and conflict.get("timeframe") == timeframe
+                    ],
                     "combined_gap_intervals": combined_gaps,
                     "combined_gap_interval_count": len(combined_gaps),
                 },
             }
 
-            union_times: dict[datetime, Any] = {}
+            union_values: dict[datetime, set[str]] = {}
+            union_spread: dict[datetime, Any] = {}
             for record in merged_records:
-                union_times.setdefault(record["time"], record["row"].get("spread"))
+                timestamp = record["time"]
+                spread_value = record["row"].get("spread")
+                union_values.setdefault(timestamp, set()).add(str(spread_value))
+                union_spread.setdefault(timestamp, spread_value)
+            union_times = [(timestamp, union_spread[timestamp] if len(values) == 1 else None) for timestamp, values in union_values.items()]
             spread_entries[symbol][timeframe] = {
                 "previous_source": old_result.get("spread_audit"),
                 "recent_source": recent_result.get("spread_audit"),
-                "combined_timestamp_union": audit_spread_timeline(sorted(union_times.items(), key=lambda item: item[0])),
+                "combined_timestamp_union": audit_spread_timeline(sorted(union_times, key=lambda item: item[0])),
                 "execution_inference_eligible": False,
                 "execution_inference_reason": "UNVERIFIED_ZERO_SPREADS_OR_BROKER_COST_COVERAGE_INCOMPLETE",
-                "technical_research_eligible": bool(old_result.get("ohlc_integrity_status") == "PASS" and recent_result.get("ohlc_integrity_status") == "PASS"),
+                "technical_research_eligible": bool(
+                    old_result.get("ohlc_integrity_status") == "PASS"
+                    and recent_result.get("ohlc_integrity_status") == "PASS"
+                    and not any(
+                        conflict.get("symbol") == symbol and conflict.get("timeframe") == timeframe
+                        for conflict in (run_validation or {}).get("source_conflicts", [])
+                    )
+                ),
                 "technical_research_restrictions": [
                     "Do not calculate indicators across unresolved history gaps.",
                     "Use only windows with valid closed OHLC bars and record data source provenance.",
@@ -501,14 +596,41 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
         except OSError:
             all_source_hashes_after[path_text] = "MISSING_AFTER_AUDIT"
     originals_unchanged = all_source_hashes_before == all_source_hashes_after
-    data_files_match = not manifest_missing_files and not extra_snapshot_files and len(actual_snapshot_files) == 15
+    data_files_match = (
+        not manifest_missing_files
+        and not extra_snapshot_files
+        and not extra_old_files
+        and len(actual_snapshot_files) == len(expected_snapshot_files)
+    )
+    if run_validation is None:
+        continuity_status = "HISTORY_CONTINUITY_NOT_AUDITED"
+    elif run_validation.get("integrity_status") == "BACKFILL_INTEGRITY_FAILED" or critical_integrity_errors:
+        continuity_status = "HISTORY_CONTINUITY_BLOCKED"
+        critical_integrity_errors.extend(run_validation.get("errors", []))
+    elif run_validation.get("source_conflicts"):
+        continuity_status = "HISTORY_CONTINUITY_BLOCKED"
+    elif bridge_recovery_candidates or calendar_review_items or run_validation.get("pending_chunk_ids"):
+        continuity_status = "HISTORY_CONTINUITY_PARTIAL"
+    else:
+        continuity_status = "HISTORY_CONTINUITY_VERIFIED"
+
+    from src.market_history_backfill import _source_hashes
+
+    portable_source_hashes = _source_hashes(root, symbols=symbols, timeframes=timeframes_seconds)
     no_integrity_errors = not critical_integrity_errors
+    audit_status = "PASS_WITH_PENDING_GAPS" if no_integrity_errors and originals_unchanged and data_files_match else "FAIL"
+    if continuity_status == "HISTORY_CONTINUITY_BLOCKED":
+        audit_status = "FAIL"
 
     gaps_report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "audit_as_of_utc": as_of_utc.isoformat(),
-        "status": "PASS_WITH_PENDING_GAPS" if no_integrity_errors and originals_unchanged and data_files_match else "FAIL",
+        "status": audit_status,
+        "history_continuity_status": continuity_status,
+        "backfill_run": None if run_validation is None else {
+            key: value for key, value in run_validation.items() if key != "records_by_symbol_timeframe"
+        },
         "base_snapshot": "data/market_history/mt5_real_readonly/20261109T202112.171333Z",
         "previous_source": "data/market",
         "timeframe_grid_policy": "UTC fixed-duration steps; missing bars are candidate slots, not automatic market-data errors",
@@ -520,10 +642,11 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
             "note": "No broker holiday or DST session calendar is assumed. Friday/Sunday boundary slots remain pending until verified.",
         },
         "snapshot_file_inventory": {
-            "expected_csv_count": 15,
+            "expected_csv_count": len(expected_snapshot_files),
             "actual_csv_count": len(actual_snapshot_files),
             "missing": manifest_missing_files,
             "extra": extra_snapshot_files,
+            "previous_source_extra_csv_files": extra_old_files,
             "manifest_sha256": manifest_digest,
             "manifest_file_hash_validation": manifest_file_hash_results,
         },
@@ -536,7 +659,10 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
             "all_source_rows_audited": combined_source_rows,
             "pending_recovery_intervals": len(bridge_recovery_candidates),
             "calendar_review_intervals": len(calendar_review_items),
-            "price_overlap_conflicts": sum(data[tf]["transition"]["overlap"]["price_conflict_count"] for data in gap_entries.values() for tf in TIMEFRAMES_SECONDS),
+            "price_overlap_conflicts": sum(data[tf]["transition"]["overlap"]["price_conflict_count"] for data in gap_entries.values() for tf in timeframes_seconds),
+            "backfill_rows_in_union": 0 if run_validation is None else run_validation.get("row_count", 0),
+            "backfill_integrity_errors": 0 if run_validation is None else len(run_validation.get("errors", [])),
+            "backfill_source_conflicts": 0 if run_validation is None else len(run_validation.get("source_conflicts", [])),
         },
         "pending_recovery_intervals": bridge_recovery_candidates,
         "calendar_review_intervals": calendar_review_items,
@@ -562,7 +688,10 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
     }
 
     plan = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "canonicalization_policy": CANONICAL_HASH_POLICY,
+        "symbols": list(symbols),
+        "timeframes_seconds": dict(timeframes_seconds),
         "status": "HISTORY_BACKFILL_PREPARED",
         "prepared_utc": datetime.now(timezone.utc).isoformat(),
         "source_audit": "reports/phase2_2_2/history_gap_audit.json",
@@ -587,8 +716,8 @@ def audit_market_history(root: Path, *, as_of_utc: datetime) -> tuple[dict[str, 
         "future_command": "python scripts/backfill_market_history.py --dry-run",
         "future_explicit_download_command": "python scripts/backfill_market_history.py --download --confirm-real-read-only",
         "download_command_executed_in_this_phase": False,
-        "source_files_sha256": all_source_hashes_before,
-        "source_file_count": len(all_source_hashes_before),
+        "source_file_hashes": portable_source_hashes,
+        "source_file_count": len(portable_source_hashes),
     }
     return gaps_report, spread_report, plan
 

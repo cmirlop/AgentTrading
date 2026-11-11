@@ -1,0 +1,16 @@
+{
+  "all_invalid_run_ids_rejected": true,
+  "invalid_run_ids_rejected": {
+    ".": true,
+    "..": true,
+    "../other": true,
+    "..\\other": true,
+    "C:\\temp": true,
+    "COM1": true,
+    "CON": true,
+    "NUL": true
+  },
+  "no_external_write": true,
+  "symlink_path_rejected": true,
+  "valid_run_id": "backfill-20261109"
+}

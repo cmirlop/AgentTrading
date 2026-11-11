@@ -87,3 +87,9 @@ El comando de descarga solo recupera históricos en archivos nuevos; no cambia �
 - Los spreads no son aptos para confirmar rentabilidad. No se ejecutó análisis de sensibilidad ni backtest en esta fase.
 - La captura nueva termina el 9 de noviembre de 2026 y no contiene velas posteriores.
 - La Fase 1 conserva sus tareas manuales pendientes documentadas en [`FASE1_CIERRE.md`](FASE1_CIERRE.md). La prueba DEMO sigue siendo no aplicable al entorno actual; la validación REAL read-only independiente se completó el 9 de noviembre. No hay autorización de ejecución de órdenes.
+
+## Nota de seguimiento — Fase 2.2.2a
+
+El trabajo posterior de endurecimiento del backfill se documenta en [`FASE2_2_2A_RESULTADOS.md`](FASE2_2_2A_RESULTADOS.md). El informe nuevo de auditoría puede incorporar exactamente un run explícito, verificar plan, manifiesto y hashes canónicos/raw de cada chunk, preservar conflictos y recalcular la continuidad. La política portable solo normaliza finales CRLF/LF. Los planes y manifiestos previos de esquema 1 se rechazan expresamente; hay que crear un plan nuevo de esquema 2 para una recuperación posterior.
+
+La prueba completa de ciclo usa datos y un proveedor MT5 sintéticos. No es una recuperación real ni modifica las conclusiones históricas anteriores. El estado real permanece `HISTORY_BACKFILL_PREPARED`; esta nota no declara `HISTORY_BACKFILL_COMPLETED`. La validación final de esta fase está en [`phase2_2_2a/validation_summary.json`](../reports/phase2_2_2a/validation_summary.json), sin sobrescribir informes de Fase 2.2.2.

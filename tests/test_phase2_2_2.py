@@ -14,6 +14,8 @@ from unittest.mock import patch
 
 from scripts import backfill_market_history
 from src.market_history_audit import (
+    SYMBOLS,
+    TIMEFRAMES_SECONDS,
     _compare_overlap,
     _gap_record,
     _hash_integrity,
@@ -27,7 +29,15 @@ from src.market_history_backfill import (
     plan_chunks,
     safe_copy_rates_range,
     validate_mt5_rates,
+    validate_backfill_run,
     verify_real_readonly_account,
+)
+from src.history_data_integrity import (
+    CANONICAL_HASH_POLICY,
+    backfill_run_paths,
+    canonicalize_csv_line_endings,
+    content_hashes,
+    validate_run_id,
 )
 from src.spread_quality import audit_spread_timeline, classify_spread
 
@@ -88,9 +98,10 @@ class HistoryGapAuditTests(unittest.TestCase):
             path = Path(directory) / "sample.csv"
             path.write_bytes(content.replace(b"\r\n", b"\n"))
             result = _hash_integrity(path, hashlib.sha256(content).hexdigest())
-        self.assertEqual(result["status"], "PASS_LINE_ENDING_NORMALIZED_HASH_MATCH")
+        self.assertEqual(result["status"], "PASS_LEGACY_CRLF_LINE_ENDING_MATCH")
         self.assertFalse(result["raw_hash_matches_manifest"])
-        self.assertTrue(result["canonical_hash_matches_manifest"])
+        self.assertTrue(result["legacy_crlf_variant_matches_manifest"])
+        self.assertFalse(result["canonical_hash_matches_manifest"])
 
     def test_ohlc_integrity_is_independent_from_spread_quality(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -217,7 +228,16 @@ class BackfillPlanningTests(unittest.TestCase):
     def test_dry_run_needs_no_mt5_import(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             plan_path = Path(directory) / "plan.json"
-            plan_path.write_text(json.dumps({"status": "HISTORY_BACKFILL_PREPARED", "backfill_intervals": []}), encoding="utf-8")
+            plan_path.write_text(json.dumps({
+                "schema_version": 2,
+                "canonicalization_policy": CANONICAL_HASH_POLICY,
+                "status": "HISTORY_BACKFILL_PREPARED",
+                "symbols": ["EURUSD"],
+                "timeframes_seconds": {"M5": 300},
+                "chunk_policy": {"max_bars_per_request": 1000, "overlap_bars_each_side": 2},
+                "source_file_hashes": {},
+                "backfill_intervals": [],
+            }), encoding="utf-8")
             output = io.StringIO()
             with patch.dict(sys.modules, {"MetaTrader5": None}), redirect_stdout(output):
                 code = backfill_market_history.main(["--dry-run", "--audit-plan", str(plan_path)])
@@ -229,7 +249,17 @@ class BackfillPlanningTests(unittest.TestCase):
     def test_real_downloader_requires_explicit_confirmation_and_has_no_execution_calls(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             plan_path = Path(directory) / "plan.json"
-            plan_path.write_text(json.dumps({"status": "HISTORY_BACKFILL_PREPARED", "backfill_intervals": []}), encoding="utf-8")
+            plan_path.write_text(json.dumps({
+                "schema_version": 2,
+                "canonicalization_policy": CANONICAL_HASH_POLICY,
+                "status": "HISTORY_BACKFILL_PREPARED",
+                "symbols": ["EURUSD"],
+                "timeframes_seconds": {"M5": 300},
+                "chunk_policy": {"max_bars_per_request": 1000, "overlap_bars_each_side": 2},
+                "source_file_hashes": {},
+                "backfill_intervals": [],
+                "download_command_executed_in_this_phase": False,
+            }), encoding="utf-8")
             output = io.StringIO()
             with redirect_stdout(output):
                 code = backfill_market_history.main(["--download", "--audit-plan", str(plan_path)])
@@ -285,6 +315,83 @@ class BackfillPlanningTests(unittest.TestCase):
                 execute_backfill_plan(api, plan, root=root, run_id="stale-test", as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
             self.assertEqual(api.copy_count, 0)
             self.assertEqual(api.calls, [])
+
+
+class PortabilityAndPathSafetyTests(unittest.TestCase):
+    def test_crlf_and_lf_share_canonical_hash_but_not_raw_hash(self) -> None:
+        lf = b"time,open,high,low,close,tick_volume,spread,real_volume\n2025-01-01T00:00:00+00:00,1.1,1.2,1.0,1.15,10,0,0\n"
+        crlf = lf.replace(b"\n", b"\r\n")
+        lf_hash = content_hashes(lf)
+        crlf_hash = content_hashes(crlf)
+        self.assertNotEqual(lf_hash["raw_sha256"], crlf_hash["raw_sha256"])
+        self.assertEqual(lf_hash["canonical_sha256"], crlf_hash["canonical_sha256"])
+        self.assertEqual(canonicalize_csv_line_endings(crlf), lf)
+
+    def test_material_csv_changes_do_not_normalize_away(self) -> None:
+        baseline = b"time,open,high,low,close,tick_volume,spread,real_volume\n2025-01-01T00:00:00+00:00,1.1,1.2,1.0,1.15,10,2,0\n2025-01-01T00:05:00+00:00,1.15,1.25,1.05,1.2,11,3,0\n"
+        baseline_hash = content_hashes(baseline)["canonical_sha256"]
+        changed = {
+            "price": baseline.replace(b",1.1,1.2,1.0,1.15,", b",1.1,1.21,1.0,1.15,"),
+            "timestamp": baseline.replace(b"2025-01-01T00:00:00+00:00", b"2025-01-01T00:01:00+00:00"),
+            "spread": baseline.replace(b",10,2,0", b",10,9,0"),
+            "deleted_row": baseline.replace(b"2025-01-01T00:05:00+00:00,1.15,1.25,1.05,1.2,11,3,0\n", b""),
+            "truncated": baseline[:-9],
+        }
+        for label, variant in changed.items():
+            with self.subTest(label=label):
+                self.assertNotEqual(content_hashes(variant)["canonical_sha256"], baseline_hash)
+
+    def test_plan_generated_on_lf_resumes_with_crlf_sources_and_chunk(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _write_source_tree(root)
+            plan = _test_plan(root, bars=1)
+            for path in list((root / "data/market").rglob("*.csv")) + list((root / "data/market_history").rglob("*.csv")):
+                path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+            result = execute_backfill_plan(_FakeApi(), plan, root=root, run_id="windows-portable", as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
+            chunk = next((root / "data/market_history/backfill_runs/windows-portable/chunks").glob("*.csv"))
+            chunk.write_bytes(chunk.read_bytes().replace(b"\n", b"\r\n"))
+            audit = validate_backfill_run(root, "windows-portable", as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
+        self.assertTrue(result["source_files_unchanged"])
+        self.assertEqual(audit["integrity_status"], "PASS")
+        self.assertEqual(audit["chunks"][0]["hash_status"], "CANONICAL_MATCH_RAW_BYTES_DIFFER")
+
+    def test_run_id_validation_rejects_paths_dot_segments_and_reserved_windows_names(self) -> None:
+        self.assertEqual(validate_run_id("backfill-20261109"), "backfill-20261109")
+        for invalid in (".", "..", "../otra_carpeta", "..\\otra_carpeta", "C:\\temp", "CON", "NUL", "COM1", "LPT9", "a/b", "a\\b"):
+            with self.subTest(run_id=invalid), self.assertRaises(ValueError):
+                validate_run_id(invalid)
+
+    def test_symlink_run_directory_is_rejected_before_provider_calls(self) -> None:
+        with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
+            root = Path(directory)
+            _write_source_tree(root)
+            plan = _test_plan(root, bars=1)
+            runs = root / "data/market_history/backfill_runs"
+            runs.mkdir(parents=True)
+            try:
+                (runs / "evil-run").symlink_to(Path(outside), target_is_directory=True)
+            except OSError as exc:
+                self.skipTest(f"symlink unavailable on this platform: {type(exc).__name__}")
+            api = _FakeApi()
+            with self.assertRaisesRegex(ValueError, "BACKFILL_SYMLINK_PATH_REJECTED"):
+                execute_backfill_plan(api, plan, root=root, run_id="evil-run", as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
+            self.assertEqual(api.calls, [])
+            self.assertEqual(list(Path(outside).iterdir()), [])
+
+    def test_extra_or_missing_source_file_rejects_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _write_source_tree(root)
+            extra = root / "data/market/EURUSD/EXTRA.csv"
+            extra.write_text("extra\n", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "BACKFILL_SOURCE_INVENTORY_MISMATCH"):
+                _source_hashes(root)
+            extra.unlink()
+            missing = root / "data/market/EURUSD/M5.csv"
+            missing.unlink()
+            with self.assertRaisesRegex(RuntimeError, "BACKFILL_SOURCE_MISSING"):
+                _source_hashes(root)
 
 
 class _FakeApi:
@@ -345,9 +452,14 @@ def _test_plan(root: Path, *, start: datetime | None = None, bars: int = 1) -> d
         "missing_start_utc": start.isoformat(), "missing_end_utc": end.isoformat(),
     }]
     return {
+        "schema_version": 2,
+        "canonicalization_policy": CANONICAL_HASH_POLICY,
         "status": "HISTORY_BACKFILL_PREPARED",
         "backfill_intervals": intervals,
-        "source_files_sha256": _source_hashes(root),
+        "source_file_hashes": _source_hashes(root),
+        "symbols": list(SYMBOLS),
+        "timeframes_seconds": dict(TIMEFRAMES_SECONDS),
+        "chunk_policy": {"max_bars_per_request": 1000, "overlap_bars_each_side": 2},
         "download_command_executed_in_this_phase": False,
     }
 
