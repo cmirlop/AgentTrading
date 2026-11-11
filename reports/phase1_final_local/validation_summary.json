@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-11-11T20:28:04Z",
+  "phase": "FASE 1",
+  "status": "INCOMPLETE_PENDING_MANUAL",
+  "overall_status_source": "reports/phase1_validation.json",
+  "environment": {
+    "os": "Windows 10 build 19045",
+    "python": "CPython 3.13.14 x64",
+    "python_executable": ".venv/Scripts/python.exe",
+    "commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
+    "branch": "codex/phase1-final-local-real-readonly-closure",
+    "working_tree_clean": false,
+    "dependencies": {
+      "MetaTrader5": "5.0.6231",
+      "pandas": "3.0.6",
+      "numpy": "2.5.3",
+      "pydantic": "2.13.5",
+      "ollama": "0.6.3",
+      "openai": "3.41.0",
+      "python-dotenv": "1.2.4"
+    },
+    "mt5_terminal_available": true,
+    "ollama_available": true,
+    "deepseek_local_validation": "PENDING_RUNTIME_MISMATCH"
+  },
+  "changes": {
+    "code_and_tests": [
+      "scripts/validate_phase1.py",
+      "scripts/validate_mt5_real_readonly.py",
+      "scripts/validate_phase1_llm_live.py",
+      "tests/test_phase1_validation_provenance.py",
+      "tests/test_mt5_real_readonly.py",
+      "tests/test_phase1_llm_live.py"
+    ],
+    "reports_and_docs": [
+      "reports/phase1_validation.json",
+      "reports/mt5_real_readonly_summary.json",
+      "reports/mt5_history_refresh_summary.json",
+      "reports/phase1_final_local/integration_evidence.json",
+      "reports/phase1_final_local/validation_summary.json",
+      "docs/FASE1_VALIDACION.md",
+      "docs/FASE1_CIERRE.md",
+      "docs/FASE1_RESULTADO_FINAL.md"
+    ],
+    "commit_created": false,
+    "push_or_merge_performed": false
+  },
+  "checks": {
+    "phase1_unit_tests": {"status": "PASS", "run": 94, "passed": 93, "skipped": 1},
+    "mt5_readonly_unit_tests": {"status": "PASS", "run": 12, "passed": 12},
+    "offline_existing_checks": {"status": "PASS", "passed": 21, "failed": 0},
+    "lookahead": {"status": "PASS", "checks": 375},
+    "windows_concurrency": {"status": "PASS", "windows_msvcrt_multiprocess": true},
+    "mt5_real_read_only": {"status": "PASS", "tradeapi_disabled": true, "demo": "NOT_APPLICABLE_NO_DEMO_ACCOUNT"},
+    "mt5_broker_symbols": {"status": "PASS", "symbols": ["EURUSD", "USDCAD", "AUDUSD"]},
+    "mt5_risk_and_daily_control": {"status": "PASS", "hypothetical_calculations_only": true},
+    "market_history": {
+      "status": "PASS",
+      "files": 15,
+      "downloaded_closed_bars": 7998,
+      "last_refresh_utc": "2026-11-11T20:23:00.097058Z",
+      "output_directory": "data/market_history/mt5_real_readonly/20261111T202300.097058Z",
+      "manifest_sha256": "1b671bd07e91160434fdd9e2a1c7b3c2c6346f36710e3d05bf218bc1a7d3d56e",
+      "latest_closed_bar_utc": {"M5": "2026-11-11T20:15:00Z", "M15": "2026-11-11T20:00:00Z", "H1": "2026-11-11T19:00:00Z", "H4": "2026-11-11T16:00:00Z", "D1": "2026-11-10T00:00:00Z"},
+      "quality": {"duplicate_timestamps": 0, "out_of_order_timestamps": 0, "invalid_ohlc_spread_or_volume_rows": 0, "rows_over_1000_per_file": 0, "zero_spread_rows": 6516, "nonzero_spread_rows": 1482}
+    },
+    "ollama": {"status": "PASS", "model": "qwen3:4b", "calls": 1},
+    "deepseek_local": {"status": "PENDING", "new_call_made": false},
+    "backtests": {"status": "PASS", "scenario_executions": 8, "portfolio_base_repeatability": "PASS", "stateful_base_repeatability": "PASS"},
+    "historical_regression": {"status": "PENDING", "unmatched_capacity_cascades": {"portfolio": 151, "stateful": 77}, "unattributed_selections": {"portfolio": 8, "stateful": 0}},
+    "dry_run_safety": {"status": "PASS", "orders_sent_by_process": 0, "trades_executed_by_process": 0, "order_send_called": false, "order_check_called": false},
+    "backtest_transaction_cost_assumptions": {"status": "PENDING", "reason": "BASE commission/slippage are zero and unverified; CONSERVATIVE/STRESS are sensitivity assumptions."}
+  },
+  "backtest_comparison_65_limit_portfolio": [
+    {"scenario": "BASE", "opportunities": 10284, "signals": 1737, "accepted_plans": 1737, "rejected_plans": 266, "executed": 686, "closed": 628, "ambiguous": 28, "gross_eur": 25.62, "closed_costs_eur": 0.0, "incurred_costs_eur": 0.0, "net_eur": 25.62, "net_profit_factor": 1.118, "net_expectancy_eur": 0.041, "net_drawdown_eur": 10.94},
+    {"scenario": "CONSERVATIVE", "opportunities": 10284, "signals": 1736, "accepted_plans": 1736, "rejected_plans": 266, "executed": 685, "closed": 627, "ambiguous": 28, "gross_eur": 26.12, "closed_costs_eur": 53.64, "incurred_costs_eur": 58.58, "net_eur": -27.53, "net_profit_factor": 0.89, "net_expectancy_eur": -0.044, "net_drawdown_eur": 36.69},
+    {"scenario": "STRESS", "opportunities": 10284, "signals": 1748, "accepted_plans": 1748, "rejected_plans": 265, "executed": 689, "closed": 632, "ambiguous": 28, "gross_eur": 18.29, "closed_costs_eur": 92.68, "incurred_costs_eur": 101.0, "net_eur": -74.39, "net_profit_factor": 0.735, "net_expectancy_eur": -0.118, "net_drawdown_eur": 77.59}
+  ],
+  "stateful_net_eur_65_limit_by_pair": {
+    "BASE": {"EURUSD": 15.05, "USDCAD": 20.93, "AUDUSD": -14.89},
+    "CONSERVATIVE": {"EURUSD": -6.86, "USDCAD": 0.32, "AUDUSD": -36.28},
+    "STRESS": {"EURUSD": -24.86, "USDCAD": -16.54, "AUDUSD": -55.88}
+  },
+  "historical_regression": {
+    "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "matched_stable_ids": {"portfolio": 7628, "stateful": 8926},
+    "unmatched_old": {"portfolio": 87, "stateful": 48},
+    "unmatched_current": {"portfolio": 187, "stateful": 165},
+    "technical_plan_field_differences": 0,
+    "documented_direct_capacity_cascades": {"portfolio": 115, "stateful": 136},
+    "pending_capacity_cascades_without_release_witness": {"portfolio": 151, "stateful": 77},
+    "unattributed_selection_or_capacity": {"portfolio": 8, "stateful": 0},
+    "execution_state_changes_at_expiry": "Documented simulator correction; non-technical signal plans remained unchanged.",
+    "overall": "PENDING"
+  },
+  "pending_manual": [
+    "DeepSeek live validation in the current Windows runtime requires explicit authorization for a new provider call.",
+    "Review historical selection cascades that have no matched release-time witness and compare aggregate legacy results with stable per-trade snapshots.",
+    "The original MT5 DEMO test remains not applicable until a DEMO account is available; the REAL account was checked read-only only.",
+    "Broker commission and slippage assumptions remain unverified."
+  ],
+  "reports": {
+    "global": "reports/phase1_validation.json",
+    "integration_evidence": "reports/phase1_final_local/integration_evidence.json",
+    "mt5_real_read_only": "reports/mt5_real_readonly_summary.json",
+    "history_refresh": "reports/mt5_history_refresh_summary.json",
+    "historical_attribution": "reports/phase1_final_local/historical_regression_attribution.json",
+    "private_trade_level_detail": "reports/private/phase1_final_local/historical_regression_attribution_detail.json"
+  },
+  "conclusion": {
+    "phase1_complete": false,
+    "phase2_ready": false,
+    "trading_enabled": false,
+    "orders_sent": 0,
+    "trades_executed": 0
+  }
+}

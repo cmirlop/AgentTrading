@@ -147,7 +147,10 @@ def _public_projection(private_report: dict[str, Any]) -> dict[str, Any]:
         "open_position_count": private_report.get("open_position_count"),
         "pending_order_count": private_report.get("pending_order_count"),
         "daily_history_status": private_report.get("daily_history_status", "PENDING"),
+        "history_refresh_status": private_report.get("history_status", "NOT_RUN"),
         "history_root": private_report.get("history_root"),
+        "traceability": private_report.get("traceability"),
+        "command_executed": private_report.get("command_executed"),
         "errors": list(private_report.get("safe_errors", [])),
         "orders_sent_by_process": 0,
         "trades_executed_by_process": 0,
@@ -198,10 +201,29 @@ def _refresh_report_classification(report: dict[str, Any]) -> dict[str, Any]:
             if report.get("broker_data_status") == "PASS"
             and report.get("risk_status") == "PASS"
             and report.get("daily_loss_status") == "PASS"
-            and report.get("history_status") == "PASS"
+            and report.get("history_status") in {"PASS", "NOT_RUN"}
+            and isinstance(report.get("traceability"), dict)
+            and isinstance(report.get("traceability", {}).get("external_scope_fingerprint"), str)
             else "MT5_REAL_READ_ONLY_PENDING"
         )
     return report
+
+
+def _mt5_traceability() -> dict[str, Any]:
+    """Capture the source/runtime scope used by the Phase 1 evidence adapter."""
+    from scripts.validate_phase1 import (
+        _external_scope_data_fingerprint,
+        _external_scope_snapshot,
+        _source_snapshot,
+    )
+
+    snapshot = _source_snapshot()
+    scope = _external_scope_snapshot("mt5_real", snapshot)
+    return {
+        "validation_fingerprint": snapshot,
+        "external_scope": scope,
+        "external_scope_fingerprint": _external_scope_data_fingerprint(scope),
+    }
 
 
 def _json_safe(value: Any) -> Any:
@@ -414,6 +436,15 @@ def _risk_check(api: Any, account: Any, account_currency: str, symbol: str, meta
             risk_reference=risk_config.RISK_REFERENCE,
         )
         sizing = {key: value for key, value in sizing.items() if key not in {"risk_reference_amount"}}
+        margin_volume = sizing.get("volume") if sizing.get("status") == "VALID" else meta.get("volume_min")
+        try:
+            broker_margin = _read(api, "order_calc_margin", order_types[direction], symbol, float(margin_volume), entry)
+            margin_status = "PASS" if _finite(broker_margin) and float(broker_margin) >= 0 else "PENDING"
+        except SafetyGateError:
+            raise
+        except Exception:
+            broker_margin = None
+            margin_status = "PENDING"
         scenarios[direction] = {
             "entry_reference": entry,
             "hypothetical_stop": stop,
@@ -422,9 +453,13 @@ def _risk_check(api: Any, account: Any, account_currency: str, symbol: str, meta
             "engine_valuation_method": valuation_method,
             "broker_comparison": comparison,
             "difference_percent": round(difference_percent, 6) if difference_percent is not None else None,
+            "broker_order_calc_margin": float(broker_margin) if _finite(broker_margin) else None,
+            "margin_volume": float(margin_volume) if _finite(margin_volume, positive=True) else None,
+            "margin_calculation_status": margin_status,
             "position_sizing": sizing,
         }
     statuses = {item["broker_comparison"] for item in scenarios.values()}
+    statuses.update(item["margin_calculation_status"] for item in scenarios.values())
     statuses.update("FAIL" if item["position_sizing"].get("status") == "REJECTED" and item["position_sizing"].get("errors") != ["VOLUME_BELOW_MINIMUM_RISK_BUDGET"] else "PASS" for item in scenarios.values())
     overall = "FAIL" if "FAIL" in statuses else "PENDING" if "PENDING" in statuses else "PASS"
     return {"status": overall, "scenarios": scenarios}
@@ -500,6 +535,10 @@ def run_validation(api: Any, *, refresh_history: bool = True) -> dict[str, Any]:
         "orders_sent_by_process": 0,
         "trades_executed_by_process": 0,
     }
+    try:
+        report["traceability"] = _mt5_traceability()
+    except Exception:
+        report["safe_errors"].append("VALIDATION_PROVENANCE_UNAVAILABLE")
     initialized = False
     try:
         initialized = bool(api.initialize())
@@ -710,12 +749,17 @@ def run_validation(api: Any, *, refresh_history: bool = True) -> dict[str, Any]:
             manifest_path = data_dir / "manifest.json"
             _write_json_preserving(manifest_path, history_manifest)
             report["history_manifest_sha256"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+        else:
+            report["history_status"] = "NOT_RUN"
 
         statuses = [item.get("status", "PENDING") for item in report["symbols"].values()]
         risk_statuses = [item.get("status", "PENDING") for item in report["risk"].values()]
         history_statuses = [item.get("status", "PENDING") for values in report.get("history", {}).values() for item in values.values()]
         report["broker_data_status"] = "PASS" if len(statuses) == len(SYMBOLS) and all(x == "PASS" for x in statuses) else "PARTIAL"
-        report["history_status"] = "PASS" if len(history_statuses) == len(SYMBOLS) * len(TIMEFRAME_NAMES) and all(x == "PASS" for x in history_statuses) else "PARTIAL"
+        if refresh_history:
+            report["history_status"] = "PASS" if len(history_statuses) == len(SYMBOLS) * len(TIMEFRAME_NAMES) and all(x == "PASS" for x in history_statuses) else "PARTIAL"
+        else:
+            report["history_status"] = "NOT_RUN"
         _refresh_report_classification(report)
     except SafetyGateError as exc:
         report["account"]["read_only_safety"] = "FAIL"
@@ -752,6 +796,7 @@ def main(argv: list[str] | None = None) -> int:
             "reason": "Risk-limit blocks are valid outcomes when calculation and source data are complete.",
             "mt5_reconnected": False,
         }
+        report["command_executed"] = [sys.executable, "scripts/validate_mt5_real_readonly.py", "--reproject-existing"]
     else:
         try:
             import MetaTrader5 as mt5
@@ -768,6 +813,7 @@ def main(argv: list[str] | None = None) -> int:
             }
         else:
             report = run_validation(mt5, refresh_history=not args.no_history_refresh)
+        report["command_executed"] = [sys.executable, "scripts/validate_mt5_real_readonly.py", *sys.argv[1:]]
     _write_json_preserving(private_path, report)
     public = _public_projection(report)
     _write_json_preserving(summary_path, public)

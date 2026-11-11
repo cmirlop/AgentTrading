@@ -93,6 +93,8 @@ RELEVANT_FILES = [
     "scripts/validate_phase1.py",
     "scripts/validate_phase1_mt5.py",
     "scripts/validate_phase1_llm_live.py",
+    "scripts/validate_mt5_real_readonly.py",
+    "tests/test_mt5_real_readonly.py",
 ]
 
 PHASE1_TEST_FILES = sorted(
@@ -130,6 +132,17 @@ EXTERNAL_VALIDATION_SCOPES = {
         ),
         "dependencies": ("MetaTrader5", "numpy", "pandas", "pydantic"),
     },
+    "mt5_real": {
+        "files": (
+            "scripts/validate_mt5_real_readonly.py",
+            "tests/test_mt5_real_readonly.py",
+            "config/market_config.py",
+            "config/risk_config.py",
+            "src/mt5_deal_history.py",
+            "src/risk_engine.py",
+        ),
+        "dependencies": ("MetaTrader5", "numpy"),
+    },
 }
 
 DECLARED_SIMULATOR_CORRECTIONS = {
@@ -145,6 +158,51 @@ DECLARED_SIMULATOR_CORRECTIONS = {
             "ambiguous filled outcomes. It does not alter signal-selection code."
         ),
         "trade_level_attribution_available": False,
+    },
+    (
+        "src/historical_execution.py",
+        "03022d66350fddc5f6a8d0d83da5745893bed96155fad71224635563245d584a",
+        "6c648843c3056b36baec803f38f17a561a7634ba574ca208bd134840f103f0da",
+    ): {
+        "correction_id": "HISTORICAL_EXECUTION_VALIDATION_EXPIRY_SPREAD_AND_COSTS",
+        "cause": (
+            "Adds strict OHLC/time/plan/spread validation, audits observed zero spreads, "
+            "supports an explicit spread floor whose default is zero, corrects expiry-bar "
+            "classification and end-of-data pending/expired states, and charges round-turn "
+            "costs to ambiguous filled outcomes. Signal generation and trade-plan construction "
+            "are unchanged."
+        ),
+        "trade_level_attribution_available": True,
+        "change_class": "DOCUMENTED_SIMULATOR_CORRECTION",
+    },
+}
+
+DECLARED_BACKTEST_SOURCE_CHANGES = {
+    (
+        "run_portfolio_backtest.py",
+        "2177d5567f91666533d35935fc339016b823b6dca7e74a0ffdadd2a25fe23e99",
+        "5521d032f899e32a60df013870ed2fe0da81b9f2d8368430410c0912197fb62a",
+    ): {
+        "change_id": "PORTFOLIO_BACKTEST_AUDIT_AND_RESEARCH_OPTIONS",
+        "cause": (
+            "Adds spread-quality audit fields and opt-in spread-floor, threshold and mode "
+            "arguments. Defaults preserve the prior run: spread floor zero and all existing "
+            "thresholds/modes. No signal-generation or plan-selection rule changes."
+        ),
+        "change_class": "BACKTEST_AUDIT_AND_OPT_IN_OPTIONS",
+    },
+    (
+        "run_stateful_backtest.py",
+        "57acb952979efb1ef20f9bdc725322f13de8c357cb0d202eecbb6c5d4651528a",
+        "a71615abb6980c4b90426396b1c1435efc85eeb2ff082cfbe65a2e7ed057745d",
+    ): {
+        "change_id": "STATEFUL_BACKTEST_AUDIT_AND_RESEARCH_OPTIONS",
+        "cause": (
+            "Adds spread-quality audit fields and opt-in spread-floor, threshold and mode "
+            "arguments. Defaults preserve the prior run: spread floor zero and all existing "
+            "thresholds/modes. No signal-generation or plan-selection rule changes."
+        ),
+        "change_class": "BACKTEST_AUDIT_AND_OPT_IN_OPTIONS",
     },
 }
 
@@ -238,6 +296,15 @@ def _external_configuration(provider):
             "temperature": agent_config.OLLAMA_TEMPERATURE,
             "context_window": agent_config.OLLAMA_CONTEXT,
             "keep_alive": agent_config.OLLAMA_KEEP_ALIVE,
+        }
+    if provider == "mt5_real":
+        return {
+            "provider": provider,
+            "account_mode": "REAL_REQUIRED",
+            "read_only_required": True,
+            "tradeapi_disabled_required": True,
+            "orders_or_positions_mutated": False,
+            "history_refresh_optional": True,
         }
     return {}
 
@@ -775,18 +842,26 @@ def _assess_baseline_comparison(comparison, simulator_correction_ids=()):
 
 def _classify_technical_source_differences(differences):
     simulator_corrections = []
+    documented_non_signal_changes = []
     unexplained = []
     for item in differences:
         key = (item.get("file"), item.get("before"), item.get("after"))
         correction = DECLARED_SIMULATOR_CORRECTIONS.get(key)
-        if correction is None:
-            unexplained.append({**item, "change_class": "UNEXPLAINED_TECHNICAL_SOURCE_CHANGE"})
-        else:
+        if correction is not None:
             simulator_corrections.append({
                 **item,
                 **correction,
                 "change_class": "DOCUMENTED_SIMULATOR_CORRECTION",
             })
+            continue
+        registered_change = DECLARED_BACKTEST_SOURCE_CHANGES.get(key)
+        if registered_change is not None:
+            documented_non_signal_changes.append({
+                **item,
+                **registered_change,
+            })
+            continue
+        unexplained.append({**item, "change_class": "UNEXPLAINED_TECHNICAL_SOURCE_CHANGE"})
     return {
         "status": "FAIL" if unexplained else "PASS",
         "files_compared": [
@@ -797,6 +872,7 @@ def _classify_technical_source_differences(differences):
         ],
         "differences": list(differences),
         "simulator_correction_changes": simulator_corrections,
+        "documented_non_signal_changes": documented_non_signal_changes,
         "unexplained_differences": unexplained,
         "reason": None if not unexplained else "Technical source changes lack a registered, hash-pinned explanation.",
     }
@@ -1237,6 +1313,26 @@ def _archive_existing_report(path):
     return str(target.relative_to(ROOT)).replace("\\", "/")
 
 
+def _latest_phase1_local_provider_report(provider, fallback):
+    """Use the newest private-free local live report while preserving fallback."""
+    reports = ROOT / "reports" / "phase1_final_local"
+    candidates = []
+    if reports.is_dir():
+        for path in reports.glob(f"{provider}_live_*.json"):
+            try:
+                report = json.loads(path.read_text(encoding="utf-8"))
+                generated = report.get("generated_at_utc")
+                parsed = datetime.fromisoformat(str(generated).replace("Z", "+00:00"))
+                if parsed.tzinfo is None or report.get("provider") != provider:
+                    continue
+                candidates.append((parsed.astimezone(timezone.utc), path))
+            except (OSError, json.JSONDecodeError, TypeError, ValueError):
+                continue
+    if not candidates:
+        return fallback
+    return max(candidates, key=lambda item: item[0])[1].relative_to(ROOT).as_posix()
+
+
 def _external_validation_status(path, current_snapshot):
     report_path = ROOT / path
     if not report_path.is_file():
@@ -1245,14 +1341,51 @@ def _external_validation_status(path, current_snapshot):
         external = json.loads(report_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return {"status": "FAIL", "reason": "External validation report is unreadable.", "report": path}
-    status = external.get("status")
-    if status not in {"PASS", "FAIL", "PENDING"}:
-        return {"status": "FAIL", "reason": "External validation report has an invalid status.", "report": path}
+    basename = Path(path).name.lower()
+    provider = (
+        "mt5_real" if "mt5_real_readonly" in basename else
+        "deepseek" if "deepseek" in basename else
+        "ollama" if "ollama" in basename else
+        "mt5" if "mt5" in basename else None
+    )
+    raw_status = external.get("status")
+    if provider == "mt5_real":
+        status = {
+            "MT5_REAL_READ_ONLY_PASS": "PASS",
+            "MT5_REAL_READ_ONLY_FAIL": "FAIL",
+            "MT5_REAL_READ_ONLY_PENDING": "PENDING",
+        }.get(raw_status)
+        if status is None:
+            return {"status": "FAIL", "reason": "MT5 REAL report has an invalid status.", "report": path}
+        safety = external.get("read_only_safety")
+        if raw_status == "MT5_REAL_READ_ONLY_PASS":
+            if external.get("account_type") != "REAL":
+                return {"status": "FAIL", "reason": "MT5 evidence does not identify a verified REAL account.", "report": path}
+            if not isinstance(safety, dict) or safety.get("status") != "PASS" or safety.get("tradeapi_disabled") is not True:
+                return {"status": "FAIL", "reason": "MT5 read-only control is absent or failed.", "report": path}
+            if external.get("connection") != "PASS":
+                return {"status": "PENDING", "reason": "MT5 connection was not verified.", "report": path}
+            if external.get("orders_sent_by_process") != 0 or external.get("trades_executed_by_process") != 0:
+                return {"status": "FAIL", "reason": "MT5 validation reports an operational action.", "report": path}
+            if external.get("broker_data") != "PASS" or external.get("risk_engine") != "PASS" or external.get("daily_loss_control") != "PASS":
+                return {"status": "PENDING", "reason": "MT5 REAL evidence is incomplete for broker, risk or daily-loss checks.", "report": path}
+            if external.get("demo_validation") not in {"NOT_APPLICABLE_NO_DEMO_ACCOUNT", "PENDING_NOT_APPLICABLE_NO_DEMO_ACCOUNT"}:
+                return {"status": "PENDING", "reason": "MT5 DEMO applicability is not explicitly recorded.", "report": path}
+            symbols = external.get("symbols")
+            if not isinstance(symbols, dict) or any(
+                not isinstance(symbols.get(symbol), dict)
+                or symbols[symbol].get("metadata_valid") is not True
+                or symbols[symbol].get("risk_status") != "PASS"
+                for symbol in ("EURUSD", "USDCAD", "AUDUSD")
+            ):
+                return {"status": "PENDING", "reason": "One or more required MT5 symbols lack validated metadata or risk evidence.", "report": path}
+    else:
+        status = raw_status
+        if status not in {"PASS", "FAIL", "PENDING"}:
+            return {"status": "FAIL", "reason": "External validation report has an invalid status.", "report": path}
     recorded = external.get("traceability", {}).get("validation_fingerprint")
     if not isinstance(recorded, dict):
         return {"status": "PENDING", "reason": "External report lacks source provenance.", "report": path}
-    basename = Path(path).name.lower()
-    provider = "deepseek" if "deepseek" in basename else "ollama" if "ollama" in basename else "mt5" if "mt5" in basename else None
     current_scope = _external_scope_snapshot(provider, current_snapshot) if provider else None
     recorded_scope = external.get("traceability", {}).get("external_scope")
     recorded_scope_fingerprint = external.get("traceability", {}).get("external_scope_fingerprint")
@@ -1297,7 +1430,7 @@ def _external_validation_status(path, current_snapshot):
             "stale_fields": differences,
             "report": path,
         }
-    generated_raw = external.get("generated_at_utc")
+    generated_raw = external.get("generated_at_utc") or external.get("generated_utc")
     try:
         generated_at = datetime.fromisoformat(generated_raw.replace("Z", "+00:00"))
         if generated_at.tzinfo is None:
@@ -1357,6 +1490,11 @@ def main(argv=None):
     ]
     tests["phase1_unit_tests"] = _run(new_suite_command, timeout=300)
     test_commands.append(new_suite_command)
+    mt5_readonly_test_command = [
+        sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_mt5_real_readonly.py"
+    ]
+    tests["mt5_real_readonly_tests"] = _run(mt5_readonly_test_command, timeout=180)
+    test_commands.append(mt5_readonly_test_command)
     for filename in OFFLINE_EXISTING_TESTS:
         command = [sys.executable, filename]
         tests[filename] = _run(command, timeout=240)
@@ -1451,8 +1589,11 @@ def main(argv=None):
         offline_pass = False
         offline_failures.append("relevant_validation_files_missing")
     integrations = {
-        "mt5": _external_validation_status("reports/phase1_mt5_validation.json", snapshot_after),
-        "ollama": _external_validation_status("reports/phase1_llm_live_ollama.json", snapshot_after),
+        "mt5": _external_validation_status("reports/mt5_real_readonly_summary.json", snapshot_after),
+        "ollama": _external_validation_status(
+            _latest_phase1_local_provider_report("ollama", "reports/phase1_llm_live_ollama.json"),
+            snapshot_after,
+        ),
         "deepseek": _external_validation_status("reports/phase1_llm_live_deepseek.json", snapshot_after),
     }
     live_status = {name: item["status"] for name, item in integrations.items()}
@@ -1562,8 +1703,9 @@ def main(argv=None):
             },
             "mt5_runtime_validation": {
                 "status": live_status["mt5"],
-                "script": "scripts/validate_phase1_mt5.py",
-                "reason": integrations["mt5"].get("reason") or "MT5 integration is manual.",
+                "script": "scripts/validate_mt5_real_readonly.py --no-history-refresh",
+                "demo_status": "NOT_APPLICABLE_NO_DEMO_ACCOUNT",
+                "reason": integrations["mt5"].get("reason") or "REAL account validated through read-only controls; DEMO is not available and is not imitated.",
                 "evidence": integrations["mt5"],
             },
             "ollama_live_validation": {

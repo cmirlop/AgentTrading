@@ -9,7 +9,9 @@ import json
 import os
 from pathlib import Path
 import shutil
+import sqlite3
 import sys
+import tempfile
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -39,6 +41,82 @@ def _traceability(provider):
         "external_scope": _external_scope_snapshot(provider, snapshot),
         "external_scope_fingerprint": _external_scope_fingerprint(provider, snapshot),
     }
+
+
+def _structured_chat_with_temporary_ledger(schema, prompt, payload):
+    """Run one probe against an isolated ledger, never the operational ledger."""
+    from src.event_ledger import bind_event, initialize_ledger, record_opportunity
+    from src.agents.llm_client import structured_chat
+
+    with tempfile.TemporaryDirectory(prefix="agenttrading-provider-probe-") as directory:
+        ledger_path = Path(directory) / "probe.sqlite3"
+        initialize_ledger(ledger_path)
+        event_id = record_opportunity(
+            "DIAGNOSTIC",
+            datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            {"technical_decision": "PROVIDER_CONTRACT_PROBE_ONLY"},
+            eligible=False,
+            exclusion_reason="PROVIDER_CONTRACT_PROBE_NOT_A_MARKET_OPPORTUNITY",
+            strategy_version="LIVE_DIAGNOSTIC_ONLY",
+            path=ledger_path,
+        )
+        prior_log_required = os.environ.get("RESEARCH_LOG_REQUIRED")
+        # Unregistered diagnostic schemas must remain ineligible by ledger policy.
+        # Persistence is checked from the isolated DB below, so strict market-role
+        # registration is neither needed nor appropriate for this probe.
+        os.environ["RESEARCH_LOG_REQUIRED"] = "0"
+        try:
+            with bind_event(
+                event_id,
+                ledger_path,
+                agent_role="UNREGISTERED_SCHEMA",
+                agent_stage="DIAGNOSTIC_ONLY",
+            ):
+                answer, metadata = structured_chat(
+                    schema,
+                    prompt,
+                    payload,
+                    return_metadata=True,
+                )
+        finally:
+            if prior_log_required is None:
+                os.environ.pop("RESEARCH_LOG_REQUIRED", None)
+            else:
+                os.environ["RESEARCH_LOG_REQUIRED"] = prior_log_required
+
+        database = sqlite3.connect(ledger_path)
+        try:
+            persisted = database.execute(
+                "SELECT COUNT(*) FROM llm_events WHERE event_id=? AND pydantic_status='VALID'",
+                (event_id,),
+            ).fetchone()[0]
+            stages = dict(database.execute(
+                "SELECT event_type,COUNT(*) FROM coverage_events WHERE event_id=? GROUP BY event_type",
+                (event_id,),
+            ).fetchall())
+            eligible = database.execute(
+                "SELECT COUNT(*) FROM coverage_events WHERE event_id=? AND eligible=1",
+                (event_id,),
+            ).fetchone()[0]
+            orders = database.execute(
+                "SELECT COALESCE(SUM(order_executed),0) FROM llm_events WHERE event_id=?",
+                (event_id,),
+            ).fetchone()[0]
+        finally:
+            database.close()
+        ledger_result = {
+            "status": "PASS" if persisted == 1 and stages.get("LLM_QUERY_PLANNED") == 1
+                      and stages.get("LLM_QUERY_SENT") == 1 and stages.get("LLM_RESPONSE_PERSISTED") == 1
+                      and eligible == 0 and orders == 0 else "FAIL",
+            "isolated_temporary_ledger": True,
+            "valid_response_events": int(persisted),
+            "planned_queries": int(stages.get("LLM_QUERY_PLANNED", 0)),
+            "sent_queries": int(stages.get("LLM_QUERY_SENT", 0)),
+            "persisted_responses": int(stages.get("LLM_RESPONSE_PERSISTED", 0)),
+            "eligible_events": int(eligible),
+            "orders_executed": int(orders),
+        }
+        return answer, metadata, ledger_result
 
 
 def _archive_existing_output(path):
@@ -92,6 +170,7 @@ def validate(provider, *, authorize_deepseek=False):
         "api_key_logged": False,
         "market_order_sent": False,
         "operational_signal_created": False,
+        "research_ledger": {"status": "PENDING"},
         "invalid_response_guard": _invalid_response_guard_check(),
         "traceability": _traceability(provider),
     }
@@ -154,12 +233,10 @@ def validate(provider, *, authorize_deepseek=False):
         "Do not return a trading recommendation."
     )
     try:
-        answer, metadata = structured_chat(
-            ProbeAnswer,
-            prompt,
-            payload,
-            return_metadata=True,
+        answer, metadata, ledger_result = _structured_chat_with_temporary_ledger(
+            ProbeAnswer, prompt, payload,
         )
+        report["research_ledger"] = ledger_result
         report["calls_made"] = 1
         report["response"] = {
             "status": answer.status,
@@ -169,7 +246,7 @@ def validate(provider, *, authorize_deepseek=False):
         reported_model = metadata.get("provider_reported_model")
         model_matches = reported_model == configuration.model
         report["model_matches_configuration"] = model_matches
-        report["status"] = "PASS" if model_matches and answer.status == "PASS" else "FAIL"
+        report["status"] = "PASS" if model_matches and answer.status == "PASS" and ledger_result.get("status") == "PASS" else "FAIL"
         if not model_matches:
             report["reason"] = "Provider did not report the configured model exactly."
         elif answer.evidence_used != ["LIVE_PROBE"]:
@@ -179,10 +256,12 @@ def validate(provider, *, authorize_deepseek=False):
         report["calls_made"] = 1
         report["status"] = "FAIL"
         report["reason"] = exc.code
+        report["research_ledger"] = {"status": "FAIL", "reason": exc.code}
     except Exception as exc:
         report["calls_made"] = 1
         report["status"] = "FAIL"
         report["reason"] = f"Provider request failed ({type(exc).__name__}); no retry was attempted."
+        report["research_ledger"] = {"status": "FAIL", "reason": "PROBE_LEDGER_OR_VALIDATION_ERROR"}
     return report
 
 
