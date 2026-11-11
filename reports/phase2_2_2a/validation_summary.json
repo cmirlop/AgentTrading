@@ -1,0 +1,640 @@
+{
+  "audit": {
+    "audit_status": "PASS_WITH_PENDING_GAPS",
+    "backfill_run_included": false,
+    "calendar_review_intervals": 1758,
+    "continuity_status": "HISTORY_CONTINUITY_NOT_AUDITED",
+    "critical_integrity_errors": [],
+    "data_provenance": "FROZEN_LOCAL_HISTORICAL_FILES_NO_BACKFILL_RUN",
+    "pending_recovery_intervals": 77,
+    "real_recovery_performed": false,
+    "snapshot_csv_count": 15,
+    "source_files_unchanged": true,
+    "source_hashes_after": {
+      "data/market/AUDUSD/D1.csv": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148",
+      "data/market/AUDUSD/H1.csv": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2",
+      "data/market/AUDUSD/H4.csv": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b",
+      "data/market/AUDUSD/M15.csv": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273",
+      "data/market/AUDUSD/M5.csv": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0",
+      "data/market/EURUSD/D1.csv": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539",
+      "data/market/EURUSD/H1.csv": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b",
+      "data/market/EURUSD/H4.csv": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92",
+      "data/market/EURUSD/M15.csv": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b",
+      "data/market/EURUSD/M5.csv": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67",
+      "data/market/USDCAD/D1.csv": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326",
+      "data/market/USDCAD/H1.csv": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175",
+      "data/market/USDCAD/H4.csv": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da",
+      "data/market/USDCAD/M15.csv": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e",
+      "data/market/USDCAD/M5.csv": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_D1.csv": "d0ff2aa6943a6c2cc721080cf4c5680e1880d2fedfc8b1dfa59c8a840aef0d11",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H1.csv": "63484d21f1818cb5aae107dfac9da6f6817c612744db535450e6a30251752777",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H4.csv": "c969a7064cb65369b94f086f31ed838ff2030e07eef208199ad7085986fc2edf",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M15.csv": "86c12d25e7b84cd9b9f7714983461c9ceeb8bbcf33427be45bd3c90bb4350117",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M5.csv": "2ab221c9f016c959700a0da24f52f435c5fac483f99df51104e47dafd63783cb",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_D1.csv": "2b9b4be2d826e589be252135ced95640064804d1bf7cba8ffa2be52a3d3f77aa",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H1.csv": "0cf0b6994a4dc10ea46785494353e32595990688e35dbb5d908ad23f5dd960e4",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H4.csv": "40145b5a822cf31fc89add8bbc200934fca948d83ea23bfbb58a111a28132da7",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv": "6392adfdd91d6db59ce51bf8b123212def855168f37fd338f507cdde616cf111",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv": "ae68606f776ed8f813522f7b1a5fe4b8434800d697fc6e5d7606c69df01d8555",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_D1.csv": "b645ebcaab1e61ae14da1c082ec2f781cd0d61b21df78b122387478659cecce3",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H1.csv": "035fa86a70025562976847a564b1331a1705725c84dfb5b64648fb24cfe0498c",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H4.csv": "e37d901b59ce3a3b5a3261a053f9f6ebab8e6a570f641270b5aa803f1e8eeb12",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv": "ca785e780f62ccccf38e8e5478c417f65d9d0ae3263b09e533f07da1fa89c894",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv": "2ad5d4cd23d8f5e600b07d47007ae7d6b1c5f3efef5b072883426f074b6e875d"
+    },
+    "source_hashes_before": {
+      "data/market/AUDUSD/D1.csv": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148",
+      "data/market/AUDUSD/H1.csv": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2",
+      "data/market/AUDUSD/H4.csv": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b",
+      "data/market/AUDUSD/M15.csv": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273",
+      "data/market/AUDUSD/M5.csv": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0",
+      "data/market/EURUSD/D1.csv": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539",
+      "data/market/EURUSD/H1.csv": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b",
+      "data/market/EURUSD/H4.csv": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92",
+      "data/market/EURUSD/M15.csv": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b",
+      "data/market/EURUSD/M5.csv": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67",
+      "data/market/USDCAD/D1.csv": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326",
+      "data/market/USDCAD/H1.csv": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175",
+      "data/market/USDCAD/H4.csv": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da",
+      "data/market/USDCAD/M15.csv": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e",
+      "data/market/USDCAD/M5.csv": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_D1.csv": "d0ff2aa6943a6c2cc721080cf4c5680e1880d2fedfc8b1dfa59c8a840aef0d11",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H1.csv": "63484d21f1818cb5aae107dfac9da6f6817c612744db535450e6a30251752777",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H4.csv": "c969a7064cb65369b94f086f31ed838ff2030e07eef208199ad7085986fc2edf",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M15.csv": "86c12d25e7b84cd9b9f7714983461c9ceeb8bbcf33427be45bd3c90bb4350117",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M5.csv": "2ab221c9f016c959700a0da24f52f435c5fac483f99df51104e47dafd63783cb",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_D1.csv": "2b9b4be2d826e589be252135ced95640064804d1bf7cba8ffa2be52a3d3f77aa",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H1.csv": "0cf0b6994a4dc10ea46785494353e32595990688e35dbb5d908ad23f5dd960e4",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H4.csv": "40145b5a822cf31fc89add8bbc200934fca948d83ea23bfbb58a111a28132da7",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv": "6392adfdd91d6db59ce51bf8b123212def855168f37fd338f507cdde616cf111",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv": "ae68606f776ed8f813522f7b1a5fe4b8434800d697fc6e5d7606c69df01d8555",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_D1.csv": "b645ebcaab1e61ae14da1c082ec2f781cd0d61b21df78b122387478659cecce3",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H1.csv": "035fa86a70025562976847a564b1331a1705725c84dfb5b64648fb24cfe0498c",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H4.csv": "e37d901b59ce3a3b5a3261a053f9f6ebab8e6a570f641270b5aa803f1e8eeb12",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv": "ca785e780f62ccccf38e8e5478c417f65d9d0ae3263b09e533f07da1fa89c894",
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv": "2ad5d4cd23d8f5e600b07d47007ae7d6b1c5f3efef5b072883426f074b6e875d"
+    }
+  },
+  "baseline_integrity": {
+    "after_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "before_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "expected_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "status": "PASS"
+  },
+  "commands_executed": [
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "scripts/validate_phase2_2_2a.py"
+    ],
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "-m",
+      "unittest",
+      "-v",
+      "test_phase2_2_2"
+    ],
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "-m",
+      "unittest",
+      "-v",
+      "test_phase2_2_2a"
+    ],
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "scripts/backfill_market_history.py",
+      "--dry-run",
+      "--audit-plan",
+      "reports/phase2_2_2a/audits/future_mt5_backfill_plan.json"
+    ]
+  ],
+  "dry_run": {
+    "checks": {
+      "dry_run_status": true,
+      "mt5_not_imported": true,
+      "process_succeeded": true,
+      "zero_mt5_connections": true,
+      "zero_orders": true,
+      "zero_provider_calls": true
+    },
+    "chunk_count": 98,
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "scripts/backfill_market_history.py",
+      "--dry-run",
+      "--audit-plan",
+      "reports/phase2_2_2a/audits/future_mt5_backfill_plan.json"
+    ],
+    "duration_seconds": 0.319,
+    "mt5_connections": 0,
+    "mt5_imported": false,
+    "orders_sent": 0,
+    "output_tail": "hunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2023-12-23T00:00:00+00:00\",\n      \"core_end_utc\": \"2023-12-25T00:00:00+00:00\",\n      \"request_start_utc\": \"2023-12-21T00:00:00+00:00\",\n      \"request_end_utc\": \"2023-12-27T00:00:00+00:00\",\n      \"core_bar_count\": 3,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"d8f63cfe1199326a62bcecde\",\n      \"interval_id\": \"a37faec20d921406\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2023-12-30T00:00:00+00:00\",\n      \"core_end_utc\": \"2024-01-01T00:00:00+00:00\",\n      \"request_start_utc\": \"2023-12-28T00:00:00+00:00\",\n      \"request_end_utc\": \"2024-01-03T00:00:00+00:00\",\n      \"core_bar_count\": 3,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"5d553f6d259a6ae00a2a0e8a\",\n      \"interval_id\": \"54625f97249f063d\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2024-12-25T00:00:00+00:00\",\n      \"core_end_utc\": \"2024-12-25T00:00:00+00:00\",\n      \"request_start_utc\": \"2024-12-23T00:00:00+00:00\",\n      \"request_end_utc\": \"2024-12-27T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"0d5ae4803ee917b844476357\",\n      \"interval_id\": \"7d6aaa50b294bfc5\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2025-01-01T00:00:00+00:00\",\n      \"core_end_utc\": \"2025-01-01T00:00:00+00:00\",\n      \"request_start_utc\": \"2024-12-30T00:00:00+00:00\",\n      \"request_end_utc\": \"2025-01-03T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"b708f365a5d0b45be9c92711\",\n      \"interval_id\": \"cd1280b1b3310010\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2025-12-25T00:00:00+00:00\",\n      \"core_end_utc\": \"2025-12-25T00:00:00+00:00\",\n      \"request_start_utc\": \"2025-12-23T00:00:00+00:00\",\n      \"request_end_utc\": \"2025-12-27T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"6141beb05fb87b88e7ade7c9\",\n      \"interval_id\": \"d2141b7db5debc02\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2026-01-01T00:00:00+00:00\",\n      \"core_end_utc\": \"2026-01-01T00:00:00+00:00\",\n      \"request_start_utc\": \"2025-12-30T00:00:00+00:00\",\n      \"request_end_utc\": \"2026-01-03T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    }\n  ]\n}\n",
+    "provider_calls": 0,
+    "status": "PASS"
+  },
+  "generated_utc": "2026-11-11T10:02:45.200512+00:00",
+  "history_backfill_completed": false,
+  "history_backfill_status": "HISTORY_BACKFILL_PREPARED",
+  "limitations": [
+    "Post-backfill continuity evidence uses synthetic data and a fake MT5 provider; no real recovery was performed.",
+    "A real later download and post-download audit still require the user's Windows MT5 REAL read-only terminal and explicit authorization.",
+    "Unknown broker trading hours, holidays and feed omissions remain pending until verified against broker data/calendar.",
+    "Manifest schema 1 is explicitly rejected; create a fresh schema 2 audit plan before downloading."
+  ],
+  "mandatory_checks": {
+    "dry_run_without_mt5_pass": true,
+    "focused_offline_tests_pass": true,
+    "frozen_baseline_unchanged": true,
+    "frozen_source_audit_completed": true,
+    "no_order_calls_in_backfill_route": true,
+    "original_data_and_baseline_untouched": true,
+    "path_safety_pass": true,
+    "portable_hashes_pass": true,
+    "source_files_unchanged": true,
+    "synthetic_clean_recovery_verified": true,
+    "synthetic_conflict_blocked": true,
+    "synthetic_incomplete_partial": true,
+    "synthetic_interruption_resume_pass": true,
+    "synthetic_originals_unchanged": true
+  },
+  "phase_status": "PHASE2_2_2A_COMPLETE",
+  "repository": {
+    "base_commit": "2ffae736c8b5a561aa613d00d30dcef1584e671b",
+    "branch": "codex/phase2-2-2a-history-backfill-hardening",
+    "commit": "2ffae736c8b5a561aa613d00d30dcef1584e671b",
+    "working_tree_dirty": true
+  },
+  "runtime": {
+    "canonical_hash_policy": "CSV_LINE_ENDINGS_LF_V1",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]"
+  },
+  "schema_version": 1,
+  "security": {
+    "files_scanned": [
+      "src/market_history_backfill.py",
+      "scripts/backfill_market_history.py"
+    ],
+    "forbidden_calls": [],
+    "live_integrations": "NOT_RUN_BY_DESIGN",
+    "llm_provider_calls": 0,
+    "mt5_import_statement_present_for_explicit_download": true,
+    "orders_sent": 0,
+    "real_market_downloads": 0,
+    "real_mt5_connections": 0,
+    "status": "PASS"
+  },
+  "source_integrity": {
+    "before_after_hashes_equal": true,
+    "file_count": 30,
+    "hash_kind": "raw_sha256_and_canonical_sha256",
+    "source_hashes_after": {
+      "data/market/AUDUSD/D1.csv": {
+        "canonical_sha256": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148"
+      },
+      "data/market/AUDUSD/H1.csv": {
+        "canonical_sha256": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2"
+      },
+      "data/market/AUDUSD/H4.csv": {
+        "canonical_sha256": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b"
+      },
+      "data/market/AUDUSD/M15.csv": {
+        "canonical_sha256": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273"
+      },
+      "data/market/AUDUSD/M5.csv": {
+        "canonical_sha256": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0"
+      },
+      "data/market/EURUSD/D1.csv": {
+        "canonical_sha256": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539"
+      },
+      "data/market/EURUSD/H1.csv": {
+        "canonical_sha256": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b"
+      },
+      "data/market/EURUSD/H4.csv": {
+        "canonical_sha256": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92"
+      },
+      "data/market/EURUSD/M15.csv": {
+        "canonical_sha256": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b"
+      },
+      "data/market/EURUSD/M5.csv": {
+        "canonical_sha256": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67"
+      },
+      "data/market/USDCAD/D1.csv": {
+        "canonical_sha256": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326"
+      },
+      "data/market/USDCAD/H1.csv": {
+        "canonical_sha256": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175"
+      },
+      "data/market/USDCAD/H4.csv": {
+        "canonical_sha256": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da"
+      },
+      "data/market/USDCAD/M15.csv": {
+        "canonical_sha256": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e"
+      },
+      "data/market/USDCAD/M5.csv": {
+        "canonical_sha256": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_D1.csv": {
+        "canonical_sha256": "d0ff2aa6943a6c2cc721080cf4c5680e1880d2fedfc8b1dfa59c8a840aef0d11",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "d0ff2aa6943a6c2cc721080cf4c5680e1880d2fedfc8b1dfa59c8a840aef0d11"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H1.csv": {
+        "canonical_sha256": "63484d21f1818cb5aae107dfac9da6f6817c612744db535450e6a30251752777",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "63484d21f1818cb5aae107dfac9da6f6817c612744db535450e6a30251752777"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H4.csv": {
+        "canonical_sha256": "c969a7064cb65369b94f086f31ed838ff2030e07eef208199ad7085986fc2edf",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "c969a7064cb65369b94f086f31ed838ff2030e07eef208199ad7085986fc2edf"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M15.csv": {
+        "canonical_sha256": "86c12d25e7b84cd9b9f7714983461c9ceeb8bbcf33427be45bd3c90bb4350117",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "86c12d25e7b84cd9b9f7714983461c9ceeb8bbcf33427be45bd3c90bb4350117"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M5.csv": {
+        "canonical_sha256": "2ab221c9f016c959700a0da24f52f435c5fac483f99df51104e47dafd63783cb",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "2ab221c9f016c959700a0da24f52f435c5fac483f99df51104e47dafd63783cb"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_D1.csv": {
+        "canonical_sha256": "2b9b4be2d826e589be252135ced95640064804d1bf7cba8ffa2be52a3d3f77aa",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "2b9b4be2d826e589be252135ced95640064804d1bf7cba8ffa2be52a3d3f77aa"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H1.csv": {
+        "canonical_sha256": "0cf0b6994a4dc10ea46785494353e32595990688e35dbb5d908ad23f5dd960e4",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "0cf0b6994a4dc10ea46785494353e32595990688e35dbb5d908ad23f5dd960e4"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H4.csv": {
+        "canonical_sha256": "40145b5a822cf31fc89add8bbc200934fca948d83ea23bfbb58a111a28132da7",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "40145b5a822cf31fc89add8bbc200934fca948d83ea23bfbb58a111a28132da7"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv": {
+        "canonical_sha256": "6392adfdd91d6db59ce51bf8b123212def855168f37fd338f507cdde616cf111",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "6392adfdd91d6db59ce51bf8b123212def855168f37fd338f507cdde616cf111"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv": {
+        "canonical_sha256": "ae68606f776ed8f813522f7b1a5fe4b8434800d697fc6e5d7606c69df01d8555",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "ae68606f776ed8f813522f7b1a5fe4b8434800d697fc6e5d7606c69df01d8555"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_D1.csv": {
+        "canonical_sha256": "b645ebcaab1e61ae14da1c082ec2f781cd0d61b21df78b122387478659cecce3",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "b645ebcaab1e61ae14da1c082ec2f781cd0d61b21df78b122387478659cecce3"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H1.csv": {
+        "canonical_sha256": "035fa86a70025562976847a564b1331a1705725c84dfb5b64648fb24cfe0498c",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "035fa86a70025562976847a564b1331a1705725c84dfb5b64648fb24cfe0498c"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H4.csv": {
+        "canonical_sha256": "e37d901b59ce3a3b5a3261a053f9f6ebab8e6a570f641270b5aa803f1e8eeb12",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "e37d901b59ce3a3b5a3261a053f9f6ebab8e6a570f641270b5aa803f1e8eeb12"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv": {
+        "canonical_sha256": "ca785e780f62ccccf38e8e5478c417f65d9d0ae3263b09e533f07da1fa89c894",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "ca785e780f62ccccf38e8e5478c417f65d9d0ae3263b09e533f07da1fa89c894"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv": {
+        "canonical_sha256": "2ad5d4cd23d8f5e600b07d47007ae7d6b1c5f3efef5b072883426f074b6e875d",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "2ad5d4cd23d8f5e600b07d47007ae7d6b1c5f3efef5b072883426f074b6e875d"
+      }
+    },
+    "source_hashes_before": {
+      "data/market/AUDUSD/D1.csv": {
+        "canonical_sha256": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "4166cf928627eecf3da3cfaeebe0b261a3e3f1973526182a731f5c7a6478c148"
+      },
+      "data/market/AUDUSD/H1.csv": {
+        "canonical_sha256": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "73fe1dd84527dc19cb0513a80327079a9202a08225d1039903562da2e340dfb2"
+      },
+      "data/market/AUDUSD/H4.csv": {
+        "canonical_sha256": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "3b983686b8e862670d4b6fde8e0c8c831ab1bb506a74be34169ccd3e3e91879b"
+      },
+      "data/market/AUDUSD/M15.csv": {
+        "canonical_sha256": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "9f0b705c569c9f665cdb605504f9b159238dfe9e0b2068845a68e7580aaba273"
+      },
+      "data/market/AUDUSD/M5.csv": {
+        "canonical_sha256": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "db543dc84438eaad9dcbace05c689be7e410620bb11cb0990e29602371ccceb0"
+      },
+      "data/market/EURUSD/D1.csv": {
+        "canonical_sha256": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "d03ba80b73af1047dddbfcdfc1817890e0a9ad710dc2f690289843968db36539"
+      },
+      "data/market/EURUSD/H1.csv": {
+        "canonical_sha256": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "1915ebad2c6947e3b269e2cdc233d664d11796ac89bdd3bfcc7ba89688fc547b"
+      },
+      "data/market/EURUSD/H4.csv": {
+        "canonical_sha256": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "5cade210c476d65cfa25d51e42e13e0eb15fd8d871b39ee8272730157ea13f92"
+      },
+      "data/market/EURUSD/M15.csv": {
+        "canonical_sha256": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "e30cbf77c767ab11db2e072ee55f507b60690e613c1b6ef4f361031191e1640b"
+      },
+      "data/market/EURUSD/M5.csv": {
+        "canonical_sha256": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "56b138223d929ac71f1519907b6832d20a8883fced28636a2957e2257ec81f67"
+      },
+      "data/market/USDCAD/D1.csv": {
+        "canonical_sha256": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "05c2263ab3d885b98b152b524befa9a24fe9252947ed5e978aaf86da92ded326"
+      },
+      "data/market/USDCAD/H1.csv": {
+        "canonical_sha256": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "6b7cf6bf3fa3462da7f81472030bbe3e721f4f65b69bf829816afde7446f9175"
+      },
+      "data/market/USDCAD/H4.csv": {
+        "canonical_sha256": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "b1e19045a12dbeca771e7a353eeab377ddcc37121cbc4f322c69fe61e40c54da"
+      },
+      "data/market/USDCAD/M15.csv": {
+        "canonical_sha256": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "f3dda032193a4cb8466365decc93f313fe971ab3d0485c2227543b898525a36e"
+      },
+      "data/market/USDCAD/M5.csv": {
+        "canonical_sha256": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "379dcfdd45cbe5580b9164e8c3a0bd423c6a0c2d2a2cef74add0739705e46f52"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_D1.csv": {
+        "canonical_sha256": "d0ff2aa6943a6c2cc721080cf4c5680e1880d2fedfc8b1dfa59c8a840aef0d11",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "d0ff2aa6943a6c2cc721080cf4c5680e1880d2fedfc8b1dfa59c8a840aef0d11"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H1.csv": {
+        "canonical_sha256": "63484d21f1818cb5aae107dfac9da6f6817c612744db535450e6a30251752777",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "63484d21f1818cb5aae107dfac9da6f6817c612744db535450e6a30251752777"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_H4.csv": {
+        "canonical_sha256": "c969a7064cb65369b94f086f31ed838ff2030e07eef208199ad7085986fc2edf",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "c969a7064cb65369b94f086f31ed838ff2030e07eef208199ad7085986fc2edf"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M15.csv": {
+        "canonical_sha256": "86c12d25e7b84cd9b9f7714983461c9ceeb8bbcf33427be45bd3c90bb4350117",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "86c12d25e7b84cd9b9f7714983461c9ceeb8bbcf33427be45bd3c90bb4350117"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/AUDUSD_M5.csv": {
+        "canonical_sha256": "2ab221c9f016c959700a0da24f52f435c5fac483f99df51104e47dafd63783cb",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "2ab221c9f016c959700a0da24f52f435c5fac483f99df51104e47dafd63783cb"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_D1.csv": {
+        "canonical_sha256": "2b9b4be2d826e589be252135ced95640064804d1bf7cba8ffa2be52a3d3f77aa",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "2b9b4be2d826e589be252135ced95640064804d1bf7cba8ffa2be52a3d3f77aa"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H1.csv": {
+        "canonical_sha256": "0cf0b6994a4dc10ea46785494353e32595990688e35dbb5d908ad23f5dd960e4",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "0cf0b6994a4dc10ea46785494353e32595990688e35dbb5d908ad23f5dd960e4"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_H4.csv": {
+        "canonical_sha256": "40145b5a822cf31fc89add8bbc200934fca948d83ea23bfbb58a111a28132da7",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "40145b5a822cf31fc89add8bbc200934fca948d83ea23bfbb58a111a28132da7"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M15.csv": {
+        "canonical_sha256": "6392adfdd91d6db59ce51bf8b123212def855168f37fd338f507cdde616cf111",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "6392adfdd91d6db59ce51bf8b123212def855168f37fd338f507cdde616cf111"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/EURUSD_M5.csv": {
+        "canonical_sha256": "ae68606f776ed8f813522f7b1a5fe4b8434800d697fc6e5d7606c69df01d8555",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "ae68606f776ed8f813522f7b1a5fe4b8434800d697fc6e5d7606c69df01d8555"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_D1.csv": {
+        "canonical_sha256": "b645ebcaab1e61ae14da1c082ec2f781cd0d61b21df78b122387478659cecce3",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "b645ebcaab1e61ae14da1c082ec2f781cd0d61b21df78b122387478659cecce3"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H1.csv": {
+        "canonical_sha256": "035fa86a70025562976847a564b1331a1705725c84dfb5b64648fb24cfe0498c",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "035fa86a70025562976847a564b1331a1705725c84dfb5b64648fb24cfe0498c"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_H4.csv": {
+        "canonical_sha256": "e37d901b59ce3a3b5a3261a053f9f6ebab8e6a570f641270b5aa803f1e8eeb12",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "e37d901b59ce3a3b5a3261a053f9f6ebab8e6a570f641270b5aa803f1e8eeb12"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M15.csv": {
+        "canonical_sha256": "ca785e780f62ccccf38e8e5478c417f65d9d0ae3263b09e533f07da1fa89c894",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "ca785e780f62ccccf38e8e5478c417f65d9d0ae3263b09e533f07da1fa89c894"
+      },
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z/USDCAD_M5.csv": {
+        "canonical_sha256": "2ad5d4cd23d8f5e600b07d47007ae7d6b1c5f3efef5b072883426f074b6e875d",
+        "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+        "raw_sha256": "2ad5d4cd23d8f5e600b07d47007ae7d6b1c5f3efef5b072883426f074b6e875d"
+      }
+    }
+  },
+  "spread_quality": {
+    "execution_inference_eligible": false,
+    "status": "PASS_DIAGNOSTIC_EXECUTION_QUALITY_NOT_CONFIRMATORY",
+    "zero_spread_percent_by_symbol_timeframe": {
+      "AUDUSD": {
+        "D1": {
+          "old_zero_percent": 100.0,
+          "recent_zero_percent": 100.0,
+          "union_zero_percent": 100.0
+        },
+        "H1": {
+          "old_zero_percent": 95.8276,
+          "recent_zero_percent": 95.9514,
+          "union_zero_percent": 95.8321
+        },
+        "H4": {
+          "old_zero_percent": 99.9429,
+          "recent_zero_percent": 100.0,
+          "union_zero_percent": 99.9449
+        },
+        "M15": {
+          "old_zero_percent": 94.8307,
+          "recent_zero_percent": 94.9546,
+          "union_zero_percent": 94.833
+        },
+        "M5": {
+          "old_zero_percent": 92.9141,
+          "recent_zero_percent": 94.9744,
+          "union_zero_percent": 92.9339
+        }
+      },
+      "EURUSD": {
+        "D1": {
+          "old_zero_percent": 100.0,
+          "recent_zero_percent": 100.0,
+          "union_zero_percent": 100.0
+        },
+        "H1": {
+          "old_zero_percent": 95.8737,
+          "recent_zero_percent": 95.9514,
+          "union_zero_percent": 95.8766
+        },
+        "H4": {
+          "old_zero_percent": 99.9429,
+          "recent_zero_percent": 100.0,
+          "union_zero_percent": 99.9449
+        },
+        "M15": {
+          "old_zero_percent": 94.9035,
+          "recent_zero_percent": 94.9546,
+          "union_zero_percent": 94.9045
+        },
+        "M5": {
+          "old_zero_percent": 94.3414,
+          "recent_zero_percent": 94.9744,
+          "union_zero_percent": 94.3475
+        }
+      },
+      "USDCAD": {
+        "D1": {
+          "old_zero_percent": 62.0977,
+          "recent_zero_percent": 100.0,
+          "union_zero_percent": 62.9802
+        },
+        "H1": {
+          "old_zero_percent": 31.3857,
+          "recent_zero_percent": 76.1134,
+          "union_zero_percent": 33.0243
+        },
+        "H4": {
+          "old_zero_percent": 41.7357,
+          "recent_zero_percent": 93.5484,
+          "union_zero_percent": 43.507
+        },
+        "M15": {
+          "old_zero_percent": 23.1146,
+          "recent_zero_percent": 60.6458,
+          "union_zero_percent": 23.8316
+        },
+        "M5": {
+          "old_zero_percent": 13.8813,
+          "recent_zero_percent": 32.9231,
+          "union_zero_percent": 14.0642
+        }
+      }
+    }
+  },
+  "synthetic_scenarios": {
+    "clean_continuity": "HISTORY_CONTINUITY_VERIFIED",
+    "conflict_continuity": "HISTORY_CONTINUITY_BLOCKED",
+    "empty_response_continuity": "HISTORY_CONTINUITY_PARTIAL",
+    "mock_market_read_calls": 10,
+    "provenance": "SYNTHETIC_TEST_DATA_NOT_REAL_RECOVERY"
+  },
+  "tests": {
+    "duration_seconds": 33.637,
+    "modules": [
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "-m",
+          "unittest",
+          "-v",
+          "test_phase2_2_2"
+        ],
+        "duration_seconds": 32.81,
+        "exit_code": 0,
+        "module": "test_phase2_2_2",
+        "output_tail": "test_demo_account_is_rejected_before_any_rates_read (test_phase2_2_2.BackfillPlanningTests.test_demo_account_is_rejected_before_any_rates_read) ... ok\ntest_dry_run_needs_no_mt5_import (test_phase2_2_2.BackfillPlanningTests.test_dry_run_needs_no_mt5_import) ... ok\ntest_gate_is_rechecked_after_a_failed_mt5_read (test_phase2_2_2.BackfillPlanningTests.test_gate_is_rechecked_after_a_failed_mt5_read) ... ok\ntest_invalid_symbol_or_unaligned_interval_is_rejected (test_phase2_2_2.BackfillPlanningTests.test_invalid_symbol_or_unaligned_interval_is_rejected) ... ok\ntest_large_ranges_split_under_bar_cap_with_overlaps (test_phase2_2_2.BackfillPlanningTests.test_large_ranges_split_under_bar_cap_with_overlaps) ... ok\ntest_mt5_read_is_guarded_before_and_after_call (test_phase2_2_2.BackfillPlanningTests.test_mt5_read_is_guarded_before_and_after_call) ... ok\ntest_open_bars_are_excluded_and_duplicates_or_bad_ohlc_are_classified (test_phase2_2_2.BackfillPlanningTests.test_open_bars_are_excluded_and_duplicates_or_bad_ohlc_are_classified) ... ok\ntest_real_downloader_requires_explicit_confirmation_and_has_no_execution_calls (test_phase2_2_2.BackfillPlanningTests.test_real_downloader_requires_explicit_confirmation_and_has_no_execution_calls) ... ok\ntest_resume_after_interruption_does_not_refetch_completed_chunk (test_phase2_2_2.BackfillPlanningTests.test_resume_after_interruption_does_not_refetch_completed_chunk) ... ok\ntest_source_conflict_is_preserved_and_blocks_continuity_claim (test_phase2_2_2.BackfillPlanningTests.test_source_conflict_is_preserved_and_blocks_continuity_claim) ... ok\ntest_stale_source_plan_is_rejected_before_mt5_calls (test_phase2_2_2.BackfillPlanningTests.test_stale_source_plan_is_rejected_before_mt5_calls) ... ok\ntest_actual_frozen_sources_have_exact_known_bridges_and_remain_unchanged (test_phase2_2_2.HistoryGapAuditTests.test_actual_frozen_sources_have_exact_known_bridges_and_remain_unchanged) ... ok\ntest_exact_missing_slots_and_weekend_classification (test_phase2_2_2.HistoryGapAuditTests.test_exact_missing_slots_and_weekend_classification) ... ok\ntest_irregular_timestamp_spacing_has_no_invented_missing_slots (test_phase2_2_2.HistoryGapAuditTests.test_irregular_timestamp_spacing_has_no_invented_missing_slots) ... ok\ntest_manifest_hash_accounts_for_crlf_checkout_normalization (test_phase2_2_2.HistoryGapAuditTests.test_manifest_hash_accounts_for_crlf_checkout_normalization) ... ok\ntest_ohlc_integrity_is_independent_from_spread_quality (test_phase2_2_2.HistoryGapAuditTests.test_ohlc_integrity_is_independent_from_spread_quality) ... ok\ntest_overlap_union_deduplicates_equal_bars_and_keeps_conflicts (test_phase2_2_2.HistoryGapAuditTests.test_overlap_union_deduplicates_equal_bars_and_keeps_conflicts) ... ok\ntest_weekday_hole_is_pending_not_assumed_to_be_an_error (test_phase2_2_2.HistoryGapAuditTests.test_weekday_hole_is_pending_not_assumed_to_be_an_error) ... ok\ntest_crlf_and_lf_share_canonical_hash_but_not_raw_hash (test_phase2_2_2.PortabilityAndPathSafetyTests.test_crlf_and_lf_share_canonical_hash_but_not_raw_hash) ... ok\ntest_extra_or_missing_source_file_rejects_inventory (test_phase2_2_2.PortabilityAndPathSafetyTests.test_extra_or_missing_source_file_rejects_inventory) ... ok\ntest_material_csv_changes_do_not_normalize_away (test_phase2_2_2.PortabilityAndPathSafetyTests.test_material_csv_changes_do_not_normalize_away) ... ok\ntest_plan_generated_on_lf_resumes_with_crlf_sources_and_chunk (test_phase2_2_2.PortabilityAndPathSafetyTests.test_plan_generated_on_lf_resumes_with_crlf_sources_and_chunk) ... ok\ntest_run_id_validation_rejects_paths_dot_segments_and_reserved_windows_names (test_phase2_2_2.PortabilityAndPathSafetyTests.test_run_id_validation_rejects_paths_dot_segments_and_reserved_windows_names) ... ok\ntest_symlink_run_directory_is_rejected_before_provider_calls (test_phase2_2_2.PortabilityAndPathSafetyTests.test_symlink_run_directory_is_rejected_before_provider_calls) ... ok\ntest_frozen_sources_have_separate_old_new_and_union_statistics (test_phase2_2_2.SpreadAuditTests.test_frozen_sources_have_separate_old_new_and_union_statistics) ... ok\ntest_spread_states_and_session_distribution (test_phase2_2_2.SpreadAuditTests.test_spread_states_and_session_distribution) ... ok\n\n----------------------------------------------------------------------\nRan 26 tests in 32.427s\n\nOK\n",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_passed": 26,
+        "tests_run": 26,
+        "tests_skipped": 0
+      },
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "-m",
+          "unittest",
+          "-v",
+          "test_phase2_2_2a"
+        ],
+        "duration_seconds": 0.827,
+        "exit_code": 0,
+        "module": "test_phase2_2_2a",
+        "output_tail": "test_clean_interrupted_resume_reaudit_verifies_continuity (test_phase2_2_2a.EndToEndBackfillTests.test_clean_interrupted_resume_reaudit_verifies_continuity) ... ok\ntest_corrupt_chunk_hash_blocks_post_backfill_audit (test_phase2_2_2a.EndToEndBackfillTests.test_corrupt_chunk_hash_blocks_post_backfill_audit) ... ok\ntest_empty_response_remains_pending_and_continuity_is_partial (test_phase2_2_2a.EndToEndBackfillTests.test_empty_response_remains_pending_and_continuity_is_partial) ... ok\ntest_old_manifest_schema_is_rejected_explicitly (test_phase2_2_2a.EndToEndBackfillTests.test_old_manifest_schema_is_rejected_explicitly) ... ok\ntest_orphan_chunk_file_is_rejected (test_phase2_2_2a.EndToEndBackfillTests.test_orphan_chunk_file_is_rejected) ... ok\ntest_post_audit_exposes_raw_and_canonical_hash_evidence (test_phase2_2_2a.EndToEndBackfillTests.test_post_audit_exposes_raw_and_canonical_hash_evidence) ... ok\ntest_price_conflict_is_retained_and_blocks_continuity (test_phase2_2_2a.EndToEndBackfillTests.test_price_conflict_is_retained_and_blocks_continuity) ... ok\ntest_resume_with_changed_plan_is_rejected_without_market_read (test_phase2_2_2a.EndToEndBackfillTests.test_resume_with_changed_plan_is_rejected_without_market_read) ... ok\ntest_unexpected_source_file_blocks_continuity_even_with_valid_chunks (test_phase2_2_2a.EndToEndBackfillTests.test_unexpected_source_file_blocks_continuity_even_with_valid_chunks) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.459s\n\nOK\n",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_passed": 9,
+        "tests_run": 9,
+        "tests_skipped": 0
+      }
+    ],
+    "python_executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "python_version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "tests_failed": 0,
+    "tests_passed": 35,
+    "tests_run": 35,
+    "tests_skipped": 0
+  },
+  "validation_started_utc": "2026-11-11T10:01:53.406955+00:00"
+}
