@@ -1,0 +1,313 @@
+{
+  "audit": {
+    "calendar_review_interval_count": 1758,
+    "critical_integrity_errors": [],
+    "exact_gap_intervals_report": "reports/phase2_2_2/history_gap_audit.json",
+    "future_chunk_plan_report": "reports/phase2_2_2/future_mt5_backfill_plan.json",
+    "pending_recovery_interval_count": 77,
+    "price_overlap_conflicts": 0,
+    "snapshot_csv_count": 15,
+    "source_files_unchanged": true,
+    "source_rows": 514054,
+    "source_sha256_before_after_equal": true,
+    "status": "PASS_WITH_PENDING_GAPS",
+    "zero_spread_percent_by_symbol_timeframe": {
+      "AUDUSD": {
+        "D1": {
+          "combined_zero_percent": 100.0,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 100.0,
+          "recent_zero_percent": 100.0
+        },
+        "H1": {
+          "combined_zero_percent": 95.8321,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 95.8276,
+          "recent_zero_percent": 95.9514
+        },
+        "H4": {
+          "combined_zero_percent": 99.9449,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 99.9429,
+          "recent_zero_percent": 100.0
+        },
+        "M15": {
+          "combined_zero_percent": 94.833,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 94.8307,
+          "recent_zero_percent": 94.9546
+        },
+        "M5": {
+          "combined_zero_percent": 92.9339,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 92.9141,
+          "recent_zero_percent": 94.9744
+        }
+      },
+      "EURUSD": {
+        "D1": {
+          "combined_zero_percent": 100.0,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 100.0,
+          "recent_zero_percent": 100.0
+        },
+        "H1": {
+          "combined_zero_percent": 95.8766,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 95.8737,
+          "recent_zero_percent": 95.9514
+        },
+        "H4": {
+          "combined_zero_percent": 99.9449,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 99.9429,
+          "recent_zero_percent": 100.0
+        },
+        "M15": {
+          "combined_zero_percent": 94.9045,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 94.9035,
+          "recent_zero_percent": 94.9546
+        },
+        "M5": {
+          "combined_zero_percent": 94.3475,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 94.3414,
+          "recent_zero_percent": 94.9744
+        }
+      },
+      "USDCAD": {
+        "D1": {
+          "combined_zero_percent": 62.9802,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 62.0977,
+          "recent_zero_percent": 100.0
+        },
+        "H1": {
+          "combined_zero_percent": 33.0243,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 31.3857,
+          "recent_zero_percent": 76.1134
+        },
+        "H4": {
+          "combined_zero_percent": 43.507,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 41.7357,
+          "recent_zero_percent": 93.5484
+        },
+        "M15": {
+          "combined_zero_percent": 23.8316,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 23.1146,
+          "recent_zero_percent": 60.6458
+        },
+        "M5": {
+          "combined_zero_percent": 14.0642,
+          "execution_inference_eligible": false,
+          "old_zero_percent": 13.8813,
+          "recent_zero_percent": 32.9231
+        }
+      }
+    }
+  },
+  "baseline_integrity": {
+    "actual_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "expected_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "status": "PASS"
+  },
+  "commands_and_results": [
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "scripts/audit_market_history.py",
+        "--as-of-utc",
+        "2026-11-11T00:00:00Z"
+      ],
+      "duration_seconds": 14.821,
+      "exit_code": 0,
+      "name": "market_history_audit",
+      "output_tail": "{\n  \"status\": \"PASS_WITH_PENDING_GAPS\",\n  \"snapshot_files\": 15,\n  \"audited_source_rows\": 514054,\n  \"pending_recovery_intervals\": 77,\n  \"calendar_review_intervals\": 1758,\n  \"price_overlap_conflicts\": 0,\n  \"source_files_unchanged\": true,\n  \"mt5_connections\": 0,\n  \"report_dir\": \"reports/phase2_2_2\"\n}\n",
+      "status": "PASS",
+      "tests_run": null,
+      "tests_skipped": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_phase2_2_2"
+      ],
+      "duration_seconds": 27.899,
+      "exit_code": 0,
+      "name": "offline_tests:test_phase2_2_2",
+      "output_tail": "test_demo_account_is_rejected_before_any_rates_read (test_phase2_2_2.BackfillPlanningTests.test_demo_account_is_rejected_before_any_rates_read) ... ok\ntest_dry_run_needs_no_mt5_import (test_phase2_2_2.BackfillPlanningTests.test_dry_run_needs_no_mt5_import) ... ok\ntest_gate_is_rechecked_after_a_failed_mt5_read (test_phase2_2_2.BackfillPlanningTests.test_gate_is_rechecked_after_a_failed_mt5_read) ... ok\ntest_invalid_symbol_or_unaligned_interval_is_rejected (test_phase2_2_2.BackfillPlanningTests.test_invalid_symbol_or_unaligned_interval_is_rejected) ... ok\ntest_large_ranges_split_under_bar_cap_with_overlaps (test_phase2_2_2.BackfillPlanningTests.test_large_ranges_split_under_bar_cap_with_overlaps) ... ok\ntest_mt5_read_is_guarded_before_and_after_call (test_phase2_2_2.BackfillPlanningTests.test_mt5_read_is_guarded_before_and_after_call) ... ok\ntest_open_bars_are_excluded_and_duplicates_or_bad_ohlc_are_classified (test_phase2_2_2.BackfillPlanningTests.test_open_bars_are_excluded_and_duplicates_or_bad_ohlc_are_classified) ... ok\ntest_real_downloader_requires_explicit_confirmation_and_has_no_execution_calls (test_phase2_2_2.BackfillPlanningTests.test_real_downloader_requires_explicit_confirmation_and_has_no_execution_calls) ... ok\ntest_resume_after_interruption_does_not_refetch_completed_chunk (test_phase2_2_2.BackfillPlanningTests.test_resume_after_interruption_does_not_refetch_completed_chunk) ... ok\ntest_source_conflict_is_preserved_and_blocks_continuity_claim (test_phase2_2_2.BackfillPlanningTests.test_source_conflict_is_preserved_and_blocks_continuity_claim) ... ok\ntest_stale_source_plan_is_rejected_before_mt5_calls (test_phase2_2_2.BackfillPlanningTests.test_stale_source_plan_is_rejected_before_mt5_calls) ... ok\ntest_actual_frozen_sources_have_exact_known_bridges_and_remain_unchanged (test_phase2_2_2.HistoryGapAuditTests.test_actual_frozen_sources_have_exact_known_bridges_and_remain_unchanged) ... ok\ntest_exact_missing_slots_and_weekend_classification (test_phase2_2_2.HistoryGapAuditTests.test_exact_missing_slots_and_weekend_classification) ... ok\ntest_irregular_timestamp_spacing_has_no_invented_missing_slots (test_phase2_2_2.HistoryGapAuditTests.test_irregular_timestamp_spacing_has_no_invented_missing_slots) ... ok\ntest_manifest_hash_accounts_for_crlf_checkout_normalization (test_phase2_2_2.HistoryGapAuditTests.test_manifest_hash_accounts_for_crlf_checkout_normalization) ... ok\ntest_ohlc_integrity_is_independent_from_spread_quality (test_phase2_2_2.HistoryGapAuditTests.test_ohlc_integrity_is_independent_from_spread_quality) ... ok\ntest_overlap_union_deduplicates_equal_bars_and_keeps_conflicts (test_phase2_2_2.HistoryGapAuditTests.test_overlap_union_deduplicates_equal_bars_and_keeps_conflicts) ... ok\ntest_weekday_hole_is_pending_not_assumed_to_be_an_error (test_phase2_2_2.HistoryGapAuditTests.test_weekday_hole_is_pending_not_assumed_to_be_an_error) ... ok\ntest_frozen_sources_have_separate_old_new_and_union_statistics (test_phase2_2_2.SpreadAuditTests.test_frozen_sources_have_separate_old_new_and_union_statistics) ... ok\ntest_spread_states_and_session_distribution (test_phase2_2_2.SpreadAuditTests.test_spread_states_and_session_distribution) ... ok\n\n----------------------------------------------------------------------\nRan 20 tests in 27.496s\n\nOK\n",
+      "status": "PASS",
+      "tests_run": 20,
+      "tests_skipped": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_mt5_real_readonly"
+      ],
+      "duration_seconds": 0.096,
+      "exit_code": 0,
+      "name": "offline_tests:test_mt5_real_readonly",
+      "output_tail": "test_configured_exposure_block_is_a_successful_guard_decision (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_configured_exposure_block_is_a_successful_guard_decision) ... ok\ntest_daily_deposits_do_not_offset_realized_trading_loss (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_daily_deposits_do_not_offset_realized_trading_loss) ... ok\ntest_demo_account_is_not_accepted_or_read_further (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_demo_account_is_not_accepted_or_read_further) ... ok\ntest_dynamic_read_method_is_rejected (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_dynamic_read_method_is_rejected) ... ok\ntest_gate_failure_stops_before_account_or_market_reads (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_gate_failure_stops_before_account_or_market_reads) ... ok\ntest_history_refresh_excludes_still_open_bar (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_history_refresh_excludes_still_open_bar) ... ok\ntest_missing_portfolio_risk_data_remains_pending (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_missing_portfolio_risk_data_remains_pending) ... ok\ntest_private_report_directory_is_ignored_by_git (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_private_report_directory_is_ignored_by_git) ... ok\ntest_public_projection_excludes_account_identifiers_and_financials (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_public_projection_excludes_account_identifiers_and_financials) ... ok\ntest_public_projection_includes_observed_spread_points (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_public_projection_includes_observed_spread_points) ... ok\ntest_validator_has_no_order_or_position_mutation_route (test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_validator_has_no_order_or_position_mutation_route) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.011s\n\nOK\n",
+      "status": "PASS",
+      "tests_run": 11,
+      "tests_skipped": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_phase2_1_1"
+      ],
+      "duration_seconds": 3.544,
+      "exit_code": 0,
+      "name": "offline_tests:test_phase2_1_1",
+      "output_tail": "test_concurrent_llm_events_are_append_only_without_lost_writes (test_phase2_1_1.Phase2111Tests.test_concurrent_llm_events_are_append_only_without_lost_writes) ... ok\ntest_event_id_is_stable_deduplicated_and_conflicts_rejected (test_phase2_1_1.Phase2111Tests.test_event_id_is_stable_deduplicated_and_conflicts_rejected) ... ok\ntest_event_ledger_is_safe_for_concurrent_duplicate_writers (test_phase2_1_1.Phase2111Tests.test_event_ledger_is_safe_for_concurrent_duplicate_writers) ... ok\ntest_invalid_evidence_and_provider_error_are_logged_not_operational (test_phase2_1_1.Phase2111Tests.test_invalid_evidence_and_provider_error_are_logged_not_operational) ... LLM call failed provider=ollama model=qwen3:4b schema=_Decision error=LLM_INVALID_EVIDENCE\nLLM call failed provider=ollama model=qwen3:4b schema=_Decision error=LLM_TIMEOUT\nok\ntest_mock_llm_call_records_valid_decision_and_no_secret (test_phase2_1_1.Phase2111Tests.test_mock_llm_call_records_valid_decision_and_no_secret) ... ok\ntest_outcome_is_appended_separately_and_original_is_immutable (test_phase2_1_1.Phase2111Tests.test_outcome_is_appended_separately_and_original_is_immutable) ... ok\ntest_pairing_and_policy_interface_use_same_event_portfolio_constraints (test_phase2_1_1.Phase2111Tests.test_pairing_and_policy_interface_use_same_event_portfolio_constraints) ... ok\ntest_pairing_never_invents_llm_decisions_and_requires_provenance (test_phase2_1_1.Phase2111Tests.test_pairing_never_invents_llm_decisions_and_requires_provenance) ... ok\ntest_phase2_conclusions_have_explicit_independent_states (test_phase2_1_1.Phase2111Tests.test_phase2_conclusions_have_explicit_independent_states) ... ok\ntest_spread_units_are_not_silently_converted (test_phase2_1_1.Phase2111Tests.test_spread_units_are_not_silently_converted) ... ok\ntest_spread_zero_missing_invalid_and_assumption_are_distinct (test_phase2_1_1.Phase2111Tests.test_spread_zero_missing_invalid_and_assumption_are_distinct) ... ok\ntest_uncovered_opportunity_stays_in_technical_population (test_phase2_1_1.Phase2111Tests.test_uncovered_opportunity_stays_in_technical_population) ... ok\ntest_warmup_cutoff_excludes_unclosed_and_future_bars (test_phase2_1_1.Phase2111Tests.test_warmup_cutoff_excludes_unclosed_and_future_bars) ... ok\ntest_warmup_insufficiency_and_predeclared_stability_criterion (test_phase2_1_1.Phase2111Tests.test_warmup_insufficiency_and_predeclared_stability_criterion) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 3.003s\n\nOK\n",
+      "status": "PASS",
+      "tests_run": 14,
+      "tests_skipped": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_phase2_2"
+      ],
+      "duration_seconds": 2.492,
+      "exit_code": 0,
+      "name": "offline_tests:test_phase2_2",
+      "output_tail": "ero_pnl) ... ok\ntest_anonymous_export_and_ledger_have_no_account_or_credentials (test_phase2_2.Phase22Tests.test_anonymous_export_and_ledger_have_no_account_or_credentials) ... ok\ntest_budget_mock_blocks_unknown_prices_limits_and_retries (test_phase2_2.Phase22Tests.test_budget_mock_blocks_unknown_prices_limits_and_retries) ... ok\ntest_concurrent_writers_keep_every_llm_and_coverage_event (test_phase2_2.Phase22Tests.test_concurrent_writers_keep_every_llm_and_coverage_event) ... ok\ntest_currency_exposure_is_enforced_by_shared_risk_engine (test_phase2_2.Phase22Tests.test_currency_exposure_is_enforced_by_shared_risk_engine) ... ok\ntest_daily_loss_is_applied_to_later_opportunities_in_each_policy (test_phase2_2.Phase22Tests.test_daily_loss_is_applied_to_later_opportunities_in_each_policy) ... ok\ntest_duplicate_event_ids_are_no_evaluable (test_phase2_2.Phase22Tests.test_duplicate_event_ids_are_no_evaluable) ... ok\ntest_economic_comparator_accepts_full_population_report_including_uncovered_events (test_phase2_2.Phase22Tests.test_economic_comparator_accepts_full_population_report_including_uncovered_events) ... ok\ntest_economic_comparator_rejects_selected_pair_subset_without_population_report (test_phase2_2.Phase22Tests.test_economic_comparator_rejects_selected_pair_subset_without_population_report) ... ok\ntest_expired_reservations_do_not_consume_slots (test_phase2_2.Phase22Tests.test_expired_reservations_do_not_consume_slots) ... ok\ntest_explicit_taxonomy_does_not_turn_watch_into_buy_sell (test_phase2_2.Phase22Tests.test_explicit_taxonomy_does_not_turn_watch_into_buy_sell) ... ok\ntest_future_outcome_magnitude_does_not_change_prior_policy_acceptance (test_phase2_2.Phase22Tests.test_future_outcome_magnitude_does_not_change_prior_policy_acceptance) ... ok\ntest_ledger_reconciles_all_events_and_outcome_idempotently (test_phase2_2.Phase22Tests.test_ledger_reconciles_all_events_and_outcome_idempotently) ... ok\ntest_missing_risk_context_or_outcome_is_no_evaluable_not_zero_pnl (test_phase2_2.Phase22Tests.test_missing_risk_context_or_outcome_is_no_evaluable_not_zero_pnl) ... ok\ntest_pairer_rejects_context_from_a_candle_after_the_opportunity (test_phase2_2.Phase22Tests.test_pairer_rejects_context_from_a_candle_after_the_opportunity) ... ok\ntest_query_without_persisted_response_fails_reconciliation (test_phase2_2.Phase22Tests.test_query_without_persisted_response_fails_reconciliation) ... ok\ntest_real_simulation_rejects_model_selected_counterfactual_plan (test_phase2_2.Phase22Tests.test_real_simulation_rejects_model_selected_counterfactual_plan) ... ok\ntest_reconciliation_fails_on_orphan_coverage_and_missing_plan_context (test_phase2_2.Phase22Tests.test_reconciliation_fails_on_orphan_coverage_and_missing_plan_context) ... ok\ntest_research_strict_without_event_stops_before_provider_call (test_phase2_2.Phase22Tests.test_research_strict_without_event_stops_before_provider_call) ... research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nok\ntest_risk_config_is_source_of_two_slot_limit_and_override_is_rejected (test_phase2_2.Phase22Tests.test_risk_config_is_source_of_two_slot_limit_and_override_is_rejected) ... ok\ntest_same_time_priority_and_policy_states_are_independent_with_two_slots (test_phase2_2.Phase22Tests.test_same_time_priority_and_policy_states_are_independent_with_two_slots) ... ok\ntest_sqlite_failure_is_structured_and_strict_mode_raises (test_phase2_2.Phase22Tests.test_sqlite_failure_is_structured_and_strict_mode_raises) ... research ledger persistence failed status=LEDGER_SQLITE_BUSY event_id=f520cadd3f4dc6dda8184c0b21b2cd2b2eae2e21b98ec4fd8b79f4542a5cf2ad\nresearch ledger persistence failed status=LEDGER_SQLITE_BUSY event_id=f520cadd3f4dc6dda8184c0b21b2cd2b2eae2e21b98ec4fd8b79f4542a5cf2ad\nok\ntest_strict_future_outcomes_cannot_precede_signal_or_release (test_phase2_2.Phase22Tests.test_strict_future_outcomes_cannot_precede_signal_or_release) ... research outcome persistence failed status=LEDGER_DATA_VALIDATION_ERROR event_id=f520cadd3f4dc6dda8184c0b21b2cd2b2eae2e21b98ec4fd8b79f4542a5cf2ad\nok\ntest_strict_post_response_persistence_failure_is_not_retried (test_phase2_2.Phase22Tests.test_strict_post_response_persistence_failure_is_not_retried) ... research ledger write failed after provider response schema=_Decision\nok\ntest_taxonomy_outcomes_and_missing_coverage_remain_distinct (test_phase2_2.Phase22Tests.test_taxonomy_outcomes_and_missing_coverage_remain_distinct) ... ok\ntest_trade_context_is_allowlisted_and_never_overwritten (test_phase2_2.Phase22Tests.test_trade_context_is_allowlisted_and_never_overwritten) ... research ledger persistence failed status=LEDGER_SERIALIZATION_ERROR event_id=f520cadd3f4dc6dda8184c0b21b2cd2b2eae2e21b98ec4fd8b79f4542a5cf2ad\nok\ntest_two_persisted_reservations_block_third_proposal (test_phase2_2.Phase22Tests.test_two_persisted_reservations_block_third_proposal) ... ok\n\n----------------------------------------------------------------------\nRan 28 tests in 1.803s\n\nOK\n",
+      "status": "PASS",
+      "tests_run": 28,
+      "tests_skipped": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "test_phase2_2_1"
+      ],
+      "duration_seconds": 0.809,
+      "exit_code": 0,
+      "name": "offline_tests:test_phase2_2_1",
+      "output_tail": "test_all_timeframes_are_checked_for_future_closed_candles (test_phase2_2_1.Phase221TechnicalReferenceTests.test_all_timeframes_are_checked_for_future_closed_candles) ... ok\ntest_economic_comparator_revalidates_ledger_and_rejects_fabricated_or_stale_report (test_phase2_2_1.Phase221TechnicalReferenceTests.test_economic_comparator_revalidates_ledger_and_rejects_fabricated_or_stale_report) ... ok\ntest_ledger_reconciliation_rejects_duplicate_request_identifiers (test_phase2_2_1.Phase221TechnicalReferenceTests.test_ledger_reconciliation_rejects_duplicate_request_identifiers) ... ok\ntest_migration_adds_new_ledger_tables_and_request_ids_without_dropping_rows (test_phase2_2_1.Phase221TechnicalReferenceTests.test_migration_adds_new_ledger_tables_and_request_ids_without_dropping_rows) ... ok\ntest_missing_spread_is_not_silently_replaced_with_zero (test_phase2_2_1.Phase221TechnicalReferenceTests.test_missing_spread_is_not_silently_replaced_with_zero) ... ok\ntest_no_technical_candidate_keeps_explicit_plan_status_not_a_fake_order (test_phase2_2_1.Phase221TechnicalReferenceTests.test_no_technical_candidate_keeps_explicit_plan_status_not_a_fake_order) ... ok\ntest_non_candidate_and_historical_plan_rejection_are_retained_with_reasons (test_phase2_2_1.Phase221TechnicalReferenceTests.test_non_candidate_and_historical_plan_rejection_are_retained_with_reasons) ... ok\ntest_paired_policies_require_same_common_plan_and_ignore_persist_time_for_slot_release (test_phase2_2_1.Phase221TechnicalReferenceTests.test_paired_policies_require_same_common_plan_and_ignore_persist_time_for_slot_release) ... ok\ntest_persistence_time_does_not_make_unobserved_close_release_early (test_phase2_2_1.Phase221TechnicalReferenceTests.test_persistence_time_does_not_make_unobserved_close_release_early) ... ok\ntest_plan_and_hash_are_deterministic_and_do_not_depend_on_model_answer (test_phase2_2_1.Phase221TechnicalReferenceTests.test_plan_and_hash_are_deterministic_and_do_not_depend_on_model_answer) ... ok\ntest_plan_record_is_append_only_idempotent_and_reconciliation_requires_every_event (test_phase2_2_1.Phase221TechnicalReferenceTests.test_plan_record_is_append_only_idempotent_and_reconciliation_requires_every_event) ... ok\ntest_reference_reuses_existing_65_limit_plan_builder_without_llm (test_phase2_2_1.Phase221TechnicalReferenceTests.test_reference_reuses_existing_65_limit_plan_builder_without_llm) ... ok\ntest_zero_spread_is_explicitly_unverified_and_not_confirmatory (test_phase2_2_1.Phase221TechnicalReferenceTests.test_zero_spread_is_explicitly_unverified_and_not_confirmatory) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.358s\n\nOK\n",
+      "status": "PASS",
+      "tests_run": 13,
+      "tests_skipped": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "scripts/backfill_market_history.py",
+        "--dry-run",
+        "--audit-plan",
+        "reports/phase2_2_2/future_mt5_backfill_plan.json"
+      ],
+      "dry_run_checks": {
+        "mt5_not_imported": true,
+        "status_dry_run": true,
+        "zero_mt5_connections": true,
+        "zero_orders": true,
+        "zero_provider_calls": true
+      },
+      "duration_seconds": 0.367,
+      "exit_code": 0,
+      "name": "backfill_plan_dry_run",
+      "output_tail": "4\",\n      \"timeframe_seconds\": 14400,\n      \"core_start_utc\": \"2024-12-25T00:00:00+00:00\",\n      \"core_end_utc\": \"2024-12-25T20:00:00+00:00\",\n      \"request_start_utc\": \"2024-12-24T16:00:00+00:00\",\n      \"request_end_utc\": \"2024-12-26T04:00:00+00:00\",\n      \"core_bar_count\": 6,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"ffaf6fc69b6c95c6099b10b0\",\n      \"interval_id\": \"15b4f2c2213775f6\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"H4\",\n      \"timeframe_seconds\": 14400,\n      \"core_start_utc\": \"2025-01-01T00:00:00+00:00\",\n      \"core_end_utc\": \"2025-01-01T20:00:00+00:00\",\n      \"request_start_utc\": \"2024-12-31T16:00:00+00:00\",\n      \"request_end_utc\": \"2025-01-02T04:00:00+00:00\",\n      \"core_bar_count\": 6,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"2c53fb1c3d14e4551bf46ace\",\n      \"interval_id\": \"772034b6cca2eb9a\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"H4\",\n      \"timeframe_seconds\": 14400,\n      \"core_start_utc\": \"2025-12-25T00:00:00+00:00\",\n      \"core_end_utc\": \"2025-12-25T20:00:00+00:00\",\n      \"request_start_utc\": \"2025-12-24T16:00:00+00:00\",\n      \"request_end_utc\": \"2025-12-26T04:00:00+00:00\",\n      \"core_bar_count\": 6,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"f7a92fad9d77dc435c68945e\",\n      \"interval_id\": \"f5e95479b9f5a405\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"H4\",\n      \"timeframe_seconds\": 14400,\n      \"core_start_utc\": \"2026-01-01T00:00:00+00:00\",\n      \"core_end_utc\": \"2026-01-01T20:00:00+00:00\",\n      \"request_start_utc\": \"2025-12-31T16:00:00+00:00\",\n      \"request_end_utc\": \"2026-01-02T04:00:00+00:00\",\n      \"core_bar_count\": 6,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"8643f2145f0b4ad16e79e1d4\",\n      \"interval_id\": \"1328698c56526824\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2023-12-23T00:00:00+00:00\",\n      \"core_end_utc\": \"2023-12-25T00:00:00+00:00\",\n      \"request_start_utc\": \"2023-12-21T00:00:00+00:00\",\n      \"request_end_utc\": \"2023-12-27T00:00:00+00:00\",\n      \"core_bar_count\": 3,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"d8f63cfe1199326a62bcecde\",\n      \"interval_id\": \"a37faec20d921406\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2023-12-30T00:00:00+00:00\",\n      \"core_end_utc\": \"2024-01-01T00:00:00+00:00\",\n      \"request_start_utc\": \"2023-12-28T00:00:00+00:00\",\n      \"request_end_utc\": \"2024-01-03T00:00:00+00:00\",\n      \"core_bar_count\": 3,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"5d553f6d259a6ae00a2a0e8a\",\n      \"interval_id\": \"54625f97249f063d\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2024-12-25T00:00:00+00:00\",\n      \"core_end_utc\": \"2024-12-25T00:00:00+00:00\",\n      \"request_start_utc\": \"2024-12-23T00:00:00+00:00\",\n      \"request_end_utc\": \"2024-12-27T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"0d5ae4803ee917b844476357\",\n      \"interval_id\": \"7d6aaa50b294bfc5\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2025-01-01T00:00:00+00:00\",\n      \"core_end_utc\": \"2025-01-01T00:00:00+00:00\",\n      \"request_start_utc\": \"2024-12-30T00:00:00+00:00\",\n      \"request_end_utc\": \"2025-01-03T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"b708f365a5d0b45be9c92711\",\n      \"interval_id\": \"cd1280b1b3310010\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2025-12-25T00:00:00+00:00\",\n      \"core_end_utc\": \"2025-12-25T00:00:00+00:00\",\n      \"request_start_utc\": \"2025-12-23T00:00:00+00:00\",\n      \"request_end_utc\": \"2025-12-27T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    },\n    {\n      \"chunk_id\": \"6141beb05fb87b88e7ade7c9\",\n      \"interval_id\": \"d2141b7db5debc02\",\n      \"chunk_number\": 0,\n      \"symbol\": \"AUDUSD\",\n      \"timeframe\": \"D1\",\n      \"timeframe_seconds\": 86400,\n      \"core_start_utc\": \"2026-01-01T00:00:00+00:00\",\n      \"core_end_utc\": \"2026-01-01T00:00:00+00:00\",\n      \"request_start_utc\": \"2025-12-30T00:00:00+00:00\",\n      \"request_end_utc\": \"2026-01-03T00:00:00+00:00\",\n      \"core_bar_count\": 1,\n      \"request_bar_cap\": 1000,\n      \"overlap_bars_each_side\": 2\n    }\n  ]\n}\n",
+      "status": "PASS",
+      "tests_run": null,
+      "tests_skipped": 0
+    }
+  ],
+  "corrected_intermediate_findings": [
+    {
+      "initial_result": "FAIL",
+      "reason": "The existing read-only allowlist assertion did not include the newly required copy_rates_range reader.",
+      "resolution": "Updated the expected allowlist to include copy_rates_range; the final complete run passed.",
+      "status": "CORRECTED_AND_RERUN",
+      "test": "test_mt5_real_readonly.MT5RealReadonlySafetyTests.test_validator_has_no_order_or_position_mutation_route"
+    }
+  ],
+  "dry_run": {
+    "calendar_review_interval_count": 1758,
+    "checks": {
+      "mt5_not_imported": true,
+      "status_dry_run": true,
+      "zero_mt5_connections": true,
+      "zero_orders": true,
+      "zero_provider_calls": true
+    },
+    "chunk_count": 98
+  },
+  "external_integrations": {
+    "connection_count": 0,
+    "historical_backtests": "NOT_RUN_BY_DESIGN",
+    "llm_call_count": 0,
+    "llm_calls": "NOT_RUN_BY_DESIGN",
+    "mt5_connection": "NOT_RUN_BY_DESIGN",
+    "orders": "NOT_RUN_BY_DESIGN",
+    "orders_sent": 0
+  },
+  "generated_utc": "2026-11-11T08:49:22.287550+00:00",
+  "history_backfill_status": "HISTORY_BACKFILL_PREPARED",
+  "limitations": [
+    "History recovery is prepared only; no missing bars were downloaded or re-audited.",
+    "Forex session closures and holidays are not inferred where the broker calendar is unavailable.",
+    "Historical spread execution costs are not confirmatory because zero spread values and broker cost coverage are unverified.",
+    "The audit compares prices across sources only where timestamps overlap; no overlapping prices means no direct cross-source price comparison."
+  ],
+  "mandatory_checks": {
+    "all_original_sources_unchanged": true,
+    "audit_reports_written": true,
+    "audit_status_not_fail": true,
+    "backfill_plan_prepared_not_executed": true,
+    "frozen_baseline_sha256_unchanged": true,
+    "mt5_not_connected": true,
+    "no_historical_backtest": true,
+    "no_llm_calls": true,
+    "no_orders": true,
+    "offline_steps_pass": true
+  },
+  "phase_status": "PHASE2_2_2_COMPLETE",
+  "repository": {
+    "branch": "codex/phase2-2-2-history-data-quality",
+    "commit": "2e61a68847ec82a0fd6420cad344640a037b7897",
+    "root": "/workspace/AgentTrading-phase2-2-2",
+    "working_tree_dirty": true
+  },
+  "runtime": {
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]"
+  },
+  "schema_version": 1,
+  "test_summary": {
+    "failed_commands": 0,
+    "modules": [
+      "test_phase2_2_2",
+      "test_mt5_real_readonly",
+      "test_phase2_1_1",
+      "test_phase2_2",
+      "test_phase2_2_1"
+    ],
+    "passed_commands": 7,
+    "tests_run": 86,
+    "tests_skipped": 0
+  }
+}

@@ -46,6 +46,7 @@ READ_ONLY_METHODS = frozenset(
         "symbol_info",
         "symbol_info_tick",
         "copy_rates_from_pos",
+        "copy_rates_range",
         "order_calc_profit",
         "order_calc_margin",
     }
@@ -87,7 +88,12 @@ def _read(api: Any, method: str, *args: Any, **kwargs: Any) -> Any:
     if method not in READ_ONLY_METHODS:
         raise SafetyGateError("READ_METHOD_NOT_ALLOWLISTED")
     _verify_terminal_gate(api)
-    result = getattr(api, method)(*args, **kwargs)
+    try:
+        result = getattr(api, method)(*args, **kwargs)
+    except Exception:
+        # Recheck the terminal gate even when the provider call itself fails.
+        _verify_terminal_gate(api)
+        raise
     _verify_terminal_gate(api)
     return result
 
