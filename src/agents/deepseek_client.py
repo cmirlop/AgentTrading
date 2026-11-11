@@ -81,6 +81,7 @@ def deepseek_structured_chat(
     timeout_seconds=None,
     max_tokens=None,
     return_metadata=False,
+    on_request_start=None,
 ):
     """Generate and validate one structured response; retries remain disabled."""
     api_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
@@ -139,6 +140,10 @@ def deepseek_structured_chat(
         kwargs["temperature"] = 0.0
 
     started = perf_counter()
+    if on_request_start is not None:
+        # The remote smoke runner uses this local callback to count an attempt
+        # at the exact point immediately before the sole HTTP request.
+        on_request_start()
     try:
         response = client.chat.completions.create(**kwargs)
     except Exception as exc:
@@ -179,6 +184,7 @@ def deepseek_structured_chat(
     details = getattr(usage, "completion_tokens_details", None)
     metadata = {
         "provider_reported_model": getattr(response, "model", None),
+        "finish_reason": choice.finish_reason,
         "prompt_tokens": getattr(usage, "prompt_tokens", None),
         "completion_tokens": getattr(usage, "completion_tokens", None),
         "reasoning_tokens": getattr(details, "reasoning_tokens", None),

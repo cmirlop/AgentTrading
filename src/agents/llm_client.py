@@ -197,7 +197,7 @@ def _validate_evidence(result: Any, fields: list[str], allowed_ids: list[str]) -
             raise LLMProviderError("LLM_INVALID_EVIDENCE")
 
 
-def structured_chat(schema, system_prompt, payload, *, model_override=None, return_metadata=False):
+def structured_chat(schema, system_prompt, payload, *, model_override=None, return_metadata=False, on_request_start=None):
     """Call the selected provider once and return a validated Pydantic model.
 
     ``return_metadata`` is intended for explicit live validation. It returns
@@ -287,6 +287,7 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
                 model=config.model,
                 timeout_seconds=config.timeout_seconds,
                 max_tokens=config.max_tokens,
+                on_request_start=on_request_start,
                 # Metadata comes from the same response; this does not make an
                 # extra provider request and lets the append-only ledger retain
                 # usage counts even when the caller does not request metadata.
@@ -379,6 +380,7 @@ def structured_chat(schema, system_prompt, payload, *, model_override=None, retu
             "provider": config.provider,
             "configured_model": config.model,
             "provider_reported_model": metadata.get("provider_reported_model"),
+            "finish_reason": metadata.get("finish_reason"),
             "latency_seconds": round(elapsed, 3),
             "prompt_tokens": metadata.get("prompt_tokens"),
             "completion_tokens": metadata.get("completion_tokens"),
