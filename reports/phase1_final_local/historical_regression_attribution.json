@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-11-11T20:06:41.6294207Z",
+  "validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
+  "pre_finalization_commit": "1ef0faf7600b866236f75cb7c229fc8a3b66973e",
+  "dataset": {
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "bytes": 2333785,
+    "rows": 22011,
+    "period_utc": "2026-04-07T18:15:00+00:00/2026-10-07T18:15:00+00:00",
+    "source": "verified Git blob, run from private temporary copy"
+  },
+  "configuration": {
+    "cost_scenario": "BASE",
+    "backtest_configs_hash_identical_between_commits": true,
+    "technical_trade_planner_source_hash_identical_between_commits": true,
+    "signal_prompts_and_strategy_parameters_modified": false,
+    "portfolio_repeatability": "PASS (current BASE #1 vs #2 stable IDs and summaries)",
+    "stateful_repeatability": "PASS (current BASE #1 vs #2 stable IDs and summaries)"
+  },
+  "technical_signal_or_plan_change_status": "PASS",
+  "unattributed_execution_status": "PENDING",
+  "overall_attribution_status": "PENDING",
+  "notes": [
+    "Stable trade IDs are SHA-256(symbol, threshold, mode, signal_time).",
+    "Plan fields are compared separately from execution states and economics.",
+    "Added spread audit fields are current-only and do not change the BASE cost assumption (spread floor defaults to zero).",
+    "Capacity cascade labels require a matched predecessor release timestamp crossing the signal time; all other unmatched selections stay pending."
+  ],
+  "modes": {
+    "portfolio": {
+      "name": "portfolio",
+      "pre_finalization_trade_rows": 7715,
+      "current_trade_rows": 7815,
+      "matched_stable_trade_ids": 7628,
+      "pre_finalization_only_ids": 87,
+      "current_only_ids": 187,
+      "invalid_ids": {
+        "pre_finalization": 0,
+        "current": 0
+      },
+      "duplicate_ids": {
+        "pre_finalization": [],
+        "current": []
+      },
+      "technical_plan_status": "PASS",
+      "execution_difference_count": 915,
+      "execution_difference_causes": {
+        "EXPIRY_BAR_FILL_CLASSIFICATION": 345,
+        "DERIVED_FROM_DOCUMENTED_EXECUTION_STATE_CHANGE": 570
+      },
+      "unattributed_execution_difference_count": 0,
+      "result_transitions": {
+        "LOSS -> AMBIGUOUS_EXPIRY_BAR": 83,
+        "AMBIGUOUS_BOTH -> AMBIGUOUS_EXPIRY_BAR": 1,
+        "WIN -> AMBIGUOUS_EXPIRY_BAR": 31
+      },
+      "presence_difference_causes": {
+        "CAPACITY_CASCADE_WITHOUT_MATCHED_RELEASE_WITNESS_PENDING": 151,
+        "UNATTRIBUTED_SELECTION_OR_CAPACITY_DIFFERENCE": 8,
+        "DOCUMENTED_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 115
+      },
+      "unmatched_selection_pending_count": 159,
+      "status": "PENDING"
+    },
+    "stateful": {
+      "name": "stateful",
+      "pre_finalization_trade_rows": 8974,
+      "current_trade_rows": 9091,
+      "matched_stable_trade_ids": 8926,
+      "pre_finalization_only_ids": 48,
+      "current_only_ids": 165,
+      "invalid_ids": {
+        "pre_finalization": 0,
+        "current": 0
+      },
+      "duplicate_ids": {
+        "pre_finalization": [],
+        "current": []
+      },
+      "technical_plan_status": "PASS",
+      "execution_difference_count": 948,
+      "execution_difference_causes": {
+        "EXPIRY_BAR_FILL_CLASSIFICATION": 273,
+        "DERIVED_FROM_DOCUMENTED_EXECUTION_STATE_CHANGE": 675
+      },
+      "unattributed_execution_difference_count": 0,
+      "result_transitions": {
+        "LOSS -> AMBIGUOUS_EXPIRY_BAR": 102,
+        "AMBIGUOUS_BOTH -> AMBIGUOUS_EXPIRY_BAR": 1,
+        "WIN -> AMBIGUOUS_EXPIRY_BAR": 33,
+        "AMBIGUOUS_ENTRY_BAR -> AMBIGUOUS_EXPIRY_BAR": 1
+      },
+      "presence_difference_causes": {
+        "CAPACITY_CASCADE_WITHOUT_MATCHED_RELEASE_WITNESS_PENDING": 77,
+        "DOCUMENTED_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 136
+      },
+      "unmatched_selection_pending_count": 77,
+      "status": "PENDING"
+    }
+  }
+}

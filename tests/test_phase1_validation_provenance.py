@@ -21,6 +21,7 @@ from scripts.validate_phase1 import (
     _external_scope_snapshot,
     _external_scope_data_fingerprint,
     _external_validation_status,
+    _latest_phase1_local_provider_report,
     _normalized_text_sha256,
     _phase_status,
     _source_snapshot,
@@ -34,6 +35,24 @@ from scripts.validate_phase1 import (
 
 
 class ValidationProvenanceTests(unittest.TestCase):
+    def test_latest_local_live_report_is_selected_by_utc_timestamp(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            report_dir = root / "reports" / "phase1_final_local"
+            report_dir.mkdir(parents=True)
+            (report_dir / "ollama_live_older.json").write_text(json.dumps({
+                "provider": "ollama", "generated_at_utc": "2026-11-11T17:00:00+00:00",
+            }), encoding="utf-8")
+            (report_dir / "ollama_live_newer.json").write_text(json.dumps({
+                "provider": "ollama", "generated_at_utc": "2026-11-11T19:00:00Z",
+            }), encoding="utf-8")
+            (report_dir / "ollama_live_wrong_provider.json").write_text(json.dumps({
+                "provider": "deepseek", "generated_at_utc": "2026-11-11T20:00:00Z",
+            }), encoding="utf-8")
+            with patch("scripts.validate_phase1.ROOT", root):
+                selected = _latest_phase1_local_provider_report("ollama", "fallback.json")
+        self.assertEqual(selected, "reports/phase1_final_local/ollama_live_newer.json")
+
     def test_refresh_rejects_prior_report_without_exact_fingerprint(self):
         report = {"traceability": {}, "checks": {"historical_regression": {"status": "PASS"}}}
         self.assertTrue(_verify_refresh_compatibility(report, _source_snapshot()))
@@ -254,6 +273,32 @@ class ValidationProvenanceTests(unittest.TestCase):
         unknown = dict(correction, after="f" * 64)
         self.assertEqual(_classify_technical_source_differences([unknown])["status"], "FAIL")
 
+    def test_current_simulator_changes_are_hash_pinned_and_separate_from_signal_changes(self):
+        differences = [
+            {
+                "file": "run_portfolio_backtest.py",
+                "before": "2177d5567f91666533d35935fc339016b823b6dca7e74a0ffdadd2a25fe23e99",
+                "after": "5521d032f899e32a60df013870ed2fe0da81b9f2d8368430410c0912197fb62a",
+            },
+            {
+                "file": "run_stateful_backtest.py",
+                "before": "57acb952979efb1ef20f9bdc725322f13de8c357cb0d202eecbb6c5d4651528a",
+                "after": "a71615abb6980c4b90426396b1c1435efc85eeb2ff082cfbe65a2e7ed057745d",
+            },
+            {
+                "file": "src/historical_execution.py",
+                "before": "03022d66350fddc5f6a8d0d83da5745893bed96155fad71224635563245d584a",
+                "after": "6c648843c3056b36baec803f38f17a561a7634ba574ca208bd134840f103f0da",
+            },
+        ]
+        result = _classify_technical_source_differences(differences)
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(len(result["documented_non_signal_changes"]), 2)
+        self.assertEqual(len(result["simulator_correction_changes"]), 1)
+        self.assertEqual(result["unexplained_differences"], [])
+        unknown = dict(differences[0], after="f" * 64)
+        self.assertEqual(_classify_technical_source_differences([unknown])["status"], "FAIL")
+
     def test_stable_trade_id_comparison_reports_plan_state_and_cost_changes(self):
         before = [{
             "symbol": "EURUSD", "threshold": 65, "mode": "LIMIT", "signal_time": "2026-01-01T00:00:00Z",
@@ -344,6 +389,85 @@ class ValidationProvenanceTests(unittest.TestCase):
             self.assertIn("missing_provider_dependency_version", result["stale_fields"])
         finally:
             path.unlink(missing_ok=True)
+
+    def test_mt5_real_readonly_evidence_is_fresh_scoped_and_keeps_demo_separate(self):
+        snapshot = _source_snapshot()
+        scope = _external_scope_snapshot("mt5_real", snapshot)
+        relative = "reports/_test_mt5_real_readonly_status.json"
+        path = ROOT / relative
+
+        def write_fixture(**overrides):
+            report = {
+                "status": "MT5_REAL_READ_ONLY_PASS",
+                "generated_utc": datetime.now(timezone.utc).isoformat(),
+                "account_type": "REAL",
+                "connection": "PASS",
+                "read_only_safety": {"status": "PASS", "tradeapi_disabled": True},
+                "broker_data": "PASS",
+                "risk_engine": "PASS",
+                "daily_loss_control": "PASS",
+                "history_refresh_status": "NOT_RUN",
+                "demo_validation": "PENDING_NOT_APPLICABLE_NO_DEMO_ACCOUNT",
+                "orders_sent_by_process": 0,
+                "trades_executed_by_process": 0,
+                "symbols": {
+                    symbol: {"metadata_valid": True, "risk_status": "PASS"}
+                    for symbol in ("EURUSD", "USDCAD", "AUDUSD")
+                },
+                "traceability": {
+                    "validation_fingerprint": snapshot,
+                    "external_scope": scope,
+                    "external_scope_fingerprint": _external_scope_data_fingerprint(scope),
+                },
+                "command_executed": ["python", "scripts/validate_mt5_real_readonly.py", "--no-history-refresh"],
+            }
+            report.update(overrides)
+            path.write_text(json.dumps(report), encoding="utf-8")
+            return report
+
+        try:
+            write_fixture()
+            result = _external_validation_status(relative, snapshot)
+            self.assertEqual(result["status"], "PASS")
+            self.assertTrue(result["evidence_reused"])
+            self.assertEqual(result["result_origin"], "REUSED_VERIFIED_EXTERNAL_EVIDENCE")
+            self.assertEqual(result["origin_validation_commit"], snapshot["validation_commit"])
+
+            write_fixture(generated_utc="2020-01-01T00:00:00Z")
+            result = _external_validation_status(relative, snapshot)
+            self.assertEqual(result["status"], "PENDING")
+            self.assertIn("24 hours", result["reason"])
+
+            write_fixture(symbols={"EURUSD": {"metadata_valid": True, "risk_status": "PASS"}})
+            result = _external_validation_status(relative, snapshot)
+            self.assertEqual(result["status"], "PENDING")
+
+            for bad_safety in (
+                {"account_type": "DEMO"},
+                {"read_only_safety": {"status": "FAIL", "tradeapi_disabled": False}},
+                {"orders_sent_by_process": 1},
+            ):
+                write_fixture(**bad_safety)
+                result = _external_validation_status(relative, snapshot)
+                self.assertEqual(result["status"], "FAIL")
+
+            changed_snapshot = dict(snapshot)
+            changed_snapshot["relevant_file_sha256"] = {
+                **snapshot["relevant_file_sha256"],
+                "scripts/validate_mt5_real_readonly.py": "changed-source-hash",
+            }
+            write_fixture()
+            result = _external_validation_status(relative, changed_snapshot)
+            self.assertEqual(result["status"], "PENDING")
+            self.assertIn("files.scripts/validate_mt5_real_readonly.py", result["stale_fields"])
+        finally:
+            path.unlink(missing_ok=True)
+
+    def test_absent_mt5_real_report_remains_pending(self):
+        relative = "reports/_test_missing_mt5_real_readonly_status.json"
+        path = ROOT / relative
+        path.unlink(missing_ok=True)
+        self.assertEqual(_external_validation_status(relative, _source_snapshot())["status"], "PENDING")
 
     def test_main_runtime_has_no_order_send_call_and_requires_python_trading_disabled(self):
         self.assertEqual(scan_order_execution_calls(ROOT), [])

@@ -1,102 +1,30 @@
-# Cierre local de Fase 1 — AgentTrading
+# Cierre de Fase 1 — AgentTrading
 
-**Estado vigente al 11 de noviembre de 2026: `INCOMPLETE_PENDING_MANUAL`.** La validación `MT5_REAL_READ_ONLY_PASS` del 9 de noviembre es una comprobación legítima e independiente: verificó una cuenta REAL en solo lectura, `tradeapi_disabled=True`, datos del bróker, motor de riesgo y límite diario. No hay una cuenta DEMO disponible; su comprobación es `NOT_APPLICABLE_NO_DEMO_ACCOUNT`, no un PASS ficticio ni un requisito para falsear. La nota de cierre añadida abajo registra un smoke remoto DeepSeek PASS en Python 3.12; no sustituye la comprobación de Windows/Python 3.13 ni resuelve las diferencias históricas pendientes.
+**Decisión al 11/11/2026: `INCOMPLETE_PENDING_MANUAL`.** No se declara `PHASE1_COMPLETE` ni se inicia la Fase 2.
 
-La validación pública está en [`reports/mt5_real_readonly_summary.json`](../reports/mt5_real_readonly_summary.json). Registra cero órdenes y cero operaciones ejecutadas por el proceso. Esta evidencia no autoriza órdenes ni cambia la política DRY RUN. Siguen pendientes otras comprobaciones de Fase 1, incluida la revisión de DeepSeek en el runtime local actual y la atribución de diferencias históricas agregadas.
+## Evidencias aprobadas
 
-La tabla y el informe de la revisión local anterior se conservan debajo como registro histórico; sus estados DEMO describen aquella ejecución y no sustituyen la validación REAL posterior.
+- 94 pruebas `test_phase1_*.py`: 93 PASS y una omisión de prueba POSIX no aplicable a Windows. Los bloqueos concurrentes multiproceso de Windows sí se probaron.
+- 21/21 pruebas offline del validador y 375 comprobaciones look-ahead PASS.
+- Ocho backtests portfolio/stateful completados; BASE se repitió en ambos modos y fue reproducible.
+- MT5 REAL en solo lectura: terminal conectado, `tradeapi_disabled=True`; EURUSD, USDCAD y AUDUSD pasaron metadatos, riesgo hipotético, exposición y evaluación diaria.
+- Ollama live PASS con `qwen3:4b`, JSON/Pydantic/evidencia válidos y guardas de respuestas inválidas.
+- Cero órdenes enviadas y cero operaciones ejecutadas por el proceso. No se llamó a `order_send()` ni `order_check()`.
 
-La revisión local anterior se hizo en Windows 10 build 19045 con Python 3.13.14, en la rama `codex/phase1-local-closure` y sobre el commit `d099610f03eeeef0576aa541187a635bbcb4d9f0`.
+## Pendiente para una decisión de cierre
 
-## Resultado histórico de la revisión local anterior
+1. MT5 DEMO: no hay una cuenta DEMO disponible. El resultado de cuenta REAL es una validación independiente y no se presenta como DEMO.
+2. DeepSeek: existe un PASS remoto del 11/11 en Python 3.12.14/Pydantic 2.14.2, pero el entorno Windows usa Python 3.13.14/Pydantic 2.13.5. No se repitió una llamada facturable; se requiere autorización para hacerlo en este runtime.
+3. Regresión histórica: se explicaron los cambios de estado de expiración y una parte de las diferencias de selección por capacidad. Persisten selecciones sin testigo directo (portfolio 159; stateful 77) y no se pueden atribuir métricas antiguas que carecen de snapshots por operación.
+4. Costes: las hipótesis de comisiones y slippage no se han contrastado con tarifas reales del bróker.
 
-| Comprobación | Estado | Evidencia |
-|---|---|---|
-| Suite `test_phase1_*.py` | PASS | 85 pruebas; 84 PASS y una omisión específica POSIX. Locks y procesos concurrentes se probaron en Windows. |
-| 21 pruebas offline históricas | PASS | Ejecutadas por `scripts/validate_phase1.py`; ninguna falló. |
-| Look-ahead | PASS | `test_no_lookahead.py`: 375 checks. |
-| Riesgo diario y exposición USD | PASS (lógica) / PENDING (MT5 real) | Casos offline, procesos, persistencia y deals mock PASS; lectura de cuenta DEMO no ejecutada. |
-| Seguridad DRY RUN | PASS | Cero llamadas `order_send` en el proyecto; no hubo órdenes ni señales operativas. |
-| MT5 demo | PENDING en aquella ejecución; actualmente NOT APPLICABLE | No se pudo verificar DEMO entonces. La cuenta DEMO no está disponible; la validación REAL de solo lectura posterior pasó de forma independiente. |
-| Ollama live | PASS | `qwen3:4b`; JSON/Pydantic/evidencia válidos; guardas de respuesta inválida PASS. |
-| DeepSeek live | PASS remoto / PENDING Windows | El smoke de una única llamada del 11/11/2026 pasó en Python 3.12.14/Pydantic 2.14.2. La validación del runtime local Windows/Python 3.13.14 sigue pendiente; evidencia nueva abajo. |
-| Ocho escenarios de backtest | PASS | Portfolio y stateful BASE×2, CONSERVATIVE y STRESS sobre dataset congelado verificado. |
-| Repetibilidad BASE | PASS | Igualdad de agregados y operaciones con identificadores estables en ambos modos. |
-| Regresión contra métricas anteriores | PENDING | Las diferencias agregadas no se presumieron esperadas; faltan snapshots históricos por operación para atribuirlas. |
+La prueba MT5 REAL está en [`reports/mt5_real_readonly_summary.json`](../reports/mt5_real_readonly_summary.json); la actualización histórica del 11/11 está en [`reports/mt5_history_refresh_summary.json`](../reports/mt5_history_refresh_summary.json) y los CSV versionados en su carpeta indicada. La matriz de resultados, cifras económicas y trazabilidad están en [`docs/FASE1_VALIDACION.md`](FASE1_VALIDACION.md) y [`docs/FASE1_RESULTADO_FINAL.md`](FASE1_RESULTADO_FINAL.md). El estado programático vigente está en [`reports/phase1_validation.json`](../reports/phase1_validation.json).
 
-## Actualización: validación REAL de solo lectura
+## Operaciones manuales necesarias
 
-| Comprobación | Estado actual | Evidencia |
-|---|---|---|
-| Tipo de cuenta | PASS: REAL | `reports/mt5_real_readonly_summary.json`; no se publica el número de cuenta ni identificadores privados. |
-| Bloqueo de trading por API | PASS | `read_only_safety.tradeapi_disabled=true`. |
-| Datos del bróker | PASS | Símbolos y metadatos EURUSD, USDCAD y AUDUSD. |
-| Motor de riesgo | PASS | Contraste de riesgo con cálculos disponibles del bróker. |
-| Límite diario | PASS | Historial de deals evaluado en la validación. |
-| Cuenta DEMO | NOT APPLICABLE | No hay cuenta DEMO disponible en el entorno; no se ha marcado como superada. |
-| Autorización de órdenes | NO EXISTE | No se enviaron órdenes; esta fase no cambia ni habilita ejecución. |
+- Si se desea completar la validación MT5 original, conectar manualmente a una cuenta DEMO, mantener deshabilitado **Disable algorithmic trading via external Python API** y ejecutar `python scripts/validate_phase1_mt5.py`.
+- Autorizar explícitamente una única prueba DeepSeek live nueva para el runtime local. No pegar API keys en el chat.
+- Revisar las diferencias históricas pendientes con snapshots comparables o registrar su revisión antes de cambiar su estado.
+- Tras resolver las comprobaciones, ejecutar `python scripts/validate_phase1.py`. El código de salida es 0 para `PHASE1_COMPLETE`, 2 para `INCOMPLETE_PENDING_MANUAL` y 1 para FAIL.
 
-La comprobación REAL es de solo lectura, puntual y no sustituye las pruebas de proveedor ni la revisión histórica pendientes. No se debe cambiar de cuenta ni activar trading API para repetirla.
-
-## Correcciones incluidas
-
-1. Los informes MT5 detallados se guardan en `reports/private/`, excluido de Git. El informe público contiene estado, motivo seguro y hashes de procedencia, no balance, equity, servidor ni número de cuenta. Los informes existentes se archivaron antes de generar el resumen nuevo.
-2. La reutilización de evidencia compara el contenido del código, configuración, dependencias, runtime y dataset; la rama o el SHA de merge no invalidan un resultado si los hashes pertinentes coinciden. Las reutilizaciones quedan registradas.
-3. `daily_loss_limit_evaluation` forma parte del estado global. Tanto permitir propuestas como bloquear por alcanzar el límite son comportamientos válidos; la falta de datos o un error de cálculo hace fallar la comprobación.
-4. Las regresiones históricas separan cambios técnicos, correcciones de simulador registradas y diferencias económicas no atribuibles. La corrección de `src/historical_execution.py` está asociada a hashes antes/después. Como los informes de origen son agregados, sus cambios económicos siguen PENDING.
-
-## Comparativa económica
-
-Los siguientes cortes mantienen fijo el umbral/modo `65 / LIMIT`; no son una selección para optimizar estadísticas. El spread histórico bid/ask ya está incorporado. Los costes BASE de comisión/slippage son cero porque no hay tarifas reales verificadas; CONSERVATIVE y STRESS son hipótesis de sensibilidad, no cotizaciones del bróker.
-
-### Portfolio `65 / LIMIT`
-
-| Escenario | Oportunidades | Señales | Planes aceptados/rechazados | Ejecutadas/cerradas | Ambiguas | Bruto EUR | Coste cerrado/incurrido EUR | Neto EUR | PF neto | Expectativa neta EUR | DD neto EUR |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| BASE | 10.284 | 1.737 | 1.737 / 266 | 686 / 628 | 28 | 25,62 | 0 / 0 | 25,62 | 1,118 | 0,041 | 10,94 |
-| CONSERVATIVE | 10.284 | 1.736 | 1.736 / 266 | 685 / 627 | 28 | 26,12 | 53,64 / 58,58 | -27,53 | 0,890 | -0,044 | 36,69 |
-| STRESS | 10.284 | 1.748 | 1.748 / 265 | 689 / 632 | 28 | 18,29 | 92,68 / 101,00 | -74,39 | 0,735 | -0,118 | 77,59 |
-
-### Stateful `65 / LIMIT`
-
-Cada fila corresponde a un par. La matriz completa por umbral/modo está en `reports/phase1_validation.json`.
-
-| Escenario | Par | Oportunidades | Señales/planes aceptados | Rechazados | Ejecutadas/cerradas | Ambiguas | Bruto EUR | Coste cerrado/incurrido EUR | Neto EUR | PF neto | Expectativa neta EUR | DD neto EUR |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| BASE | EURUSD | 3.271 | 710 | 124 | 277 / 251 | 26 | 15,05 | 0 / 0 | 15,05 | 1,174 | 0,060 | 13,59 |
-| BASE | USDCAD | 3.651 | 729 | 87 | 275 / 257 | 18 | 20,93 | 0 / 0 | 20,93 | 1,382 | 0,081 | 7,34 |
-| BASE | AUDUSD | 3.362 | 685 | 114 | 264 / 245 | 19 | -14,89 | 0 / 0 | -14,89 | 0,823 | -0,061 | 24,11 |
-| CONSERVATIVE | EURUSD | 3.271 | 710 | 124 | 277 / 251 | 26 | 15,05 | 21,91 / 24,18 | -6,86 | 0,936 | -0,027 | 23,28 |
-| CONSERVATIVE | USDCAD | 3.651 | 728 | 87 | 274 / 256 | 18 | 21,42 | 21,10 / 22,58 | 0,32 | 1,010 | 0,001 | 10,89 |
-| CONSERVATIVE | AUDUSD | 3.362 | 685 | 114 | 264 / 245 | 19 | -14,89 | 21,39 / 23,05 | -36,28 | 0,644 | -0,148 | 40,17 |
-| STRESS | EURUSD | 3.271 | 712 | 127 | 279 / 253 | 26 | 13,57 | 38,43 / 42,38 | -24,86 | 0,788 | -0,098 | 34,86 |
-| STRESS | USDCAD | 3.651 | 736 | 90 | 277 / 259 | 18 | 19,01 | 35,55 / 38,02 | -16,54 | 0,795 | -0,064 | 21,01 |
-| STRESS | AUDUSD | 3.362 | 686 | 114 | 265 / 246 | 19 | -18,51 | 37,37 / 40,26 | -55,88 | 0,527 | -0,227 | 56,63 |
-
-## Revisión histórica
-
-El dataset congelado `0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3` se recuperó del commit `1ef0faf7600b866236f75cb7c229fc8a3b66973e` y se verificó antes de usarlo. La copia se creó en un directorio temporal; el archivo de trabajo local no se modificó.
-
-Las oportunidades técnicas se mantuvieron invariantes. El validador detectó una corrección documentada del simulador: validación estricta de barras/planes, manejo del borde de expiración, estado pendiente al fin del dataset y costes para operaciones ambiguas con fill. Sin embargo, los informes anteriores no incluyen operaciones con IDs estables. Las diferencias agregadas frente a baseline/pre-cierre son 111, 256, 175 y 492; permanecen sin atribución individual y no se marcan como PASS.
-
-## Intervención manual
-
-- La prueba DEMO no aplica mientras no exista una cuenta DEMO; no se debe cambiar de cuenta para simular ese PASS.
-- Si se autoriza más adelante una nueva comprobación DeepSeek, usar las dependencias del runtime que se pretende validar y cargar la clave desde ajustes seguros, nunca desde el chat.
-- Revisar la regresión agregada con snapshots por operación de la versión anterior y la actual sobre el mismo dataset, o reproducir la versión anterior para obtenerlos.
-
-La evidencia, estados exactos, huellas y diferencias están en [`docs/FASE1_RESULTADO_FINAL.md`](FASE1_RESULTADO_FINAL.md), [`reports/phase1_validation.json`](../reports/phase1_validation.json) y el resumen público MT5 enlazado arriba. La Fase 1 sigue pendiente por las comprobaciones restantes; en ningún caso este documento autoriza operaciones reales.
-
-## Nota de seguimiento: smoke remoto DeepSeek — 11 de noviembre de 2026
-
-Se realizó una sola petición autorizada a Chat Completions (`https://api.deepseek.com`) con el alias `deepseek-flash`. El proveedor informó el mismo alias; `finish_reason=stop`, JSON y esquema Pydantic válidos, estado `PASS` y evidencia limitada a `LIVE_PROBE`. El payload fue exclusivamente diagnóstico y sintético. No se ejecutaron pipelines de mercado.
-
-- Resultado: `DEEPSEEK_REMOTE_LIVE_PASS`; 1 intento, sin reintentos.
-- Preflight: tope de salida 256 tokens, 30 s, `temperature=0`, thinking desactivado; cota de entrada 3.024 tokens y coste máximo calculado de `0.0012144 USD`. Se aplicaron tarifas públicas oficiales en USD, tier pico sin caché: entrada `0.30 USD/1M`, salida `1.20 USD/1M`; fuentes y hora UTC están en el informe JSON.
-- Uso informado: 203 tokens de entrada y 17 de salida; coste estimado conservador `0.000081300 USD`. No es un cargo confirmado por el panel de facturación.
-- Registro: la consulta y respuesta se persistieron en un SQLite privado excluido de Git. El evento es inelegible y está aislado del ledger de investigación; el resumen público publica únicamente metadatos, hashes y conteos.
-- Comprobaciones offline: 72 pruebas PASS, 0 FAIL, 0 SKIPPED, repetidas por el wrapper antes de la llamada.
-- Seguridad: 0 conexiones MT5, 0 órdenes, 0 señales operativas y 0 credenciales publicadas. La clave solo se consultó como disponibilidad booleana.
-- Runtime remoto: CPython `3.12.14`, Pydantic `2.14.2`, OpenAI SDK `3.41.0`; commit base `fc4f9da0f3c42a461f55993adf47bd1269237339`, rama `codex/phase1-deepseek-remote-live-smoke`.
-
-La evidencia pública está en [`reports/phase1_deepseek_remote/validation_summary.json`](../reports/phase1_deepseek_remote/validation_summary.json) y el resumen técnico en [`docs/FASE1_DEEPSEEK_REMOTO_RESULTADOS.md`](FASE1_DEEPSEEK_REMOTO_RESULTADOS.md). Esta prueba solo valida el contrato del proveedor en este runtime. No valida Windows/Python 3.13, el rendimiento predictivo, la rentabilidad ni el valor añadido de DeepSeek. No se debe repetir la opción `--authorize-single-request`: el único intento autorizado ya se consumió.
+Hasta entonces, el sistema debe seguir exclusivamente en DRY RUN. Este cierre no habilita trading ni autoriza comenzar la Fase 2.

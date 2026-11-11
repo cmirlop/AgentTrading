@@ -95,6 +95,49 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
         ])
         self.assertEqual((status, decision), ("PASS", "BLOCKED_BY_CONFIGURED_LIMIT"))
 
+    def test_margin_is_calculated_hypothetically_for_sized_volume(self):
+        class RiskAPI:
+            ORDER_TYPE_BUY = 0
+            ORDER_TYPE_SELL = 1
+
+            def __init__(self):
+                self.margin_calls = []
+
+            def terminal_info(self):
+                return SimpleNamespace(connected=True, tradeapi_disabled=True)
+
+            def order_calc_profit(self, order_type, symbol, volume, entry, stop):
+                return -10.0
+
+            def order_calc_margin(self, order_type, symbol, volume, entry):
+                self.margin_calls.append((order_type, symbol, volume, entry))
+                return 123.45
+
+        api = RiskAPI()
+        metadata = {
+            "trade_tick_size": 0.0001,
+            "trade_tick_value_loss": 1.0,
+            "trade_contract_size": 100000.0,
+            "volume_min": 0.01,
+            "volume_max": 100.0,
+            "volume_step": 0.01,
+            "currency_base": "EUR",
+            "currency_profit": "USD",
+        }
+        result = validator._risk_check(
+            api,
+            SimpleNamespace(equity=10000.0, balance=10000.0),
+            "USD",
+            "EURUSD",
+            metadata,
+            SimpleNamespace(ask=1.1000, bid=1.0999),
+            {"EURUSD": 1.1},
+        )
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(len(api.margin_calls), 2)
+        self.assertTrue(all(item["margin_calculation_status"] == "PASS" for item in result["scenarios"].values()))
+        self.assertTrue(all(item["broker_order_calc_margin"] == 123.45 for item in result["scenarios"].values()))
+
     def test_missing_portfolio_risk_data_remains_pending(self):
         status, decision = validator._portfolio_decision(["EXISTING_POSITION_RISK_UNAVAILABLE"])
         self.assertEqual((status, decision), ("PENDING", "INSUFFICIENT_DATA"))

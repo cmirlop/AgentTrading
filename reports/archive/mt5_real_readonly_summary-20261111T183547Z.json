@@ -1,0 +1,48 @@
+{
+  "account_type": "REAL",
+  "broker_data": "PASS",
+  "connection": "PASS",
+  "daily_history_status": "PASS",
+  "daily_loss_control": "PASS",
+  "demo_validation": "PENDING_NOT_APPLICABLE_NO_DEMO_ACCOUNT",
+  "errors": [],
+  "generated_utc": "2026-11-11T18:35:47.709998+00:00",
+  "history_root": null,
+  "open_position_count": 0,
+  "orders_sent_by_process": 0,
+  "pending_order_count": 0,
+  "read_only_safety": {
+    "status": "PASS",
+    "tradeapi_disabled": true
+  },
+  "risk_engine": "PASS",
+  "schema_version": 1,
+  "status": "MT5_REAL_READ_ONLY_PENDING",
+  "symbols": {
+    "AUDUSD": {
+      "history": {},
+      "metadata_valid": true,
+      "risk_status": "PASS",
+      "spread_points": 9.0,
+      "spread_quality": "PASS",
+      "status": "PASS"
+    },
+    "EURUSD": {
+      "history": {},
+      "metadata_valid": true,
+      "risk_status": "PASS",
+      "spread_points": 8.0,
+      "spread_quality": "PASS",
+      "status": "PASS"
+    },
+    "USDCAD": {
+      "history": {},
+      "metadata_valid": true,
+      "risk_status": "PASS",
+      "spread_points": 10.0,
+      "spread_quality": "PASS",
+      "status": "PASS"
+    }
+  },
+  "trades_executed_by_process": 0
+}

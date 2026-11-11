@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-11-11T20:28:04Z",
+  "validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
+  "branch": "codex/phase1-final-local-real-readonly-closure",
+  "overall_phase1_status": "INCOMPLETE_PENDING_MANUAL",
+  "mt5_real_read_only": {
+    "status": "MT5_REAL_READ_ONLY_PASS",
+    "account_type": "REAL",
+    "connection": "PASS",
+    "tradeapi_disabled": true,
+    "orders_sent_by_process": 0,
+    "trades_executed_by_process": 0,
+    "order_send_called": false,
+    "order_check_called": false,
+    "demo_validation": "PENDING_NOT_APPLICABLE_NO_DEMO_ACCOUNT",
+    "open_positions_observed": 0,
+    "pending_orders_observed": 0,
+    "daily_history": "PASS",
+    "daily_loss_control": "PASS",
+    "hypothetical_risk_calculations": "PASS",
+    "symbols": {
+      "EURUSD": {"status": "PASS", "metadata": "PASS", "risk": "PASS", "observed_spread_points": 9.0},
+      "USDCAD": {"status": "PASS", "metadata": "PASS", "risk": "PASS", "observed_spread_points": 9.0},
+      "AUDUSD": {"status": "PASS", "metadata": "PASS", "risk": "PASS", "observed_spread_points": 9.0}
+    },
+    "public_report": "reports/mt5_real_readonly_summary.json"
+  },
+  "market_history_refresh": {
+    "status": "UPDATED",
+    "generated_at_utc": "2026-11-11T20:23:00.097058Z",
+    "output_directory": "data/market_history/mt5_real_readonly/20261111T202300.097058Z",
+    "symbols": ["EURUSD", "USDCAD", "AUDUSD"],
+    "timeframes": ["M5", "M15", "H1", "H4", "D1"],
+    "csv_files": 15,
+    "downloaded_bars_total": 7998,
+    "downloaded_bars_per_symbol": 2666,
+    "total_closed_rows": 7998,
+    "interpretation": "Fetched rows written to a new timestamped snapshot; no existing/frozen dataset was overwritten or merged.",
+    "manifest_sha256": "1b671bd07e91160434fdd9e2a1c7b3c2c6346f36710e3d05bf218bc1a7d3d56e",
+    "latest_closed_bar_utc": {
+      "M5": "2026-11-09T20:15:00Z",
+      "M15": "2026-11-09T20:00:00Z",
+      "H1": "2026-11-09T19:00:00Z",
+      "H4": "2026-11-09T16:00:00Z",
+      "D1": "2026-11-10T00:00:00Z"
+    },
+    "data_quality": {
+      "files_over_1000_rows": 0,
+      "duplicate_timestamps": 0,
+      "out_of_order_timestamps": 0,
+      "invalid_ohlc_spread_or_tick_volume_rows": 0,
+      "zero_spread_rows": 6516,
+      "nonzero_spread_rows": 1482
+    },
+    "validation": "PASS",
+    "known_data_limitations": ["Spread is present but zero on 6,516 of 7,998 rows; it is not reliable evidence of transaction costs."],
+    "evidence": "reports/mt5_history_refresh_summary.json"
+  },
+  "ollama": {
+    "status": "PASS",
+    "provider": "ollama",
+    "configured_model": "qwen3:4b",
+    "reported_model": "qwen3:4b",
+    "calls_made": 1,
+    "json_valid": true,
+    "pydantic_validation": "PASS",
+    "allowed_evidence_validation": "PASS",
+    "invalid_response_guards": "PASS",
+    "operational_signal_created": false,
+    "orders_executed": 0,
+    "report": "reports/phase1_final_local/ollama_live_20261111T1900Z.json"
+  },
+  "deepseek": {
+    "local_runtime_status": "PENDING",
+    "remote_evidence_status": "DEEPSEEK_REMOTE_LIVE_PASS",
+    "remote_model": "deepseek-flash",
+    "remote_calls_reported": 1,
+    "remote_retries_reported": 0,
+    "remote_runtime": {"python": "3.12.14", "pydantic": "2.14.2"},
+    "local_runtime": {"python": "3.13.14", "pydantic": "2.13.5"},
+    "reuse_decision": "NOT_REUSED_RUNTIME_DEPENDENCY_MISMATCH",
+    "new_local_provider_call_made": false,
+    "pending_reason": "Current Windows runtime has not been live-tested; a new provider call requires explicit authorization.",
+    "remote_report": "reports/phase1_deepseek_remote/validation_summary.json"
+  },
+  "safety_scope": {
+    "dry_run_only": true,
+    "trading_operations_performed": 0,
+    "credentials_published": false
+  }
+}

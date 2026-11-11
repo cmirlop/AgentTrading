@@ -1,6 +1,7 @@
 import os
 import sys
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -8,7 +9,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.validate_phase1_llm_live import ProbeAnswer, _invalid_response_guard_check, validate
+from scripts.validate_phase1_llm_live import (
+    ProbeAnswer,
+    _invalid_response_guard_check,
+    _structured_chat_with_temporary_ledger,
+    validate,
+)
 from src.agents.deepseek_client import _api_failure_code
 from src.agents.llm_client import LLMProviderError
 
@@ -57,23 +63,63 @@ class LiveProviderValidatorOfflineTests(unittest.TestCase):
             "DEEPSEEK_API_KEY": "unit-test-only",
             "DEEPSEEK_MODEL": "deepseek-flash",
         }):
-            with patch("src.agents.llm_client.structured_chat", return_value=(answer, metadata)) as request:
+            with patch(
+                "scripts.validate_phase1_llm_live._structured_chat_with_temporary_ledger",
+                return_value=(answer, metadata, {"status": "PASS", "isolated_temporary_ledger": True}),
+            ) as request:
                 report = validate("deepseek", authorize_deepseek=True)
         self.assertEqual(report["status"], "PASS")
         self.assertEqual(report["calls_made"], 1)
         self.assertEqual(report["provider_metadata"]["completion_tokens"], 4)
         self.assertEqual(request.call_count, 1)
-        self.assertTrue(request.call_args.kwargs["return_metadata"])
+        self.assertEqual(request.call_args.args[0], ProbeAnswer)
         self.assertFalse(report["api_key_logged"])
         self.assertFalse(report["market_order_sent"])
 
     def test_invalid_provider_response_never_becomes_signal(self):
         with patch.dict(os.environ, {"DEEPSEEK_API_KEY": "unit-test-only"}):
-            with patch("src.agents.llm_client.structured_chat", side_effect=LLMProviderError("LLM_INVALID_EVIDENCE")):
+            with patch("scripts.validate_phase1_llm_live._structured_chat_with_temporary_ledger", side_effect=LLMProviderError("LLM_INVALID_EVIDENCE")):
                 report = validate("deepseek", authorize_deepseek=True)
         self.assertEqual(report["status"], "FAIL")
         self.assertEqual(report["calls_made"], 1)
         self.assertFalse(report["operational_signal_created"])
+
+    def test_probe_ledger_is_temporary_ineligible_and_persists_valid_response(self):
+        from src.event_ledger import record_llm_call, record_llm_query_started
+
+        answer = ProbeAnswer(status="PASS", evidence_used=["LIVE_PROBE"])
+
+        def fake_structured_chat(schema, prompt, payload, *, return_metadata):
+            self.assertTrue(return_metadata)
+            record_llm_query_started(role="LIVE_PROVIDER_CONTRACT_PROBE", policy_id=None, payload=payload)
+            record_llm_call(
+                schema_name=schema.__name__,
+                provider="ollama",
+                model="qwen3:4b",
+                prompt=prompt,
+                payload=payload,
+                allowed_evidence=["LIVE_PROBE"],
+                requested_at=datetime.now(timezone.utc).isoformat(),
+                result=answer,
+                metadata={"provider_reported_model": "qwen3:4b"},
+                agent_role="UNREGISTERED_SCHEMA",
+                agent_stage="DIAGNOSTIC_ONLY",
+            )
+            return answer, {"provider_reported_model": "qwen3:4b"}
+
+        with patch("src.agents.llm_client.structured_chat", side_effect=fake_structured_chat):
+            response, metadata, ledger = _structured_chat_with_temporary_ledger(
+                ProbeAnswer,
+                "diagnostic only",
+                {"allowed_evidence_ids": ["LIVE_PROBE"]},
+            )
+        self.assertEqual(response.status, "PASS")
+        self.assertEqual(metadata["provider_reported_model"], "qwen3:4b")
+        self.assertEqual(ledger["status"], "PASS")
+        self.assertTrue(ledger["isolated_temporary_ledger"])
+        self.assertEqual(ledger["valid_response_events"], 1)
+        self.assertEqual(ledger["eligible_events"], 0)
+        self.assertEqual(ledger["orders_executed"], 0)
 
 
 if __name__ == "__main__":
