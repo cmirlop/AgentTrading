@@ -177,7 +177,7 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
                 self.assertNotIn(node.id, forbidden_attributes)
         self.assertTrue(validator.READ_ONLY_METHODS.issubset({
             "account_info", "positions_get", "orders_get", "history_deals_get",
-            "symbol_info", "symbol_info_tick", "copy_rates_from_pos",
+            "symbol_info", "symbol_info_tick", "copy_rates_from_pos", "copy_rates_range",
             "order_calc_profit", "order_calc_margin",
         }))
 

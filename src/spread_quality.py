@@ -8,6 +8,7 @@ assumptions rather than observed broker quotes.
 from __future__ import annotations
 
 from math import isfinite
+from datetime import datetime, timezone
 from typing import Any
 
 import pandas as pd
@@ -34,6 +35,8 @@ UTC_SESSION_BINS = (
 
 def classify_spread(value: Any) -> str:
     if value is None or value is pd.NA:
+        return "MISSING"
+    if isinstance(value, str) and not value.strip():
         return "MISSING"
     try:
         if pd.isna(value):
@@ -91,5 +94,99 @@ def audit_spread_values(values: pd.Series) -> dict[str, Any]:
         "p99_all_numeric_points": float(numeric.quantile(0.99)) if numeric.notna().any() else None,
         "max_points": float(numeric.max()) if numeric.notna().any() else None,
         "values_at_least_20_points": int((numeric >= 20).sum()),
+        "source_values_modified": False,
+    }
+
+
+def _percentile(values: list[float], percentile: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * percentile
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    weight = position - lower
+    return ordered[lower] * (1 - weight) + ordered[upper] * weight
+
+
+def audit_spread_timeline(records: list[tuple[datetime, Any]]) -> dict[str, Any]:
+    """Summarize raw MT5 spread points without imputing or converting them.
+
+    ``OBSERVED_VALID`` only means that a positive finite value was present in
+    the historical field. It does not establish that it is a complete
+    bid/ask execution-cost series.
+    """
+    normalized: list[tuple[datetime, Any, str]] = []
+    counts = {state: 0 for state in SPREAD_QUALITY_STATES}
+    for timestamp, value in records:
+        if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+            raise ValueError("SPREAD_TIMESTAMP_MUST_BE_TIMEZONE_AWARE")
+        utc_time = timestamp.astimezone(timezone.utc)
+        state = classify_spread(value)
+        counts[state] += 1
+        normalized.append((utc_time, value, state))
+
+    positive: list[float] = []
+    for _, value, state in normalized:
+        if state == "OBSERVED_VALID":
+            positive.append(float(value))
+
+    sessions: dict[str, list[tuple[Any, str]]] = {label: [] for _, _, label in UTC_SESSION_BINS}
+    by_month: dict[str, list[str]] = {}
+    for timestamp, value, state in normalized:
+        sessions[utc_session(timestamp.hour)].append((value, state))
+        by_month.setdefault(timestamp.strftime("%Y-%m"), []).append(state)
+
+    def summarize(items: list[tuple[Any, str]]) -> dict[str, Any]:
+        state_counts = {state: sum(item_state == state for _, item_state in items) for state in SPREAD_QUALITY_STATES}
+        observed = [float(value) for value, state in items if state == "OBSERVED_VALID"]
+        total = len(items)
+        return {
+            "records": total,
+            "quality_counts": state_counts,
+            "zero_percent": round(100 * state_counts["OBSERVED_ZERO_UNVERIFIED"] / total, 4) if total else None,
+            "positive_percent": round(100 * state_counts["OBSERVED_VALID"] / total, 4) if total else None,
+            "missing_percent": round(100 * state_counts["MISSING"] / total, 4) if total else None,
+            "invalid_percent": round(100 * state_counts["INVALID"] / total, 4) if total else None,
+            "positive_points_percentiles": {
+                f"p{int(q * 100)}": _percentile(observed, q) for q in (0.0, 0.5, 0.9, 0.95, 0.99, 1.0)
+            },
+        }
+
+    monthly = []
+    for month, states in sorted(by_month.items()):
+        observed_count = sum(state == "OBSERVED_VALID" for state in states)
+        zero_count = sum(state == "OBSERVED_ZERO_UNVERIFIED" for state in states)
+        monthly.append({
+            "month_utc": month,
+            "records": len(states),
+            "positive_observed_records": observed_count,
+            "zero_unverified_records": zero_count,
+            "positive_observed_coverage_percent": round(100 * observed_count / len(states), 4) if states else None,
+            "period_has_no_observed_positive_spreads": bool(states) and observed_count == 0,
+        })
+
+    ordered_times = [timestamp for timestamp, _, _ in normalized]
+    return {
+        "records": len(normalized),
+        "quality_counts": counts,
+        "zero_percent": round(100 * counts["OBSERVED_ZERO_UNVERIFIED"] / len(normalized), 4) if normalized else None,
+        "positive_percent": round(100 * counts["OBSERVED_VALID"] / len(normalized), 4) if normalized else None,
+        "missing_percent": round(100 * counts["MISSING"] / len(normalized), 4) if normalized else None,
+        "invalid_percent": round(100 * counts["INVALID"] / len(normalized), 4) if normalized else None,
+        "positive_points_percentiles": {
+            f"p{int(q * 100)}": _percentile(positive, q) for q in (0.0, 0.5, 0.9, 0.95, 0.99, 1.0)
+        },
+        "observed_positive_spread_coverage": {
+            "records_with_positive_value": len(positive),
+            "first_positive_utc": min((t for t, _, state in normalized if state == "OBSERVED_VALID"), default=None).isoformat() if positive else None,
+            "last_positive_utc": max((t for t, _, state in normalized if state == "OBSERVED_VALID"), default=None).isoformat() if positive else None,
+            "months_with_positive_values": sum(not item["period_has_no_observed_positive_spreads"] for item in monthly),
+            "total_months": len(monthly),
+        },
+        "by_utc_session": {session: summarize(items) for session, items in sessions.items()},
+        "by_utc_month": monthly,
+        "spread_units": "raw MT5 points; no point-to-price conversion",
+        "imputation_applied": False,
         "source_values_modified": False,
     }

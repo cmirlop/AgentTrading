@@ -1,6 +1,11 @@
 api.txt.txt
 .env
 reports/private/
+
+# Python bytecode and interpreter caches
+__pycache__/
+*.py[cod]
+*$py.class
 reports/*_private.json
 data/state/daily_risk_guard.json
 data/state/daily_risk_guard.json.lock

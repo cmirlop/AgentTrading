@@ -1,10 +1,14 @@
 # Cierre local de Fase 1 — AgentTrading
 
-**Estado: `INCOMPLETE_PENDING_MANUAL`.** La validación offline y la ejecución simulada pasaron; faltan una sesión MT5 DEMO verificable, una prueba DeepSeek con las dependencias Python actuales y la atribución de diferencias históricas agregadas.
+**Estado vigente al 11 de noviembre de 2026: `INCOMPLETE_PENDING_MANUAL`.** La validación `MT5_REAL_READ_ONLY_PASS` del 9 de noviembre es una comprobación legítima e independiente: verificó una cuenta REAL en solo lectura, `tradeapi_disabled=True`, datos del bróker, motor de riesgo y límite diario. No hay una cuenta DEMO disponible; su comprobación es `NOT_APPLICABLE_NO_DEMO_ACCOUNT`, no un PASS ficticio ni un requisito para falsear.
 
-La revisión se hizo en Windows 10 build 19045 con Python 3.13.14, en la rama `codex/phase1-local-closure` y sobre el commit `d099610f03eeeef0576aa541187a635bbcb4d9f0`. No se creó commit, no se hizo push ni merge. La Fase 2 no debe comenzar todavía.
+La validación pública está en [`reports/mt5_real_readonly_summary.json`](../reports/mt5_real_readonly_summary.json). Registra cero órdenes y cero operaciones ejecutadas por el proceso. Esta evidencia no autoriza órdenes ni cambia la política DRY RUN. Siguen pendientes otras comprobaciones de Fase 1, incluida la revisión de DeepSeek en el runtime local actual y la atribución de diferencias históricas agregadas.
 
-## Resultado de las comprobaciones
+La tabla y el informe de la revisión local anterior se conservan debajo como registro histórico; sus estados DEMO describen aquella ejecución y no sustituyen la validación REAL posterior.
+
+La revisión local anterior se hizo en Windows 10 build 19045 con Python 3.13.14, en la rama `codex/phase1-local-closure` y sobre el commit `d099610f03eeeef0576aa541187a635bbcb4d9f0`.
+
+## Resultado histórico de la revisión local anterior
 
 | Comprobación | Estado | Evidencia |
 |---|---|---|
@@ -13,12 +17,26 @@ La revisión se hizo en Windows 10 build 19045 con Python 3.13.14, en la rama `c
 | Look-ahead | PASS | `test_no_lookahead.py`: 375 checks. |
 | Riesgo diario y exposición USD | PASS (lógica) / PENDING (MT5 real) | Casos offline, procesos, persistencia y deals mock PASS; lectura de cuenta DEMO no ejecutada. |
 | Seguridad DRY RUN | PASS | Cero llamadas `order_send` en el proyecto; no hubo órdenes ni señales operativas. |
-| MT5 demo | PENDING | `ACCOUNT_NOT_VERIFIABLY_DEMO`; la validación se detuvo antes de leer mercado, posiciones, órdenes o historial. |
+| MT5 demo | PENDING en aquella ejecución; actualmente NOT APPLICABLE | No se pudo verificar DEMO entonces. La cuenta DEMO no está disponible; la validación REAL de solo lectura posterior pasó de forma independiente. |
 | Ollama live | PASS | `qwen3:4b`; JSON/Pydantic/evidencia válidos; guardas de respuesta inválida PASS. |
 | DeepSeek live | PENDING | El PASS anterior se verificó por contenido y código, pero usó Python 3.12.14/Pydantic 2.14.2 frente a 3.13.14/2.13.5 actuales. No hubo llamada nueva. |
 | Ocho escenarios de backtest | PASS | Portfolio y stateful BASE×2, CONSERVATIVE y STRESS sobre dataset congelado verificado. |
 | Repetibilidad BASE | PASS | Igualdad de agregados y operaciones con identificadores estables en ambos modos. |
 | Regresión contra métricas anteriores | PENDING | Las diferencias agregadas no se presumieron esperadas; faltan snapshots históricos por operación para atribuirlas. |
+
+## Actualización: validación REAL de solo lectura
+
+| Comprobación | Estado actual | Evidencia |
+|---|---|---|
+| Tipo de cuenta | PASS: REAL | `reports/mt5_real_readonly_summary.json`; no se publica el número de cuenta ni identificadores privados. |
+| Bloqueo de trading por API | PASS | `read_only_safety.tradeapi_disabled=true`. |
+| Datos del bróker | PASS | Símbolos y metadatos EURUSD, USDCAD y AUDUSD. |
+| Motor de riesgo | PASS | Contraste de riesgo con cálculos disponibles del bróker. |
+| Límite diario | PASS | Historial de deals evaluado en la validación. |
+| Cuenta DEMO | NOT APPLICABLE | No hay cuenta DEMO disponible en el entorno; no se ha marcado como superada. |
+| Autorización de órdenes | NO EXISTE | No se enviaron órdenes; esta fase no cambia ni habilita ejecución. |
+
+La comprobación REAL es de solo lectura, puntual y no sustituye las pruebas de proveedor ni la revisión histórica pendientes. No se debe cambiar de cuenta ni activar trading API para repetirla.
 
 ## Correcciones incluidas
 
@@ -63,8 +81,8 @@ Las oportunidades técnicas se mantuvieron invariantes. El validador detectó un
 
 ## Intervención manual
 
-- Conectar MT5 manualmente a una cuenta DEMO. El script no cambiará de cuenta. Mantener deshabilitado el trading vía API Python y volver a ejecutar `python scripts/validate_phase1_mt5.py`.
-- Autorizar expresamente una única llamada DeepSeek en el futuro si se quiere actualizar esa evidencia. Cargar la clave desde un almacén seguro; no pegarla en el chat.
+- La prueba DEMO no aplica mientras no exista una cuenta DEMO; no se debe cambiar de cuenta para simular ese PASS.
+- Si se autoriza más adelante una nueva comprobación DeepSeek, usar las dependencias del runtime que se pretende validar y cargar la clave desde ajustes seguros, nunca desde el chat.
 - Revisar la regresión agregada con snapshots por operación de la versión anterior y la actual sobre el mismo dataset, o reproducir la versión anterior para obtenerlos.
 
-La evidencia, estados exactos, huellas y diferencias están en [`docs/FASE1_RESULTADO_FINAL.md`](FASE1_RESULTADO_FINAL.md) y [`reports/phase1_validation.json`](../reports/phase1_validation.json). No comenzar Fase 2 mientras MT5, DeepSeek o la revisión histórica sigan pendientes.
+La evidencia, estados exactos, huellas y diferencias están en [`docs/FASE1_RESULTADO_FINAL.md`](FASE1_RESULTADO_FINAL.md), [`reports/phase1_validation.json`](../reports/phase1_validation.json) y el resumen público MT5 enlazado arriba. La Fase 1 sigue pendiente por las comprobaciones restantes; en ningún caso este documento autoriza operaciones reales.
