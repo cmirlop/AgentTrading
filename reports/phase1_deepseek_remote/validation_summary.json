@@ -1,0 +1,233 @@
+{
+  "actual_cost_estimate_usd": "0.000081300",
+  "actual_cost_status": "ESTIMATED_FROM_PROVIDER_USAGE_AT_PEAK_RATES",
+  "allowed_evidence_ids": [
+    "LIVE_PROBE"
+  ],
+  "api_key_available": true,
+  "api_key_hash_logged": false,
+  "api_key_length_logged": false,
+  "api_key_logged": false,
+  "api_route": "Chat Completions",
+  "budget_gate": {
+    "authorized": true,
+    "duplicate_attempt_blocked": true,
+    "input_token_bound": 3024,
+    "output_token_cap": 256,
+    "price_input_per_million_usd": "0.30",
+    "price_output_per_million_usd": "1.20",
+    "real_provider_call": false,
+    "reason": null,
+    "request_id": "MOCK-000001",
+    "request_reserved_tokens": 3280,
+    "status": "MOCK_AUTHORIZED",
+    "total_authorized_cap_usd": "0.25",
+    "usage_reconciliation": "RECORDED_MOCK_USAGE",
+    "worst_case_cost_estimate_usd": "0.0012144"
+  },
+  "calls_attempted": 1,
+  "chat_completions_documentation_verified": true,
+  "configured_model_before_probe": "deepseek-flash",
+  "dataset_sha256_actual": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "dataset_sha256_expected": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "endpoint": "https://api.deepseek.com",
+  "error_code": null,
+  "finish_reason": "stop",
+  "generated_at_utc": "2026-11-11T15:53:25.982877+00:00",
+  "input_bound": {
+    "all_message_utf8_bytes": 740,
+    "chat_framing_tokens_allowance": 64,
+    "conservative_input_tokens_upper_bound": 3024,
+    "system_message_utf8_bytes": 630,
+    "user_message_utf8_bytes": 110
+  },
+  "json_valid": true,
+  "latency_seconds": 1.834,
+  "ledger": {
+    "economic_reconciliation_in_scope": false,
+    "event_id_sha256": "5239029493d48ed023f07034ec44d5bbacb0f20b7d76f8028e633f9049ef526c",
+    "isolated_from_research_ledger": true,
+    "llm_events": 1,
+    "note": "Provider request/response is appended to a private isolated diagnostic ledger; no market opportunity, decision, plan, outcome, or trade is created.",
+    "opportunities_eligible": 0,
+    "opportunities_total": 1,
+    "opportunity_marked_ineligible": true,
+    "orders_recorded": 0,
+    "path": "reports/private/phase1_deepseek_remote/ledger_20261111T155325982855Z.sqlite3",
+    "persisted": true,
+    "query_planned": 1,
+    "query_sent": 1,
+    "response_error_persisted": 0,
+    "response_persisted": 1,
+    "system_decisions": 0,
+    "valid_responses": 1
+  },
+  "live_status": "DEEPSEEK_REMOTE_LIVE_PASS",
+  "llm_configuration": {
+    "api_route": "Chat Completions",
+    "base_url": "https://api.deepseek.com",
+    "max_retries": 0,
+    "max_tokens": 256,
+    "model": "deepseek-flash",
+    "provider": "deepseek",
+    "reasoning_effort_environment": "low",
+    "response_format": "json_object",
+    "temperature": 0.0,
+    "thinking_mode_for_this_probe": "disabled",
+    "timeout_seconds": 30.0
+  },
+  "max_output_tokens": 256,
+  "max_retries": 0,
+  "model_resolution_note": null,
+  "mt5_connections": 0,
+  "official_model_documentation_verified": true,
+  "offline_status": "DEEPSEEK_REMOTE_OFFLINE_VALIDATED",
+  "offline_tests": {
+    "duration_seconds": 7.272,
+    "live_secret_passed_to_test_process": false,
+    "modules": [
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "-m",
+          "unittest",
+          "-v",
+          "test_deepseek_remote_smoke"
+        ],
+        "exit_code": 0,
+        "module": "test_deepseek_remote_smoke",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_run": 10,
+        "tests_skipped": 0
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "-m",
+          "unittest",
+          "-v",
+          "test_phase1_llm_live"
+        ],
+        "exit_code": 0,
+        "module": "test_phase1_llm_live",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_run": 5,
+        "tests_skipped": 0
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "-m",
+          "unittest",
+          "-v",
+          "test_phase1_llm"
+        ],
+        "exit_code": 0,
+        "module": "test_phase1_llm",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_run": 13,
+        "tests_skipped": 0
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "-m",
+          "unittest",
+          "-v",
+          "test_phase1_validation_provenance"
+        ],
+        "exit_code": 0,
+        "module": "test_phase1_validation_provenance",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_run": 16,
+        "tests_skipped": 0
+      },
+      {
+        "command": [
+          "/workspace/.venvs/AgentTrading/bin/python",
+          "-m",
+          "unittest",
+          "-v",
+          "test_phase2_2"
+        ],
+        "exit_code": 0,
+        "module": "test_phase2_2",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_run": 28,
+        "tests_skipped": 0
+      }
+    ],
+    "status": "PASS",
+    "tests_failed": 0,
+    "tests_passed": 72,
+    "tests_run": 72,
+    "tests_skipped": 0
+  },
+  "operational_signal_created": false,
+  "orders_sent": 0,
+  "other_provider_calls": 0,
+  "payload_sha256": "ba37ed3a514914f86370d37ce3cbe4fc15a7abf32aa06958d879facfec5aa207",
+  "permitted_evidence_valid": true,
+  "previous_report_archived_to": null,
+  "pricing": {
+    "basis": "Published official DeepSeek pricing; worst published peak tier and uncached input assumed.",
+    "billing_unit": "1M tokens",
+    "chat_completions_url": "https://api-docs.deepseek.com/api/create-chat-completion",
+    "checked_at_utc": "2026-11-11T15:46:44Z",
+    "currency": "USD",
+    "input_price_per_million": "0.30",
+    "input_tier": "peak cache miss",
+    "model": "deepseek-flash",
+    "models_url": "https://api-docs.deepseek.com/quick_start/model_list",
+    "output_price_per_million": "1.20",
+    "output_tier": "peak",
+    "pricing_url": "https://api-docs.deepseek.com/quick_start/pricing/",
+    "resolved_model_documented": "DeepSeek-V4.1-Flash-1017",
+    "verified_date_utc": "2026-11-11"
+  },
+  "prompt_sha256": "cc644530f147ba07cef90e82a8331d4126c9a52a0c7dcee4624576c6b2e0d500",
+  "provider": "deepseek",
+  "provider_reported_model": "deepseek-flash",
+  "provider_reported_model_matches_request": true,
+  "request_is_trading_signal": false,
+  "requested_model": "deepseek-flash",
+  "response_schema": "scripts.validate_phase1_llm_live.ProbeAnswer",
+  "response_status": "PASS",
+  "response_valid": true,
+  "root_dotenv_present": false,
+  "run_id": "20261111T155325982855Z",
+  "runtime": {
+    "git_branch": "codex/phase1-deepseek-remote-live-smoke",
+    "git_head": "fc4f9da0f3c42a461f55993adf47bd1269237339",
+    "openai_sdk": "3.41.0",
+    "pydantic": "2.14.2",
+    "python": "3.12.14",
+    "python_implementation": "CPython",
+    "worktree_dirty": true
+  },
+  "schema_valid": true,
+  "schema_version": 1,
+  "source_sha256": {
+    "scripts/validate_deepseek_remote_smoke.py": "53b150ccd3c86b47c5908d8e62c230905d2a16af16fa613446d4701faf792126",
+    "scripts/validate_phase1_llm_live.py": "8de6328fa7db41b35ed86f21b7ad0b09d425686e12aad1c1eb06af53140e98b2",
+    "src/agents/deepseek_client.py": "85ba9ee389777e6e5b0554b6bfb5db809a34d13e4ab7d66b7917b8357b248284",
+    "src/agents/llm_client.py": "e9caf95254de02838ca99430e5be2fff68bd06dfd49e9fa21cbde59bb749ca90",
+    "src/deepseek_remote_smoke.py": "6dff23a7672b5bfdd29e21d8fd9753983990b43fe8c7bb9513378e48fc94215d",
+    "src/event_ledger.py": "460c3ef81e51d1516baa15d64aa1c391dd12b44f63173b6c3499ffdd58019a76",
+    "src/research_policy.py": "20d3d20e20a4c3605ebd5609331a1c452731ec55426028ebd7ad987ecb9ece1f",
+    "tests/test_deepseek_remote_smoke.py": "68ccea8fe1dffdafcd07ccdd1f84f3a10caf44dd8847b506a412a7e2b87f522c"
+  },
+  "timeout_seconds": 30,
+  "tokens": {
+    "completion_tokens": 17,
+    "prompt_tokens": 203,
+    "reasoning_tokens": null
+  },
+  "usage_within_preflight_bound": true,
+  "worst_case_preflight_cost_usd": "0.0012144"
+}

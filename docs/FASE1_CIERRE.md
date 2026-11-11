@@ -1,6 +1,6 @@
 # Cierre local de Fase 1 — AgentTrading
 
-**Estado vigente al 11 de noviembre de 2026: `INCOMPLETE_PENDING_MANUAL`.** La validación `MT5_REAL_READ_ONLY_PASS` del 9 de noviembre es una comprobación legítima e independiente: verificó una cuenta REAL en solo lectura, `tradeapi_disabled=True`, datos del bróker, motor de riesgo y límite diario. No hay una cuenta DEMO disponible; su comprobación es `NOT_APPLICABLE_NO_DEMO_ACCOUNT`, no un PASS ficticio ni un requisito para falsear.
+**Estado vigente al 11 de noviembre de 2026: `INCOMPLETE_PENDING_MANUAL`.** La validación `MT5_REAL_READ_ONLY_PASS` del 9 de noviembre es una comprobación legítima e independiente: verificó una cuenta REAL en solo lectura, `tradeapi_disabled=True`, datos del bróker, motor de riesgo y límite diario. No hay una cuenta DEMO disponible; su comprobación es `NOT_APPLICABLE_NO_DEMO_ACCOUNT`, no un PASS ficticio ni un requisito para falsear. La nota de cierre añadida abajo registra un smoke remoto DeepSeek PASS en Python 3.12; no sustituye la comprobación de Windows/Python 3.13 ni resuelve las diferencias históricas pendientes.
 
 La validación pública está en [`reports/mt5_real_readonly_summary.json`](../reports/mt5_real_readonly_summary.json). Registra cero órdenes y cero operaciones ejecutadas por el proceso. Esta evidencia no autoriza órdenes ni cambia la política DRY RUN. Siguen pendientes otras comprobaciones de Fase 1, incluida la revisión de DeepSeek en el runtime local actual y la atribución de diferencias históricas agregadas.
 
@@ -19,7 +19,7 @@ La revisión local anterior se hizo en Windows 10 build 19045 con Python 3.13.14
 | Seguridad DRY RUN | PASS | Cero llamadas `order_send` en el proyecto; no hubo órdenes ni señales operativas. |
 | MT5 demo | PENDING en aquella ejecución; actualmente NOT APPLICABLE | No se pudo verificar DEMO entonces. La cuenta DEMO no está disponible; la validación REAL de solo lectura posterior pasó de forma independiente. |
 | Ollama live | PASS | `qwen3:4b`; JSON/Pydantic/evidencia válidos; guardas de respuesta inválida PASS. |
-| DeepSeek live | PENDING | El PASS anterior se verificó por contenido y código, pero usó Python 3.12.14/Pydantic 2.14.2 frente a 3.13.14/2.13.5 actuales. No hubo llamada nueva. |
+| DeepSeek live | PASS remoto / PENDING Windows | El smoke de una única llamada del 11/11/2026 pasó en Python 3.12.14/Pydantic 2.14.2. La validación del runtime local Windows/Python 3.13.14 sigue pendiente; evidencia nueva abajo. |
 | Ocho escenarios de backtest | PASS | Portfolio y stateful BASE×2, CONSERVATIVE y STRESS sobre dataset congelado verificado. |
 | Repetibilidad BASE | PASS | Igualdad de agregados y operaciones con identificadores estables en ambos modos. |
 | Regresión contra métricas anteriores | PENDING | Las diferencias agregadas no se presumieron esperadas; faltan snapshots históricos por operación para atribuirlas. |
@@ -86,3 +86,17 @@ Las oportunidades técnicas se mantuvieron invariantes. El validador detectó un
 - Revisar la regresión agregada con snapshots por operación de la versión anterior y la actual sobre el mismo dataset, o reproducir la versión anterior para obtenerlos.
 
 La evidencia, estados exactos, huellas y diferencias están en [`docs/FASE1_RESULTADO_FINAL.md`](FASE1_RESULTADO_FINAL.md), [`reports/phase1_validation.json`](../reports/phase1_validation.json) y el resumen público MT5 enlazado arriba. La Fase 1 sigue pendiente por las comprobaciones restantes; en ningún caso este documento autoriza operaciones reales.
+
+## Nota de seguimiento: smoke remoto DeepSeek — 11 de noviembre de 2026
+
+Se realizó una sola petición autorizada a Chat Completions (`https://api.deepseek.com`) con el alias `deepseek-flash`. El proveedor informó el mismo alias; `finish_reason=stop`, JSON y esquema Pydantic válidos, estado `PASS` y evidencia limitada a `LIVE_PROBE`. El payload fue exclusivamente diagnóstico y sintético. No se ejecutaron pipelines de mercado.
+
+- Resultado: `DEEPSEEK_REMOTE_LIVE_PASS`; 1 intento, sin reintentos.
+- Preflight: tope de salida 256 tokens, 30 s, `temperature=0`, thinking desactivado; cota de entrada 3.024 tokens y coste máximo calculado de `0.0012144 USD`. Se aplicaron tarifas públicas oficiales en USD, tier pico sin caché: entrada `0.30 USD/1M`, salida `1.20 USD/1M`; fuentes y hora UTC están en el informe JSON.
+- Uso informado: 203 tokens de entrada y 17 de salida; coste estimado conservador `0.000081300 USD`. No es un cargo confirmado por el panel de facturación.
+- Registro: la consulta y respuesta se persistieron en un SQLite privado excluido de Git. El evento es inelegible y está aislado del ledger de investigación; el resumen público publica únicamente metadatos, hashes y conteos.
+- Comprobaciones offline: 72 pruebas PASS, 0 FAIL, 0 SKIPPED, repetidas por el wrapper antes de la llamada.
+- Seguridad: 0 conexiones MT5, 0 órdenes, 0 señales operativas y 0 credenciales publicadas. La clave solo se consultó como disponibilidad booleana.
+- Runtime remoto: CPython `3.12.14`, Pydantic `2.14.2`, OpenAI SDK `3.41.0`; commit base `fc4f9da0f3c42a461f55993adf47bd1269237339`, rama `codex/phase1-deepseek-remote-live-smoke`.
+
+La evidencia pública está en [`reports/phase1_deepseek_remote/validation_summary.json`](../reports/phase1_deepseek_remote/validation_summary.json) y el resumen técnico en [`docs/FASE1_DEEPSEEK_REMOTO_RESULTADOS.md`](FASE1_DEEPSEEK_REMOTO_RESULTADOS.md). Esta prueba solo valida el contrato del proveedor en este runtime. No valida Windows/Python 3.13, el rendimiento predictivo, la rentabilidad ni el valor añadido de DeepSeek. No se debe repetir la opción `--authorize-single-request`: el único intento autorizado ya se consumió.
