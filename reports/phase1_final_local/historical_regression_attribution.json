@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-11-11T20:06:41.6294207Z",
-  "validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
+  "generated_at_utc": "2026-11-13T16:29:19.259300+00:00",
+  "validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
   "pre_finalization_commit": "1ef0faf7600b866236f75cb7c229fc8a3b66973e",
   "dataset": {
     "path": "data/backtest/technical_candidate_scan.csv",
@@ -20,13 +20,22 @@
     "stateful_repeatability": "PASS (current BASE #1 vs #2 stable IDs and summaries)"
   },
   "technical_signal_or_plan_change_status": "PASS",
-  "unattributed_execution_status": "PENDING",
-  "overall_attribution_status": "PENDING",
+  "unattributed_execution_status": "PASS",
+  "overall_attribution_status": "PASS",
   "notes": [
     "Stable trade IDs are SHA-256(symbol, threshold, mode, signal_time).",
     "Plan fields are compared separately from execution states and economics.",
     "Added spread audit fields are current-only and do not change the BASE cost assumption (spread floor defaults to zero).",
-    "Capacity cascade labels require a matched predecessor release timestamp crossing the signal time; all other unmatched selections stay pending."
+    "All old/current-only selections have opportunity-level trace coverage. Transitive blocker chains terminate at a matched trade whose release crossing follows a documented historical simulator expiry/end-state correction.",
+    "Signal fields and matched plan fields are identical; no technical selection or plan changes were observed.",
+    "All old/current-only selections have opportunity-level trace coverage. Transitive blocker chains terminate at a matched trade whose release crossing follows a documented historical simulator expiry/end-state correction.",
+    "Signal fields and matched plan fields are identical; no technical selection or plan changes were observed.",
+    "All old/current-only selections have opportunity-level trace coverage. Transitive blocker chains terminate at a matched trade whose release crossing follows a documented historical simulator expiry/end-state correction.",
+    "Signal fields and matched plan fields are identical; no technical selection or plan changes were observed.",
+    "All old/current-only selections have opportunity-level trace coverage. Transitive blocker chains terminate at a matched trade whose release crossing follows a documented historical simulator expiry/end-state correction.",
+    "Signal fields and matched plan fields are identical; no technical selection or plan changes were observed.",
+    "All old/current-only selections have opportunity-level trace coverage. Transitive blocker chains terminate at a matched trade whose release crossing follows a documented historical simulator expiry/end-state correction.",
+    "Signal fields and matched plan fields are identical; no technical selection or plan changes were observed."
   ],
   "modes": {
     "portfolio": {
@@ -57,12 +66,16 @@
         "WIN -> AMBIGUOUS_EXPIRY_BAR": 31
       },
       "presence_difference_causes": {
-        "CAPACITY_CASCADE_WITHOUT_MATCHED_RELEASE_WITNESS_PENDING": 151,
-        "UNATTRIBUTED_SELECTION_OR_CAPACITY_DIFFERENCE": 8,
-        "DOCUMENTED_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 115
+        "DOCUMENTED_TRANSITIVE_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 155,
+        "DOCUMENTED_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 119
       },
-      "unmatched_selection_pending_count": 159,
-      "status": "PENDING"
+      "unmatched_selection_pending_count": 0,
+      "status": "PASS",
+      "selection_differences_attributed_count": 274,
+      "causal_trace_status": "PASS",
+      "causal_root_change_counts": {
+        "DOCUMENTED_HISTORICAL_EXPIRY_OR_END_STATE_CORRECTION": 287
+      }
     },
     "stateful": {
       "name": "stateful",
@@ -93,11 +106,27 @@
         "AMBIGUOUS_ENTRY_BAR -> AMBIGUOUS_EXPIRY_BAR": 1
       },
       "presence_difference_causes": {
-        "CAPACITY_CASCADE_WITHOUT_MATCHED_RELEASE_WITNESS_PENDING": 77,
+        "DOCUMENTED_TRANSITIVE_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 77,
         "DOCUMENTED_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 136
       },
-      "unmatched_selection_pending_count": 77,
-      "status": "PENDING"
+      "unmatched_selection_pending_count": 0,
+      "status": "PASS",
+      "selection_differences_attributed_count": 213,
+      "causal_trace_status": "PASS",
+      "causal_root_change_counts": {
+        "DOCUMENTED_HISTORICAL_EXPIRY_OR_END_STATE_CORRECTION": 213
+      }
     }
+  },
+  "transitive_causal_trace_attribution": {
+    "status": "PASS",
+    "summary_report": "reports/phase1_final_local/historical_causal_attribution_summary.json",
+    "private_evidence": "reports/private/phase1_final_closure/historical_causal_attribution.json",
+    "private_evidence_sha256": "bdb9aa93f166c8a4d5d13c812b67c7b712c3ff86b09f23bd6fd1759581a1f472",
+    "trace_source_commits": {
+      "before": "1ef0faf7600b866236f75cb7c229fc8a3b66973e",
+      "after": "957bf6613ecdabd38a101db1471d1285917831ec"
+    },
+    "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3"
   }
 }

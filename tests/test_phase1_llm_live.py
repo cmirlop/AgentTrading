@@ -11,6 +11,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.validate_phase1_llm_live import (
     ProbeAnswer,
+    _deepseek_preflight,
     _invalid_response_guard_check,
     _structured_chat_with_temporary_ledger,
     validate,
@@ -55,17 +56,25 @@ class LiveProviderValidatorOfflineTests(unittest.TestCase):
             "provider": "deepseek",
             "configured_model": "deepseek-flash",
             "provider_reported_model": "deepseek-flash",
+            "finish_reason": "stop",
             "latency_seconds": 0.1,
             "prompt_tokens": 10,
             "completion_tokens": 4,
         }
+
+        def one_request(*args, **kwargs):
+            callback = kwargs.get("on_request_start")
+            if callback:
+                callback()
+            return answer, metadata, {"status": "PASS", "isolated_temporary_ledger": True}
+
         with patch.dict(os.environ, {
             "DEEPSEEK_API_KEY": "unit-test-only",
             "DEEPSEEK_MODEL": "deepseek-flash",
         }):
             with patch(
                 "scripts.validate_phase1_llm_live._structured_chat_with_temporary_ledger",
-                return_value=(answer, metadata, {"status": "PASS", "isolated_temporary_ledger": True}),
+                side_effect=one_request,
             ) as request:
                 report = validate("deepseek", authorize_deepseek=True)
         self.assertEqual(report["status"], "PASS")
@@ -76,9 +85,41 @@ class LiveProviderValidatorOfflineTests(unittest.TestCase):
         self.assertFalse(report["api_key_logged"])
         self.assertFalse(report["market_order_sent"])
 
+    def test_deepseek_preflight_enforces_model_timeout_output_and_cost_cap(self):
+        prompt = "Synthetic integration diagnostic."
+        payload = {"allowed_evidence_ids": ["LIVE_PROBE"]}
+        passing = _deepseek_preflight(
+            ProbeAnswer, prompt, payload, model="deepseek-flash",
+            max_output_tokens=256, timeout_seconds=30,
+        )
+        self.assertEqual(passing["status"], "PASS")
+        self.assertLessEqual(float(passing["maximum_cost_estimate_usd"]), 0.25)
+
+        wrong_model = _deepseek_preflight(
+            ProbeAnswer, prompt, payload, model="another-model",
+            max_output_tokens=256, timeout_seconds=30,
+        )
+        too_long = _deepseek_preflight(
+            ProbeAnswer, prompt, payload, model="deepseek-flash",
+            max_output_tokens=257, timeout_seconds=30,
+        )
+        too_slow = _deepseek_preflight(
+            ProbeAnswer, prompt, payload, model="deepseek-flash",
+            max_output_tokens=256, timeout_seconds=30.01,
+        )
+        self.assertEqual(wrong_model["status"], "PENDING")
+        self.assertEqual(too_long["status"], "PENDING")
+        self.assertEqual(too_slow["status"], "PENDING")
+
     def test_invalid_provider_response_never_becomes_signal(self):
+        def invalid_response(*args, **kwargs):
+            callback = kwargs.get("on_request_start")
+            if callback:
+                callback()
+            raise LLMProviderError("LLM_INVALID_EVIDENCE")
+
         with patch.dict(os.environ, {"DEEPSEEK_API_KEY": "unit-test-only"}):
-            with patch("scripts.validate_phase1_llm_live._structured_chat_with_temporary_ledger", side_effect=LLMProviderError("LLM_INVALID_EVIDENCE")):
+            with patch("scripts.validate_phase1_llm_live._structured_chat_with_temporary_ledger", side_effect=invalid_response):
                 report = validate("deepseek", authorize_deepseek=True)
         self.assertEqual(report["status"], "FAIL")
         self.assertEqual(report["calls_made"], 1)

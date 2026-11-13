@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import gzip
 import hashlib
 import importlib.metadata
 import json
@@ -553,6 +554,9 @@ def _reassess_reused_historical_evidence(prior_historical, pre_final_report, cur
     for name, exact_name in comparisons.items():
         results[name] = _assess_baseline_comparison(results.get(exact_name, {}), correction_ids)
     results["technical_source_invariance"] = source_invariance
+    results["historical_selection_attribution"] = _verify_transitive_selection_attribution(
+        results.get("dataset_sha256")
+    )
     opportunity_differences = [
         item
         for key in ("pre_finalization_portfolio_exact", "pre_finalization_stateful_exact")
@@ -579,6 +583,7 @@ def _reassess_reused_historical_evidence(prior_historical, pre_final_report, cur
             "repeatability_portfolio_base", "repeatability_portfolio_base_trades",
             "repeatability_stateful_base", "repeatability_stateful_base_trades",
             "technical_opportunity_invariance", "technical_source_invariance",
+            "historical_selection_attribution",
         )
     ]
     statuses = [item["status"] for item in checked]
@@ -653,6 +658,26 @@ def _redact_sensitive_text(value):
     )
     for pattern in patterns:
         value = re.sub(pattern, redact_assignment, value)
+    for path, replacement in (
+        (Path(sys.executable), "<PYTHON>"),
+        (ROOT, "<REPOSITORY>"),
+        (Path(tempfile.gettempdir()), "<TEMP>"),
+        (Path.home(), "<USER_HOME>"),
+    ):
+        for variant in {str(path), path.as_posix(), str(path).replace("/", "\\")}:
+            if variant:
+                value = re.sub(re.escape(variant), replacement, value, flags=re.IGNORECASE)
+    return value
+
+
+def _sanitize_public_report(value):
+    """Recursively redact sensitive values and local machine paths before publication."""
+    if isinstance(value, dict):
+        return {key: _sanitize_public_report(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_sanitize_public_report(item) for item in value]
+    if isinstance(value, str):
+        return _redact_sensitive_text(value)
     return value
 
 
@@ -878,6 +903,208 @@ def _classify_technical_source_differences(differences):
     }
 
 
+def _selection_root_has_release_crossing(root):
+    """Check a root correction at the specific skipped opportunity in its causal chain."""
+    chain = root.get("chain")
+    steps = root.get("chain_steps")
+    if not isinstance(chain, list) or len(chain) < 2 or not isinstance(steps, list):
+        return False
+    if len(steps) != len(chain) - 1 or chain[-1] != root.get("root_trade_id"):
+        return False
+    step = steps[-1]
+    if step.get("trade_id") != chain[-2]:
+        return False
+    identity = step.get("identity")
+    signal_time = identity.get("signal_time") if isinstance(identity, dict) else None
+    try:
+        candidate_time = datetime.fromisoformat(signal_time.replace("Z", "+00:00"))
+        release_before = datetime.fromisoformat(root["root_release_before"].replace("Z", "+00:00"))
+        release_after = datetime.fromisoformat(root["root_release_after"].replace("Z", "+00:00"))
+    except (AttributeError, KeyError, TypeError, ValueError):
+        return False
+    if candidate_time.tzinfo is None:
+        candidate_time = candidate_time.replace(tzinfo=timezone.utc)
+    if release_before.tzinfo is None:
+        release_before = release_before.replace(tzinfo=timezone.utc)
+    if release_after.tzinfo is None:
+        release_after = release_after.replace(tzinfo=timezone.utc)
+    candidate_time = candidate_time.astimezone(timezone.utc)
+    release_before = release_before.astimezone(timezone.utc)
+    release_after = release_after.astimezone(timezone.utc)
+    if step.get("present_side") == "new":
+        return release_before > candidate_time >= release_after
+    if step.get("present_side") == "old":
+        return release_after > candidate_time >= release_before
+    return False
+
+
+def _verify_transitive_selection_attribution(expected_dataset_sha256):
+    """Verify content-addressed opportunity traces and their transitive release chains."""
+    summary_path = ROOT / "reports" / "phase1_final_local" / "historical_causal_attribution_summary.json"
+    if not summary_path.is_file():
+        return {"status": "PENDING", "reason": "Opportunity-level causal trace summary is missing."}
+    try:
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        generated_raw = summary.get("generated_at_utc")
+        generated = datetime.fromisoformat(generated_raw.replace("Z", "+00:00"))
+        if generated.tzinfo is None:
+            raise ValueError
+        age = (datetime.now(timezone.utc) - generated.astimezone(timezone.utc)).total_seconds()
+    except (OSError, json.JSONDecodeError, AttributeError, TypeError, ValueError):
+        return {"status": "FAIL", "reason": "Causal trace summary is unreadable or has no valid UTC timestamp."}
+    if age < -300 or age > 24 * 60 * 60:
+        return {"status": "PENDING", "reason": "Causal trace evidence is older than 24 hours or future-dated."}
+    if summary.get("dataset_sha256") != expected_dataset_sha256:
+        return {"status": "PENDING", "reason": "Causal trace evidence uses a different frozen dataset."}
+    if summary.get("status") != "PASS":
+        return {"status": "PENDING", "reason": "Causal trace summary is not PASS."}
+
+    private_rel = summary.get("private_evidence")
+    private_path = (ROOT / str(private_rel)).resolve()
+    private_root = (ROOT / "reports" / "private").resolve()
+    try:
+        private_path.relative_to(private_root)
+    except ValueError:
+        return {"status": "FAIL", "reason": "Causal evidence path is outside reports/private."}
+    if not private_path.is_file():
+        return {"status": "PENDING", "reason": "Private causal trace evidence is unavailable."}
+    if _sha256(private_path) != summary.get("private_evidence_sha256"):
+        return {"status": "FAIL", "reason": "Private causal trace evidence hash does not match the public summary."}
+    try:
+        private = json.loads(private_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"status": "FAIL", "reason": "Private causal trace evidence is unreadable."}
+    if private.get("status") != "PASS" or private.get("dataset_sha256") != expected_dataset_sha256:
+        return {"status": "PENDING", "reason": "Private causal evidence is incomplete or bound to a different dataset."}
+    if summary.get("pre_finalization_commit") != private.get("pre_finalization_commit") or summary.get("current_commit") != private.get("current_commit"):
+        return {"status": "FAIL", "reason": "Public and private replay commit provenance differs."}
+    if private.get("configuration") != {"cost_scenario": "BASE", "spread_floor_points": 0.0, "llm_enabled": False}:
+        return {"status": "FAIL", "reason": "Causal replay configuration is not the frozen BASE technical-only configuration."}
+
+    try:
+        dependencies = {name: importlib.metadata.version(name) for name in ("pandas", "numpy")}
+    except importlib.metadata.PackageNotFoundError:
+        return {"status": "PENDING", "reason": "A required historical replay dependency is unavailable."}
+    recorded_runtime = private.get("runtime", {})
+    if recorded_runtime.get("python_version") != sys.version or recorded_runtime.get("dependencies") != dependencies:
+        return {"status": "PENDING", "reason": "Python or historical replay dependency versions changed since tracing."}
+
+    expected_sources = (
+        "run_portfolio_backtest.py", "run_stateful_backtest.py",
+        "src/historical_execution.py", "src/historical_trade_planner.py",
+        "config/backtest_config.py", "config/backtest_cost_config.py",
+        "config/trade_planner_config.py",
+    )
+    source_hashes = private.get("source_hashes", {})
+    old_commit = private.get("pre_finalization_commit")
+    current_commit = private.get("current_commit")
+    for name in expected_sources:
+        expected_current = source_hashes.get("current", {}).get(name)
+        path = ROOT / name
+        if not expected_current or not path.is_file() or _normalized_text_sha256(path) != expected_current:
+            return {"status": "PENDING", "reason": f"Historical replay source changed: {name}."}
+        try:
+            result = subprocess.run(
+                ["git", "show", f"{current_commit}:{name}"], cwd=ROOT,
+                capture_output=True, timeout=60, check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return {"status": "PENDING", "reason": f"Current replay source provenance is unavailable: {name}."}
+        if result.returncode != 0 or hashlib.sha256(result.stdout).hexdigest() != expected_current:
+            return {"status": "FAIL", "reason": f"Recorded current replay source hash is not proven by Git: {name}."}
+        expected_old = source_hashes.get("old", {}).get(name)
+        try:
+            result = subprocess.run(
+                ["git", "show", f"{old_commit}:{name}"], cwd=ROOT,
+                capture_output=True, timeout=60, check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return {"status": "PENDING", "reason": f"Pre-finalization replay source provenance is unavailable: {name}."}
+        if not expected_old or result.returncode != 0 or hashlib.sha256(result.stdout).hexdigest() != expected_old:
+            return {"status": "FAIL", "reason": f"Recorded pre-finalization replay source hash is not proven by Git: {name}."}
+
+    artifacts = private.get("trace_artifacts", {})
+    if set(artifacts) != {"portfolio_before", "portfolio_after", "stateful_before", "stateful_after"}:
+        return {"status": "FAIL", "reason": "One or more full opportunity trace artifacts are missing."}
+    if summary.get("trace_artifacts") != artifacts:
+        return {"status": "FAIL", "reason": "Public and private trace artifact manifests differ."}
+    for name, artifact in artifacts.items():
+        artifact_path = (ROOT / str(artifact.get("path", ""))).resolve()
+        try:
+            artifact_path.relative_to(private_root)
+        except ValueError:
+            return {"status": "FAIL", "reason": "A compressed trace artifact is outside reports/private."}
+        if not artifact_path.is_file() or _sha256(artifact_path) != artifact.get("sha256"):
+            return {"status": "FAIL", "reason": f"Compressed trace artifact hash mismatch: {name}."}
+        digest = hashlib.sha256()
+        raw_bytes = 0
+        lines = 0
+        try:
+            with gzip.open(artifact_path, "rb") as stream:
+                for block in iter(lambda: stream.read(1024 * 1024), b""):
+                    digest.update(block)
+                    raw_bytes += len(block)
+                    lines += block.count(b"\n")
+        except (OSError, EOFError):
+            return {"status": "FAIL", "reason": f"Compressed trace artifact cannot be decoded: {name}."}
+        if digest.hexdigest() != artifact.get("raw_sha256") or raw_bytes != artifact.get("raw_bytes"):
+            return {"status": "FAIL", "reason": f"Decompressed trace content hash mismatch: {name}."}
+        mode = "portfolio" if name.startswith("portfolio_") else "stateful"
+        expected_lines = private.get("modes", {}).get(mode, {}).get("trace_rows_before")
+        if lines != expected_lines:
+            return {"status": "FAIL", "reason": f"Trace row count does not match replay summary: {name}."}
+
+    selection_details = private.get("selection_differences", {})
+    verified_total = 0
+    for mode in ("portfolio", "stateful"):
+        mode_summary = private.get("modes", {}).get(mode, {})
+        rows = selection_details.get(mode, [])
+        if mode_summary.get("status") != "PASS" or mode_summary.get("trade_trace_integrity") != "PASS":
+            return {"status": "PENDING", "reason": f"The {mode} replay trace did not pass integrity checks."}
+        if mode_summary.get("duplicate_trace_ids") != 0 or mode_summary.get("trace_candidate_ids_match") is not True:
+            return {"status": "FAIL", "reason": f"The {mode} opportunity trace set is incomplete or duplicated."}
+        if mode_summary.get("technical_signal_differences") or mode_summary.get("technical_plan_differences"):
+            return {"status": "FAIL", "reason": f"The {mode} replay contains unexplained technical signal or plan changes."}
+        if mode_summary.get("selection_differences_pending") != 0 or len(rows) != mode_summary.get("selection_differences_total"):
+            return {"status": "PENDING", "reason": f"The {mode} replay has unexplained selection differences."}
+        for row in rows:
+            chain = row.get("causal_chain", [])
+            steps = row.get("causal_steps", [])
+            if row.get("causality_status") != "PASS" or not chain or chain[0] != row.get("trade_id") or len(chain) < 2:
+                return {"status": "PENDING", "reason": f"An {mode} selection has no complete causal chain."}
+            if len(steps) != len(chain) - 1:
+                return {"status": "FAIL", "reason": f"An {mode} causal chain is missing a blocker step."}
+            for index, step in enumerate(steps):
+                if step.get("trade_id") != chain[index] or step.get("blocked_decision") != "SKIPPED":
+                    return {"status": "FAIL", "reason": f"An {mode} causal step does not match its opportunity trace."}
+                blocker_ids = {slot.get("trade_id") for slot in step.get("active_slots_before", [])}
+                if chain[index + 1] not in blocker_ids:
+                    return {"status": "FAIL", "reason": f"An {mode} causal predecessor is absent from the recorded active slots."}
+            for root in row.get("root_predecessors", []):
+                if (
+                    not _selection_root_has_release_crossing(root)
+                    or root.get("root_change") != "DOCUMENTED_HISTORICAL_EXPIRY_OR_END_STATE_CORRECTION"
+                ):
+                    return {"status": "FAIL", "reason": f"An {mode} terminal predecessor does not prove a documented release-time crossing."}
+            if not row.get("root_predecessors"):
+                return {"status": "PENDING", "reason": f"An {mode} selection has no terminal simulator-correction witness."}
+        verified_total += len(rows)
+
+    if summary.get("selection_differences_total") != verified_total or summary.get("selection_differences_attributed") != verified_total or summary.get("selection_differences_pending") != 0:
+        return {"status": "FAIL", "reason": "Public causal attribution counts do not match private opportunity evidence."}
+    return {
+        "status": "PASS",
+        "selection_differences": verified_total,
+        "unexplained_selection_differences": 0,
+        "technical_signal_differences": 0,
+        "technical_plan_differences": 0,
+        "dataset_sha256": expected_dataset_sha256,
+        "private_evidence_sha256": summary.get("private_evidence_sha256"),
+        "trace_artifacts": {name: item.get("sha256") for name, item in artifacts.items()},
+        "evidence_reused_by_content_hash": True,
+    }
+
+
 def _base_regression_and_costs():
     from config.backtest_cost_config import COST_SCENARIOS
 
@@ -1021,6 +1248,7 @@ def _base_regression_and_costs():
     ]
     source_invariance = _classify_technical_source_differences(technical_source_differences)
     source_invariance["dataset_sha256"] = dataset_hash
+    selection_attribution = _verify_transitive_selection_attribution(dataset_hash)
     simulator_correction_ids = [
         item["correction_id"] for item in source_invariance["simulator_correction_changes"]
     ]
@@ -1109,6 +1337,7 @@ def _base_regression_and_costs():
         "evidence": "Opportunity totals are compared exactly against the frozen technical scan; no aggregate opportunity changes were observed.",
     }
     results["technical_source_invariance"] = source_invariance
+    results["historical_selection_attribution"] = selection_attribution
     results["repeatability_stateful_base"] = _summary_reproducibility(
         stateful_base_1, stateful_base_2, ["symbol", "threshold", "mode"]
     )
@@ -1133,6 +1362,7 @@ def _base_regression_and_costs():
         results["repeatability_stateful_base_trades"],
         results["technical_opportunity_invariance"],
         results["technical_source_invariance"],
+        results["historical_selection_attribution"],
     ]
     statuses = [item["status"] for item in comparisons]
     results["status"] = "FAIL" if "FAIL" in statuses else "PENDING" if "PENDING" in statuses else "PASS"
@@ -1252,6 +1482,14 @@ def _phase_status(offline_pass, integration_statuses, historical_status):
     if "PENDING" in integration_statuses or historical_status != "PASS":
         return "INCOMPLETE_PENDING_MANUAL"
     return "PHASE1_COMPLETE"
+
+
+def _phase_exit_code(phase_status):
+    return {
+        "PHASE1_COMPLETE": 0,
+        "FAIL": 1,
+        "INCOMPLETE_PENDING_MANUAL": 2,
+    }.get(phase_status, 1)
 
 
 def _external_scope_snapshot(provider, snapshot):
@@ -1610,6 +1848,7 @@ def main(argv=None):
             "FULL_OFFLINE_AND_HISTORICAL_REPLAY"
         ),
         "overall_status": phase_status,
+        "exit_code": _phase_exit_code(phase_status),
         "validation_states": {
             "offline": (
                 "VALIDACIÓN OFFLINE FALLIDA" if not offline_pass else
@@ -1743,10 +1982,11 @@ def main(argv=None):
     if historical_status == "PENDING":
         report["pending_manual"].append({
             "check": "HISTORICAL_REGRESSION_REVIEW",
-            "reason": "Frozen reports contain aggregate metrics but not stable per-trade snapshots; differences need explicit attribution.",
+            "reason": "The older baseline and pre-finalization aggregate comparisons lack matching stable-ID snapshots. Exact 1ef-to-957 BASE traces explain 487 selection differences, but do not prove every older aggregate metric delta.",
         })
     report["traceability"]["prior_report_archive"] = _archive_existing_report(REPORT_PATH)
-    REPORT_PATH.write_text(json.dumps(_native(report), indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
+    safe_report = _sanitize_public_report(_native(report))
+    REPORT_PATH.write_text(json.dumps(safe_report, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
 
     mandatory_failures = list(offline_failures)
     if tests["phase1_unit_tests"]["status"] != "PASS":
@@ -1761,6 +2001,7 @@ def main(argv=None):
     summary = {
         "report": str(REPORT_PATH),
         "overall_status": phase_status,
+        "exit_code": _phase_exit_code(phase_status),
         "validation_states": report["validation_states"],
         "offline_existing_passed": len(OFFLINE_EXISTING_TESTS) - len(offline_failures),
         "offline_existing_failed": offline_failures,
@@ -1773,7 +2014,7 @@ def main(argv=None):
         "dataset_sha256": snapshot_after["dataset_sha256"],
     }
     print(json.dumps(summary, indent=2, ensure_ascii=False))
-    return 1 if mandatory_failures else 2 if phase_status == "INCOMPLETE_PENDING_MANUAL" else 0
+    return _phase_exit_code(phase_status)
 
 
 if __name__ == "__main__":

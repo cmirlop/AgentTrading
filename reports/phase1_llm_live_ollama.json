@@ -1,12 +1,15 @@
 {
   "phase": "FASE 1.1 LLM LIVE",
   "provider": "ollama",
-  "status": "PASS",
-  "generated_at_utc": "2026-11-05T20:28:03.702367+00:00",
-  "calls_made": 1,
+  "status": "PENDING",
+  "generated_at_utc": "2026-11-13T15:28:28.294764+00:00",
+  "calls_made": 0,
   "api_key_logged": false,
   "market_order_sent": false,
   "operational_signal_created": false,
+  "research_ledger": {
+    "status": "PENDING"
+  },
   "invalid_response_guard": {
     "status": "PASS",
     "invalid_schema_rejected": true,
@@ -15,21 +18,18 @@
   },
   "traceability": {
     "validation_fingerprint": {
-      "validation_commit": "d099610f03eeeef0576aa541187a635bbcb4d9f0",
-      "branch": "codex/phase1-local-closure",
+      "validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "branch": "codex/phase1-autonomous-closure-20261113",
       "working_tree": {
         "clean": false,
         "changes": [
-          "M .gitignore",
-          " M reports/phase1_mt5_validation.json",
-          " M scripts/validate_phase1.py",
+          "M reports/mt5_history_refresh_summary.json",
+          " M reports/mt5_real_readonly_summary.json",
+          " M reports/phase1_llm_live_deepseek.json",
           " M scripts/validate_phase1_llm_live.py",
-          " M scripts/validate_phase1_mt5.py",
-          " M src/agents/__pycache__/deepseek_client.cpython-313.pyc",
-          " M src/agents/__pycache__/llm_client.cpython-313.pyc",
-          " M tests/test_phase1_mt5_safety.py",
-          " M tests/test_phase1_validation_provenance.py",
-          "?? scripts/__pycache__/validate_phase1.cpython-313.pyc"
+          " M tests/test_phase1_llm_live.py",
+          "?? reports/archive/mt5_history_refresh_summary-20261111T203048Z.json",
+          "?? reports/archive/mt5_real_readonly_summary-20261111T202355Z.json"
         ]
       },
       "dataset_path": "data\\backtest\\technical_candidate_scan.csv",
@@ -46,22 +46,23 @@
         "reports/phase1_baseline_metrics.json": "9ff1e94600b489c0c2a9d90318fe4ffc096c9ed131d746bc336b74537305fa3b",
         "reports/phase1_pre_finalization_validation.json": "38cf0e0cc63c4b211e39e9027a230c01ea8290c7f7221a19097636aa02388dbb",
         "run_cycle.py": "1f7b38497a9af6b901163c263a2f699abdfd81cfedc7d123d5fbd1e398bd94a7",
-        "run_dry_pipeline.py": "e3451edd2b36c84ce42d8174d77850df060f3f344b32fcbdd4155a58a363257a",
-        "run_market_agents.py": "315f8459d6e5446f52e26cacea4c777747930b7cc3ae8f5e4903a25f4cd77f8a",
-        "run_portfolio_backtest.py": "2177d5567f91666533d35935fc339016b823b6dca7e74a0ffdadd2a25fe23e99",
-        "run_stateful_backtest.py": "57acb952979efb1ef20f9bdc725322f13de8c357cb0d202eecbb6c5d4651528a",
-        "scripts/validate_phase1.py": "e78a5a1a9711e4ac368b1d9110b247b925ff930c5948f4557bbb9f90b4434f82",
-        "scripts/validate_phase1_llm_live.py": "8de6328fa7db41b35ed86f21b7ad0b09d425686e12aad1c1eb06af53140e98b2",
-        "scripts/validate_phase1_mt5.py": "463d9485b65092cd4c82edab490912d96a555f34bf367e4efa38e4e242a7da11",
+        "run_dry_pipeline.py": "6a124dfb0dfbad48b8d39f7123a7d0c1767dabb499d330bde72bae59dbd4551e",
+        "run_market_agents.py": "f83833bbfc6a76691e6c38745e3b307720ccb24666e2a896556c263dfa961b22",
+        "run_portfolio_backtest.py": "5521d032f899e32a60df013870ed2fe0da81b9f2d8368430410c0912197fb62a",
+        "run_stateful_backtest.py": "a71615abb6980c4b90426396b1c1435efc85eeb2ff082cfbe65a2e7ed057745d",
+        "scripts/validate_mt5_real_readonly.py": "56eae8a9cbea20f6ddf69663b2c3958bc6e51a7280aa43b09d95c5404b69b4e8",
+        "scripts/validate_phase1.py": "aecc72e87489150f849e23a8b218c838cc347d3ec1d654e58a40d88d1db5cc57",
+        "scripts/validate_phase1_llm_live.py": "066422038178edb0113a1c53757e9aa9fc6f55951d760714215a0f9fca139dbb",
+        "scripts/validate_phase1_mt5.py": "3ad8c33c5e36c6dece8035011bd494ba2e1c5757d4c930fc6c07946dff578bca",
         "src/agents/decision_agent.py": "76ca802e80f0a2070b44fb5abdea0c40df5e427e149467426aece04749175d8b",
-        "src/agents/deepseek_client.py": "ac75ebede48bcdd480ef46336884e7fc377f0e0f986d08aeb3d091f51f1076e0",
-        "src/agents/llm_client.py": "6f11b21da17e6eada001d0e10591a7b67c860703a4e70f76f2aff9e321c2a888",
-        "src/agents/market_analyst.py": "60b171932d42f083c37624e2920625a519dbd80a982940e92245442fa1ef8b4a",
+        "src/agents/deepseek_client.py": "85ba9ee389777e6e5b0554b6bfb5db809a34d13e4ab7d66b7917b8357b248284",
+        "src/agents/llm_client.py": "e9caf95254de02838ca99430e5be2fff68bd06dfd49e9fa21cbde59bb749ca90",
+        "src/agents/market_analyst.py": "35e068321031bbc48e8504f0502694f6db850e9e1ab0651e8e1856314bd421b0",
         "src/agents/regime_agent.py": "f53cfdfb1e055108ec1bc01d3711c6e454cfb2e6d15d6a8910208b73be583c26",
         "src/agents/risk_agent.py": "6fa8a7c826b575cdec79988e115b63fbf70c417d894ead5a579378b39cc2fc6c",
         "src/agents/strategy_agent.py": "e40188135b919e01eb5c5c7c0b09dfdbd8b1c9def31408cf456283862875dc8a",
         "src/daily_risk_guard.py": "c1159e0cb42304ad3922940edd432e77b527837c62c926afde52c42fbb554f81",
-        "src/historical_execution.py": "0a9f36b496429f0ce577a237e9f6ffab36a0dd7d29f5fe7d8b9fa3caa7d70531",
+        "src/historical_execution.py": "6c648843c3056b36baec803f38f17a561a7634ba574ca208bd134840f103f0da",
         "src/historical_trade_planner.py": "77292f82d40c1bfe89fee318d3daffe635722ec1261870ade6ebf207b7a8b0a8",
         "src/mt5_deal_history.py": "8ff63a126bdd07639df74b24e10229d998b6c328ae94eb577266dd42c1549805",
         "src/mt5_runtime.py": "bf843358a51e221b40a88dfe54e032df48ca8e55b89eb550eebd035da3d96c51",
@@ -70,14 +71,15 @@
         "src/risk_preflight.py": "cedbae87408593bf1eb820066a8019ce30e4ec7e53f4be1d35692e1b207ed6ab",
         "src/risk_validator.py": "653b8693b6309a0077e75e8b282a7e58a2628e1bd80a971ea918a1a926facbf6",
         "src/trade_planner.py": "ec9e1e40a8942bc73e255565a6fdd35846ecafa3381cb6ec4913eb2b21d5a156",
-        "tests/test_phase1_backtest.py": "144faa822cad7b7202474139c01b30836b0f5cb188c29f26edbebb32ea06680f",
+        "tests/test_mt5_real_readonly.py": "693ae0c6ae4d0f0d511f0c1db1c3f408fd858e055dbf26e68bfee620bf440993",
+        "tests/test_phase1_backtest.py": "9d5e6d2dc633aed83ff06d6d5072ce2938ad7bb3df1737e850ee267048f40ec1",
         "tests/test_phase1_daily_guard.py": "86274fdc559d373675bab15247c5c42fcff6cad58dc0d8d682c006d9be0d6b5e",
         "tests/test_phase1_llm.py": "5d91da7c9c14020406aaa29982f798d0211b8d73e04a3c78e795b0f89423b4d0",
-        "tests/test_phase1_llm_live.py": "c7db7ed80e3916cfc5930991b1e394b9b741f1d63c46b3108b41949e755b8faa",
-        "tests/test_phase1_mt5_safety.py": "4f28f4726ac558575430674560aec02af53842888c08aff3e7721d7168d333d0",
+        "tests/test_phase1_llm_live.py": "4e5d0d0447a9d750508991b5bd0654aea0715a5b40032a42889248bf56adb702",
+        "tests/test_phase1_mt5_safety.py": "c7791b9e41a43a8d30bc1b05a0a69c0acb08bfa7a077e1905b33f2c7741f2d50",
         "tests/test_phase1_risk.py": "700fc98f84d2a91a3e35c47b761b2e03fb07b186921e0feb228f327ee5f31f54",
         "tests/test_phase1_risk_validator.py": "aefaeb312bce632e845b704c03af4e1425766e825834d63db6e3c98a9fdabbd8",
-        "tests/test_phase1_validation_provenance.py": "a692533c3ff13567cf8082d8def0423a30de57913ebc3206539b5fa9ff649dc2"
+        "tests/test_phase1_validation_provenance.py": "4454b4b622e25b62bf9f328c5244380de538d0abf75828878a2c57fbadbed358"
       },
       "backtest_config_sha256": {
         "config/agent_config.py": "0034a2664f3b5dcd0d9a8a702ac76e6d24c195971c3fcd31b68694fafee0957b",
@@ -89,7 +91,7 @@
         "config/trade_planner_config.py": "eedfc22f77be6f2f5ead8427c13de0a58434e41ca789506b2cc6807a1518ab65"
       },
       "baseline_metrics_sha256": "9ff1e94600b489c0c2a9d90318fe4ffc096c9ed131d746bc336b74537305fa3b",
-      "source_fingerprint_sha256": "2486ef98f174d5e8147a12857e7909104e8d4ab0c88d35f74a923ce35001308a",
+      "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
       "python_version": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
       "dependencies": {
         "pandas": "3.0.6",
@@ -106,7 +108,7 @@
       "provider": "ollama",
       "files": {
         "config/agent_config.py": "0034a2664f3b5dcd0d9a8a702ac76e6d24c195971c3fcd31b68694fafee0957b",
-        "src/agents/llm_client.py": "6f11b21da17e6eada001d0e10591a7b67c860703a4e70f76f2aff9e321c2a888"
+        "src/agents/llm_client.py": "e9caf95254de02838ca99430e5be2fff68bd06dfd49e9fa21cbde59bb749ca90"
       },
       "dependencies": {
         "ollama": "0.6.3",
@@ -124,9 +126,9 @@
         "context_window": 8192,
         "keep_alive": "30m"
       },
-      "probe_logic_sha256": "b7be468d2f947aa7f12e1b798fb218c84ba4cfa9a75f495683d4230bc659e0f2"
+      "probe_logic_sha256": "9b6334ed548d7272b1c8e7c14a623e5214ee2502016f5b397f35c0781a5bc83d"
     },
-    "external_scope_fingerprint": "4bbc059b81ecfbca52fb429caa4895b6c9db88d2df4a5a664d6963392e756a77"
+    "external_scope_fingerprint": "3235b63dc162d9ca7bc40daf6e35b1d90b12166d7d42d11b8dea619e1a99301a"
   },
   "configuration": {
     "provider": "ollama",
@@ -139,32 +141,14 @@
     "context_window": 8192,
     "keep_alive": "30m"
   },
-  "model_available": true,
-  "response": {
-    "status": "PASS",
-    "evidence_used": [
-      "LIVE_PROBE"
-    ]
-  },
-  "provider_metadata": {
-    "provider": "ollama",
-    "configured_model": "qwen3:4b",
-    "provider_reported_model": "qwen3:4b",
-    "latency_seconds": 9.057,
-    "prompt_tokens": 76,
-    "completion_tokens": 26,
-    "reasoning_tokens": null,
-    "timeout_seconds": 120.0,
-    "reasoning_effort": null,
-    "max_tokens": null,
-    "max_retries": 0
-  },
-  "model_matches_configuration": true,
+  "reason": "Ollama service/model listing unavailable (ConnectionError).",
   "command_executed": [
-    "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+    "<PYTHON>",
     "scripts/validate_phase1_llm_live.py",
     "--provider",
-    "ollama"
+    "ollama",
+    "--output",
+    "reports/phase1_llm_live_ollama.json"
   ],
-  "previous_report_archive": "reports/private/archive/phase1_llm_live_ollama_20261105T202814367681Z.json"
+  "previous_report_archive": "reports/private/archive/phase1_llm_live_ollama_20261113T152840339934Z.json"
 }

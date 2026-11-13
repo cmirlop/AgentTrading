@@ -2,7 +2,7 @@
   "account_type": "REAL",
   "broker_data": "PASS",
   "command_executed": [
-    "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+    "<PYTHON>",
     "scripts/validate_mt5_real_readonly.py",
     "--no-history-refresh"
   ],

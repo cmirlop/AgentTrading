@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-11-13T16:29:19.259300+00:00",
+  "status": "PASS",
+  "pre_finalization_commit": "1ef0faf7600b866236f75cb7c229fc8a3b66973e",
+  "current_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+  "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "configuration": {
+    "cost_scenario": "BASE",
+    "spread_floor_points": 0.0,
+    "llm_enabled": false
+  },
+  "runtime": {
+    "python_version": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+    "dependencies": {
+      "pandas": "3.0.6",
+      "numpy": "2.5.3"
+    }
+  },
+  "modes": {
+    "portfolio": {
+      "status": "PASS",
+      "trace_rows_before": 56474,
+      "trace_rows_after": 56474,
+      "duplicate_trace_ids": 0,
+      "trace_candidate_ids_match": true,
+      "selected_before": 7715,
+      "selected_after": 7815,
+      "matched_stable_ids": 7628,
+      "before_only": 87,
+      "after_only": 187,
+      "technical_signal_differences": 0,
+      "technical_plan_differences": 0,
+      "selection_differences_total": 274,
+      "selection_differences_attributed": 274,
+      "selection_differences_pending": 0,
+      "root_cause_counts": {
+        "DOCUMENTED_HISTORICAL_EXPIRY_OR_END_STATE_CORRECTION": 287
+      },
+      "output_trade_rows_before": 7715,
+      "output_trade_rows_after": 7815,
+      "missing_trade_traces": 0,
+      "trade_trace_integrity": "PASS"
+    },
+    "stateful": {
+      "status": "PASS",
+      "trace_rows_before": 56474,
+      "trace_rows_after": 56474,
+      "duplicate_trace_ids": 0,
+      "trace_candidate_ids_match": true,
+      "selected_before": 8974,
+      "selected_after": 9091,
+      "matched_stable_ids": 8926,
+      "before_only": 48,
+      "after_only": 165,
+      "technical_signal_differences": 0,
+      "technical_plan_differences": 0,
+      "selection_differences_total": 213,
+      "selection_differences_attributed": 213,
+      "selection_differences_pending": 0,
+      "root_cause_counts": {
+        "DOCUMENTED_HISTORICAL_EXPIRY_OR_END_STATE_CORRECTION": 213
+      },
+      "output_trade_rows_before": 8974,
+      "output_trade_rows_after": 9091,
+      "missing_trade_traces": 0,
+      "trade_trace_integrity": "PASS"
+    }
+  },
+  "technical_signal_differences": 0,
+  "technical_plan_differences": 0,
+  "selection_differences_total": 487,
+  "selection_differences_attributed": 487,
+  "selection_differences_pending": 0,
+  "root_cause_counts": {
+    "DOCUMENTED_HISTORICAL_EXPIRY_OR_END_STATE_CORRECTION": 500
+  },
+  "private_evidence": "reports/private/phase1_final_closure/historical_causal_attribution.json",
+  "private_evidence_sha256": "bdb9aa93f166c8a4d5d13c812b67c7b712c3ff86b09f23bd6fd1759581a1f472",
+  "public_regression_report_update": "PASS",
+  "trace_artifacts": {
+    "portfolio_before": {
+      "path": "reports/private/phase1_final_closure/traces/portfolio_before.jsonl.gz",
+      "sha256": "1934c2043cd6a00da21699fd93bc287681407841dfb4fd4cd38790d907ce4285",
+      "bytes": 4029766,
+      "raw_sha256": "ae34656b37ca9f9f2b5309931395bf4490856fd2362ef7dbbef51af5f29e6c52",
+      "raw_bytes": 61732147
+    },
+    "portfolio_after": {
+      "path": "reports/private/phase1_final_closure/traces/portfolio_after.jsonl.gz",
+      "sha256": "b1c8d5204b855d35124a72a93cba88ef9aedbdc72e283e88a97c4be9dff73468",
+      "bytes": 4038847,
+      "raw_sha256": "9795b29c9662ddddd1aeff8b1b4007629d2579279bcd3c800ba4ee70a7262e28",
+      "raw_bytes": 61684786
+    },
+    "stateful_before": {
+      "path": "reports/private/phase1_final_closure/traces/stateful_before.jsonl.gz",
+      "sha256": "0e31cf16e8383ba71efaff15b7706adb0dd0facab20ce8712b867e80355dcf7a",
+      "bytes": 3696386,
+      "raw_sha256": "0383d9811e73fbbe6068e02c553f7e2b49663ee2edf0b4d7ac31f6675625e362",
+      "raw_bytes": 51300718
+    },
+    "stateful_after": {
+      "path": "reports/private/phase1_final_closure/traces/stateful_after.jsonl.gz",
+      "sha256": "06264025bd202e00e8c294631c915eba1189443eb0875087673061a426220ef3",
+      "bytes": 3704888,
+      "raw_sha256": "5248295c1c2dd5cb0e7b6dfe93826cf8131a356f62b3e88a770d4de1ed71801d",
+      "raw_bytes": 51345144
+    }
+  }
+}
