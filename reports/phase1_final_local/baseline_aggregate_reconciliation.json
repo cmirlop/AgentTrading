@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-11-13T21:05:08.580002+00:00",
+  "generated_at_utc": "2026-11-13T21:14:42.378379+00:00",
   "status": "PASS",
   "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
   "commit_chain": {
@@ -38,6 +38,6 @@
   "base_cost_assumption_verified": true,
   "conservative_stress_comparison": "NO_PRE_COST_MODEL_BASELINE_COMPARABLE",
   "private_evidence": "reports/private/phase1_final_closure/historical_aggregate_reconciliation.json",
-  "private_evidence_sha256": "3c7eaafde91cfb5756d0405ea2987821679c80e16afb1b6d6a730cc9069fc197",
+  "private_evidence_sha256": "0e0240274d406b7befe751ba0e782b3a9939f6565fbfb99cea2b5b663749dbba",
   "errors": []
 }

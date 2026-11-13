@@ -8,29 +8,16 @@
     "integration": "VALIDACIÓN DE INTEGRACIÓN COMPLETADA",
     "phase1": "FASE 1 COMPLETADA"
   },
-  "generated_at_utc": "2026-11-13T21:05:18.710397+00:00",
+  "generated_at_utc": "2026-11-13T21:14:52.246097+00:00",
   "traceability": {
     "validation_fingerprint": {
-      "validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+      "validation_commit": "5817db82d58558b2b8037734016292da4150e220",
       "branch": "codex/issue14-phase1-integrity",
       "working_tree": {
         "clean": false,
         "changes": [
-          "M docs/FASE1_CIERRE.md",
-          " M docs/FASE1_RESULTADO_FINAL.md",
-          " M docs/FASE1_VALIDACION.md",
-          " M reports/phase1_final_local/validation_summary.json",
-          " M reports/phase1_llm_live_ollama.json",
-          " M reports/phase1_validation.json",
-          " M scripts/validate_phase1.py",
-          " M tests/test_phase1_llm_live.py",
-          " M tests/test_phase1_validation_provenance.py",
-          "?? docs/OLLAMA_WINDOWS_DIAGNOSTICO.md",
-          "?? reports/phase1_final_local/baseline_aggregate_reconciliation.json",
-          "?? reports/phase1_final_local/ollama_live_20261113T1908Z_issue14_pass.json",
-          "?? scripts/reconcile_phase1_historical.py",
-          "?? tests/test_phase1_reconciliation.py",
-          "?? tests/test_phase1_runner.py"
+          "M reports/phase1_final_local/baseline_aggregate_reconciliation.json",
+          " M reports/phase1_validation.json"
         ]
       },
       "dataset_path": "data\\backtest\\technical_candidate_scan.csv",
@@ -258,7 +245,7 @@
           "stateful_stress"
         ],
         "source_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
-        "source_generated_at_utc": "2026-11-13T20:44:14.442822+00:00",
+        "source_generated_at_utc": "2026-11-13T21:05:18.710397+00:00",
         "fingerprint_sha256": "677c48856b6606d1ff5d76cd4ae28e1ee91f930670de41e484c83d9c36a13c8e"
       },
       "external_integrations": [
@@ -267,7 +254,7 @@
           "status": "PASS",
           "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
           "report": "reports/mt5_real_readonly_summary.json",
-          "age_seconds": 20837.1,
+          "age_seconds": 21410.6,
           "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
           "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
           "command_executed_this_run": false
@@ -277,7 +264,7 @@
           "status": "PASS",
           "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
           "report": "reports/phase1_final_local/ollama_live_20261113T1908Z_issue14_pass.json",
-          "age_seconds": 6981.3,
+          "age_seconds": 7554.8,
           "origin_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
           "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
           "command_executed_this_run": false
@@ -287,7 +274,7 @@
           "status": "PASS",
           "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
           "report": "reports/phase1_llm_live_deepseek.json",
-          "age_seconds": 20617.5,
+          "age_seconds": 21191.0,
           "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
           "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
           "command_executed_this_run": false
@@ -318,10 +305,10 @@
       "fingerprint_sha256": "677c48856b6606d1ff5d76cd4ae28e1ee91f930670de41e484c83d9c36a13c8e",
       "source_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
       "source_branch": "codex/issue14-phase1-integrity",
-      "source_generated_at_utc": "2026-11-13T20:44:14.442822+00:00",
-      "age_seconds": 1262.8
+      "source_generated_at_utc": "2026-11-13T21:05:18.710397+00:00",
+      "age_seconds": 572.1
     },
-    "prior_report_archive": "reports/private/archive/phase1_validation_20261113T210204703878Z.json"
+    "prior_report_archive": "reports/private/archive/phase1_validation_20261113T211138659616Z.json"
   },
   "checks": {
     "integrity_imports_configuration": {
@@ -331,10 +318,10 @@
         "status": "PASS",
         "phase": "integrity_imports_configuration",
         "execution_state": "COMPLETED",
-        "started_at_utc": "2026-11-13T21:05:01.470878+00:00",
-        "finished_at_utc": "2026-11-13T21:05:03.950048+00:00",
+        "started_at_utc": "2026-11-13T21:14:35.315980+00:00",
+        "finished_at_utc": "2026-11-13T21:14:37.764374+00:00",
         "return_code": 0,
-        "duration_seconds": 2.479,
+        "duration_seconds": 2.448,
         "command": [
           "<PYTHON>",
           "-c",
@@ -60610,12 +60597,12 @@
       "aggregate_reconciliation": {
         "status": "PASS",
         "age_seconds": 1.1,
-        "private_evidence_sha256": "3c7eaafde91cfb5756d0405ea2987821679c80e16afb1b6d6a730cc9069fc197",
+        "private_evidence_sha256": "0e0240274d406b7befe751ba0e782b3a9939f6565fbfb99cea2b5b663749dbba",
         "aggregate_metric_deltas_documented": 721,
         "unexplained_aggregate_deltas": 0
       },
       "aggregate_reconciliation_provenance": {
-        "private_evidence_sha256": "3c7eaafde91cfb5756d0405ea2987821679c80e16afb1b6d6a730cc9069fc197",
+        "private_evidence_sha256": "0e0240274d406b7befe751ba0e782b3a9939f6565fbfb99cea2b5b663749dbba",
         "selection_differences": null,
         "technical_signal_or_plan_changes": null,
         "unexplained_aggregate_deltas": 0
@@ -60638,11 +60625,11 @@
         "fingerprint_sha256": "677c48856b6606d1ff5d76cd4ae28e1ee91f930670de41e484c83d9c36a13c8e",
         "source_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
         "source_branch": "codex/issue14-phase1-integrity",
-        "source_generated_at_utc": "2026-11-13T20:44:14.442822+00:00",
-        "age_seconds": 1262.8
+        "source_generated_at_utc": "2026-11-13T21:05:18.710397+00:00",
+        "age_seconds": 572.1
       },
       "reassessment": {
-        "performed_at_utc": "2026-11-13T21:05:18.528083+00:00",
+        "performed_at_utc": "2026-11-13T21:14:52.061549+00:00",
         "classification_logic": "Current validator reclassified the archived exact-run comparison data; no backtest code or result rows were altered."
       }
     },
@@ -60672,7 +60659,7 @@
         "status": "PASS",
         "reason": null,
         "generated_at_utc": "2026-11-13T15:18:01.621030+00:00",
-        "age_seconds": 20837.1,
+        "age_seconds": 21410.6,
         "report": "reports/mt5_real_readonly_summary.json",
         "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
         "command_executed": [
@@ -60685,7 +60672,7 @@
         "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
         "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
         "origin_branch": "codex/phase1-autonomous-closure-20261113",
-        "current_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+        "current_validation_commit": "5817db82d58558b2b8037734016292da4150e220",
         "current_branch": "codex/issue14-phase1-integrity",
         "external_scope_fingerprint": "9bd1f8e90f00e7ef5142acfbc8bf177ec9f8d3e57e170a13ec9809be6adbfdbc",
         "probe_logic_content_verified_at_commit": null
@@ -60699,7 +60686,7 @@
         "status": "PASS",
         "reason": null,
         "generated_at_utc": "2026-11-13T19:08:57.380966+00:00",
-        "age_seconds": 6981.3,
+        "age_seconds": 7554.8,
         "report": "reports/phase1_final_local/ollama_live_20261113T1908Z_issue14_pass.json",
         "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
         "command_executed": [
@@ -60713,7 +60700,7 @@
         "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
         "origin_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
         "origin_branch": "codex/issue14-phase1-integrity",
-        "current_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+        "current_validation_commit": "5817db82d58558b2b8037734016292da4150e220",
         "current_branch": "codex/issue14-phase1-integrity",
         "external_scope_fingerprint": "3235b63dc162d9ca7bc40daf6e35b1d90b12166d7d42d11b8dea619e1a99301a",
         "probe_logic_content_verified_at_commit": null
@@ -60727,7 +60714,7 @@
         "status": "PASS",
         "reason": null,
         "generated_at_utc": "2026-11-13T15:21:41.213704+00:00",
-        "age_seconds": 20617.5,
+        "age_seconds": 21191.0,
         "report": "reports/phase1_llm_live_deepseek.json",
         "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
         "command_executed": [
@@ -60744,7 +60731,7 @@
         "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
         "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
         "origin_branch": "codex/phase1-autonomous-closure-20261113",
-        "current_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+        "current_validation_commit": "5817db82d58558b2b8037734016292da4150e220",
         "current_branch": "codex/issue14-phase1-integrity",
         "external_scope_fingerprint": "7a11f5709ae83d03221aa54047fe7364802b85ab3ee7fd45b7ca871b994d9906",
         "probe_logic_content_verified_at_commit": null
@@ -60756,10 +60743,10 @@
       "status": "PASS",
       "phase": "phase1_unit_tests",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:04.720286+00:00",
-      "finished_at_utc": "2026-11-13T21:02:22.937535+00:00",
+      "started_at_utc": "2026-11-13T21:11:38.674683+00:00",
+      "finished_at_utc": "2026-11-13T21:11:57.095863+00:00",
       "return_code": 0,
-      "duration_seconds": 18.217,
+      "duration_seconds": 18.421,
       "command": [
         "<PYTHON>",
         "-m",
@@ -60771,8 +60758,8 @@
         "test_phase1_*.py"
       ],
       "reason": null,
-      "stdout_tail": "[interrupt_state_test] START utc=2026-11-13T21:02:16.530281+00:00 deadline=8s\n[interrupt_state_test] INTERRUPTED; owned process tree terminated=True",
-      "stderr_tail": "LM_INVALID_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INVALID_EVIDENCE\n...research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=deepseek model=deepseek-flash schema=Answer error=LLM_PROVIDER_DEPENDENCY_MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_TIMEOUT\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INCOMPLETE_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n..............................................................................\n----------------------------------------------------------------------\nRan 119 tests in 15.590s\n\nOK (skipped=1)",
+      "stdout_tail": "[interrupt_state_test] START utc=2026-11-13T21:11:50.630490+00:00 deadline=8s\n[interrupt_state_test] INTERRUPTED; owned process tree terminated=True",
+      "stderr_tail": "LM_INVALID_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INVALID_EVIDENCE\n...research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=deepseek model=deepseek-flash schema=Answer error=LLM_PROVIDER_DEPENDENCY_MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_TIMEOUT\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INCOMPLETE_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n..............................................................................\n----------------------------------------------------------------------\nRan 119 tests in 15.696s\n\nOK (skipped=1)",
       "output_line_count": 23,
       "process_tree_terminated": false
     },
@@ -60780,10 +60767,10 @@
       "status": "PASS",
       "phase": "mt5_real_readonly_tests",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:22.938410+00:00",
-      "finished_at_utc": "2026-11-13T21:02:24.527373+00:00",
+      "started_at_utc": "2026-11-13T21:11:57.096745+00:00",
+      "finished_at_utc": "2026-11-13T21:11:58.638376+00:00",
       "return_code": 0,
-      "duration_seconds": 1.589,
+      "duration_seconds": 1.542,
       "command": [
         "<PYTHON>",
         "-m",
@@ -60796,7 +60783,7 @@
       ],
       "reason": null,
       "stdout_tail": "",
-      "stderr_tail": "............\n----------------------------------------------------------------------\nRan 12 tests in 0.373s\n\nOK",
+      "stderr_tail": "............\n----------------------------------------------------------------------\nRan 12 tests in 0.338s\n\nOK",
       "output_line_count": 5,
       "process_tree_terminated": false
     },
@@ -60804,10 +60791,10 @@
       "status": "PASS",
       "phase": "test_deepseek_integration.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:24.527786+00:00",
-      "finished_at_utc": "2026-11-13T21:02:27.233372+00:00",
+      "started_at_utc": "2026-11-13T21:11:58.638801+00:00",
+      "finished_at_utc": "2026-11-13T21:12:01.357527+00:00",
       "return_code": 0,
-      "duration_seconds": 2.706,
+      "duration_seconds": 2.719,
       "command": [
         "<PYTHON>",
         "test_deepseek_integration.py"
@@ -60822,10 +60809,10 @@
       "status": "PASS",
       "phase": "test_historical_level_outcome_regression.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:27.233850+00:00",
-      "finished_at_utc": "2026-11-13T21:02:28.887286+00:00",
+      "started_at_utc": "2026-11-13T21:12:01.358624+00:00",
+      "finished_at_utc": "2026-11-13T21:12:03.014627+00:00",
       "return_code": 0,
-      "duration_seconds": 1.653,
+      "duration_seconds": 1.656,
       "command": [
         "<PYTHON>",
         "test_historical_level_outcome_regression.py"
@@ -60840,10 +60827,10 @@
       "status": "PASS",
       "phase": "test_level_event_context_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:28.887683+00:00",
-      "finished_at_utc": "2026-11-13T21:02:44.574368+00:00",
+      "started_at_utc": "2026-11-13T21:12:03.015050+00:00",
+      "finished_at_utc": "2026-11-13T21:12:18.623727+00:00",
       "return_code": 0,
-      "duration_seconds": 15.687,
+      "duration_seconds": 15.609,
       "command": [
         "<PYTHON>",
         "test_level_event_context_historical.py"
@@ -60858,10 +60845,10 @@
       "status": "PASS",
       "phase": "test_level_evidence.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:44.574952+00:00",
-      "finished_at_utc": "2026-11-13T21:02:47.117665+00:00",
+      "started_at_utc": "2026-11-13T21:12:18.624314+00:00",
+      "finished_at_utc": "2026-11-13T21:12:21.170958+00:00",
       "return_code": 0,
-      "duration_seconds": 2.543,
+      "duration_seconds": 2.547,
       "command": [
         "<PYTHON>",
         "test_level_evidence.py"
@@ -60876,10 +60863,10 @@
       "status": "PASS",
       "phase": "test_level_evidence_price_action.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:47.118641+00:00",
-      "finished_at_utc": "2026-11-13T21:02:50.220672+00:00",
+      "started_at_utc": "2026-11-13T21:12:21.171965+00:00",
+      "finished_at_utc": "2026-11-13T21:12:24.256217+00:00",
       "return_code": 0,
-      "duration_seconds": 3.102,
+      "duration_seconds": 3.084,
       "command": [
         "<PYTHON>",
         "test_level_evidence_price_action.py"
@@ -60894,10 +60881,10 @@
       "status": "PASS",
       "phase": "test_level_history_batch_payload.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:02:50.221440+00:00",
-      "finished_at_utc": "2026-11-13T21:03:01.442304+00:00",
+      "started_at_utc": "2026-11-13T21:12:24.257008+00:00",
+      "finished_at_utc": "2026-11-13T21:12:35.576830+00:00",
       "return_code": 0,
-      "duration_seconds": 11.221,
+      "duration_seconds": 11.32,
       "command": [
         "<PYTHON>",
         "test_level_history_batch_payload.py"
@@ -60912,10 +60899,10 @@
       "status": "PASS",
       "phase": "test_level_history_events_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:03:01.442850+00:00",
-      "finished_at_utc": "2026-11-13T21:03:17.402807+00:00",
+      "started_at_utc": "2026-11-13T21:12:35.577403+00:00",
+      "finished_at_utc": "2026-11-13T21:12:51.471591+00:00",
       "return_code": 0,
-      "duration_seconds": 15.96,
+      "duration_seconds": 15.894,
       "command": [
         "<PYTHON>",
         "test_level_history_events_historical.py"
@@ -60930,10 +60917,10 @@
       "status": "PASS",
       "phase": "test_level_history_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:03:17.403700+00:00",
-      "finished_at_utc": "2026-11-13T21:03:32.648439+00:00",
+      "started_at_utc": "2026-11-13T21:12:51.472468+00:00",
+      "finished_at_utc": "2026-11-13T21:13:06.840412+00:00",
       "return_code": 0,
-      "duration_seconds": 15.245,
+      "duration_seconds": 15.368,
       "command": [
         "<PYTHON>",
         "test_level_history_historical.py"
@@ -60948,10 +60935,10 @@
       "status": "PASS",
       "phase": "test_level_history_llm_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:03:32.649128+00:00",
-      "finished_at_utc": "2026-11-13T21:03:49.369541+00:00",
+      "started_at_utc": "2026-11-13T21:13:06.841127+00:00",
+      "finished_at_utc": "2026-11-13T21:13:23.301324+00:00",
       "return_code": 0,
-      "duration_seconds": 16.72,
+      "duration_seconds": 16.46,
       "command": [
         "<PYTHON>",
         "test_level_history_llm_historical.py"
@@ -60966,10 +60953,10 @@
       "status": "PASS",
       "phase": "test_level_history_prompt_payload.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:03:49.370257+00:00",
-      "finished_at_utc": "2026-11-13T21:04:00.608298+00:00",
+      "started_at_utc": "2026-11-13T21:13:23.302028+00:00",
+      "finished_at_utc": "2026-11-13T21:13:34.650338+00:00",
       "return_code": 0,
-      "duration_seconds": 11.238,
+      "duration_seconds": 11.348,
       "command": [
         "<PYTHON>",
         "test_level_history_prompt_payload.py"
@@ -60984,10 +60971,10 @@
       "status": "PASS",
       "phase": "test_level_history_report_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:00.608905+00:00",
-      "finished_at_utc": "2026-11-13T21:04:17.162082+00:00",
+      "started_at_utc": "2026-11-13T21:13:34.650960+00:00",
+      "finished_at_utc": "2026-11-13T21:13:51.165894+00:00",
       "return_code": 0,
-      "duration_seconds": 16.553,
+      "duration_seconds": 16.515,
       "command": [
         "<PYTHON>",
         "test_level_history_report_historical.py"
@@ -61002,10 +60989,10 @@
       "status": "PASS",
       "phase": "test_level_outcome_touch.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:17.162953+00:00",
-      "finished_at_utc": "2026-11-13T21:04:19.594139+00:00",
+      "started_at_utc": "2026-11-13T21:13:51.166694+00:00",
+      "finished_at_utc": "2026-11-13T21:13:53.565960+00:00",
       "return_code": 0,
-      "duration_seconds": 2.431,
+      "duration_seconds": 2.399,
       "command": [
         "<PYTHON>",
         "test_level_outcome_touch.py"
@@ -61020,10 +61007,10 @@
       "status": "PASS",
       "phase": "test_level_price_action.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:19.594897+00:00",
-      "finished_at_utc": "2026-11-13T21:04:22.071793+00:00",
+      "started_at_utc": "2026-11-13T21:13:53.566778+00:00",
+      "finished_at_utc": "2026-11-13T21:13:56.071304+00:00",
       "return_code": 0,
-      "duration_seconds": 2.477,
+      "duration_seconds": 2.505,
       "command": [
         "<PYTHON>",
         "test_level_price_action.py"
@@ -61038,10 +61025,10 @@
       "status": "PASS",
       "phase": "test_level_registry_full_day.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:22.072572+00:00",
-      "finished_at_utc": "2026-11-13T21:04:41.136932+00:00",
+      "started_at_utc": "2026-11-13T21:13:56.072081+00:00",
+      "finished_at_utc": "2026-11-13T21:14:14.985976+00:00",
       "return_code": 0,
-      "duration_seconds": 19.064,
+      "duration_seconds": 18.914,
       "command": [
         "<PYTHON>",
         "test_level_registry_full_day.py"
@@ -61056,10 +61043,10 @@
       "status": "PASS",
       "phase": "test_level_registry_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:41.137482+00:00",
-      "finished_at_utc": "2026-11-13T21:04:43.866817+00:00",
+      "started_at_utc": "2026-11-13T21:14:14.986633+00:00",
+      "finished_at_utc": "2026-11-13T21:14:17.702633+00:00",
       "return_code": 0,
-      "duration_seconds": 2.729,
+      "duration_seconds": 2.716,
       "command": [
         "<PYTHON>",
         "test_level_registry_historical.py"
@@ -61074,10 +61061,10 @@
       "status": "PASS",
       "phase": "test_level_thesis_direction.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:43.867342+00:00",
-      "finished_at_utc": "2026-11-13T21:04:45.925523+00:00",
+      "started_at_utc": "2026-11-13T21:14:17.703239+00:00",
+      "finished_at_utc": "2026-11-13T21:14:19.793128+00:00",
       "return_code": 0,
-      "duration_seconds": 2.058,
+      "duration_seconds": 2.09,
       "command": [
         "<PYTHON>",
         "test_level_thesis_direction.py"
@@ -61092,10 +61079,10 @@
       "status": "PASS",
       "phase": "test_level_thesis_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:45.926324+00:00",
-      "finished_at_utc": "2026-11-13T21:04:50.909119+00:00",
+      "started_at_utc": "2026-11-13T21:14:19.793955+00:00",
+      "finished_at_utc": "2026-11-13T21:14:24.853720+00:00",
       "return_code": 0,
-      "duration_seconds": 4.983,
+      "duration_seconds": 5.06,
       "command": [
         "<PYTHON>",
         "test_level_thesis_historical.py"
@@ -61110,10 +61097,10 @@
       "status": "PASS",
       "phase": "test_level_thesis_unclear.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:50.910010+00:00",
-      "finished_at_utc": "2026-11-13T21:04:52.985400+00:00",
+      "started_at_utc": "2026-11-13T21:14:24.854649+00:00",
+      "finished_at_utc": "2026-11-13T21:14:26.904092+00:00",
       "return_code": 0,
-      "duration_seconds": 2.075,
+      "duration_seconds": 2.049,
       "command": [
         "<PYTHON>",
         "test_level_thesis_unclear.py"
@@ -61128,10 +61115,10 @@
       "status": "PASS",
       "phase": "test_multiagent_second_stage.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:52.985892+00:00",
-      "finished_at_utc": "2026-11-13T21:04:54.152121+00:00",
+      "started_at_utc": "2026-11-13T21:14:26.904566+00:00",
+      "finished_at_utc": "2026-11-13T21:14:28.069933+00:00",
       "return_code": 0,
-      "duration_seconds": 1.166,
+      "duration_seconds": 1.165,
       "command": [
         "<PYTHON>",
         "test_multiagent_second_stage.py"
@@ -61146,10 +61133,10 @@
       "status": "PASS",
       "phase": "test_no_lookahead.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:54.152603+00:00",
-      "finished_at_utc": "2026-11-13T21:04:58.879284+00:00",
+      "started_at_utc": "2026-11-13T21:14:28.070414+00:00",
+      "finished_at_utc": "2026-11-13T21:14:32.751853+00:00",
       "return_code": 0,
-      "duration_seconds": 4.727,
+      "duration_seconds": 4.681,
       "command": [
         "<PYTHON>",
         "test_no_lookahead.py"
@@ -61164,10 +61151,10 @@
       "status": "PASS",
       "phase": "test_support_resistance_historical.py",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:04:58.879821+00:00",
-      "finished_at_utc": "2026-11-13T21:05:01.470165+00:00",
+      "started_at_utc": "2026-11-13T21:14:32.752381+00:00",
+      "finished_at_utc": "2026-11-13T21:14:35.315241+00:00",
       "return_code": 0,
-      "duration_seconds": 2.59,
+      "duration_seconds": 2.563,
       "command": [
         "<PYTHON>",
         "test_support_resistance_historical.py"
@@ -61200,10 +61187,10 @@
       "status": "PASS",
       "phase": "historical_aggregate_reconciliation",
       "execution_state": "COMPLETED",
-      "started_at_utc": "2026-11-13T21:05:03.950431+00:00",
-      "finished_at_utc": "2026-11-13T21:05:09.659373+00:00",
+      "started_at_utc": "2026-11-13T21:14:37.764791+00:00",
+      "finished_at_utc": "2026-11-13T21:14:43.445459+00:00",
       "return_code": 0,
-      "duration_seconds": 5.709,
+      "duration_seconds": 5.681,
       "command": [
         "<PYTHON>",
         "scripts/reconcile_phase1_historical.py"
@@ -61216,7 +61203,7 @@
       "verification": {
         "status": "PASS",
         "age_seconds": 1.1,
-        "private_evidence_sha256": "3c7eaafde91cfb5756d0405ea2987821679c80e16afb1b6d6a730cc9069fc197",
+        "private_evidence_sha256": "0e0240274d406b7befe751ba0e782b3a9939f6565fbfb99cea2b5b663749dbba",
         "aggregate_metric_deltas_documented": 721,
         "unexplained_aggregate_deltas": 0
       }
@@ -61228,7 +61215,7 @@
       "status": "PASS",
       "reason": null,
       "generated_at_utc": "2026-11-13T15:18:01.621030+00:00",
-      "age_seconds": 20837.1,
+      "age_seconds": 21410.6,
       "report": "reports/mt5_real_readonly_summary.json",
       "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
       "command_executed": [
@@ -61241,7 +61228,7 @@
       "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
       "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
       "origin_branch": "codex/phase1-autonomous-closure-20261113",
-      "current_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+      "current_validation_commit": "5817db82d58558b2b8037734016292da4150e220",
       "current_branch": "codex/issue14-phase1-integrity",
       "external_scope_fingerprint": "9bd1f8e90f00e7ef5142acfbc8bf177ec9f8d3e57e170a13ec9809be6adbfdbc",
       "probe_logic_content_verified_at_commit": null
@@ -61250,7 +61237,7 @@
       "status": "PASS",
       "reason": null,
       "generated_at_utc": "2026-11-13T19:08:57.380966+00:00",
-      "age_seconds": 6981.3,
+      "age_seconds": 7554.8,
       "report": "reports/phase1_final_local/ollama_live_20261113T1908Z_issue14_pass.json",
       "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
       "command_executed": [
@@ -61264,7 +61251,7 @@
       "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
       "origin_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
       "origin_branch": "codex/issue14-phase1-integrity",
-      "current_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+      "current_validation_commit": "5817db82d58558b2b8037734016292da4150e220",
       "current_branch": "codex/issue14-phase1-integrity",
       "external_scope_fingerprint": "3235b63dc162d9ca7bc40daf6e35b1d90b12166d7d42d11b8dea619e1a99301a",
       "probe_logic_content_verified_at_commit": null
@@ -61273,7 +61260,7 @@
       "status": "PASS",
       "reason": null,
       "generated_at_utc": "2026-11-13T15:21:41.213704+00:00",
-      "age_seconds": 20617.5,
+      "age_seconds": 21191.0,
       "report": "reports/phase1_llm_live_deepseek.json",
       "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
       "command_executed": [
@@ -61290,7 +61277,7 @@
       "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
       "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
       "origin_branch": "codex/phase1-autonomous-closure-20261113",
-      "current_validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+      "current_validation_commit": "5817db82d58558b2b8037734016292da4150e220",
       "current_branch": "codex/issue14-phase1-integrity",
       "external_scope_fingerprint": "7a11f5709ae83d03221aa54047fe7364802b85ab3ee7fd45b7ca871b994d9906",
       "probe_logic_content_verified_at_commit": null

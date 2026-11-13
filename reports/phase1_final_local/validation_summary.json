@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-11-13T21:05:18.710397+00:00",
+  "generated_at_utc": "2026-11-13T21:14:52.246097+00:00",
   "overall_status": "PHASE1_COMPLETE",
   "exit_code": 0,
   "validation_mode": "FULL_OFFLINE_WITH_HASH_VERIFIED_HISTORICAL_REPLAY_REUSE",
   "execution_state": "COMPLETED",
-  "validation_commit": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91",
+  "validation_commit": "5817db82d58558b2b8037734016292da4150e220",
   "branch": "codex/issue14-phase1-integrity",
   "dataset_sha256": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0",
   "workspace_dataset_sha256": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0",
