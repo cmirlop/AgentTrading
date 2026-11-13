@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-11-13T21:14:42.378379+00:00",
+  "status": "PASS",
+  "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "commit_chain": {
+    "baseline": "a00644a6b330b6235bea3f47cb17d2dfe39d4f5b",
+    "pre_finalization": "1ef0faf7600b866236f75cb7c229fc8a3b66973e",
+    "current": "ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91"
+  },
+  "published_summary_reproduction": {
+    "baseline_portfolio": "PASS",
+    "baseline_stateful": "PASS",
+    "pre_finalization_portfolio": "PASS",
+    "pre_finalization_stateful": "PASS",
+    "current_portfolio": "PASS",
+    "current_stateful": "PASS"
+  },
+  "selection_witness_status": "PASS",
+  "baseline_to_prefinal_selection_changes": {
+    "portfolio": 0,
+    "stateful": 0
+  },
+  "prefinal_to_current_selection_changes": {
+    "portfolio": 274,
+    "stateful": 213
+  },
+  "prefinal_to_current_changed_common_operations": {
+    "portfolio": 115,
+    "stateful": 137
+  },
+  "technical_signal_or_plan_changes": {
+    "portfolio": 0,
+    "stateful": 0
+  },
+  "aggregate_metric_deltas_documented": 721,
+  "unexplained_aggregate_deltas": 0,
+  "base_cost_assumption_verified": true,
+  "conservative_stress_comparison": "NO_PRE_COST_MODEL_BASELINE_COMPARABLE",
+  "private_evidence": "reports/private/phase1_final_closure/historical_aggregate_reconciliation.json",
+  "private_evidence_sha256": "0e0240274d406b7befe751ba0e782b3a9939f6565fbfb99cea2b5b663749dbba",
+  "errors": []
+}
