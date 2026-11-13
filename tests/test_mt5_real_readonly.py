@@ -7,6 +7,7 @@ import csv
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from types import SimpleNamespace
@@ -72,6 +73,7 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
                 "balance": 50000.0, "equity": 49900.0,
             },
             "symbols": {}, "risk": {}, "history": {},
+            "command_executed": [sys.executable, str(Path(__file__).resolve())],
             "safe_errors": [],
         }
         public_text = json.dumps(validator._public_projection(private), sort_keys=True)
@@ -79,6 +81,9 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
             self.assertNotIn(secret, public_text)
         self.assertIn('"account_type": "REAL"', public_text)
         self.assertIn('"orders_sent_by_process": 0', public_text)
+        self.assertNotIn(str(Path.home()), public_text)
+        self.assertNotIn(sys.executable, public_text)
+        self.assertIn("<PYTHON>", public_text)
 
     def test_public_projection_includes_observed_spread_points(self):
         private = {

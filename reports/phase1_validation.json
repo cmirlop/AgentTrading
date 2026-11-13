@@ -2,34 +2,34 @@
   "phase": "FASE 1.1 — HARDENING Y VALIDACIÓN FINAL",
   "validation_mode": "FULL_OFFLINE_WITH_HASH_VERIFIED_HISTORICAL_REPLAY_REUSE",
   "overall_status": "INCOMPLETE_PENDING_MANUAL",
+  "exit_code": 2,
   "validation_states": {
-    "offline": "VALIDACIÓN HISTÓRICA PENDIENTE DE REVISIÓN",
+    "offline": "REVALIDACIÓN GLOBAL FINAL PENDIENTE; evidencia integral previa PASS",
     "integration": "VALIDACIÓN DE INTEGRACIÓN PENDIENTE",
     "phase1": "FASE 1 PENDIENTE"
   },
-  "generated_at_utc": "2026-11-11T20:37:55.299171+01:00",
+  "generated_at_utc": "2026-11-13T16:49:53.717883+00:00",
   "traceability": {
     "validation_fingerprint": {
-      "validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-      "branch": "codex/phase1-final-local-real-readonly-closure",
+      "validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "branch": "codex/phase1-autonomous-closure-20261113",
       "working_tree": {
         "clean": false,
         "changes": [
           "M reports/mt5_history_refresh_summary.json",
           " M reports/mt5_real_readonly_summary.json",
+          " M reports/phase1_final_local/historical_regression_attribution.json",
+          " M reports/phase1_llm_live_deepseek.json",
+          " M reports/phase1_llm_live_ollama.json",
           " M reports/phase1_validation.json",
-          " M scripts/validate_mt5_real_readonly.py",
           " M scripts/validate_phase1.py",
           " M scripts/validate_phase1_llm_live.py",
-          " M tests/test_mt5_real_readonly.py",
           " M tests/test_phase1_llm_live.py",
           " M tests/test_phase1_validation_provenance.py",
-          "?? reports/archive/mt5_history_refresh_summary-20261109T204428Z.json",
-          "?? reports/archive/mt5_history_refresh_summary-20261111T183547Z.json",
-          "?? reports/archive/mt5_real_readonly_summary-20261109T204428Z.json",
-          "?? reports/archive/mt5_real_readonly_summary-20261111T183547Z.json",
-          "?? reports/phase1_final_local/ollama_live_20261111T1847Z.json",
-          "?? reports/phase1_final_local/ollama_live_20261111T1900Z.json"
+          "?? reports/archive/mt5_history_refresh_summary-20261111T203048Z.json",
+          "?? reports/archive/mt5_real_readonly_summary-20261111T202355Z.json",
+          "?? reports/phase1_final_local/historical_causal_attribution_summary.json",
+          "?? reports/phase1_final_local/ollama_live_current_runtime.json"
         ]
       },
       "dataset_path": "data\\backtest\\technical_candidate_scan.csv",
@@ -51,8 +51,8 @@
         "run_portfolio_backtest.py": "5521d032f899e32a60df013870ed2fe0da81b9f2d8368430410c0912197fb62a",
         "run_stateful_backtest.py": "a71615abb6980c4b90426396b1c1435efc85eeb2ff082cfbe65a2e7ed057745d",
         "scripts/validate_mt5_real_readonly.py": "56eae8a9cbea20f6ddf69663b2c3958bc6e51a7280aa43b09d95c5404b69b4e8",
-        "scripts/validate_phase1.py": "aecc72e87489150f849e23a8b218c838cc347d3ec1d654e58a40d88d1db5cc57",
-        "scripts/validate_phase1_llm_live.py": "e71812afb5e1497fa71a529a00e65878e0e362628445f8d94466dac8fb85adc2",
+        "scripts/validate_phase1.py": "80f2e286bb9567e6a2616ed2cc9ee0df692b6c6bb7e76ffbc14ba46624a715f6",
+        "scripts/validate_phase1_llm_live.py": "066422038178edb0113a1c53757e9aa9fc6f55951d760714215a0f9fca139dbb",
         "scripts/validate_phase1_mt5.py": "3ad8c33c5e36c6dece8035011bd494ba2e1c5757d4c930fc6c07946dff578bca",
         "src/agents/decision_agent.py": "76ca802e80f0a2070b44fb5abdea0c40df5e427e149467426aece04749175d8b",
         "src/agents/deepseek_client.py": "85ba9ee389777e6e5b0554b6bfb5db809a34d13e4ab7d66b7917b8357b248284",
@@ -75,11 +75,11 @@
         "tests/test_phase1_backtest.py": "9d5e6d2dc633aed83ff06d6d5072ce2938ad7bb3df1737e850ee267048f40ec1",
         "tests/test_phase1_daily_guard.py": "86274fdc559d373675bab15247c5c42fcff6cad58dc0d8d682c006d9be0d6b5e",
         "tests/test_phase1_llm.py": "5d91da7c9c14020406aaa29982f798d0211b8d73e04a3c78e795b0f89423b4d0",
-        "tests/test_phase1_llm_live.py": "7b29bc2821310cb968305c3be4e96adfd2aa6f6992fd11b110ef781a974f6a04",
+        "tests/test_phase1_llm_live.py": "4e5d0d0447a9d750508991b5bd0654aea0715a5b40032a42889248bf56adb702",
         "tests/test_phase1_mt5_safety.py": "c7791b9e41a43a8d30bc1b05a0a69c0acb08bfa7a077e1905b33f2c7741f2d50",
         "tests/test_phase1_risk.py": "700fc98f84d2a91a3e35c47b761b2e03fb07b186921e0feb228f327ee5f31f54",
         "tests/test_phase1_risk_validator.py": "aefaeb312bce632e845b704c03af4e1425766e825834d63db6e3c98a9fdabbd8",
-        "tests/test_phase1_validation_provenance.py": "4454b4b622e25b62bf9f328c5244380de538d0abf75828878a2c57fbadbed358"
+        "tests/test_phase1_validation_provenance.py": "b3d42edf9ff8a3b79ee09e3bf445819b2804a72a328bb53c451fc97b4c505636"
       },
       "backtest_config_sha256": {
         "config/agent_config.py": "0034a2664f3b5dcd0d9a8a702ac76e6d24c195971c3fcd31b68694fafee0957b",
@@ -91,7 +91,7 @@
         "config/trade_planner_config.py": "eedfc22f77be6f2f5ead8427c13de0a58434e41ca789506b2cc6807a1518ab65"
       },
       "baseline_metrics_sha256": "9ff1e94600b489c0c2a9d90318fe4ffc096c9ed131d746bc336b74537305fa3b",
-      "source_fingerprint_sha256": "073d7f15234f3e76af86be9f0e31e16a8601e785fca56cd020b664a3a94ce32d",
+      "source_fingerprint_sha256": "884bc985e00fdda1250f9a3ea486d99884fc461e735de3710f3fe4878c55a181",
       "python_version": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
       "dependencies": {
         "pandas": "3.0.6",
@@ -106,11 +106,11 @@
     },
     "commands_executed": [
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "scripts/validate_phase1.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "-m",
         "unittest",
         "discover",
@@ -120,7 +120,7 @@
         "test_phase1_*.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "-m",
         "unittest",
         "discover",
@@ -130,202 +130,211 @@
         "test_mt5_real_readonly.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_deepseek_integration.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_historical_level_outcome_regression.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_event_context_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_evidence.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_evidence_price_action.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_batch_payload.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_events_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_llm_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_prompt_payload.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_report_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_outcome_touch.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_price_action.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_registry_full_day.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_registry_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_thesis_direction.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_thesis_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_thesis_unclear.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_multiagent_second_stage.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_no_lookahead.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_support_resistance_historical.py"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "-c",
         "import config.agent_config, config.risk_config, config.backtest_cost_config; import src.agents.llm_client, src.risk_engine, src.daily_risk_guard, src.risk_preflight, src.historical_execution, src.mt5_deal_history; print('offline imports OK')"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_portfolio_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "portfolio_base_1",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_1",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_1",
         "--cost-scenario",
         "BASE"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_portfolio_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "portfolio_base_2",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_2",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_2",
         "--cost-scenario",
         "BASE"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_portfolio_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "portfolio_conservative",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_conservative",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_conservative",
         "--cost-scenario",
         "CONSERVATIVE"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_portfolio_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "portfolio_stress",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_stress",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_stress",
         "--cost-scenario",
         "STRESS"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_stateful_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "stateful_base_1",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_1",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_1",
         "--cost-scenario",
         "BASE"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_stateful_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "stateful_base_2",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_2",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_2",
         "--cost-scenario",
         "BASE"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_stateful_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "stateful_conservative",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_conservative",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_conservative",
         "--cost-scenario",
         "CONSERVATIVE"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "run_stateful_backtest.py",
         "--scan",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
         "--name",
         "stateful_stress",
         "--output-dir",
-        "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_stress",
+        "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_stress",
         "--cost-scenario",
         "STRESS"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "scripts/validate_mt5_real_readonly.py",
         "--no-history-refresh"
       ],
       [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "scripts/validate_phase1_llm_live.py",
         "--provider",
         "ollama",
         "--output",
-        "reports/phase1_final_local/ollama_live_20261111T1900Z.json"
+        "reports\\phase1_final_local\\ollama_live_current_runtime.json"
+      ],
+      [
+        "<PYTHON>",
+        "scripts/validate_phase1_llm_live.py",
+        "--provider",
+        "deepseek",
+        "--authorize-deepseek",
+        "--output",
+        "reports/phase1_llm_live_deepseek.json"
       ]
     ],
     "validator_refresh_hash_check": {
@@ -373,23 +382,23 @@
         "src/trade_planner.py"
       ],
       "fingerprint_sha256": "3cd0276dada86eb8e02b075e36b7f3390c1063225748afe3f6720c3b9a753cec",
-      "source_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-      "source_branch": "codex/phase1-final-local-real-readonly-closure",
-      "source_generated_at_utc": "2026-11-11T20:31:54.231111+01:00",
-      "age_seconds": 360.7
+      "source_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "source_branch": "codex/phase1-autonomous-closure-20261113",
+      "source_generated_at_utc": "2026-11-13T16:42:59.664939+00:00",
+      "age_seconds": 412.6
     },
-    "prior_report_archive": "reports/private/archive/phase1_validation_20261111T193755299555Z.json"
+    "prior_report_archive": "reports/private/archive/phase1_validation_20261113T164953718265Z.json"
   },
   "checks": {
     "integrity_imports_configuration": {
       "status": "PASS",
-      "python_files_parsed": 151,
+      "python_files_parsed": 154,
       "import_check": {
         "status": "PASS",
         "return_code": 0,
-        "duration_seconds": 1.474,
+        "duration_seconds": 1.483,
         "command": [
-          "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+          "<PYTHON>",
           "-c",
           "import config.agent_config, config.risk_config, config.backtest_cost_config; import src.agents.llm_client, src.risk_engine, src.daily_risk_guard, src.risk_preflight, src.historical_execution, src.mt5_deal_history; print('offline imports OK')"
         ],
@@ -402,8 +411,8 @@
     "llm_provider_selection_and_validation": {
       "status": "PASS",
       "evidence": "Mocked provider and schema tests; no billed API calls.",
-      "live_ollama": "PASS",
-      "live_deepseek": "PENDING"
+      "live_ollama": "PENDING",
+      "live_deepseek": "PASS"
     },
     "risk_per_trade": {
       "status": "PASS",
@@ -484,160 +493,160 @@
         "portfolio_base_1": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 163.495,
+          "duration_seconds": 161.061,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_portfolio_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "portfolio_base_1",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_1",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_1",
             "--cost-scenario",
             "BASE"
           ],
-          "stdout_tail": "46 | win=0.3475 | expEUR=0.024 | pnlEUR=10.65 | PF=1.071 | DD=11.25 | globalBlocked=  608\n        EURUSD=423 USDCAD=470 AUDUSD=408\n>=85 STOP  | taken= 505 | resolved= 269 | win=0.3643 | expEUR=0.075 | pnlEUR=20.11 | PF=1.101 | DD=28.76 | globalBlocked=  971\n        EURUSD=156 USDCAD=171 AUDUSD=178\n>=90 LIMIT | taken=1110 | resolved= 367 | win=0.3706 | expEUR=0.067 | pnlEUR=24.43 | PF=1.21 | DD=9.44 | globalBlocked=  296\n        EURUSD=361 USDCAD=408 AUDUSD=341\n>=90 STOP  | taken= 428 | resolved= 238 | win=0.3655 | expEUR=0.089 | pnlEUR=21.12 | PF=1.123 | DD=29.28 | globalBlocked=  534\n        EURUSD=133 USDCAD=143 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_1\\portfolio_base_1_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_1\\portfolio_base_1_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_1\\portfolio_base_1_metadata.json\n",
+          "stdout_tail": "46 | win=0.3475 | expEUR=0.024 | pnlEUR=10.65 | PF=1.071 | DD=11.25 | globalBlocked=  608\n        EURUSD=423 USDCAD=470 AUDUSD=408\n>=85 STOP  | taken= 505 | resolved= 269 | win=0.3643 | expEUR=0.075 | pnlEUR=20.11 | PF=1.101 | DD=28.76 | globalBlocked=  971\n        EURUSD=156 USDCAD=171 AUDUSD=178\n>=90 LIMIT | taken=1110 | resolved= 367 | win=0.3706 | expEUR=0.067 | pnlEUR=24.43 | PF=1.21 | DD=9.44 | globalBlocked=  296\n        EURUSD=361 USDCAD=408 AUDUSD=341\n>=90 STOP  | taken= 428 | resolved= 238 | win=0.3655 | expEUR=0.089 | pnlEUR=21.12 | PF=1.123 | DD=29.28 | globalBlocked=  534\n        EURUSD=133 USDCAD=143 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_1\\portfolio_base_1_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_1\\portfolio_base_1_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_1\\portfolio_base_1_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 7815
         },
         "portfolio_base_2": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 160.416,
+          "duration_seconds": 161.098,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_portfolio_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "portfolio_base_2",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_2",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_2",
             "--cost-scenario",
             "BASE"
           ],
-          "stdout_tail": "46 | win=0.3475 | expEUR=0.024 | pnlEUR=10.65 | PF=1.071 | DD=11.25 | globalBlocked=  608\n        EURUSD=423 USDCAD=470 AUDUSD=408\n>=85 STOP  | taken= 505 | resolved= 269 | win=0.3643 | expEUR=0.075 | pnlEUR=20.11 | PF=1.101 | DD=28.76 | globalBlocked=  971\n        EURUSD=156 USDCAD=171 AUDUSD=178\n>=90 LIMIT | taken=1110 | resolved= 367 | win=0.3706 | expEUR=0.067 | pnlEUR=24.43 | PF=1.21 | DD=9.44 | globalBlocked=  296\n        EURUSD=361 USDCAD=408 AUDUSD=341\n>=90 STOP  | taken= 428 | resolved= 238 | win=0.3655 | expEUR=0.089 | pnlEUR=21.12 | PF=1.123 | DD=29.28 | globalBlocked=  534\n        EURUSD=133 USDCAD=143 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_2\\portfolio_base_2_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_2\\portfolio_base_2_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_base_2\\portfolio_base_2_metadata.json\n",
+          "stdout_tail": "46 | win=0.3475 | expEUR=0.024 | pnlEUR=10.65 | PF=1.071 | DD=11.25 | globalBlocked=  608\n        EURUSD=423 USDCAD=470 AUDUSD=408\n>=85 STOP  | taken= 505 | resolved= 269 | win=0.3643 | expEUR=0.075 | pnlEUR=20.11 | PF=1.101 | DD=28.76 | globalBlocked=  971\n        EURUSD=156 USDCAD=171 AUDUSD=178\n>=90 LIMIT | taken=1110 | resolved= 367 | win=0.3706 | expEUR=0.067 | pnlEUR=24.43 | PF=1.21 | DD=9.44 | globalBlocked=  296\n        EURUSD=361 USDCAD=408 AUDUSD=341\n>=90 STOP  | taken= 428 | resolved= 238 | win=0.3655 | expEUR=0.089 | pnlEUR=21.12 | PF=1.123 | DD=29.28 | globalBlocked=  534\n        EURUSD=133 USDCAD=143 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_2\\portfolio_base_2_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_2\\portfolio_base_2_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_base_2\\portfolio_base_2_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 7815
         },
         "portfolio_conservative": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 159.32,
+          "duration_seconds": 159.901,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_portfolio_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "portfolio_conservative",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_conservative",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_conservative",
             "--cost-scenario",
             "CONSERVATIVE"
           ],
-          "stdout_tail": "EUR=10.65 | PF=1.071 | DD=11.25 | globalBlocked=  608\n        EURUSD=423 USDCAD=470 AUDUSD=408\n>=85 STOP  | taken= 505 | resolved= 269 | win=0.3643 | expEUR=0.075 | pnlEUR=20.11 | PF=1.101 | DD=28.76 | globalBlocked=  971\n        EURUSD=156 USDCAD=171 AUDUSD=178\n>=90 LIMIT | taken=1110 | resolved= 367 | win=0.3706 | expEUR=0.067 | pnlEUR=24.43 | PF=1.21 | DD=9.44 | globalBlocked=  296\n        EURUSD=361 USDCAD=408 AUDUSD=341\n>=90 STOP  | taken= 428 | resolved= 238 | win=0.3655 | expEUR=0.089 | pnlEUR=21.12 | PF=1.123 | DD=29.28 | globalBlocked=  534\n        EURUSD=133 USDCAD=143 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_conservative\\portfolio_conservative_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_conservative\\portfolio_conservative_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_conservative\\portfolio_conservative_metadata.json\n",
+          "stdout_tail": "EUR=10.65 | PF=1.071 | DD=11.25 | globalBlocked=  608\n        EURUSD=423 USDCAD=470 AUDUSD=408\n>=85 STOP  | taken= 505 | resolved= 269 | win=0.3643 | expEUR=0.075 | pnlEUR=20.11 | PF=1.101 | DD=28.76 | globalBlocked=  971\n        EURUSD=156 USDCAD=171 AUDUSD=178\n>=90 LIMIT | taken=1110 | resolved= 367 | win=0.3706 | expEUR=0.067 | pnlEUR=24.43 | PF=1.21 | DD=9.44 | globalBlocked=  296\n        EURUSD=361 USDCAD=408 AUDUSD=341\n>=90 STOP  | taken= 428 | resolved= 238 | win=0.3655 | expEUR=0.089 | pnlEUR=21.12 | PF=1.123 | DD=29.28 | globalBlocked=  534\n        EURUSD=133 USDCAD=143 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_conservative\\portfolio_conservative_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_conservative\\portfolio_conservative_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_conservative\\portfolio_conservative_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 7819
         },
         "portfolio_stress": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 160.389,
+          "duration_seconds": 160.722,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_portfolio_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "portfolio_stress",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_stress",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_stress",
             "--cost-scenario",
             "STRESS"
           ],
-          "stdout_tail": "= 447 | win=0.34 | expEUR=0.009 | pnlEUR=4.14 | PF=1.027 | DD=11.25 | globalBlocked=  608\n        EURUSD=424 USDCAD=470 AUDUSD=409\n>=85 STOP  | taken= 510 | resolved= 271 | win=0.3616 | expEUR=0.06 | pnlEUR=16.34 | PF=1.082 | DD=32.44 | globalBlocked=  966\n        EURUSD=156 USDCAD=174 AUDUSD=180\n>=90 LIMIT | taken=1116 | resolved= 370 | win=0.3541 | expEUR=0.032 | pnlEUR=11.92 | PF=1.098 | DD=9.44 | globalBlocked=  294\n        EURUSD=365 USDCAD=409 AUDUSD=342\n>=90 STOP  | taken= 436 | resolved= 243 | win=0.3621 | expEUR=0.064 | pnlEUR=15.53 | PF=1.088 | DD=35.11 | globalBlocked=  534\n        EURUSD=133 USDCAD=151 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_stress\\portfolio_stress_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_stress\\portfolio_stress_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\portfolio_stress\\portfolio_stress_metadata.json\n",
+          "stdout_tail": "= 447 | win=0.34 | expEUR=0.009 | pnlEUR=4.14 | PF=1.027 | DD=11.25 | globalBlocked=  608\n        EURUSD=424 USDCAD=470 AUDUSD=409\n>=85 STOP  | taken= 510 | resolved= 271 | win=0.3616 | expEUR=0.06 | pnlEUR=16.34 | PF=1.082 | DD=32.44 | globalBlocked=  966\n        EURUSD=156 USDCAD=174 AUDUSD=180\n>=90 LIMIT | taken=1116 | resolved= 370 | win=0.3541 | expEUR=0.032 | pnlEUR=11.92 | PF=1.098 | DD=9.44 | globalBlocked=  294\n        EURUSD=365 USDCAD=409 AUDUSD=342\n>=90 STOP  | taken= 436 | resolved= 243 | win=0.3621 | expEUR=0.064 | pnlEUR=15.53 | PF=1.088 | DD=35.11 | globalBlocked=  534\n        EURUSD=133 USDCAD=151 AUDUSD=152\n\n====================================================================================================\nGUARDADO\n====================================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_stress\\portfolio_stress_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_stress\\portfolio_stress_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\portfolio_stress\\portfolio_stress_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 7899
         },
         "stateful_base_1": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 188.846,
+          "duration_seconds": 190.791,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_stateful_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "stateful_base_1",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_1",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_1",
             "--cost-scenario",
             "BASE"
           ],
-          "stdout_tail": "= 127 | riskReject=   0 | win=0.3228 | expR=0.0008 | totalR=0.1 | PF=1.001 | DD=26.3 | grossEUR=-4.31\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.2547 | expR=-0.2106 | totalR=-33.9 | PF=0.717 | DD=34.2 | grossEUR=-16.85\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2868 | expR=-0.1109 | totalR=-14.3 | PF=0.845 | DD=16.5 | grossEUR=-8.51\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_1\\stateful_base_1_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_1\\stateful_base_1_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_1\\stateful_base_1_metadata.json\n",
+          "stdout_tail": "= 127 | riskReject=   0 | win=0.3228 | expR=0.0008 | totalR=0.1 | PF=1.001 | DD=26.3 | grossEUR=-4.31\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.2547 | expR=-0.2106 | totalR=-33.9 | PF=0.717 | DD=34.2 | grossEUR=-16.85\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2868 | expR=-0.1109 | totalR=-14.3 | PF=0.845 | DD=16.5 | grossEUR=-8.51\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_1\\stateful_base_1_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_1\\stateful_base_1_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_1\\stateful_base_1_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 9091
         },
         "stateful_base_2": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 198.851,
+          "duration_seconds": 190.519,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_stateful_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "stateful_base_2",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_2",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_2",
             "--cost-scenario",
             "BASE"
           ],
-          "stdout_tail": "= 127 | riskReject=   0 | win=0.3228 | expR=0.0008 | totalR=0.1 | PF=1.001 | DD=26.3 | grossEUR=-4.31\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.2547 | expR=-0.2106 | totalR=-33.9 | PF=0.717 | DD=34.2 | grossEUR=-16.85\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2868 | expR=-0.1109 | totalR=-14.3 | PF=0.845 | DD=16.5 | grossEUR=-8.51\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_2\\stateful_base_2_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_2\\stateful_base_2_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_base_2\\stateful_base_2_metadata.json\n",
+          "stdout_tail": "= 127 | riskReject=   0 | win=0.3228 | expR=0.0008 | totalR=0.1 | PF=1.001 | DD=26.3 | grossEUR=-4.31\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.2547 | expR=-0.2106 | totalR=-33.9 | PF=0.717 | DD=34.2 | grossEUR=-16.85\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2868 | expR=-0.1109 | totalR=-14.3 | PF=0.845 | DD=16.5 | grossEUR=-8.51\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_2\\stateful_base_2_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_2\\stateful_base_2_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_base_2\\stateful_base_2_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 9091
         },
         "stateful_conservative": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 191.434,
+          "duration_seconds": 189.202,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_stateful_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "stateful_conservative",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_conservative",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_conservative",
             "--cost-scenario",
             "CONSERVATIVE"
           ],
-          "stdout_tail": " | expR=0.0008 | totalR=0.1 | PF=1.001 | DD=26.3 | grossEUR=-4.31\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.2484 | expR=-0.2298 | totalR=-37.0 | PF=0.694 | DD=37.0 | grossEUR=-19.84\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2868 | expR=-0.1109 | totalR=-14.3 | PF=0.845 | DD=16.5 | grossEUR=-8.51\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_conservative\\stateful_conservative_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_conservative\\stateful_conservative_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_conservative\\stateful_conservative_metadata.json\n",
+          "stdout_tail": " | expR=0.0008 | totalR=0.1 | PF=1.001 | DD=26.3 | grossEUR=-4.31\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.2484 | expR=-0.2298 | totalR=-37.0 | PF=0.694 | DD=37.0 | grossEUR=-19.84\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2868 | expR=-0.1109 | totalR=-14.3 | PF=0.845 | DD=16.5 | grossEUR=-8.51\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_conservative\\stateful_conservative_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_conservative\\stateful_conservative_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_conservative\\stateful_conservative_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 9096
         },
         "stateful_stress": {
           "status": "PASS",
           "return_code": 0,
-          "duration_seconds": 190.176,
+          "duration_seconds": 192.36,
           "command": [
-            "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+            "<PYTHON>",
             "run_stateful_backtest.py",
             "--scan",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\technical_candidate_scan_frozen.csv",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\technical_candidate_scan_frozen.csv",
             "--name",
             "stateful_stress",
             "--output-dir",
-            "C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_stress",
+            "<TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_stress",
             "--cost-scenario",
             "STRESS"
           ],
-          "stdout_tail": "28 | riskReject=   0 | win=0.3125 | expR=-0.0312 | totalR=-4.0 | PF=0.955 | DD=27.3 | grossEUR=-11.17\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.236 | expR=-0.2683 | totalR=-43.2 | PF=0.649 | DD=43.2 | grossEUR=-24.58\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2791 | expR=-0.1349 | totalR=-17.4 | PF=0.813 | DD=19.6 | grossEUR=-11.81\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_stress\\stateful_stress_trades.csv\nSummary: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_stress\\stateful_stress_summary.csv\nMetadata: C:\\Users\\carlo\\AppData\\Local\\Temp\\agenttrading-phase1-l4cmh_gv\\stateful_stress\\stateful_stress_metadata.json\n",
+          "stdout_tail": "28 | riskReject=   0 | win=0.3125 | expR=-0.0312 | totalR=-4.0 | PF=0.955 | DD=27.3 | grossEUR=-11.17\n>=85 LIMIT | signals= 471 | resolved= 161 | riskReject=   0 | win=0.236 | expR=-0.2683 | totalR=-43.2 | PF=0.649 | DD=43.2 | grossEUR=-24.58\n>=85 STOP  | signals= 233 | resolved= 110 | riskReject=   0 | win=0.3636 | expR=0.1273 | totalR=14.0 | PF=1.2 | DD=18.3 | grossEUR=1.36\n>=90 LIMIT | signals= 378 | resolved= 129 | riskReject=   0 | win=0.2791 | expR=-0.1349 | totalR=-17.4 | PF=0.813 | DD=19.6 | grossEUR=-11.81\n>=90 STOP  | signals= 175 | resolved=  84 | riskReject=   0 | win=0.3929 | expR=0.2179 | totalR=18.3 | PF=1.359 | DD=9.4 | grossEUR=16.28\n\n==========================================================================================\nGUARDADO\n==========================================================================================\nTrades: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_stress\\stateful_stress_trades.csv\nSummary: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_stress\\stateful_stress_summary.csv\nMetadata: <TEMP>\\agenttrading-phase1-5whx2ebd\\stateful_stress\\stateful_stress_metadata.json\n",
           "stderr_tail": "",
           "trade_count": 9178
         }
@@ -41321,6 +41330,22 @@
         "reason": null,
         "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3"
       },
+      "historical_selection_attribution": {
+        "status": "PASS",
+        "selection_differences": 487,
+        "unexplained_selection_differences": 0,
+        "technical_signal_differences": 0,
+        "technical_plan_differences": 0,
+        "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+        "private_evidence_sha256": "bdb9aa93f166c8a4d5d13c812b67c7b712c3ff86b09f23bd6fd1759581a1f472",
+        "trace_artifacts": {
+          "portfolio_before": "1934c2043cd6a00da21699fd93bc287681407841dfb4fd4cd38790d907ce4285",
+          "portfolio_after": "b1c8d5204b855d35124a72a93cba88ef9aedbdc72e283e88a97c4be9dff73468",
+          "stateful_before": "0e31cf16e8383ba71efaff15b7706adb0dd0facab20ce8712b867e80355dcf7a",
+          "stateful_after": "06264025bd202e00e8c294631c915eba1189443eb0875087673061a426220ef3"
+        },
+        "evidence_reused_by_content_hash": true
+      },
       "repeatability_stateful_base": {
         "status": "PASS",
         "differences": []
@@ -45376,92 +45401,14 @@
           "src/trade_planner.py"
         ],
         "fingerprint_sha256": "3cd0276dada86eb8e02b075e36b7f3390c1063225748afe3f6720c3b9a753cec",
-        "source_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-        "source_branch": "codex/phase1-final-local-real-readonly-closure",
-        "source_generated_at_utc": "2026-11-11T20:31:54.231111+01:00",
-        "age_seconds": 360.7
+        "source_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+        "source_branch": "codex/phase1-autonomous-closure-20261113",
+        "source_generated_at_utc": "2026-11-13T16:42:59.664939+00:00",
+        "age_seconds": 412.6
       },
       "reassessment": {
-        "performed_at_utc": "2026-11-11T20:37:55.059867+01:00",
+        "performed_at_utc": "2026-11-13T16:49:53.565132+00:00",
         "classification_logic": "Current validator reclassified the archived exact-run comparison data; no backtest code or result rows were altered."
-      },
-      "trade_level_attribution": {
-        "status": "PENDING",
-        "generated_at_utc": "2026-11-11T20:06:41.6294207Z",
-        "report": "reports/phase1_final_local/historical_regression_attribution.json",
-        "pre_finalization_commit": "1ef0faf7600b866236f75cb7c229fc8a3b66973e",
-        "current_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-        "dataset_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
-        "portfolio": {
-          "name": "portfolio",
-          "pre_finalization_trade_rows": 7715,
-          "current_trade_rows": 7815,
-          "matched_stable_trade_ids": 7628,
-          "pre_finalization_only_ids": 87,
-          "current_only_ids": 187,
-          "invalid_ids": {
-            "pre_finalization": 0,
-            "current": 0
-          },
-          "duplicate_ids": {
-            "pre_finalization": [],
-            "current": []
-          },
-          "technical_plan_status": "PASS",
-          "execution_difference_count": 915,
-          "execution_difference_causes": {
-            "EXPIRY_BAR_FILL_CLASSIFICATION": 345,
-            "DERIVED_FROM_DOCUMENTED_EXECUTION_STATE_CHANGE": 570
-          },
-          "unattributed_execution_difference_count": 0,
-          "result_transitions": {
-            "LOSS -> AMBIGUOUS_EXPIRY_BAR": 83,
-            "AMBIGUOUS_BOTH -> AMBIGUOUS_EXPIRY_BAR": 1,
-            "WIN -> AMBIGUOUS_EXPIRY_BAR": 31
-          },
-          "presence_difference_causes": {
-            "CAPACITY_CASCADE_WITHOUT_MATCHED_RELEASE_WITNESS_PENDING": 151,
-            "UNATTRIBUTED_SELECTION_OR_CAPACITY_DIFFERENCE": 8,
-            "DOCUMENTED_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 115
-          },
-          "unmatched_selection_pending_count": 159,
-          "status": "PENDING"
-        },
-        "stateful": {
-          "name": "stateful",
-          "pre_finalization_trade_rows": 8974,
-          "current_trade_rows": 9091,
-          "matched_stable_trade_ids": 8926,
-          "pre_finalization_only_ids": 48,
-          "current_only_ids": 165,
-          "invalid_ids": {
-            "pre_finalization": 0,
-            "current": 0
-          },
-          "duplicate_ids": {
-            "pre_finalization": [],
-            "current": []
-          },
-          "technical_plan_status": "PASS",
-          "execution_difference_count": 948,
-          "execution_difference_causes": {
-            "EXPIRY_BAR_FILL_CLASSIFICATION": 273,
-            "DERIVED_FROM_DOCUMENTED_EXECUTION_STATE_CHANGE": 675
-          },
-          "unattributed_execution_difference_count": 0,
-          "result_transitions": {
-            "LOSS -> AMBIGUOUS_EXPIRY_BAR": 102,
-            "AMBIGUOUS_BOTH -> AMBIGUOUS_EXPIRY_BAR": 1,
-            "WIN -> AMBIGUOUS_EXPIRY_BAR": 33,
-            "AMBIGUOUS_ENTRY_BAR -> AMBIGUOUS_EXPIRY_BAR": 1
-          },
-          "presence_difference_causes": {
-            "CAPACITY_CASCADE_WITHOUT_MATCHED_RELEASE_WITNESS_PENDING": 77,
-            "DOCUMENTED_CAPACITY_CASCADE_AFTER_RELEASE_TIME_CHANGE": 136
-          },
-          "unmatched_selection_pending_count": 77,
-          "status": "PENDING"
-        }
       }
     },
     "reproducibility": {
@@ -45490,82 +45437,81 @@
         "status": "PASS",
         "reason": null,
         "generated_at_utc": null,
-        "age_seconds": 3117.3,
+        "age_seconds": 5512.1,
         "report": "reports/mt5_real_readonly_summary.json",
-        "source_fingerprint_sha256": "13a0e4cc7cf83d1b0a57e6a62a21f1bd4b7d84391a5e24bef995c395f3ad39c4",
+        "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
         "command_executed": [
-          "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+          "<PYTHON>",
           "scripts/validate_mt5_real_readonly.py",
           "--no-history-refresh"
         ],
         "evidence_reused": true,
         "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
-        "origin_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-        "origin_branch": "codex/phase1-final-local-real-readonly-closure",
-        "current_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-        "current_branch": "codex/phase1-final-local-real-readonly-closure",
+        "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+        "origin_branch": "codex/phase1-autonomous-closure-20261113",
+        "current_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+        "current_branch": "codex/phase1-autonomous-closure-20261113",
         "external_scope_fingerprint": "f76dd2d6d6b02a43ff5097e3f44725baf512053c81f21ac7c3771764420fa213",
         "probe_logic_content_verified_at_commit": null
       }
     },
     "ollama_live_validation": {
-      "status": "PASS",
+      "status": "PENDING",
       "script": "scripts/validate_phase1_llm_live.py --provider ollama",
-      "reason": "Ollama integration is manual.",
+      "reason": "Ollama service/model listing unavailable (ConnectionError).",
       "evidence": {
-        "status": "PASS",
-        "reason": null,
-        "generated_at_utc": "2026-11-11T19:59:03.99858+01:00",
-        "age_seconds": 2331.2,
-        "report": "reports/phase1_final_local/ollama_live_20261111T1900Z.json",
-        "source_fingerprint_sha256": "10538bc4869437f7330b7bab889dc037a350f876f9af18731c8f264cb9d2d780",
+        "status": "PENDING",
+        "reason": "Ollama service/model listing unavailable (ConnectionError).",
+        "generated_at_utc": "2026-11-13T16:44:50.858157+00:00",
+        "age_seconds": 302.8,
+        "report": "reports/phase1_final_local/ollama_live_current_runtime.json",
+        "source_fingerprint_sha256": "884bc985e00fdda1250f9a3ea486d99884fc461e735de3710f3fe4878c55a181",
         "command_executed": [
-          "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+          "<PYTHON>",
           "scripts/validate_phase1_llm_live.py",
           "--provider",
           "ollama",
           "--output",
-          "reports/phase1_final_local/ollama_live_20261111T1900Z.json"
+          "reports\\phase1_final_local\\ollama_live_current_runtime.json"
         ],
         "evidence_reused": true,
         "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
-        "origin_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-        "origin_branch": "codex/phase1-final-local-real-readonly-closure",
-        "current_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-        "current_branch": "codex/phase1-final-local-real-readonly-closure",
-        "external_scope_fingerprint": "67d4d93703cd691ac23f5e3174119b1dc7d811fe7f3ca9acf8e083d0b0f5522b",
+        "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+        "origin_branch": "codex/phase1-autonomous-closure-20261113",
+        "current_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+        "current_branch": "codex/phase1-autonomous-closure-20261113",
+        "external_scope_fingerprint": "3235b63dc162d9ca7bc40daf6e35b1d90b12166d7d42d11b8dea619e1a99301a",
         "probe_logic_content_verified_at_commit": null
       }
     },
     "deepseek_live_validation": {
-      "status": "PENDING",
+      "status": "PASS",
       "script": "scripts/validate_phase1_llm_live.py --provider deepseek --authorize-deepseek",
-      "reason": "A newer remote PASS exists, but it used CPython 3.12.14 and Pydantic 2.14.2; the current Windows runtime uses CPython 3.13.14 and Pydantic 2.13.5. A new local provider call was not made because it requires explicit billing authorization.",
+      "reason": "DeepSeek integration requires explicit authorization.",
       "evidence": {
-        "status": "PENDING",
-        "reason": "The latest remote smoke is PASS but does not validate the current Windows Python/Pydantic runtime; no new local request was authorized.",
-        "stale_fields": [
-          "files.src/agents/deepseek_client.py",
-          "files.src/agents/llm_client.py",
-          "dependencies.pydantic",
-          "python_version",
-          "probe_logic_sha256"
-        ],
+        "status": "PASS",
+        "reason": null,
+        "generated_at_utc": "2026-11-13T15:21:41.213704+00:00",
+        "age_seconds": 5292.5,
         "report": "reports/phase1_llm_live_deepseek.json",
-        "supplemental_remote_evidence": {
-          "status": "DEEPSEEK_REMOTE_LIVE_PASS",
-          "report": "reports/phase1_deepseek_remote/validation_summary.json",
-          "generated_at_utc": "2026-11-11T15:53:25.982877+00:00",
-          "model": "deepseek-flash",
-          "calls_reported": 1,
-          "retries_reported": 0,
-          "runtime": {
-            "python": "3.12.14",
-            "pydantic": "2.14.2"
-          },
-          "reusable_for_current_runtime": false,
-          "new_local_call_made": false
-        }
+        "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
+        "command_executed": [
+          "<PYTHON>",
+          "scripts/validate_phase1_llm_live.py",
+          "--provider",
+          "deepseek",
+          "--authorize-deepseek",
+          "--output",
+          "reports/phase1_llm_live_deepseek.json"
+        ],
+        "evidence_reused": true,
+        "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
+        "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+        "origin_branch": "codex/phase1-autonomous-closure-20261113",
+        "current_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+        "current_branch": "codex/phase1-autonomous-closure-20261113",
+        "external_scope_fingerprint": "7a11f5709ae83d03221aa54047fe7364802b85ab3ee7fd45b7ca871b994d9906",
+        "probe_logic_content_verified_at_commit": null
       }
     }
   },
@@ -45573,9 +45519,9 @@
     "phase1_unit_tests": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 20.061,
+      "duration_seconds": 12.077,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "-m",
         "unittest",
         "discover",
@@ -45585,14 +45531,14 @@
         "test_phase1_*.py"
       ],
       "stdout_tail": "",
-      "stderr_tail": ":4b schema=Answer error=LLM_INVALID_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INVALID_EVIDENCE\n...research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=deepseek model=deepseek-flash schema=Answer error=LLM_PROVIDER_DEPENDENCY_MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_TIMEOUT\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INCOMPLETE_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.....................................................\n----------------------------------------------------------------------\nRan 94 tests in 18.257s\n\nOK (skipped=1)\n"
+      "stderr_tail": "schema=Answer error=LLM_INVALID_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INVALID_EVIDENCE\n...research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=deepseek model=deepseek-flash schema=Answer error=LLM_PROVIDER_DEPENDENCY_MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_TIMEOUT\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\nLLM call failed provider=ollama model=qwen3:4b schema=Answer error=LLM_INCOMPLETE_RESPONSE\n.research ledger persistence failed status=LEDGER_EVENT_CONTEXT_MISSING event_id=MISSING\n.........................................................\n----------------------------------------------------------------------\nRan 98 tests in 10.505s\n\nOK (skipped=1)\n"
     },
     "mt5_real_readonly_tests": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 0.53,
+      "duration_seconds": 0.512,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "-m",
         "unittest",
         "discover",
@@ -45602,14 +45548,14 @@
         "test_mt5_real_readonly.py"
       ],
       "stdout_tail": "",
-      "stderr_tail": "............\n----------------------------------------------------------------------\nRan 12 tests in 0.342s\n\nOK\n"
+      "stderr_tail": "............\n----------------------------------------------------------------------\nRan 12 tests in 0.327s\n\nOK\n"
     },
     "test_deepseek_integration.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 2.213,
+      "duration_seconds": 1.74,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_deepseek_integration.py"
       ],
       "stdout_tail": "OK: conmutador y DeepSeek Flash validados sin red ni coste API\n",
@@ -45618,9 +45564,9 @@
     "test_historical_level_outcome_regression.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 0.665,
+      "duration_seconds": 0.642,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_historical_level_outcome_regression.py"
       ],
       "stdout_tail": "OK: BREAK/HOLD requieren dos cierres M5; las mechas solas no cambian el resultado\n",
@@ -45629,9 +45575,9 @@
     "test_level_event_context_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 20.827,
+      "duration_seconds": 14.885,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_event_context_historical.py"
       ],
       "stdout_tail": "USDCAD | USDCAD_Z000004 | 1.38527-1.38557\nAnalisis hasta: 2026-04-08T18:00:00+00:00\nRupturas historicas enriquecidas: 37\nEpisodio seleccionado: 2026-04-08T02:15:00+00:00 -> 2026-04-08T02:45:00+00:00\nPapel historico al llegar: SUPPORT\nM15: cierre=2026-04-08T02:45:00+00:00 EMA=BEARISH RSI=16.33 retorno5_pct=-0.2787 ATR_relativo=1.274\nH1: cierre=2026-04-08T02:00:00+00:00 EMA=MIXED RSI=20.27 retorno5_pct=-0.2877 ATR_relativo=1.357\nH4: cierre=2026-04-08T00:00:00+00:00 EMA=BULLISH RSI=39.29 retorno5_pct=-0.24 ATR_relativo=1.007\nD1: cierre=2026-04-08T00:00:00+00:00 EMA=MIXED RSI=61.47 retorno5_pct=-0.2005 ATR_relativo=0.892\nOK: contexto historico real confirmado, solo velas cerradas y sin futuro\nRegistro temporal eliminado al terminar\n",
@@ -45640,9 +45586,9 @@
     "test_level_evidence.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 1.569,
+      "duration_seconds": 1.552,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_evidence.py"
       ],
       "stdout_tail": "00+00:00',\n                                                     '2026-04-08T10:15:00+00:00',\n                                                     '2026-04-08T14:45:00+00:00'],\n                          'timeframes': ['D1'],\n                          'pivot_types': ['LOW'],\n                          'last_touch': '2026-01-14T00:00:00+00:00',\n                          'last_pivot_time': '2026-01-14T00:00:00+00:00',\n                          'strength': 33,\n                          'distance': 0.00128,\n                          'distance_atr': 1.27,\n                          'strength_label': 'WEAK',\n                          'distance_label': 'MODERATE'},\n           'distance_between_nearest_levels_atr': 1.58,\n           'strength_difference_support_minus_resistance': 17},\n 'available_evidence_ids': ['NEAREST_SUPPORT_PRESENT',\n                            'SUPPORT_WEAK',\n                            'SUPPORT_DISTANCE_NEAR',\n                            'NEAREST_RESISTANCE_PRESENT',\n                            'RESISTANCE_WEAK',\n                            'RESISTANCE_DISTANCE_MODERATE',\n                            'SUPPORT_STRONGER_THAN_RESISTANCE'],\n 'source': 'DETERMINISTIC_PYTHON'}\n",
@@ -45651,9 +45597,9 @@
     "test_level_evidence_price_action.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 2.104,
+      "duration_seconds": 2.109,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_evidence_price_action.py"
       ],
       "stdout_tail": "                     'range_atr': 0.664,\n                      'body_fraction': 0.292,\n                      'upper_wick_fraction': 0.083,\n                      'lower_wick_fraction': 0.625,\n                      'close_location': 0.917}}}\n\nPRICE ACTION EVIDENCE:\n['M5_LEVEL_MOVING_AWAY_AFTER_INTERACTION',\n 'M5_LEVEL_MOVING_AWAY',\n 'M5_LEVEL_REPEATED_TESTS',\n 'M5_LEVEL_CLOSE_INSIDE_ZONE',\n 'M5_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M5_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M5_LEVEL_MEANINGFUL_BREACH',\n 'M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE',\n 'M15_LEVEL_REPEATED_TESTS',\n 'M15_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M15_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M15_LEVEL_MEANINGFUL_BREACH',\n 'M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE']\n\nIDS PRESENT IN AVAILABLE_EVIDENCE:\n['M5_LEVEL_MOVING_AWAY_AFTER_INTERACTION',\n 'M5_LEVEL_MOVING_AWAY',\n 'M5_LEVEL_REPEATED_TESTS',\n 'M5_LEVEL_CLOSE_INSIDE_ZONE',\n 'M5_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M5_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M5_LEVEL_MEANINGFUL_BREACH',\n 'M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE',\n 'M15_LEVEL_REPEATED_TESTS',\n 'M15_LEVEL_CLOSE_THROUGH_LEVEL',\n 'M15_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL',\n 'M15_LEVEL_MEANINGFUL_BREACH',\n 'M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE']\n",
@@ -45662,9 +45608,9 @@
     "test_level_history_batch_payload.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 10.499,
+      "duration_seconds": 10.457,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_batch_payload.py"
       ],
       "stdout_tail": "====================================================================================================\nLEVEL THESIS HISTORICAL BATCH\n====================================================================================================\nSymbol: USDCAD\nPeriodo: 2026-04-08 00:00:00+00:00 -> 2026-04-09 00:00:00+00:00\n[LEVEL HISTORY] time=2026-04-08T10:15:00+00:00 zone=USDCAD_Z000004 role=SUPPORT as_of=2026-04-08T10:15:00+00:00\n\nOK: informe historico recibido por LevelHypothesisComparison\nHora: 2026-04-08T10:15:00+00:00\nZona: USDCAD_Z000004\nFuncion: SUPPORT\nPrecio: 1.38531 - 1.38553\nEpisodios recientes: 3\nOK: zona, rol y fecha coinciden; Ollama no se ha ejecutado\n",
@@ -45673,9 +45619,9 @@
     "test_level_history_events_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 16.508,
+      "duration_seconds": 15.13,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_events_historical.py"
       ],
       "stdout_tail": "TION resuelto: 2026-04-08T03:30:00+00:00\n    2026-04-08T07:30:00+00:00 SUPPORT -> REJECTION resuelto: 2026-04-08T09:30:00+00:00\n    2026-04-08T16:00:00+00:00 SUPPORT -> REJECTION resuelto: 2026-04-08T16:15:00+00:00\nOK: recuentos consistentes y sin informacion futura\n\nRESISTENCIA MAS CERCANA: USDCAD_Z000004 (RESISTANCE)\nZona: 1.38527 - 1.38557\nPrimera deteccion: 2026-04-08T00:00:00+00:00\n  ANTES DE DETECTARSE (RETROSPECTIVO):\n    contactos=98 rechazos=62 rupturas=36 pendientes=0 sin_resolver=0\n  DESDE SU DETECCION:\n    contactos=3 rechazos=2 rupturas=1 pendientes=0 sin_resolver=0\n  Ultimos 5 episodios:\n    2026-03-27T06:00:00+00:00 RESISTANCE -> REJECTION resuelto: 2026-03-27T08:00:00+00:00\n    2026-03-27T17:15:00+00:00 SUPPORT -> REJECTION resuelto: 2026-03-27T17:30:00+00:00\n    2026-04-08T02:15:00+00:00 SUPPORT -> BREAK resuelto: 2026-04-08T02:45:00+00:00\n    2026-04-08T10:15:00+00:00 RESISTANCE -> REJECTION resuelto: 2026-04-08T10:45:00+00:00\n    2026-04-08T14:45:00+00:00 SUPPORT -> REJECTION resuelto: 2026-04-08T15:00:00+00:00\nOK: recuentos consistentes y sin informacion futura\n\nOK: episodios reales clasificados, sin Ollama ni operaciones\nRegistro temporal eliminado al terminar\n",
@@ -45684,9 +45630,9 @@
     "test_level_history_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 17.671,
+      "duration_seconds": 14.397,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_historical.py"
       ],
       "stdout_tail": "me de contactos hasta 2026-04-08T18:00:00+00:00\nInstantes M15 del replay: 73\n\nSOPORTE: USDCAD_Z000014 (SUPPORT)\nPrecio: 1.38309 - 1.38368\nOrigen: H1\nPrimera deteccion: 2026-04-08T18:00:00+00:00\nM15 cerradas revisadas: 38155\nContactos anteriores (retrospectivos): 116\nUltimos anteriores: ['2026-03-26T11:00:00+00:00', '2026-03-26T23:15:00+00:00', '2026-04-08T03:15:00+00:00', '2026-04-08T07:30:00+00:00', '2026-04-08T16:00:00+00:00']\nContactos desde deteccion: 0\nUltimos posteriores: []\nOK: clasificacion temporal y filtro de velas futuras\n\nRESISTENCIA: USDCAD_Z000004 (RESISTANCE)\nPrecio: 1.38527 - 1.38557\nOrigen: D1\nPrimera deteccion: 2026-04-08T00:00:00+00:00\nM15 cerradas revisadas: 38155\nContactos anteriores (retrospectivos): 98\nUltimos anteriores: ['2026-01-20T05:45:00+00:00', '2026-03-26T18:45:00+00:00', '2026-03-27T03:00:00+00:00', '2026-03-27T06:00:00+00:00', '2026-03-27T17:15:00+00:00']\nContactos desde deteccion: 3\nUltimos posteriores: ['2026-04-08T02:15:00+00:00', '2026-04-08T10:15:00+00:00', '2026-04-08T14:45:00+00:00']\nOK: clasificacion temporal y filtro de velas futuras\n\nOK: LevelHistoryAnalyzer probado sobre niveles reales, sin Ollama\nRegistro temporal eliminado al terminar.\n",
@@ -45695,9 +45641,9 @@
     "test_level_history_llm_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 19.59,
+      "duration_seconds": 15.824,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_llm_historical.py"
       ],
       "stdout_tail": "TE: USDCAD_Z000014 (SUPPORT)\nZona: 1.38309-1.38368\nOrigen: ['H1']\nAntes deteccion: contactos=116 rechazos=76 rupturas=37\nDesde deteccion: contactos=0 rechazos=0 rupturas=0\nTamano JSON compacto: 2854 caracteres\nEpisodios recientes: 3\nEjemplos ruptura: 2\n  ruptura: 2026-01-22T02:45:00+00:00 -> 2026-01-22T03:15:00+00:00 RSI_M15_contacto= 50.01 RSI_M15_confirmacion= 47.64\n  ruptura: 2026-01-21T04:45:00+00:00 -> 2026-01-21T06:30:00+00:00 RSI_M15_contacto= 45.79 RSI_M15_confirmacion= 60.59\nOK: datos reales compactados sin informacion futura\n\nRESISTENCIA: USDCAD_Z000004 (RESISTANCE)\nZona: 1.38527-1.38557\nOrigen: ['D1']\nAntes deteccion: contactos=98 rechazos=62 rupturas=36\nDesde deteccion: contactos=3 rechazos=2 rupturas=1\nTamano JSON compacto: 2851 caracteres\nEpisodios recientes: 3\nEjemplos ruptura: 2\n  ruptura: 2026-03-27T03:00:00+00:00 -> 2026-03-27T03:30:00+00:00 RSI_M15_contacto= 52.91 RSI_M15_confirmacion= 59.64\n  ruptura: 2026-04-08T02:15:00+00:00 -> 2026-04-08T02:45:00+00:00 RSI_M15_contacto= 19.4 RSI_M15_confirmacion= 16.33\nOK: datos reales compactados sin informacion futura\n\nOK: resumenes historicos reales listos para integrar, sin Ollama\nRegistro temporal eliminado al terminar.\n",
@@ -45706,9 +45652,9 @@
     "test_level_history_prompt_payload.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 14.912,
+      "duration_seconds": 10.397,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_prompt_payload.py"
       ],
       "stdout_tail": "====================================================================================================\nLEVEL THESIS HISTORICAL BATCH\n====================================================================================================\nSymbol: USDCAD\nPeriodo: 2026-04-08 00:00:00+00:00 -> 2026-04-09 00:00:00+00:00\n[LEVEL HISTORY] time=2026-04-08T10:15:00+00:00 zone=USDCAD_Z000004 role=SUPPORT as_of=2026-04-08T10:15:00+00:00\n[PROMPT CHECK] Instrucciones de historia: 7/7 presentes\n[PROMPT CHECK] Caracteres del prompt: 5653\n[PROMPT CHECK] Caracteres de la memoria: 3046\n[PROMPT CHECK] Rupturas en memoria: 2\n[PROMPT CHECK] No se ha llamado a Ollama\n\nOK: informe historico recibido por LevelHypothesisComparison\nHora: 2026-04-08T10:15:00+00:00\nZona: USDCAD_Z000004\nFuncion: SUPPORT\nPrecio: 1.38531 - 1.38553\nEpisodios recientes: 3\nOK: zona, rol y fecha coinciden; Ollama no se ha ejecutado\n",
@@ -45717,9 +45663,9 @@
     "test_level_history_report_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 19.616,
+      "duration_seconds": 15.833,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_history_report_historical.py"
       ],
       "stdout_tail": ":30:00+00:00 SUPPORT -> REJECTION\n  2026-04-08T16:00:00+00:00 SUPPORT -> REJECTION\nEjemplos recientes de ruptura:\n  2026-01-21T04:45:00+00:00 -> 2026-01-21T06:30:00+00:00 RSI_M15_contacto=45.79 RSI_M15_confirmacion=60.59\n  2026-01-22T02:45:00+00:00 -> 2026-01-22T03:15:00+00:00 RSI_M15_contacto=50.01 RSI_M15_confirmacion=47.64\nOK: informe compacto consistente y sin velas futuras\n\nRESISTENCIA MAS CERCANA: USDCAD_Z000004 (RESISTANCE)\nZona: 1.38527 - 1.38557\nPrimera deteccion: 2026-04-08T00:00:00+00:00\nTemporalidades: ['D1']\nRETROSPECTIVO: contactos=98 rechazos=62 rupturas=36\nDESDE DETECCION: contactos=3 rechazos=2 rupturas=1\nUltimos episodios:\n  2026-04-08T02:15:00+00:00 SUPPORT -> BREAK\n  2026-04-08T10:15:00+00:00 RESISTANCE -> REJECTION\n  2026-04-08T14:45:00+00:00 SUPPORT -> REJECTION\nEjemplos recientes de ruptura:\n  2026-03-27T03:00:00+00:00 -> 2026-03-27T03:30:00+00:00 RSI_M15_contacto=52.91 RSI_M15_confirmacion=59.64\n  2026-04-08T02:15:00+00:00 -> 2026-04-08T02:45:00+00:00 RSI_M15_contacto=19.4 RSI_M15_confirmacion=16.33\nOK: informe compacto consistente y sin velas futuras\n\nOK: informes reales listos para revisar, sin Ollama ni operaciones\nRegistro temporal eliminado al terminar\n",
@@ -45728,9 +45674,9 @@
     "test_level_outcome_touch.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 1.394,
+      "duration_seconds": 1.41,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_outcome_touch.py"
       ],
       "stdout_tail": "================================================================================================\n08:00 - antes HOLD\n====================================================================================================\n{'status': 'OK',\n 'analysis_time': '2026-04-08T08:00:00+00:00',\n 'thesis': 'SUPPORT_HOLD',\n 'level_type': 'SUPPORT',\n 'expected_outcome': 'HOLD',\n 'actual_outcome': 'HOLD',\n 'correct': True,\n 'horizon_minutes': 180,\n 'atr': 0.0006,\n 'break_buffer_atr': 0.1,\n 'hold_confirmation_atr': 0.1,\n 'confirmation_closures': 2,\n 'outcome_confirmation_basis': 'TWO_CONSECUTIVE_M15_CLOSES',\n 'touch_required_for_hold': True,\n 'touch_lookback_minutes': 15,\n 'level_touched_before_future': False,\n 'touch_time': '2026-04-08T08:15:00+00:00',\n 'level_low': 1.38315,\n 'level_high': 1.38333,\n 'break_threshold': 1.38309,\n 'hold_threshold': 1.38339,\n 'event_time': '2026-04-08T09:30:00+00:00',\n 'event_bar': {'bar_open_time': '2026-04-08T09:15:00+00:00',\n               'bar_close_time': '2026-04-08T09:30:00+00:00',\n               'open': 1.38452,\n               'high': 1.38471,\n               'low': 1.38411,\n               'close': 1.3842},\n 'future_min_low': 1.38238,\n 'future_max_high': 1.38572}\n",
@@ -45739,9 +45685,9 @@
     "test_level_price_action.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 1.462,
+      "duration_seconds": 1.469,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_price_action.py"
       ],
       "stdout_tail": "             'upper_wick_fraction': 0.133,\n                     'lower_wick_fraction': 0.267,\n                     'close_location': 0.867}},\n 'M15': {'bars': 6,\n         'approach_move_atr': -0.138,\n         'bars_toward_level': 3,\n         'zone_touches': 5,\n         'closes_inside_zone': 0,\n         'closes_through_level': 2,\n         'max_breach_atr': 0.692,\n         'last_close_distance_from_zone_atr': 0.221,\n         'recent_volume_ratio': 1.496,\n         'last_bar': {'body_atr': 0.194,\n                      'range_atr': 0.664,\n                      'body_fraction': 0.292,\n                      'upper_wick_fraction': 0.083,\n                      'lower_wick_fraction': 0.625,\n                      'close_location': 0.917}}}\n\nPRICE ACTION EVIDENCE:\n - M5_LEVEL_MOVING_AWAY_AFTER_INTERACTION\n - M5_LEVEL_MOVING_AWAY\n - M5_LEVEL_REPEATED_TESTS\n - M5_LEVEL_CLOSE_INSIDE_ZONE\n - M5_LEVEL_CLOSE_THROUGH_LEVEL\n - M5_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL\n - M5_LEVEL_MEANINGFUL_BREACH\n - M5_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n - M15_LEVEL_REPEATED_TESTS\n - M15_LEVEL_CLOSE_THROUGH_LEVEL\n - M15_LEVEL_MULTIPLE_CLOSES_THROUGH_LEVEL\n - M15_LEVEL_MEANINGFUL_BREACH\n - M15_LEVEL_CURRENTLY_PRE_BREAK_SIDE\n",
@@ -45750,9 +45696,9 @@
     "test_level_registry_full_day.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 24.099,
+      "duration_seconds": 18.155,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_registry_full_day.py"
       ],
       "stdout_tail": "\n2026-04-08T17:45:00+00:00\nSoporte:     USDCAD_Z000009 (SUPPORT) 1.38042-1.38070 desde=2026-04-08T01:45:00+00:00\nResistencia: USDCAD_Z000003 (RESISTANCE) 1.38644-1.38707 desde=2026-04-08T00:00:00+00:00\n\n2026-04-08T18:00:00+00:00\nSoporte:     USDCAD_Z000014 (SUPPORT) 1.38309-1.38368 desde=2026-04-08T18:00:00+00:00\nResistencia: USDCAD_Z000004 (RESISTANCE) 1.38527-1.38557 desde=2026-04-08T00:00:00+00:00\n\nRESUMEN REPLAY REGISTRO\nVelas M15 evaluadas: 96\nZonas distintas registradas: 15\nReobservaciones con ID conservado: 768\nCambios de rol observados: 37\nOK: registro cronologico del dia completo, sin Ollama\nRegistro temporal eliminado al terminar.\n",
@@ -45761,9 +45707,9 @@
     "test_level_registry_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 1.727,
+      "duration_seconds": 1.732,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_registry_historical.py"
       ],
       "stdout_tail": "\n2026-04-08T17:45:00+00:00\nSoporte:     USDCAD_Z000001 | SUPPORT | 1.38042-1.38070 | detectada=2026-04-08T17:45:00+00:00\nResistencia: USDCAD_Z000005 | RESISTANCE | 1.38644-1.38707 | detectada=2026-04-08T17:45:00+00:00\n\n2026-04-08T18:00:00+00:00\nSoporte:     USDCAD_Z000010 | SUPPORT | 1.38309-1.38368 | detectada=2026-04-08T18:00:00+00:00\nResistencia: USDCAD_Z000009 | RESISTANCE | 1.38527-1.38557 | detectada=2026-04-08T17:45:00+00:00\n\nOK: 7 zonas conservan su ID entre ambos análisis\nRegistro temporal eliminado al terminar la prueba.\n",
@@ -45772,9 +45718,9 @@
     "test_level_thesis_direction.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 1.055,
+      "duration_seconds": 1.046,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_thesis_direction.py"
       ],
       "stdout_tail": "['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']}\nValidation errors: ['THESIS_WITHOUT_TECHNICAL_EVIDENCE']\nOK RECHAZADA: RESISTANCE_HOLD / M5_RETURN5_POSITIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: RESISTANCE\nHOLD score: 0.2\nBREAK score: 0.8\nConfidence: 0.8\nHOLD evidence: ['M5_RETURN5_NEGATIVE']\nBREAK evidence: ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_POSITIVE']\nOK ACEPTADA: RESISTANCE_BREAK / M5_RETURN5_POSITIVE\n\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_DIRECTION\nActive level: RESISTANCE\nHOLD score: 0.2\nBREAK score: 0.8\nConfidence: 0.8\nHOLD evidence: ['M5_RETURN5_POSITIVE']\nBREAK evidence: ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']\n\n[LEVEL THESIS INVALID RAW]\nTime: TEST_DIRECTION\nMarket structure: AT_RESISTANCE\nRaw assessment: {'thesis': 'RESISTANCE_BREAK', 'target_level': 'RESISTANCE', 'operation': 'BUY', 'confidence': 0.8, 'evidence_used': ['RESISTANCE_MEDIUM', 'M5_LEVEL_REPEATED_TESTS', 'M5_RETURN5_NEGATIVE']}\nValidation errors: ['THESIS_WITHOUT_TECHNICAL_EVIDENCE']\nOK RECHAZADA: RESISTANCE_BREAK / M5_RETURN5_NEGATIVE\nOK: las 8 comprobaciones direccionales han superado la prueba.\n",
@@ -45783,9 +45729,9 @@
     "test_level_thesis_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 5.124,
+      "duration_seconds": 4.256,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_thesis_historical.py"
       ],
       "stdout_tail": "stance_between_nearest_levels_atr': 1.58,\n           'strength_difference_support_minus_resistance': 17},\n 'available_evidence_ids': ['NEAREST_SUPPORT_PRESENT',\n                            'SUPPORT_WEAK',\n                            'SUPPORT_DISTANCE_NEAR',\n                            'NEAREST_RESISTANCE_PRESENT',\n                            'RESISTANCE_WEAK',\n                            'RESISTANCE_DISTANCE_MODERATE',\n                            'SUPPORT_STRONGER_THAN_RESISTANCE'],\n 'source': 'DETERMINISTIC_PYTHON'}\n\n================================================================================\nLEVEL THESIS\n================================================================================\n{'thesis': 'UNCLEAR',\n 'target_level': 'NONE',\n 'operation': 'NONE',\n 'confidence': 0.0,\n 'evidence_used': [],\n 'comparison_diagnostics': None,\n 'reason_codes': ['INSUFFICIENT_EVIDENCE'],\n 'valid': True,\n 'validation_errors': [],\n 'source': 'LLM'}\n\n================================================================================\nLEVEL OUTCOME\n================================================================================\n{'status': 'NOT_EVALUATED', 'reason': 'NO_ACTIVE_LEVEL_FOR_UNCLEAR_THESIS'}\n",
@@ -45794,9 +45740,9 @@
     "test_level_thesis_unclear.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 1.06,
+      "duration_seconds": 1.055,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_level_thesis_unclear.py"
       ],
       "stdout_tail": "\n[LEVEL HYPOTHESIS COMPARISON]\nTime: TEST_UNCLEAR\nActive level: SUPPORT\nHOLD score: 0.7\nBREAK score: 0.3\nConfidence: 0.3\nHOLD evidence: ['SUPPORT_MEDIUM']\nBREAK evidence: ['M5_RETURN5_NEGATIVE']\nOK: UNCLEAR es una abstencion valida, sin operacion ni evidencias de tesis.\nOK: error de API registrado por tipo y replay puede continuar sin reintentos.\n",
@@ -45805,9 +45751,9 @@
     "test_multiagent_second_stage.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 0.157,
+      "duration_seconds": 0.156,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_multiagent_second_stage.py"
       ],
       "stdout_tail": "\nFINAL DECISION\n\n{'status': 'DRY_RUN_APPROVED', 'approved': True, 'errors': [], 'symbol': 'USDCAD', 'strategy': 'PULLBACK', 'direction': 'BUY', 'order_request': {'symbol': 'USDCAD', 'volume': 0.01, 'price': 1.42, 'sl': 1.418, 'tp': 1.4242}, 'trade_authorized': False, 'source': 'DETERMINISTIC_PYTHON'}\n\n[OK] SECOND STAGE TEST PASSED\n",
@@ -45816,9 +45762,9 @@
     "test_no_lookahead.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 3.689,
+      "duration_seconds": 3.712,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_no_lookahead.py"
       ],
       "stdout_tail": "================================================================================\nBACKTEST - NO LOOKAHEAD TEST\n================================================================================\n\nEURUSD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 1.158379725816395\n [OK] sin look-ahead\n\nUSDCAD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 1.3815670652387981\n [OK] sin look-ahead\n\nAUDUSD\n Evaluation start: 2026-04-13 00:15:00+00:00\n D1 EMA200 at start: 0.6753688010223463\n [OK] sin look-ahead\n\n[OK] Checks realizados: 375\n",
@@ -45827,9 +45773,9 @@
     "test_support_resistance_historical.py": {
       "status": "PASS",
       "return_code": 0,
-      "duration_seconds": 1.564,
+      "duration_seconds": 1.557,
       "command": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "test_support_resistance_historical.py"
       ],
       "stdout_tail": "026-04-03T00:00:00+00:00',\n  'strength': 80,\n  'distance': 0.00244,\n  'distance_atr': 2.42},\n {'role': 'RESISTANCE',\n  'low': 1.38706,\n  'high': 1.38762,\n  'mid': 1.38734,\n  'touches': 3,\n  'pivot_count': 3,\n  'recent_independent_touches_m15': 3,\n  'recent_touch_times_m15': ['2026-04-08T01:45:00+00:00',\n                             '2026-04-08T13:00:00+00:00',\n                             '2026-04-08T15:30:00+00:00'],\n  'timeframes': ['H1', 'D1'],\n  'pivot_types': ['HIGH', 'LOW'],\n  'last_touch': '2026-04-08T14:00:00+00:00',\n  'last_pivot_time': '2026-04-08T14:00:00+00:00',\n  'strength': 79,\n  'distance': 0.00307,\n  'distance_atr': 3.04},\n {'role': 'RESISTANCE',\n  'low': 1.38983,\n  'high': 1.3904,\n  'mid': 1.39011,\n  'touches': 4,\n  'pivot_count': 4,\n  'recent_independent_touches_m15': 3,\n  'recent_touch_times_m15': ['2026-04-07T17:30:00+00:00',\n                             '2026-04-07T19:15:00+00:00',\n                             '2026-04-08T01:45:00+00:00'],\n  'timeframes': ['H1', 'H4'],\n  'pivot_types': ['HIGH', 'LOW'],\n  'last_touch': '2026-04-08T02:00:00+00:00',\n  'last_pivot_time': '2026-04-08T02:00:00+00:00',\n  'strength': 81,\n  'distance': 0.00584,\n  'distance_atr': 5.78}]\n",
@@ -45857,69 +45803,81 @@
       "status": "PASS",
       "reason": null,
       "generated_at_utc": null,
-      "age_seconds": 3117.3,
+      "age_seconds": 5512.1,
       "report": "reports/mt5_real_readonly_summary.json",
-      "source_fingerprint_sha256": "13a0e4cc7cf83d1b0a57e6a62a21f1bd4b7d84391a5e24bef995c395f3ad39c4",
+      "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
       "command_executed": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "scripts/validate_mt5_real_readonly.py",
         "--no-history-refresh"
       ],
       "evidence_reused": true,
       "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
-      "origin_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-      "origin_branch": "codex/phase1-final-local-real-readonly-closure",
-      "current_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-      "current_branch": "codex/phase1-final-local-real-readonly-closure",
+      "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "origin_branch": "codex/phase1-autonomous-closure-20261113",
+      "current_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "current_branch": "codex/phase1-autonomous-closure-20261113",
       "external_scope_fingerprint": "f76dd2d6d6b02a43ff5097e3f44725baf512053c81f21ac7c3771764420fa213",
       "probe_logic_content_verified_at_commit": null
     },
     "ollama": {
-      "status": "PASS",
-      "reason": null,
-      "generated_at_utc": "2026-11-11T19:59:03.99858+01:00",
-      "age_seconds": 2331.2,
-      "report": "reports/phase1_final_local/ollama_live_20261111T1900Z.json",
-      "source_fingerprint_sha256": "10538bc4869437f7330b7bab889dc037a350f876f9af18731c8f264cb9d2d780",
+      "status": "PENDING",
+      "reason": "Ollama service/model listing unavailable (ConnectionError).",
+      "generated_at_utc": "2026-11-13T16:44:50.858157+00:00",
+      "age_seconds": 302.8,
+      "report": "reports/phase1_final_local/ollama_live_current_runtime.json",
+      "source_fingerprint_sha256": "884bc985e00fdda1250f9a3ea486d99884fc461e735de3710f3fe4878c55a181",
       "command_executed": [
-        "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+        "<PYTHON>",
         "scripts/validate_phase1_llm_live.py",
         "--provider",
         "ollama",
         "--output",
-        "reports/phase1_final_local/ollama_live_20261111T1900Z.json"
+        "reports\\phase1_final_local\\ollama_live_current_runtime.json"
       ],
       "evidence_reused": true,
       "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
-      "origin_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-      "origin_branch": "codex/phase1-final-local-real-readonly-closure",
-      "current_validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
-      "current_branch": "codex/phase1-final-local-real-readonly-closure",
-      "external_scope_fingerprint": "67d4d93703cd691ac23f5e3174119b1dc7d811fe7f3ca9acf8e083d0b0f5522b",
+      "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "origin_branch": "codex/phase1-autonomous-closure-20261113",
+      "current_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "current_branch": "codex/phase1-autonomous-closure-20261113",
+      "external_scope_fingerprint": "3235b63dc162d9ca7bc40daf6e35b1d90b12166d7d42d11b8dea619e1a99301a",
       "probe_logic_content_verified_at_commit": null
     },
     "deepseek": {
-      "status": "PENDING",
-      "reason": "A newer remote PASS is recorded separately, but runtime/dependency versions differ; current Windows local live validation remains pending.",
-      "stale_fields": [
-        "files.src/agents/deepseek_client.py",
-        "files.src/agents/llm_client.py",
-        "dependencies.pydantic",
-        "python_version",
-        "probe_logic_sha256"
-      ],
+      "status": "PASS",
+      "reason": null,
+      "generated_at_utc": "2026-11-13T15:21:41.213704+00:00",
+      "age_seconds": 5292.5,
       "report": "reports/phase1_llm_live_deepseek.json",
-      "supplemental_remote_report": "reports/phase1_deepseek_remote/validation_summary.json"
+      "source_fingerprint_sha256": "1891edae7e8eafbf85aa1e10b46881db56b628a869f4009105a98d132a3967b8",
+      "command_executed": [
+        "<PYTHON>",
+        "scripts/validate_phase1_llm_live.py",
+        "--provider",
+        "deepseek",
+        "--authorize-deepseek",
+        "--output",
+        "reports/phase1_llm_live_deepseek.json"
+      ],
+      "evidence_reused": true,
+      "result_origin": "REUSED_VERIFIED_EXTERNAL_EVIDENCE",
+      "origin_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "origin_branch": "codex/phase1-autonomous-closure-20261113",
+      "current_validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+      "current_branch": "codex/phase1-autonomous-closure-20261113",
+      "external_scope_fingerprint": "7a11f5709ae83d03221aa54047fe7364802b85ab3ee7fd45b7ca871b994d9906",
+      "probe_logic_content_verified_at_commit": null
     }
   },
   "pending_manual": [
     {
-      "check": "DEEPSEEK",
-      "reason": "Remote PASS evidence from 2026-11-11 uses CPython 3.12.14/Pydantic 2.14.2; current Windows runtime is CPython 3.13.14/Pydantic 2.13.5. Local live request remains pending explicit billing authorization."
+      "check": "OLLAMA",
+      "reason": "Ollama service/model listing unavailable (ConnectionError)."
     },
     {
       "check": "HISTORICAL_REGRESSION_REVIEW",
-      "reason": "The direct trade-level comparison explains expiry-bar state changes and witnessed capacity cascades. Portfolio still has 151 capacity cascades without a matched release witness and 8 other selection/capacity differences; stateful has 77 cascades without a matched release witness. Legacy aggregate differences remain pending review."
+      "reason": "The older baseline and pre-finalization aggregate comparisons lack matching stable-ID snapshots. Exact 1ef-to-957 BASE traces explain 487 selection differences, but do not prove every older aggregate metric delta."
     }
   ],
   "omitted_tests": {
@@ -45939,23 +45897,53 @@
       "command_executed": false
     }
   },
-  "local_closure_supplement": {
-    "supplemented_at_utc": "2026-11-11T20:28:04Z",
-    "overall_status": "INCOMPLETE_PENDING_MANUAL",
-    "integration_evidence": "reports/phase1_final_local/integration_evidence.json",
-    "public_summary": "reports/phase1_final_local/validation_summary.json",
-    "mt5_real_read_only": "MT5_REAL_READ_ONLY_PASS",
-    "history_refresh": "PASS; 7,998 closed bars downloaded to a new 15-file snapshot (no merge/overwrite), refreshed 2026-11-11T20:23Z; latest closed M5 20:15Z",
-    "ollama": "PASS; qwen3:4b; one local diagnostic request",
-    "deepseek_local": "PENDING; current runtime has not been live-validated; no new provider call was made",
-    "historical_regression": "PENDING; see checks.historical_regression.trade_level_attribution for stable-ID detail",
-    "trading_operations": 0
-  },
   "notes": [
     "The validator does not run MT5, Ollama or DeepSeek integration automatically.",
     "--refresh-offline reuses historical results only when relevant source, dataset and configuration hashes exactly match.",
     "BASE spread remains embedded in side-aware bid/ask fills; it is not deducted twice.",
     "CONSERVATIVE and STRESS cost inputs remain labeled unverified sensitivity assumptions, not broker tariffs.",
     "No prompts, HOLD/BREAK thresholds, technical weights or selection criteria were optimized."
-  ]
+  ],
+  "latest_attempt": {
+    "generated_at_utc": "2026-11-13T17:24:14.439117+00:00",
+    "status": "INTERRUPTED",
+    "command": [
+      "<PYTHON>",
+      "scripts/validate_phase1.py"
+    ],
+    "validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
+    "branch": "codex/phase1-autonomous-closure-20261113",
+    "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
+    "validator_exit_code": null,
+    "command_session_exit_code": 1,
+    "reason": "The full validator produced no output for more than ten minutes and was interrupted. No final suite result or new validation report was produced.",
+    "targeted_tests_after_privacy_changes": [
+      {
+        "command": "python -m unittest tests.test_phase1_validation_provenance",
+        "status": "PASS",
+        "tests": 25
+      },
+      {
+        "command": "python -m unittest tests.test_phase1_llm_live",
+        "status": "PASS",
+        "tests": 7
+      },
+      {
+        "command": "python -m unittest tests.test_mt5_real_readonly",
+        "status": "PASS",
+        "tests": 12
+      },
+      {
+        "command": "python -m py_compile scripts/validate_phase1.py scripts/validate_phase1_llm_live.py scripts/validate_mt5_real_readonly.py tests/test_phase1_validation_provenance.py tests/test_mt5_real_readonly.py",
+        "status": "PASS"
+      }
+    ],
+    "previous_full_validation": {
+      "generated_at_utc": "2026-11-13T16:49:53.717883+00:00",
+      "phase1_unit_tests": "PASS (98 tests: 97 passed, 1 POSIX-specific skip)",
+      "offline_existing_tests": "PASS (21/21)",
+      "lookahead": "PASS (375 checks)",
+      "scope_note": "This evidence predates the final public-report path-redaction changes."
+    }
+  }
 }

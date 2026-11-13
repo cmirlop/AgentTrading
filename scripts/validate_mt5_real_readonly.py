@@ -130,7 +130,7 @@ def _public_projection(private_report: dict[str, Any]) -> dict[str, Any]:
                 for tf, details in history.items()
             },
         }
-    return {
+    projected = {
         "schema_version": 1,
         "generated_utc": private_report.get("generated_utc"),
         "status": private_report.get("status", "MT5_REAL_READ_ONLY_PENDING"),
@@ -156,6 +156,9 @@ def _public_projection(private_report: dict[str, Any]) -> dict[str, Any]:
         "trades_executed_by_process": 0,
         "demo_validation": "PENDING_NOT_APPLICABLE_NO_DEMO_ACCOUNT",
     }
+    from scripts.validate_phase1 import _sanitize_public_report
+
+    return _sanitize_public_report(projected)
 
 
 def _portfolio_decision(errors: list[str]) -> tuple[str, str]:
@@ -791,6 +794,7 @@ def main(argv: list[str] | None = None) -> int:
             parser.error("No existe el informe privado que se quiere reproyectar")
         report = json.loads(private_path.read_text(encoding="utf-8"))
         _refresh_report_classification(report)
+        report["traceability"] = _mt5_traceability()
         report["reclassification"] = {
             "generated_utc": datetime.now(timezone.utc).isoformat(),
             "reason": "Risk-limit blocks are valid outcomes when calculation and source data are complete.",
@@ -832,7 +836,9 @@ def main(argv: list[str] | None = None) -> int:
         "orders_sent_by_process": 0,
         "trades_executed_by_process": 0,
     }
-    _write_json_preserving(history_path, history_summary)
+    from scripts.validate_phase1 import _sanitize_public_report
+
+    _write_json_preserving(history_path, _sanitize_public_report(history_summary))
     print(json.dumps(public, indent=2, sort_keys=True))
     return 0 if report.get("status") == "MT5_REAL_READ_ONLY_PASS" else 2 if report.get("status") == "MT5_REAL_READ_ONLY_FAIL" else 3
 

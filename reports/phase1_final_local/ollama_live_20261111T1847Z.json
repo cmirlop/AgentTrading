@@ -164,7 +164,7 @@
   },
   "model_matches_configuration": true,
   "command_executed": [
-    "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
+    "<PYTHON>",
     "scripts/validate_phase1_llm_live.py",
     "--provider",
     "ollama",

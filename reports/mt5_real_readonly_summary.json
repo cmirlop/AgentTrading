@@ -2,17 +2,18 @@
   "account_type": "REAL",
   "broker_data": "PASS",
   "command_executed": [
-    "C:\\Users\\carlo\\Desktop\\Sistema Agentes Bolsa\\AgentTrading\\.venv\\Scripts\\python.exe",
-    "scripts/validate_mt5_real_readonly.py"
+    "<PYTHON>",
+    "scripts/validate_mt5_real_readonly.py",
+    "--reproject-existing"
   ],
   "connection": "PASS",
   "daily_history_status": "PASS",
   "daily_loss_control": "PASS",
   "demo_validation": "PENDING_NOT_APPLICABLE_NO_DEMO_ACCOUNT",
   "errors": [],
-  "generated_utc": "2026-11-11T20:23:00.097058+00:00",
-  "history_refresh_status": "PASS",
-  "history_root": "data/market_history/mt5_real_readonly/20261111T202300.097058Z",
+  "generated_utc": "2026-11-13T15:18:01.621030+00:00",
+  "history_refresh_status": "NOT_RUN",
+  "history_root": null,
   "open_position_count": 0,
   "orders_sent_by_process": 0,
   "pending_order_count": 0,
@@ -25,38 +26,7 @@
   "status": "MT5_REAL_READ_ONLY_PASS",
   "symbols": {
     "AUDUSD": {
-      "history": {
-        "D1": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-10T00:00:00+00:00",
-          "new_bars": 22,
-          "status": "PASS"
-        },
-        "H1": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T19:00:00+00:00",
-          "new_bars": 542,
-          "status": "PASS"
-        },
-        "H4": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T16:00:00+00:00",
-          "new_bars": 136,
-          "status": "PASS"
-        },
-        "M15": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T20:00:00+00:00",
-          "new_bars": 991,
-          "status": "PASS"
-        },
-        "M5": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T20:15:00+00:00",
-          "new_bars": 975,
-          "status": "PASS"
-        }
-      },
+      "history": {},
       "metadata_valid": true,
       "risk_status": "PASS",
       "spread_points": 9.0,
@@ -64,80 +34,18 @@
       "status": "PASS"
     },
     "EURUSD": {
-      "history": {
-        "D1": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-10T00:00:00+00:00",
-          "new_bars": 22,
-          "status": "PASS"
-        },
-        "H1": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T19:00:00+00:00",
-          "new_bars": 542,
-          "status": "PASS"
-        },
-        "H4": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T16:00:00+00:00",
-          "new_bars": 136,
-          "status": "PASS"
-        },
-        "M15": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T20:00:00+00:00",
-          "new_bars": 991,
-          "status": "PASS"
-        },
-        "M5": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T20:15:00+00:00",
-          "new_bars": 975,
-          "status": "PASS"
-        }
-      },
+      "history": {},
       "metadata_valid": true,
       "risk_status": "PASS",
-      "spread_points": 9.0,
+      "spread_points": 8.0,
       "spread_quality": "PASS",
       "status": "PASS"
     },
     "USDCAD": {
-      "history": {
-        "D1": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-10T00:00:00+00:00",
-          "new_bars": 22,
-          "status": "PASS"
-        },
-        "H1": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T19:00:00+00:00",
-          "new_bars": 542,
-          "status": "PASS"
-        },
-        "H4": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T16:00:00+00:00",
-          "new_bars": 136,
-          "status": "PASS"
-        },
-        "M15": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T20:00:00+00:00",
-          "new_bars": 991,
-          "status": "PASS"
-        },
-        "M5": {
-          "data_quality": "PASS",
-          "latest_closed_utc": "2026-11-11T20:15:00+00:00",
-          "new_bars": 975,
-          "status": "PASS"
-        }
-      },
+      "history": {},
       "metadata_valid": true,
       "risk_status": "PASS",
-      "spread_points": 9.0,
+      "spread_points": 10.0,
       "spread_quality": "PASS",
       "status": "PASS"
     }
@@ -159,16 +67,16 @@
       "files": {
         "config/market_config.py": "81e09dac07a656c41c0189f1bf8dfd146eddac6f166c295bc441211269c19583",
         "config/risk_config.py": "0beeaa0a3328d71c8d52272ea2d6dfa89e7d5a8ad145e00aa4c6cc81f3f26c1d",
-        "scripts/validate_mt5_real_readonly.py": "56eae8a9cbea20f6ddf69663b2c3958bc6e51a7280aa43b09d95c5404b69b4e8",
+        "scripts/validate_mt5_real_readonly.py": "0e5134da5b3f52ebc3aa636806cc2bd1983bf1a25fad482f5986100ea891237a",
         "src/mt5_deal_history.py": "8ff63a126bdd07639df74b24e10229d998b6c328ae94eb577266dd42c1549805",
         "src/risk_engine.py": "75a0cd46febdaa28aaa659e3e85f3d1b1bf5508bf5515330ff8b74d15216309f",
-        "tests/test_mt5_real_readonly.py": "693ae0c6ae4d0f0d511f0c1db1c3f408fd858e055dbf26e68bfee620bf440993"
+        "tests/test_mt5_real_readonly.py": "7ebdad23e0d848af172156e7d65a74f1d5533c3eb20b7c161fcff1320a9e7bb9"
       },
       "probe_logic_sha256": null,
       "provider": "mt5_real",
       "python_version": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]"
     },
-    "external_scope_fingerprint": "f76dd2d6d6b02a43ff5097e3f44725baf512053c81f21ac7c3771764420fa213",
+    "external_scope_fingerprint": "9bd1f8e90f00e7ef5142acfbc8bf177ec9f8d3e57e170a13ec9809be6adbfdbc",
     "validation_fingerprint": {
       "backtest_config_sha256": {
         "config/agent_config.py": "0034a2664f3b5dcd0d9a8a702ac76e6d24c195971c3fcd31b68694fafee0957b",
@@ -180,7 +88,7 @@
         "config/trade_planner_config.py": "eedfc22f77be6f2f5ead8427c13de0a58434e41ca789506b2cc6807a1518ab65"
       },
       "baseline_metrics_sha256": "9ff1e94600b489c0c2a9d90318fe4ffc096c9ed131d746bc336b74537305fa3b",
-      "branch": "codex/phase1-final-local-real-readonly-closure",
+      "branch": "codex/phase1-autonomous-closure-20261113",
       "dataset_path": "data\\backtest\\technical_candidate_scan.csv",
       "dataset_sha256": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0",
       "dependencies": {
@@ -210,9 +118,9 @@
         "run_market_agents.py": "f83833bbfc6a76691e6c38745e3b307720ccb24666e2a896556c263dfa961b22",
         "run_portfolio_backtest.py": "5521d032f899e32a60df013870ed2fe0da81b9f2d8368430410c0912197fb62a",
         "run_stateful_backtest.py": "a71615abb6980c4b90426396b1c1435efc85eeb2ff082cfbe65a2e7ed057745d",
-        "scripts/validate_mt5_real_readonly.py": "56eae8a9cbea20f6ddf69663b2c3958bc6e51a7280aa43b09d95c5404b69b4e8",
-        "scripts/validate_phase1.py": "aecc72e87489150f849e23a8b218c838cc347d3ec1d654e58a40d88d1db5cc57",
-        "scripts/validate_phase1_llm_live.py": "e71812afb5e1497fa71a529a00e65878e0e362628445f8d94466dac8fb85adc2",
+        "scripts/validate_mt5_real_readonly.py": "0e5134da5b3f52ebc3aa636806cc2bd1983bf1a25fad482f5986100ea891237a",
+        "scripts/validate_phase1.py": "15e732be8184ec5bc7ede43c7a806df97da8ec714d41cecacbe8d8e6218ab305",
+        "scripts/validate_phase1_llm_live.py": "6af9350cd1db13f9cfd907c751e0d217c6e4b4e848ea871bc3633d7ac83252c9",
         "scripts/validate_phase1_mt5.py": "3ad8c33c5e36c6dece8035011bd494ba2e1c5757d4c930fc6c07946dff578bca",
         "src/agents/decision_agent.py": "76ca802e80f0a2070b44fb5abdea0c40df5e427e149467426aece04749175d8b",
         "src/agents/deepseek_client.py": "85ba9ee389777e6e5b0554b6bfb5db809a34d13e4ab7d66b7917b8357b248284",
@@ -231,24 +139,31 @@
         "src/risk_preflight.py": "cedbae87408593bf1eb820066a8019ce30e4ec7e53f4be1d35692e1b207ed6ab",
         "src/risk_validator.py": "653b8693b6309a0077e75e8b282a7e58a2628e1bd80a971ea918a1a926facbf6",
         "src/trade_planner.py": "ec9e1e40a8942bc73e255565a6fdd35846ecafa3381cb6ec4913eb2b21d5a156",
-        "tests/test_mt5_real_readonly.py": "693ae0c6ae4d0f0d511f0c1db1c3f408fd858e055dbf26e68bfee620bf440993",
+        "tests/test_mt5_real_readonly.py": "7ebdad23e0d848af172156e7d65a74f1d5533c3eb20b7c161fcff1320a9e7bb9",
         "tests/test_phase1_backtest.py": "9d5e6d2dc633aed83ff06d6d5072ce2938ad7bb3df1737e850ee267048f40ec1",
         "tests/test_phase1_daily_guard.py": "86274fdc559d373675bab15247c5c42fcff6cad58dc0d8d682c006d9be0d6b5e",
         "tests/test_phase1_llm.py": "5d91da7c9c14020406aaa29982f798d0211b8d73e04a3c78e795b0f89423b4d0",
-        "tests/test_phase1_llm_live.py": "7b29bc2821310cb968305c3be4e96adfd2aa6f6992fd11b110ef781a974f6a04",
+        "tests/test_phase1_llm_live.py": "4e5d0d0447a9d750508991b5bd0654aea0715a5b40032a42889248bf56adb702",
         "tests/test_phase1_mt5_safety.py": "c7791b9e41a43a8d30bc1b05a0a69c0acb08bfa7a077e1905b33f2c7741f2d50",
         "tests/test_phase1_risk.py": "700fc98f84d2a91a3e35c47b761b2e03fb07b186921e0feb228f327ee5f31f54",
         "tests/test_phase1_risk_validator.py": "aefaeb312bce632e845b704c03af4e1425766e825834d63db6e3c98a9fdabbd8",
-        "tests/test_phase1_validation_provenance.py": "4454b4b622e25b62bf9f328c5244380de538d0abf75828878a2c57fbadbed358"
+        "tests/test_phase1_validation_provenance.py": "042b7083d95f211708baef0a2da3123b71a5d5e80bd57c1bc5ebe5a9a6b66799"
       },
-      "source_fingerprint_sha256": "073d7f15234f3e76af86be9f0e31e16a8601e785fca56cd020b664a3a94ce32d",
-      "validation_commit": "c6fb7de6ee58cfdb12552b7062dbd188f771a169",
+      "source_fingerprint_sha256": "ce330518a22aa34a8f7adde1f37d7367e2310c5944192346a4fa4c35ab045538",
+      "validation_commit": "957bf6613ecdabd38a101db1471d1285917831ec",
       "working_tree": {
         "changes": [
           "M docs/FASE1_CIERRE.md",
           " M docs/FASE1_RESULTADO_FINAL.md",
           " M docs/FASE1_VALIDACION.md",
+          " M reports/archive/mt5_real_readonly_summary-20261111T184558Z.json",
+          " M reports/mt5_history_refresh_summary.json",
           " M reports/mt5_real_readonly_summary.json",
+          " M reports/phase1_final_local/historical_regression_attribution.json",
+          " M reports/phase1_final_local/ollama_live_20261111T1847Z.json",
+          " M reports/phase1_final_local/ollama_live_20261111T1900Z.json",
+          " M reports/phase1_llm_live_deepseek.json",
+          " M reports/phase1_llm_live_ollama.json",
           " M reports/phase1_validation.json",
           " M scripts/validate_mt5_real_readonly.py",
           " M scripts/validate_phase1.py",
@@ -256,15 +171,11 @@
           " M tests/test_mt5_real_readonly.py",
           " M tests/test_phase1_llm_live.py",
           " M tests/test_phase1_validation_provenance.py",
-          "?? reports/archive/mt5_history_refresh_summary-20261109T204428Z.json",
-          "?? reports/archive/mt5_history_refresh_summary-20261111T183547Z.json",
-          "?? reports/archive/mt5_real_readonly_summary-20261109T204428Z.json",
-          "?? reports/archive/mt5_real_readonly_summary-20261111T183547Z.json",
-          "?? reports/phase1_final_local/historical_regression_attribution.json",
-          "?? reports/phase1_final_local/integration_evidence.json",
-          "?? reports/phase1_final_local/ollama_live_20261111T1847Z.json",
-          "?? reports/phase1_final_local/ollama_live_20261111T1900Z.json",
-          "?? reports/phase1_final_local/validation_summary.json"
+          "?? docs/FASE1_CIERRE_AUTONOMO.md",
+          "?? reports/archive/mt5_history_refresh_summary-20261111T203048Z.json",
+          "?? reports/archive/mt5_real_readonly_summary-20261111T202355Z.json",
+          "?? reports/phase1_final_local/historical_causal_attribution_summary.json",
+          "?? reports/phase1_final_local/ollama_live_current_runtime.json"
         ],
         "clean": false
       }

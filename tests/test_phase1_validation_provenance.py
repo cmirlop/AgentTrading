@@ -1,6 +1,7 @@
 import sys
 import json
 import hashlib
+import importlib.metadata
 import subprocess
 import tempfile
 import unittest
@@ -23,18 +24,49 @@ from scripts.validate_phase1 import (
     _external_validation_status,
     _latest_phase1_local_provider_report,
     _normalized_text_sha256,
+    _phase_exit_code,
     _phase_status,
     _source_snapshot,
     _probe_logic_sha256,
+    _redact_sensitive_text,
+    _selection_root_has_release_crossing,
+    _sanitize_public_report,
     _verified_dataset_blob,
     _verified_probe_source,
     _verify_backtest_reuse_compatibility,
+    _verify_transitive_selection_attribution,
     _verify_refresh_compatibility,
     scan_order_execution_calls,
 )
 
 
 class ValidationProvenanceTests(unittest.TestCase):
+    def test_public_report_redacts_local_paths_and_credential_assignments(self):
+        payload = {
+            "commands": [sys.executable, str(ROOT / "reports" / "phase1_validation.json")],
+            "temporary": str(Path(tempfile.gettempdir()) / "phase1-run"),
+            "details": "api_key=example-secret account_id=123456 server=private-host",
+        }
+        safe = _sanitize_public_report(payload)
+        rendered = json.dumps(safe, sort_keys=True)
+        self.assertIn("<PYTHON>", rendered)
+        self.assertIn("<REPOSITORY>", rendered)
+        self.assertIn("<TEMP>", rendered)
+        for private in (str(Path.home()), str(ROOT), "example-secret", "123456", "private-host"):
+            self.assertNotIn(private, rendered)
+        self.assertIn("[REDACTED]", rendered)
+
+    def test_sensitive_text_scrubber_redacts_machine_home_prefix(self):
+        safe = _redact_sensitive_text(f"python={sys.executable} repo={ROOT}")
+        self.assertNotIn(str(Path.home()), safe)
+        self.assertNotIn(str(ROOT), safe)
+
+    def test_phase_exit_code_distinguishes_failure_pending_and_complete(self):
+        self.assertEqual(_phase_exit_code("FAIL"), 1)
+        self.assertEqual(_phase_exit_code("INCOMPLETE_PENDING_MANUAL"), 2)
+        self.assertEqual(_phase_exit_code("PHASE1_COMPLETE"), 0)
+        self.assertEqual(_phase_exit_code("UNKNOWN"), 1)
+
     def test_latest_local_live_report_is_selected_by_utc_timestamp(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -104,6 +136,49 @@ class ValidationProvenanceTests(unittest.TestCase):
         }
         self.assertEqual(_verify_refresh_compatibility(report, snapshot), [])
 
+    def test_transitive_causal_evidence_rejects_changed_replay_source_content(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "reports" / "phase1_final_local").mkdir(parents=True)
+            private_dir = root / "reports" / "private"
+            private_dir.mkdir(parents=True)
+            source = root / "run_portfolio_backtest.py"
+            source.write_text("changed replay source\n", encoding="utf-8")
+            private = {
+                "status": "PASS",
+                "dataset_sha256": "frozen-dataset",
+                "pre_finalization_commit": "a" * 40,
+                "current_commit": "b" * 40,
+                "configuration": {"cost_scenario": "BASE", "spread_floor_points": 0.0, "llm_enabled": False},
+                "runtime": {
+                    "python_version": sys.version,
+                    "dependencies": {name: importlib.metadata.version(name) for name in ("pandas", "numpy")},
+                },
+                "source_hashes": {
+                    "current": {"run_portfolio_backtest.py": hashlib.sha256(b"original replay source\n").hexdigest()},
+                    "old": {},
+                },
+            }
+            private_path = private_dir / "causal.json"
+            private_path.write_text(json.dumps(private), encoding="utf-8")
+            summary = {
+                "schema_version": 1,
+                "status": "PASS",
+                "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+                "dataset_sha256": "frozen-dataset",
+                "pre_finalization_commit": "a" * 40,
+                "current_commit": "b" * 40,
+                "private_evidence": "reports/private/causal.json",
+                "private_evidence_sha256": hashlib.sha256(private_path.read_bytes()).hexdigest(),
+            }
+            (root / "reports" / "phase1_final_local" / "historical_causal_attribution_summary.json").write_text(
+                json.dumps(summary), encoding="utf-8"
+            )
+            with patch("scripts.validate_phase1.ROOT", root):
+                result = _verify_transitive_selection_attribution("frozen-dataset")
+        self.assertEqual(result["status"], "PENDING")
+        self.assertIn("Historical replay source changed", result["reason"])
+
     def test_backtest_evidence_reuse_accepts_merge_metadata_and_rejects_source_changes(self):
         snapshot = _source_snapshot()
         baseline = json.loads((ROOT / "reports/phase1_baseline_metrics.json").read_text(encoding="utf-8"))
@@ -151,6 +226,26 @@ class ValidationProvenanceTests(unittest.TestCase):
             lf.write_bytes(b"value = 1\nprint(value)\n")
             crlf.write_bytes(b"value = 1\r\nprint(value)\r\n")
             self.assertEqual(_normalized_text_sha256(lf), _normalized_text_sha256(crlf))
+
+    def test_transitive_root_uses_the_immediate_candidate_time_and_side(self):
+        root = {
+            "root_trade_id": "root",
+            "root_release_before": "2026-05-21 13:35:00+00:00",
+            "root_release_after": "2026-05-21 11:30:00+00:00",
+            "chain": ["outer", "intermediate", "root"],
+            "chain_steps": [{
+                "trade_id": "outer",
+                "present_side": "old",
+                "identity": {"signal_time": "2026-05-21T13:45:00+00:00"},
+            }, {
+                "trade_id": "intermediate",
+                "present_side": "new",
+                "identity": {"signal_time": "2026-05-21T11:45:00+00:00"},
+            }],
+        }
+        self.assertTrue(_selection_root_has_release_crossing(root))
+        root["chain_steps"][-1]["identity"]["signal_time"] = "2026-05-21T13:45:00+00:00"
+        self.assertFalse(_selection_root_has_release_crossing(root))
 
     def test_historical_dataset_is_reused_only_from_matching_git_blob_hash(self):
         blob = b"frozen dataset\n"
