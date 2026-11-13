@@ -1,8 +1,10 @@
 import os
 import sys
 import unittest
+import json
 from datetime import datetime, timezone
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +23,40 @@ from src.agents.llm_client import LLMProviderError
 
 
 class LiveProviderValidatorOfflineTests(unittest.TestCase):
+    def test_ollama_http_500_acl_and_host_failures_are_safe_pending(self):
+        class OllamaHTTP500(Exception):
+            status_code = 500
+
+        cases = (
+            OllamaHTTP500("manifest access denied at C:\\private\\models\\manifests\\qwen3"),
+            PermissionError("access denied at C:\\private\\models\\manifests\\qwen3"),
+            ConnectionError("cannot connect to http://private-host:11434/api/tags?token=secret"),
+        )
+        configuration = SimpleNamespace(
+            model="qwen3:4b",
+            timeout_seconds=5,
+            public_dict=lambda: {"provider": "ollama", "model": "qwen3:4b"},
+        )
+
+        for error in cases:
+            with self.subTest(error=type(error).__name__):
+                class BrokenClient:
+                    def list(self):
+                        raise error
+
+                with patch.dict(os.environ, {"OLLAMA_MODEL": "qwen3:4b", "OLLAMA_HOST": "http://127.0.0.1:11434"}):
+                    with patch("src.agents.llm_client.get_llm_configuration", return_value=configuration):
+                        with patch("src.agents.llm_client._ollama_client", return_value=BrokenClient()):
+                            report = validate("ollama")
+                serialized = json.dumps(report, ensure_ascii=False)
+                self.assertEqual(report["status"], "PENDING")
+                self.assertEqual(report["calls_made"], 0)
+                self.assertFalse(report["operational_signal_created"])
+                self.assertFalse(report["market_order_sent"])
+                self.assertNotIn(str(error), serialized)
+                self.assertNotIn("private-host", serialized)
+                self.assertNotIn("secret", serialized)
+
     def test_api_errors_are_classified_without_provider_body(self):
         class AuthenticationError(Exception):
             status_code = 401

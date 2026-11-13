@@ -1,34 +1,27 @@
 # Cierre de Fase 1 — AgentTrading
 
-**Decisión al 13/11/2026: INCOMPLETE_PENDING_MANUAL.** La validación integral terminó sin fallos offline, pero no satisface todos los criterios de cierre. No iniciar Fase 2.
+**Decisión: PHASE1_COMPLETE.** La batería integral de Windows terminó con código 0 y todas las condiciones obligatorias admitidas por la incidencia quedaron verificadas. No se inició Fase 2 ni se habilitó trading real.
 
-La revalidación integral tras los cambios de privacidad quedó interrumpida después de varios minutos sin salida. No se considera un nuevo PASS. Pasaron 44 pruebas focalizadas de los componentes modificados (25 procedencia, 7 LLM live offline y 12 MT5 readonly); la suite completa y las 21 pruebas offline conservan el resultado PASS de la ejecución integral anterior.
+## Controles que cierran la fase
 
-## Evidencias PASS
+- 119 tests Phase 1: 118 PASS y un skip POSIX esperado.
+- 21/21 comprobaciones offline y 375 controles de look-ahead PASS.
+- Concurrencia y ciclo de vida de reservas validados en Windows, incluidos persistencia, expiración a 15 minutos, reinicio y límites de riesgo.
+- MT5 REAL read-only PASS con evidencia reciente y huella compatible; tradeapi_disabled=true. La DEMO es NOT_APPLICABLE_NO_DEMO_ACCOUNT, según el alcance acordado en la incidencia.
+- Ollama qwen3:4b live PASS con respuesta JSON/Pydantic y evidencia autorizada. El servicio, modelo, endpoint y manifiesto son accesibles; no se necesitó cambiar ACL, instalar ni descargar modelos.
+- DeepSeek deepseek-flash PASS mediante evidencia vigente y de procedencia verificada. No se repitió la llamada facturable.
+- Reconciliación del dataset congelado y los agregados históricos PASS: 487 cambios de selección atribuidos con evidencia por operación; 721 deltas agregados documentados; cero sin explicar.
+- Ocho backtests válidos y BASE reproducible. La última pasada integral reutilizó las salidas solo tras validar huellas y ventana de vigencia.
+- DRY RUN preservado. Ninguna orden fue enviada ni ejecutada.
 
-- En la ejecución integral anterior: 98 pruebas Phase 1, 97 PASS y una omisión POSIX específica. La última revalidación integral no terminó.
-- 21/21 comprobaciones offline y 375 comprobaciones look-ahead.
-- Concurrencia multiproceso y ciclo de vida de reservas validados en Windows.
-- Ocho backtests portfolio/stateful PASS sobre el dataset congelado; BASE repetido por modo y reproducible.
-- MT5 REAL en modo solo lectura: tradeapi_disabled=true, instrumentos EURUSD/USDCAD/AUDUSD, riesgo hipotético, exposición y límite diario PASS.
-- DeepSeek live PASS con deepseek-flash, una solicitud autorizada y sin reintentos.
-- 487 diferencias de selección entre las versiones 1ef0faf y 957bf66 atribuidas a la corrección documentada del simulador; cero cambios técnicos de señal/plan y cero selecciones pendientes en esa comparación.
-- Cero órdenes enviadas y cero operaciones ejecutadas por los procesos de validación. No se llamó a order_send ni order_check.
+## Límites documentados
 
-## Pendientes que bloquean el cierre
+- No se reconstruyó el subprocess exacto donde se detuvo la validación anterior: el informe previo no tenía checkpoints. El backtest histórico se mantiene como inferencia. La nueva instrumentación dejó constancia de progreso y la pasada final completó toda la batería.
+- Los costes CONSERVATIVE y STRESS son escenarios de sensibilidad; no son tarifas confirmadas del bróker. BASE conserva las hipótesis originales de comisión y slippage cero no verificados. Ninguna cifra se ajustó para conseguir PASS.
+- test_order_request.py y test_trade_planner.py no se ejecutan por seguridad y falta de DEMO; se marcan NOT_RUN_READ_ONLY_NO_DEMO, no PASS. Sus controles de riesgo relevantes están cubiertos por pruebas read-only y de unidad.
 
-1. Ollama live: el servicio/listado de modelos devolvió ConnectionError, calls_made=0. El intento de inicio local anterior falló por acceso denegado al directorio de manifiestos. No se modificaron permisos ni configuración.
-2. Regresión global: el baseline antiguo y la prefinalización solo conservan agregados para parte de las comparaciones. Los deltas económicos antiguos aún no pueden enlazarse completamente con IDs estables. Se mantienen PENDING aunque la comparación de trazas 1ef → 957 atribuya todas las diferencias de selección.
-3. MT5 DEMO: no hay cuenta DEMO. La cuenta REAL se validó de manera independiente y estrictamente de solo lectura; no se clasifica como DEMO.
+## Decisión operativa
 
-El histórico de mercado no se actualizó en esta ejecución; sigue disponible el snapshot separado del 11/11/2026. No se modificó el CSV congelado.
+Fase 1 completa y técnicamente se puede comenzar Fase 2 cuando el usuario lo decida. Esta tarea no inició trabajo de Fase 2. El sistema permanece en DRY RUN y no se debe conectar para trading real.
 
-## Acción manual
-
-- Restaurar el acceso del servicio Ollama al directorio del modelo configurado qwen3:4b, comprobar el listado y ejecutar scripts/validate_phase1_llm_live.py --provider ollama.
-- Resolver la comparación agregada antigua aportando snapshots estables por operación o documentando una revisión explícita de los deltas pendientes.
-- Mantener MT5 con trading externo Python deshabilitado. No operar la cuenta.
-
-El informe global es [reports/phase1_validation.json](../reports/phase1_validation.json); el código de salida registrado es 2 para pendiente, 1 para fallo y 0 para PHASE1_COMPLETE. El sistema sigue exclusivamente en DRY RUN.
-
-Acción adicional: repetir la batería global offline tras confirmar que no quedan procesos de la ejecución interrumpida y registrar su finalización. No es necesario repetir DeepSeek ni volver a conectar con MT5 para esta revalidación.
+Evidencia autoritativa: [informe integral](../reports/phase1_validation.json), [resumen de ejecución](../reports/phase1_final_local/validation_summary.json), [conciliación histórica](../reports/phase1_final_local/baseline_aggregate_reconciliation.json) y [guía Ollama](OLLAMA_WINDOWS_DIAGNOSTICO.md).

@@ -1,79 +1,72 @@
 # Resultado final local — Fase 1 de AgentTrading
 
-**ESTADO FINAL FASE 1: INCOMPLETE_PENDING_MANUAL**
+**ESTADO FINAL FASE 1: PHASE1_COMPLETE**
 
-La validación integral anterior se ejecutó el 13/11/2026 en Windows. Tras añadir redacción de rutas locales a los informes, la suite global final no terminó y fue interrumpida después de varios minutos sin salida. Las pruebas focalizadas de los componentes afectados sí pasaron: 25 de procedencia, 7 de cliente live LLM offline y 12 de MT5 readonly. El resultado global queda pendiente; no se declara PHASE1_COMPLETE ni se recomienda iniciar la Fase 2.
+La validación integral local de Windows finalizó con código 0. Las métricas negativas después de costes se conservan; la conclusión solo certifica integridad de medición, seguridad y reproducibilidad. No se modificaron la estrategia, los parámetros, el dataset congelado ni los resultados para conseguir PASS. No se inició Fase 2.
 
-## A. Entorno y cambios
+## A. Entorno
 
 - Sistema: Windows 10, build 19045.
-- Python: CPython 3.13.14 x64, .venv.
-- Commit base de validación: 957bf6613ecdabd38a101db1471d1285917831ec.
-- Rama: codex/phase1-autonomous-closure-20261113.
-- Dataset congelado usado en backtests: SHA-256 0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3. El CSV de trabajo local tenía otro hash y no se alteró.
-- Dependencias comprobadas: MetaTrader5 5.0.6231, pandas 3.0.6, NumPy 2.5.3, Pydantic 2.13.5, Ollama 0.6.3, OpenAI 3.41.0 y python-dotenv 1.2.4.
-- Archivos de implementación y prueba cambiados: scripts/validate_phase1.py, scripts/validate_phase1_llm_live.py, tests/test_phase1_validation_provenance.py y tests/test_phase1_llm_live.py. También se actualizaron los informes públicos de validación y estos documentos.
-- Las trazas financieras y de operaciones permanecen en reports/private, excluidas de Git.
+- Python: CPython 3.13.14 x64 desde .venv.
+- Rama de trabajo: codex/issue14-phase1-integrity.
+- HEAD base examinado: ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91 (main tras PR #13). El informe conserva hashes de cada archivo validado y declara el árbol modificado durante la ejecución.
+- Dependencias: pandas 3.0.6, NumPy 2.5.3, Pydantic 2.13.5, MetaTrader5 5.0.6231, Ollama SDK 0.6.3, OpenAI SDK 3.41.0 y python-dotenv 1.2.4.
+- MT5 instalado y evidencia REAL read-only previa válida; no hay cuenta DEMO. La pasada integral no abrió sesión MT5.
+- Ollama 0.40.6 responde en el endpoint local; qwen3:4b instalado y utilizado, sin sustitución silenciosa.
+- DeepSeek disponible según evidencia vigente deepseek-flash; no se realizó llamada nueva.
+- Rutas privadas, identidad de cuenta, balance, equity, historial identificable, claves y tokens no se incluyeron en los informes públicos.
+
+Archivos modificados o creados para la incidencia: scripts/validate_phase1.py, scripts/reconcile_phase1_historical.py, tests/test_phase1_llm_live.py, tests/test_phase1_reconciliation.py, tests/test_phase1_runner.py, informes JSON públicos y esta documentación. El diagnóstico detallado de Ollama y los snapshots de operaciones están bajo reports/private/, excluidos de Git.
 
 ## B. Resultados
 
 | Comprobación | Estado | Evidencia |
 |---|---|---|
-| Tests Phase 1 | PENDING en la revalidación final | La ejecución integral anterior: 98 ejecutadas; 97 PASS, 1 omisión POSIX. Última revalidación integral interrumpida; 44 pruebas focalizadas posteriores PASS. |
-| Offline existente | PASS en la ejecución integral anterior | 21/21; no se completó otra pasada integral tras la sanitización. |
-| Concurrencia Windows | PASS en la ejecución integral anterior | Locks multiproceso, persistencia, expiración y reinicios cubiertos; sin nueva pasada integral. |
-| Look-ahead | PASS en la ejecución integral anterior | 375 comprobaciones; no se completó otra pasada global. |
-| MT5 REAL solo lectura | PASS | Cuenta REAL; tradeapi_disabled=true; tres símbolos; riesgo monetario y límite diario PASS. |
-| MT5 DEMO | PENDING / no disponible | No hay cuenta DEMO; no se imita ni se marca como PASS. |
-| Riesgo y exposición MT5 | PASS | EURUSD, USDCAD y AUDUSD; cálculos hipotéticos, conversión, exposición y evaluación de historial. |
-| Históricos MT5 | NOT_RUN | Snapshot separado del 11/11 conservado; ninguna descarga ni actualización en esta ejecución. |
-| Ollama | PENDING | Servicio/listado unavailable (ConnectionError); 0 llamadas; modelo configurado qwen3:4b. |
-| DeepSeek | PASS | deepseek-flash; una solicitud autorizada, cero reintentos; JSON/Pydantic/evidencia válidos. |
-| Backtests | PASS | Ocho ejecuciones portfolio/stateful; BASE repetido dos veces en cada modalidad. |
-| Regresión de selección 1ef → 957 | PASS | 487 diferencias explicadas; cero cambios de señal o plan; cero diferencias sin atribución. |
-| Regresión contra agregados anteriores | PENDING | Falta evidencia por operación para probar todos los deltas del baseline antiguo y la prefinalización. |
-| DRY RUN | PASS | 0 órdenes enviadas y 0 operaciones ejecutadas por los procesos. |
+| Suite Phase 1 | PASS | 119 tests: 118 PASS, 1 skip específico de POSIX. Incluye Windows, trazabilidad, errores Ollama y pruebas adversariales de conciliación. |
+| Pruebas offline | PASS | 21/21 scripts completados; se registran duración y código de salida por subprocess. |
+| Concurrencia Windows | PASS | Locks y contención multiproceso, persistencia, expiración de reservas a 15 minutos, reinicio de proceso/día, bloqueo diario y exposición USD. |
+| MT5 REAL read-only | PASS reutilizado | Evidencia con tradeapi_disabled=true, cuenta REAL, EURUSD/USDCAD/AUDUSD, metadatos, precios, riesgo hipotético, exposición e historial diario. Procedencia y antigüedad verificadas dentro de 24 h. No se realizaron llamadas MT5 en la pasada integral actual. |
+| MT5 DEMO | NO APLICABLE | No existe cuenta DEMO. Se mantiene diferenciada de la validación REAL, que satisface el alcance read-only autorizado en la incidencia. |
+| Riesgo monetario | PASS | Cálculos hipotéticos de compra/venta contrastados con el cálculo del bróker en la evidencia MT5 read-only. |
+| Límite diario | PASS | Historial de deals clasificado; depósitos/retiros no compensan pérdidas operativas. Evidencia MT5 vigente y pruebas unitarias Windows. |
+| Ollama | PASS | qwen3:4b, exactamente el modelo configurado; una sola inferencia local live, JSON/Pydantic válido, evidencia LIVE_PROBE, cero señal operativa. |
+| DeepSeek | PASS reutilizado | deepseek-flash; JSON/Pydantic/evidencia permitida y llamada original documentada. Sin solicitud facturable nueva. |
+| Backtests | PASS | Portfolio BASE/CONSERVATIVE/STRESS y Stateful BASE/CONSERVATIVE/STRESS, con BASE repetido dos veces por modalidad. Reutilización validada por hashes y ventana de vigencia. |
+| Regresión histórica | PASS | Resúmenes reproducidos desde replay; IDs estables; 487 diferencias de selección explicadas; 721 deltas métricos agregados reconciliados; 0 inexplicados. |
+| Look-ahead | PASS | 375 comprobaciones. |
+| DRY RUN | PASS | Cero órdenes u operaciones ejecutadas por la validación; sin order_send() ni order_check(). |
 
-Informe global: [reports/phase1_validation.json](../reports/phase1_validation.json). Su estado es INCOMPLETE_PENDING_MANUAL y el código de salida registrado es 2.
+Los tests test_order_request.py y test_trade_planner.py quedaron NOT_RUN_READ_ONLY_NO_DEMO porque intentarían order_check() o cambiarían el estado de selección de símbolos del terminal. No se presentan como PASS. test_ollama.py queda sustituido por la comprobación live real y no se repitió para evitar una segunda inferencia local innecesaria.
 
-## C. Resultados económicos
+## C. Conciliación y resultados económicos
 
-Corte común: umbral 65 / LIMIT. BASE usa costes de comisión y slippage cero no verificados; CONSERVATIVE y STRESS son hipótesis. Los números negativos se mantienen sin modificación.
+La reproducción histórica se fijó al blob Git del dataset congelado SHA-256 0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3. El archivo de trabajo actual tiene SHA-256 341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0; es distinto, se mantuvo intacto y no se utilizó para sustituir el blob congelado.
 
-### Portfolio
+Los commits comparados son baseline a00644a6b330b6235bea3f47cb17d2dfe39d4f5b, prefinalización 1ef0faf7600b866236f75cb7c229fc8a3b66973e y versión actual ea2e60a10df4e9ae5f2e276d82cf343fd4a3ee91. Los seis resúmenes históricos publicados (portfolio y stateful para cada versión) se reprodujeron desde snapshots con hashes. Baseline→prefinalización tuvo cinco transiciones documentadas de EXPIRED_AT_END a PENDING_AT_END, cero cambios de selección y cero métricas económicas comunes alteradas. Prefinalización→actualidad registró 274 cambios de selección portfolio y 213 stateful; cada uno tiene testigo. No hubo cambios de señal o plan. Se atribuyeron 721 deltas métricos agregados a operaciones, capacidad/selección, correcciones de expiración y reglas de coste. Quedaron cero diferencias inexplicadas. Los costes CONSERVATIVE/STRESS no tienen un baseline con tarifa anterior comparable y siguen etiquetados como hipótesis de sensibilidad.
 
-| Escenario | Oportunidades | Señales | Planes A/R | Ejecutadas/cerradas | Ambiguas | Bruto EUR | Costes cerrado/incurrido EUR | Neto EUR | PF neto | Expectativa EUR | DD EUR |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| BASE | 10.284 | 1.737 | 1.737 / 266 | 686 / 628 | 28 | 25,62 | 0 / 0 | 25,62 | 1,118 | 0,041 | 10,94 |
-| CONSERVATIVE | 10.284 | 1.736 | 1.736 / 266 | 685 / 627 | 28 | 26,12 | 53,64 / 58,58 | -27,53 | 0,890 | -0,044 | 36,69 |
-| STRESS | 10.284 | 1.748 | 1.748 / 265 | 689 / 632 | 28 | 18,29 | 92,68 / 101,00 | -74,39 | 0,735 | -0,118 | 77,59 |
+Comparación Portfolio para umbral 65 / LIMIT:
 
-### Stateful por instrumento
+| Escenario | Oportunidades | Señales | Planes aceptados/rechazados | Ejecutadas | Bruto EUR | Coste cerrado/incurrido EUR | Neto EUR | PF neto | Expectativa EUR | DD neto EUR |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BASE | 10.284 | 1.737 | 1.737 / 266 | 686 | 25,62 | 0 / 0 | 25,62 | 1,118 | 0,041 | 10,94 |
+| CONSERVATIVE | 10.284 | 1.736 | 1.736 / 266 | 685 | 26,12 | 53,64 / 58,58 | -27,53 | 0,890 | -0,044 | 36,69 |
+| STRESS | 10.284 | 1.748 | 1.748 / 265 | 689 | 18,29 | 92,68 / 101,00 | -74,39 | 0,735 | -0,118 | 77,59 |
 
-| Escenario | Par | Ejecutadas/cerradas | Bruto EUR | Costes cerrado/incurrido EUR | Neto EUR | PF neto | Expectativa EUR | DD EUR |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| BASE | EURUSD | 277 / 251 | 15,05 | 0 / 0 | 15,05 | 1,174 | 0,060 | 13,59 |
-| BASE | USDCAD | 275 / 257 | 20,93 | 0 / 0 | 20,93 | 1,382 | 0,081 | 7,34 |
-| BASE | AUDUSD | 264 / 245 | -14,89 | 0 / 0 | -14,89 | 0,823 | -0,061 | 24,11 |
-| CONSERVATIVE | EURUSD | 277 / 251 | 15,05 | 21,91 / 24,18 | -6,86 | 0,936 | -0,027 | 23,28 |
-| CONSERVATIVE | USDCAD | 274 / 256 | 21,42 | 21,10 / 22,58 | 0,32 | 1,010 | 0,001 | 10,89 |
-| CONSERVATIVE | AUDUSD | 264 / 245 | -14,89 | 21,39 / 23,05 | -36,28 | 0,644 | -0,148 | 40,17 |
-| STRESS | EURUSD | 279 / 253 | 13,57 | 38,43 / 42,38 | -24,86 | 0,788 | -0,098 | 34,86 |
-| STRESS | USDCAD | 277 / 259 | 19,01 | 35,55 / 38,02 | -16,54 | 0,795 | -0,064 | 21,01 |
-| STRESS | AUDUSD | 265 / 246 | -18,51 | 37,37 / 40,26 | -55,88 | 0,527 | -0,227 | 56,63 |
+El BASE conserva costes asumidos de comisión y slippage cero, no verificados como tarifa real del bróker. CONSERVATIVE y STRESS son sensibilidades y no representan costes confirmados. No se cambió ninguna regla para alterar estas cifras.
 
-La repetibilidad BASE pasó en el mismo dataset congelado. Los cambios técnicos de señal y plan entre las fuentes 1ef0faf y 957bf66 fueron cero. La comparación causal por oportunidades explica los 487 cambios de selección mediante la corrección de expiración/estado final.
+## D. Conclusión y operaciones pendientes
 
-El comparador más amplio contra los informes agregados antiguos sigue PENDING: los archivos de baseline y prefinalización no contienen suficientes IDs estables para demostrar individualmente cada diferencia histórica. Esto impide marcar toda la regresión PASS.
+La Fase 1 está completada bajo los criterios de la incidencia. Los cambios corrigieron progreso y estados de la batería global, la distinción entre ejecución y reutilización, la validación histórica de agregados y la publicación segura de evidencia. El antiguo punto de interrupción exacto no puede recuperarse porque el informe previo no guardó checkpoints; la etapa de backtest era solo la hipótesis mejor respaldada. La ejecución actual sí terminó todas las fases.
 
-## D. Conclusión y acciones manuales
+Ollama no requirió una modificación persistente: el síntoma previo de acceso denegado no se reprodujo. El proceso usa la identidad con acceso al modelo, el endpoint de versión y listado responde correctamente, el manifiesto es legible y qwen3:4b pasó una validación live. No se borró ni descargó ningún modelo y no se cambiaron ACL.
 
-Se implementaron la verificación de procedencia por contenido normalizado entre LF/CRLF, la reutilización de evidencia histórica por hashes, la comprobación causal de cada raíz en su candidato inmediato, y un estado/código global que distingue fallo de pendiente. Los informes financieros detallados siguen privados.
+No hay tareas manuales obligatorias para cerrar Fase 1. MT5 debe permanecer con tradeapi_disabled=true; no se usó para operar. Se puede comenzar Fase 2 técnicamente cuando el usuario lo decida; esta ejecución no comenzó esa fase.
 
-Para resolver los pendientes:
-
-1. Corregir manualmente el acceso del servicio Ollama a su directorio de modelos, confirmar que qwen3:4b está visible y ejecutar scripts/validate_phase1_llm_live.py --provider ollama. No descargar ni sustituir el modelo sin autorización.
-2. Aportar snapshots por operación del baseline antiguo o completar una revisión explícita de los agregados pendientes. No convertirlos en PASS automáticamente.
-3. No usar una cuenta REAL para reemplazar la validación DEMO, si el cierre oficial exige DEMO.
-
-El validador retorna 0 para PHASE1_COMPLETE, 2 para INCOMPLETE_PENDING_MANUAL y 1 para FAIL. La Fase 1 no está completa. Mantener DRY RUN; no comenzar Fase 2 todavía. Para cerrar también la revalidación técnica local, vuelve a ejecutar la batería global offline y confirma que finaliza; no hace falta repetir MT5 ni DeepSeek.
+- [Informe de la última validación](../reports/phase1_validation.json)
+- [Resumen de estado](../reports/phase1_final_local/validation_summary.json)
+- [Conciliación agregada segura](../reports/phase1_final_local/baseline_aggregate_reconciliation.json)
+- [Resumen causal de selecciones](../reports/phase1_final_local/historical_causal_attribution_summary.json)
+- [Evidencia MT5 REAL read-only](../reports/mt5_real_readonly_summary.json)
+- [Validación live local de Ollama](../reports/phase1_final_local/ollama_live_20261113T1908Z_issue14_pass.json)
+- [Evidencia DeepSeek reutilizada](../reports/phase1_llm_live_deepseek.json)
+- [Diagnóstico y guía de Ollama](OLLAMA_WINDOWS_DIAGNOSTICO.md)

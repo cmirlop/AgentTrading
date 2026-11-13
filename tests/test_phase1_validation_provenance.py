@@ -521,12 +521,14 @@ class ValidationProvenanceTests(unittest.TestCase):
             return report
 
         try:
-            write_fixture()
+            original_report = write_fixture()
             result = _external_validation_status(relative, snapshot)
             self.assertEqual(result["status"], "PASS")
             self.assertTrue(result["evidence_reused"])
             self.assertEqual(result["result_origin"], "REUSED_VERIFIED_EXTERNAL_EVIDENCE")
             self.assertEqual(result["origin_validation_commit"], snapshot["validation_commit"])
+            self.assertEqual(result["generated_at_utc"], original_report["generated_utc"])
+            self.assertFalse(result["command_executed_this_run"])
 
             write_fixture(generated_utc="2020-01-01T00:00:00Z")
             result = _external_validation_status(relative, snapshot)
