@@ -1,0 +1,43 @@
+name: Offline research tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install offline-test dependencies
+        run: python -m pip install "pandas>=2.2,<4" "numpy>=1.26,<3" "pydantic>=2.6,<3"
+      - name: Phase 2.2.2a–e unit tests
+        run: |
+          python -m unittest discover -s tests -p "test_phase2_2_2*.py"
+          python -m unittest tests.test_macro_sources tests.test_verified_dataset_backtests
+      - name: Historical backtest and MT5 safety tests
+        run: |
+          python -m unittest discover -s tests -p "test_phase1_backtest.py"
+          python -m unittest tests.test_mt5_real_readonly tests.test_phase1_mt5_safety
+      - name: Compile source and validators
+        run: python -m compileall -q config src scripts
+      - name: Look-ahead validation
+        run: python test_no_lookahead.py
+      - name: Privacy and private-path checks
+        run: python scripts/check_phase2_2_2e_privacy.py
+      - name: No MT5 module dependency in new offline adapters
+        run: |
+          if rg -n "(^|\\s)(import MetaTrader5|from MetaTrader5)" src/macro_sources src/verified_research_dataset.py tests/test_macro_sources.py tests/test_verified_dataset_backtests.py; then
+            exit 1
+          fi
+      - name: Diff whitespace check
+        run: git diff --check

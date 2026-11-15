@@ -1,0 +1,49 @@
+{
+  "base_commit": "6d1f0f7e3e696aa3b773bed997b9d813f1eba7dc",
+  "branch": "codex/phase2-2-2e-local-macro-and-backtest-integration",
+  "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+  "current_commit": "6d1f0f7e3e696aa3b773bed997b9d813f1eba7dc",
+  "environment": {
+    "dependencies": {
+      "MetaTrader5": "5.0.6231",
+      "numpy": "2.5.3",
+      "pandas": "3.0.6",
+      "pydantic": "2.13.5"
+    },
+    "os": "Windows",
+    "python": "3.13.14"
+  },
+  "frozen_dataset": {
+    "canonical_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "expected_canonical_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "raw_sha256": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0",
+    "unchanged": true
+  },
+  "generated_at_utc": "2026-11-15T19:29:02.031841Z",
+  "gitignore": {
+    "backfill_runs_ignored": true,
+    "private_paths_tracked": 0,
+    "private_reports_ignored": true
+  },
+  "llm_provider_calls": 0,
+  "local_run": {
+    "actual_chunks_hashed": 98,
+    "chunk_hash_mismatches": 0,
+    "chunk_rows_prior_run": 18175,
+    "manifest_present": true,
+    "manifest_sha256": "1ab1fb27c55f6784dd0a47c180d14c25be112c3956ac3fca155603e8f3382965",
+    "planned_chunks": 98,
+    "run_id": "phase222b-local-20261115",
+    "source_files_reported": 47,
+    "source_hash_mismatches": 0,
+    "source_rows_prior_audit": 540143
+  },
+  "market_history_requests": 0,
+  "mt5_connection_or_reads": 0,
+  "orders_sent": 0,
+  "origin_main_commit": "6d1f0f7e3e696aa3b773bed997b9d813f1eba7dc",
+  "schema_version": 1,
+  "status": "PASS",
+  "working_tree_before_task": "CLEAN"
+}

@@ -9,8 +9,12 @@ calendar.  No weekday/weekend or DST rule is inferred from missing bars.
 from __future__ import annotations
 
 from datetime import date, datetime, time, timedelta, timezone
+import hashlib
+import json
+from pathlib import Path, PurePosixPath
 import re
 from typing import Any
+from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
@@ -26,6 +30,34 @@ SESSION_CLASSIFICATIONS = frozenset({
 })
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _HHMM = re.compile(r"(?:[01]\d|2[0-3]):[0-5]\d\Z")
+SESSION_DOCUMENT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _trusted_broker_source_hosts() -> frozenset[str]:
+    """Read only the reviewed host allowlist; never trust manifest declarations."""
+    path = SESSION_DOCUMENT_ROOT / "config" / "broker_calendar_trusted_sources.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        hosts = payload.get("trusted_source_hosts", [])
+    except (OSError, json.JSONDecodeError, AttributeError):
+        return frozenset()
+    if not isinstance(hosts, list):
+        return frozenset()
+    normalized = {
+        item.lower() for item in hosts
+        if isinstance(item, str) and item and "*" not in item and "/" not in item and ":" not in item
+    }
+    return frozenset(normalized)
+
+
+# Empty until the broker's exact legal entity and source domain are confirmed.
+# A manifest cannot authorize its own source host.
+TRUSTED_BROKER_SOURCE_HOSTS: frozenset[str] = _trusted_broker_source_hosts()
+_RULE_REFERENCE_FIELDS = frozenset({
+    "symbols", "timeframes", "timezone_rule", "weekly_sessions",
+    "exceptions", "timeframe_boundary_policy", "effective_range",
+    "exception_coverage",
+})
 
 
 def _utc(value: datetime | str | int | float) -> datetime:
@@ -152,6 +184,75 @@ def _effective_range(manifest: dict[str, Any]) -> tuple[datetime, datetime | Non
     return start_utc, end_utc
 
 
+def _verify_document_evidence(evidence: dict[str, Any]) -> str | None:
+    """Bind session rules to preserved bytes and a separately trusted host."""
+    source_url = evidence.get("source_url")
+    if not isinstance(source_url, str):
+        return "SESSION_SOURCE_URL_INVALID"
+    try:
+        parsed_url = urlsplit(source_url)
+        host = (parsed_url.hostname or "").lower()
+        if (parsed_url.scheme != "https" or not host or parsed_url.username
+                or parsed_url.password or parsed_url.port not in (None, 443)
+                or parsed_url.query or parsed_url.fragment):
+            return "SESSION_SOURCE_URL_INVALID"
+    except ValueError:
+        return "SESSION_SOURCE_URL_INVALID"
+    if host not in TRUSTED_BROKER_SOURCE_HOSTS:
+        return "SESSION_SOURCE_HOST_UNTRUSTED"
+
+    raw_path = evidence.get("document_path")
+    if not isinstance(raw_path, str) or "\\" in raw_path:
+        return "SESSION_DOCUMENT_PATH_INVALID"
+    relative = PurePosixPath(raw_path)
+    if relative.is_absolute() or any(part in {"", ".", ".."} for part in relative.parts):
+        return "SESSION_DOCUMENT_PATH_INVALID"
+    candidate = SESSION_DOCUMENT_ROOT.joinpath(*relative.parts)
+    try:
+        root = SESSION_DOCUMENT_ROOT.resolve(strict=True)
+        resolved = candidate.resolve(strict=True)
+        resolved.relative_to(root)
+    except (OSError, ValueError):
+        return "SESSION_DOCUMENT_PATH_UNAVAILABLE_OR_OUTSIDE_ROOT"
+    current = root
+    for component in relative.parts:
+        current = current / component
+        if current.is_symlink():
+            return "SESSION_DOCUMENT_SYMLINK_REJECTED"
+    try:
+        payload = resolved.read_bytes()
+    except OSError:
+        return "SESSION_DOCUMENT_READ_FAILED"
+    actual_sha256 = hashlib.sha256(payload).hexdigest()
+    declared_sha256 = evidence.get("document_sha256")
+    if not isinstance(declared_sha256, str) or not _SHA256.fullmatch(declared_sha256):
+        return "SESSION_DOCUMENT_HASH_INVALID"
+    if actual_sha256 != declared_sha256 or evidence.get("sha256") != actual_sha256:
+        return "SESSION_DOCUMENT_HASH_MISMATCH"
+
+    references = evidence.get("rule_references")
+    if not isinstance(references, dict) or set(references) != _RULE_REFERENCE_FIELDS:
+        return "SESSION_RULE_EVIDENCE_INCOMPLETE"
+    for field in _RULE_REFERENCE_FIELDS:
+        refs = references.get(field)
+        if not isinstance(refs, list) or not refs:
+            return "SESSION_RULE_EVIDENCE_INCOMPLETE"
+        for ref in refs:
+            if not isinstance(ref, dict):
+                return "SESSION_RULE_REFERENCE_INVALID"
+            start, end = ref.get("byte_start"), ref.get("byte_end")
+            excerpt_sha256 = ref.get("excerpt_sha256")
+            if (not isinstance(start, int) or isinstance(start, bool)
+                    or not isinstance(end, int) or isinstance(end, bool)
+                    or start < 0 or end <= start or end > len(payload)
+                    or not isinstance(excerpt_sha256, str)
+                    or not _SHA256.fullmatch(excerpt_sha256)):
+                return "SESSION_RULE_REFERENCE_INVALID"
+            if hashlib.sha256(payload[start:end]).hexdigest() != excerpt_sha256:
+                return "SESSION_RULE_REFERENCE_HASH_MISMATCH"
+    return None
+
+
 def validate_session_manifest(
     manifest: Any,
     symbol: str,
@@ -159,7 +260,7 @@ def validate_session_manifest(
     at_utc: datetime | str | int | float,
 ) -> str | None:
     """Return ``None`` only when all provenance and scope gates pass."""
-    if not isinstance(manifest, dict) or manifest.get("schema_version") != 1:
+    if not isinstance(manifest, dict) or manifest.get("schema_version") != 2:
         return "SESSION_MANIFEST_SCHEMA_INVALID"
     if timeframe not in TIMEFRAME_SECONDS:
         return "SESSION_TIMEFRAME_UNSUPPORTED"
@@ -168,11 +269,9 @@ def validate_session_manifest(
         return "SESSION_OFFICIAL_SOURCE_UNVERIFIED"
     if evidence.get("official_source") is not True:
         return "SESSION_OFFICIAL_SOURCE_UNVERIFIED"
-    url = evidence.get("source_url")
-    if not isinstance(url, str) or not url.startswith("https://"):
-        return "SESSION_SOURCE_URL_INVALID"
-    if not isinstance(evidence.get("sha256"), str) or not _SHA256.fullmatch(evidence["sha256"]):
-        return "SESSION_SOURCE_HASH_INVALID"
+    document_error = _verify_document_evidence(evidence)
+    if document_error:
+        return document_error
     if not evidence.get("accessed_utc"):
         return "SESSION_SOURCE_ACCESS_TIME_MISSING"
     try:
@@ -187,6 +286,9 @@ def validate_session_manifest(
         return "SESSION_TIMEFRAME_SCOPE_INVALID"
     if symbol not in symbols or timeframe not in timeframes:
         return "SESSION_SCOPE_MISMATCH"
+    version_id = manifest.get("rule_version_id")
+    if not isinstance(version_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,63}", version_id):
+        return "SESSION_RULE_VERSION_INVALID"
     try:
         start, end = _effective_range(manifest)
         instant = _utc(at_utc)
@@ -231,6 +333,27 @@ def validate_session_manifest(
     except ValueError as exc:
         return str(exc) if str(exc).startswith("SESSION_") else "SESSION_WEEKLY_RULE_INVALID"
     return None
+
+
+def select_session_manifest(
+    manifests: list[Any],
+    symbol: str,
+    timeframe: str,
+    at_utc: datetime | str | int | float,
+) -> tuple[dict[str, Any] | None, str]:
+    """Select exactly one dated rule version; gaps/overlaps remain UNKNOWN."""
+    if not isinstance(manifests, list):
+        return None, "UNKNOWN_MANIFEST_REGISTRY_INVALID"
+    matches = [
+        item for item in manifests
+        if isinstance(item, dict)
+        and validate_session_manifest(item, symbol, timeframe, at_utc) is None
+    ]
+    if len(matches) == 1:
+        return matches[0], "VERIFIED_VERSION"
+    if not matches:
+        return None, "UNKNOWN_NO_RULE_VERSION_COVERS_INSTANT"
+    return None, "CONFLICT_MULTIPLE_RULE_VERSIONS_COVER_INSTANT"
 
 
 def _validate_window(window: Any) -> None:

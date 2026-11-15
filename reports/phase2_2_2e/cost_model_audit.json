@@ -1,0 +1,45 @@
+{
+  "EUR_conversion_without_verified_cross": "COST_CONVERSION_UNVERIFIED",
+  "additional_spread_charge": 0,
+  "base_spread_embedded_in_bid_ask": true,
+  "broker_costs_verified": false,
+  "scenarios": {
+    "BASE": {
+      "assumptions_unverified": [
+        "commission=0",
+        "slippage=0"
+      ],
+      "commission_eur_per_lot_round_turn": 0.0,
+      "historical_spread_multiplier": 1.0,
+      "slippage_points_per_side": 0.0,
+      "status": "UNVERIFIED_HYPOTHESIS"
+    },
+    "CONSERVATIVE": {
+      "assumptions_unverified": [
+        "spread_multiplier=1.25",
+        "commission=7 EUR/lot",
+        "slippage=1 point/side"
+      ],
+      "commission_eur_per_lot_round_turn": 7.0,
+      "historical_spread_multiplier": 1.25,
+      "slippage_points_per_side": 1.0,
+      "status": "UNVERIFIED_HYPOTHESIS"
+    },
+    "STRESS": {
+      "assumptions_unverified": [
+        "spread_multiplier=2.0",
+        "commission=10 EUR/lot",
+        "slippage=3 points/side"
+      ],
+      "commission_eur_per_lot_round_turn": 10.0,
+      "historical_spread_multiplier": 2.0,
+      "slippage_points_per_side": 3.0,
+      "status": "UNVERIFIED_HYPOTHESIS"
+    }
+  },
+  "schema_version": 1,
+  "spread_double_counted": false,
+  "status": "PASS_HYPOTHESIS_ONLY",
+  "units": "spread MT5 points; price conversion needs point size",
+  "zero_spread": "OBSERVED_ZERO_UNVERIFIED"
+}

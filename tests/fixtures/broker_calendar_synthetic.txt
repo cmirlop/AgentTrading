@@ -1,0 +1,7 @@
+SYNTHETIC TEST DOCUMENT ONLY. Not a broker schedule and not acceptable as real calendar evidence.
+Scope: all test symbols and timeframes.
+Timezone: UTC.
+Weekly sessions: weekdays 00:00 to 24:00.
+Exceptions: none, covered only for synthetic unit tests.
+Bar boundaries: fixed UTC for unit tests.
+Effective and exception coverage dates exist only for test behavior.

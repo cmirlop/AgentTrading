@@ -1,0 +1,29 @@
+{
+  "blocked_by": [
+    "BROKER_CALENDAR_UNKNOWN",
+    "REAL_MTF_WINDOWS_UNVERIFIED",
+    "REAL_SOURCE_PARITY_UNVERIFIED",
+    "COST_CONVERSION_UNVERIFIED"
+  ],
+  "llm_calls": 0,
+  "parameter_optimization": false,
+  "preregistered_matrix": {
+    "costs": [
+      "BASE",
+      "CONSERVATIVE",
+      "STRESS"
+    ],
+    "mode": "LIMIT",
+    "spread_floor_points": [
+      0,
+      5,
+      10,
+      20
+    ],
+    "temporal_partition": "TRAIN/EVALUATION/OUT_OF_SAMPLE/OBSERVATION fixed from coverage before PnL",
+    "threshold": 65
+  },
+  "run_status": "BACKTEST_NOT_RUN",
+  "schema_version": 1,
+  "status": "NOT_RUN"
+}

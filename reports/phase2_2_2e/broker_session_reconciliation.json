@@ -1,0 +1,19 @@
+{
+  "candidate_records": 74,
+  "classification_counts": {
+    "BROKER_SESSION_OPEN_FEED_UNVERIFIED": 0,
+    "OBSERVED_NO_QUOTE_UNCONFIRMED": 0,
+    "UNKNOWN": 1850,
+    "VERIFIED_BROKER_CLOSED": 0,
+    "VERIFIED_BROKER_OPEN_NO_BAR": 0
+  },
+  "counts_may_overlap": true,
+  "market_history_requests": 0,
+  "newly_resolved_records": 0,
+  "records_total": 1850,
+  "recovery_groups": 1776,
+  "resolved_records": 0,
+  "schema_version": 1,
+  "status": "BROKER_CALENDAR_UNKNOWN",
+  "unknown_records": 1850
+}

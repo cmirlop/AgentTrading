@@ -48,6 +48,14 @@ def _source_manifest(paths):
 
 
 class VerifiedHistoryScanTests(unittest.TestCase):
+    def setUp(self):
+        self.trusted_source = patch(
+            "src.phase2_2_2d_sessions.TRUSTED_BROKER_SOURCE_HOSTS",
+            frozenset({"broker.example.test"}),
+        )
+        self.trusted_source.start()
+        self.addCleanup(self.trusted_source.stop)
+
     @staticmethod
     def _write_closed_history_fixture(root: Path, *, duplicate_spread: bool = False, conflicting_ohlc: bool = False):
         inventory = []
@@ -86,10 +94,24 @@ class VerifiedHistoryScanTests(unittest.TestCase):
     def _full_day_manifest():
         weekdays = {str(day): [{"start_local": "00:00", "end_local": "24:00"}] for day in range(7)}
         return {
-            "schema_version": 1,
+            "schema_version": 2,
+            "rule_version_id": "synthetic-test-v1",
             "evidence": {
                 "status": "OFFICIAL_BROKER_DOCUMENTED", "official_source": True,
-                "source_url": "https://broker.example.test/sessions.pdf", "sha256": "a" * 64,
+                "source_url": "https://broker.example.test/sessions.txt",
+                "sha256": "541a847e9443bbba10a298cd23e11e5d5db73d6b8af758c72a63e1bfa61e3984",
+                "document_path": "tests/fixtures/broker_calendar_synthetic.txt",
+                "document_sha256": "541a847e9443bbba10a298cd23e11e5d5db73d6b8af758c72a63e1bfa61e3984",
+                "rule_references": {
+                    field: [{
+                        "byte_start": 0, "byte_end": 363,
+                        "excerpt_sha256": "541a847e9443bbba10a298cd23e11e5d5db73d6b8af758c72a63e1bfa61e3984",
+                    }] for field in (
+                        "symbols", "timeframes", "timezone_rule", "weekly_sessions",
+                        "exceptions", "timeframe_boundary_policy", "effective_range",
+                        "exception_coverage",
+                    )
+                },
                 "accessed_utc": "2025-01-01T00:00:00Z",
                 "effective_from_utc": "2020-01-01T00:00:00Z", "effective_to_utc": "2030-01-01T00:00:00Z",
             },

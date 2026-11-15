@@ -1,0 +1,12 @@
+{
+  "account_identifiers_published": false,
+  "document_bytes_hash_and_rule_references_required": true,
+  "effective_period_coverage": null,
+  "official_dated_document_present": false,
+  "reason": "No official dated document bound to the exact broker entity and symbols was available.",
+  "schema_version": 1,
+  "self_asserted_official_source_accepted": false,
+  "status": "BROKER_CALENDAR_UNKNOWN",
+  "trusted_source_host_count": 0,
+  "verified_rule_versions": 0
+}
