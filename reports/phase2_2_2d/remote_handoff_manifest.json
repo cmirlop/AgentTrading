@@ -1,0 +1,135 @@
+{
+  "base": {
+    "branch": "main",
+    "commit": "1bcf5114ade42521d5b706d0200ac9af4c283791"
+  },
+  "ci_status": "NOT_RUN; local-only changes have not been pushed.",
+  "code_and_configuration_sha256": {
+    ".gitignore": "f61066f987210ab4c21160f5d6f22d23523e9dc137a744ae1d8a3e30d6241982",
+    "config/backtest_config.py": "07c458016ff0d3099f7d46a92eeaba6370ec838e42606c973f0f51e5c9cddd0f",
+    "config/market_config.py": "7fcfb008665eaed3e8abc9e798927965022df8daa5006dc0e61431a61f3ad313",
+    "scripts/finalize_phase2_2_2d_reports.py": "4760d00be89d4b6907795f18348107f7ca91ea828bce23a0e87cc53047a059a0",
+    "scripts/run_phase2_2_2d_offline_validation.py": "a3a5ae115b42603e8c30621139d4ebb70ba6b2a00c896dc5dc17b48a511ed48d",
+    "scripts/scan_from_verified_history.py": "3f83bc02554ec7dad92f530629f6a0b65a555d8100ad9f185bed2c473dd9f8d9",
+    "scripts/validate_mt5_real_readonly.py": "12c5a8f825ab0f82a1942f7d8d504f20e62f0cdd8cf7ba2b2e357545aea142ea",
+    "src/historical_state.py": "2c4d688e9b5697b5e3ede51cf87a72c2d051a0b93cf171d726cdf76f34e68a04",
+    "src/phase2_2_2d_sessions.py": "1b29cd089674a100fcbd223a6cd5fe91d94474fdbcf39fc2b79f76664587417d",
+    "src/verified_history_scan.py": "afcd412d0e7630adc674f2dd1162bf5aa221c7f4142198ec345bdb0123daed54"
+  },
+  "copyable_remote_prompt": "Revisa el commit/base indicado y solo los artefactos públicos de esta rama. No finjas acceso a MetaTrader, API MT5, barras privadas ni informes privados; no solicites ni uses credenciales; no llames a DeepSeek/Ollama ni a APIs facturables. Puedes revisar código, pruebas sintéticas, causalidad, hashes públicos y documentación. Conserva UNKNOWN_BROKER_CALENDAR, no inventes calendario ni resultados; no cambies estrategia, no ejecutes backtest con scan congelado como si fuera nuevo y no hagas commit, push, PR ni merge sin autorización explícita.",
+  "dependency_matrix": [
+    {
+      "local_broker_evidence_required": "NO",
+      "remote_now": "YES",
+      "task": "Synthetic session/DST tests, code review, privacy review, docs"
+    },
+    {
+      "local_broker_evidence_required": "DATED_OFFICIAL_CALENDAR",
+      "remote_now": "NO",
+      "task": "Classify all historical broker closures and MTF freshness"
+    },
+    {
+      "local_broker_evidence_required": "LOCAL_MT5_REAL_READONLY_GATE",
+      "remote_now": "NO",
+      "task": "Read terminal-specific prices/specifications or history"
+    },
+    {
+      "local_broker_evidence_required": "VERIFIED_SESSIONS + CAUSAL_SCAN + VERIFIED_COST/EXECUTION_RULES",
+      "remote_now": "NO",
+      "task": "Run an exploratory new-scan backtest"
+    }
+  ],
+  "generated_utc": "2026-11-15T17:39:16.638441Z",
+  "global_status": "PHASE2_2_2D_PARTIAL_CALENDAR_UNKNOWN",
+  "local_only_backlog": [
+    "Obtain an official broker session calendar with effective dates covering 2023–2026, per-symbol weekday quote/trade hours, timezone/DST, holidays and exceptional closures.",
+    "Use a local REAL account only after tradeapi_disabled=True for optional read-only terminal checks; never send trade requests.",
+    "After calendar approval, rerun historical reconciliation and MTF warmup; plan the smallest D1 recovery only if measured coverage still requires it.",
+    "Keep raw market bars and the private session evidence on the local machine; do not upload them."
+  ],
+  "local_result": {
+    "backtest": "BACKTEST_BLOCKED; no new scan generated.",
+    "broker_calendar": "UNKNOWN across the audited 2023–2026 source range; no historical interval resolved.",
+    "llm_calls": 0,
+    "new_market_data_requests": 0,
+    "orders_sent": 0,
+    "reconciled_interval_records": 1850,
+    "resolved_interval_records": 0,
+    "verified_mtf_windows": 0
+  },
+  "local_work": {
+    "branch": "codex/phase2-2-2d-local-intensive",
+    "commit_created": false,
+    "head": "1bcf5114ade42521d5b706d0200ac9af4c283791",
+    "merge": false,
+    "pull_request": false,
+    "push": false
+  },
+  "no_lookahead_checks": 375,
+  "private_evidence_refs": [
+    {
+      "run_id": "phase2-2-2d-local-20261115",
+      "sha256": "9c3fa6fb812a649256df9212a269d51f0d6efdd66deb2e1e8b8ee0712666a9a0"
+    },
+    {
+      "run_id": "phase222b-local-20261115",
+      "sha256": "8d3ec0042ae2c51919fdd2d4849c0548f0f3781541c3fd1e75b7ee3296342f30"
+    },
+    {
+      "run_id": "phase2_2_2d_offline_validation_20261115",
+      "sha256": "359b9c6153e3103884fb4148a89df65c7ad51694a0e5df4d02e0a10c0ad66f4f"
+    }
+  ],
+  "public_evidence": [
+    "reports/phase2_2_2d/preflight.json",
+    "reports/phase2_2_2d/source_and_run_integrity.json",
+    "reports/phase2_2_2d/broker_calendar_evidence.json",
+    "reports/phase2_2_2d/broker_session_reconciliation.json",
+    "reports/phase2_2_2d/mtf_warmup_and_causality.json",
+    "reports/phase2_2_2d/coverage_and_optional_backfill.json",
+    "reports/phase2_2_2d/scan_producer_validation.json",
+    "reports/phase2_2_2d/exploratory_costs_and_backtest.json",
+    "reports/phase2_2_2d/offline_validation_execution.json",
+    "reports/phase2_2_2d/validation_summary.json",
+    "reports/phase2_2_2d/remote_handoff_manifest.json",
+    "docs/FASE2_2_2D_RESULTADOS.md",
+    "docs/FASE2_2_2D_HANDOFF_REMOTO.md",
+    "docs/FASE2_2_2D_CALENDARIO_INPUT.md"
+  ],
+  "remote_backlog_prioritized": [
+    "Improve synthetic CI fixtures for sessions, DST, exception dates, calendar coverage and bar boundaries.",
+    "Review separation of clock cadence from broker market sessions and compare both readiness modes.",
+    "Peer review the explicit-manifest causal scan producer, lineage and output contract.",
+    "Verify statistical comparisons with synthetic fixtures or sanitized public aggregates only.",
+    "Document reproducible data provenance and review spread/commission/slippage assumptions.",
+    "Design only (do not call) a pre-registered technical-vs-DeepSeek comparison protocol with budget, cohorts, data exposure and safety gates."
+  ],
+  "schema_version": 1,
+  "status": "READY",
+  "tests": {
+    "no_lookahead": {
+      "exit_code": 0,
+      "status": "PASS",
+      "tests_run": 0,
+      "tests_skipped": 0
+    },
+    "phase1_historical_simulator": {
+      "exit_code": 0,
+      "status": "PASS",
+      "tests_run": 16,
+      "tests_skipped": 0
+    },
+    "phase1_mt5_readonly_safety": {
+      "exit_code": 0,
+      "status": "PASS",
+      "tests_run": 22,
+      "tests_skipped": 0
+    },
+    "phase2_2_2_abcd_offline": {
+      "exit_code": 0,
+      "status": "PASS",
+      "tests_run": 86,
+      "tests_skipped": 0
+    }
+  }
+}

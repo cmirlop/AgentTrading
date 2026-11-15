@@ -1,0 +1,23 @@
+{
+  "blocked_gates": {
+    "broker_verified_mtf_windows": 0,
+    "commission_and_slippage": "HYPOTHETICAL_NOT_BROKER_VALIDATED",
+    "dated_broker_calendar_for_historical_period": "PENDING",
+    "execution_and_close_windows": "UNVERIFIED",
+    "new_causal_scan": "NOT_CREATED",
+    "source_integrity": "PASS",
+    "zero_spread_rows": "OBSERVED_ZERO_UNVERIFIED"
+  },
+  "economic_metrics": null,
+  "execution_status": "NOT_RUN",
+  "generated_utc": "2026-11-15T17:39:16.638441Z",
+  "interpretation": "No se hicieron simulaciones económicas nuevas; no se infiere rentabilidad ni se modificaron parámetros.",
+  "llm_calls": 0,
+  "orders_sent": 0,
+  "portfolio_backtest": "NOT_RUN",
+  "reason": "No se cumplen simultáneamente las puertas de calendario, continuidad MTF, scan nuevo, ejecución/cierre y costes. Ejecutar backtests con el scan congelado o ventanas no verificadas mezclaría experimentos y presentaría evidencia no comparable.",
+  "schema_version": 1,
+  "spread_floors_0_5_10_20": "NOT_RUN",
+  "stateful_backtest": "NOT_RUN",
+  "status": "BACKTEST_BLOCKED"
+}

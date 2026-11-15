@@ -99,6 +99,58 @@ def prepare_symbol_history(
     return prepared
 
 
+def prepare_symbol_history_from_frames(
+    frames_by_timeframe,
+):
+    """Prepare explicit, already-verified source frames with legacy semantics.
+
+    This adapter is intentionally separate from ``prepare_symbol_history`` so
+    the frozen ``data/market`` route stays unchanged. If a caller supplies a
+    ``bar_close`` column, it is preserved as the verified provider-specific
+    close boundary; otherwise the historical fixed-duration convention is
+    retained for parity tests and synthetic fixtures.
+    """
+    prepared = {}
+
+    for timeframe in TIMEFRAMES:
+        if timeframe not in frames_by_timeframe:
+            raise ValueError(f"HISTORY_TIMEFRAME_MISSING:{timeframe}")
+        df = frames_by_timeframe[timeframe].copy()
+        if "time" not in df.columns:
+            raise ValueError(f"HISTORY_TIME_COLUMN_MISSING:{timeframe}")
+
+        df["time"] = pd.to_datetime(df["time"], utc=True)
+        if "bar_close" in df.columns:
+            verified_closes = pd.to_datetime(df["bar_close"], utc=True)
+        else:
+            verified_closes = None
+
+        df = (
+            df.sort_values("time")
+            .drop_duplicates(subset=["time"], keep="last")
+            .reset_index(drop=True)
+        )
+
+        if verified_closes is not None:
+            close_map = dict(zip(
+                pd.to_datetime(frames_by_timeframe[timeframe]["time"], utc=True),
+                verified_closes,
+            ))
+            df["bar_close"] = df["time"].map(close_map)
+            if df["bar_close"].isna().any() or not df["bar_close"].is_monotonic_increasing:
+                raise ValueError(f"HISTORY_VERIFIED_CLOSES_INVALID:{timeframe}")
+
+        df = add_indicators(df)
+
+        if verified_closes is None:
+            duration = pd.Timedelta(minutes=TF_MINUTES[timeframe])
+            df["bar_close"] = df["time"] + duration
+
+        prepared[timeframe] = df
+
+    return prepared
+
+
 def _recent_candles(
     df,
     count,

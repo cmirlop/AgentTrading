@@ -1,0 +1,168 @@
+{
+  "coverage_by_symbol_timeframe": [
+    {
+      "first_source_open_utc": "2025-06-06T04:15:00Z",
+      "last_source_open_utc": "2026-11-11T20:15:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 102488,
+      "symbol": "EURUSD",
+      "timeframe": "M5",
+      "unique_valid_timestamps": 107035
+    },
+    {
+      "first_source_open_utc": "2024-09-24T07:00:00Z",
+      "last_source_open_utc": "2026-11-11T20:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 52860,
+      "symbol": "EURUSD",
+      "timeframe": "M15",
+      "unique_valid_timestamps": 53045
+    },
+    {
+      "first_source_open_utc": "2024-09-09T00:00:00Z",
+      "last_source_open_utc": "2026-11-11T19:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 14026,
+      "symbol": "EURUSD",
+      "timeframe": "H1",
+      "unique_valid_timestamps": 13532
+    },
+    {
+      "first_source_open_utc": "2024-07-10T08:00:00Z",
+      "last_source_open_utc": "2026-11-11T16:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 3763,
+      "symbol": "EURUSD",
+      "timeframe": "H4",
+      "unique_valid_timestamps": 3639
+    },
+    {
+      "first_source_open_utc": "2023-07-17T00:00:00Z",
+      "last_source_open_utc": "2026-11-10T00:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 881,
+      "symbol": "EURUSD",
+      "timeframe": "D1",
+      "unique_valid_timestamps": 861
+    },
+    {
+      "first_source_open_utc": "2025-06-06T04:10:00Z",
+      "last_source_open_utc": "2026-11-11T20:15:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 102488,
+      "symbol": "USDCAD",
+      "timeframe": "M5",
+      "unique_valid_timestamps": 107035
+    },
+    {
+      "first_source_open_utc": "2024-09-24T07:00:00Z",
+      "last_source_open_utc": "2026-11-11T20:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 52859,
+      "symbol": "USDCAD",
+      "timeframe": "M15",
+      "unique_valid_timestamps": 53044
+    },
+    {
+      "first_source_open_utc": "2024-09-09T00:00:00Z",
+      "last_source_open_utc": "2026-11-11T19:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 14026,
+      "symbol": "USDCAD",
+      "timeframe": "H1",
+      "unique_valid_timestamps": 13532
+    },
+    {
+      "first_source_open_utc": "2024-07-10T08:00:00Z",
+      "last_source_open_utc": "2026-11-11T16:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 3763,
+      "symbol": "USDCAD",
+      "timeframe": "H4",
+      "unique_valid_timestamps": 3639
+    },
+    {
+      "first_source_open_utc": "2023-07-17T00:00:00Z",
+      "last_source_open_utc": "2026-11-10T00:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 881,
+      "symbol": "USDCAD",
+      "timeframe": "D1",
+      "unique_valid_timestamps": 861
+    },
+    {
+      "first_source_open_utc": "2025-06-06T03:45:00Z",
+      "last_source_open_utc": "2026-11-11T20:15:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 102488,
+      "symbol": "AUDUSD",
+      "timeframe": "M5",
+      "unique_valid_timestamps": 107035
+    },
+    {
+      "first_source_open_utc": "2024-09-24T07:00:00Z",
+      "last_source_open_utc": "2026-11-11T20:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 52859,
+      "symbol": "AUDUSD",
+      "timeframe": "M15",
+      "unique_valid_timestamps": 53044
+    },
+    {
+      "first_source_open_utc": "2024-09-09T00:00:00Z",
+      "last_source_open_utc": "2026-11-11T19:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 14026,
+      "symbol": "AUDUSD",
+      "timeframe": "H1",
+      "unique_valid_timestamps": 13532
+    },
+    {
+      "first_source_open_utc": "2024-07-10T08:00:00Z",
+      "last_source_open_utc": "2026-11-11T16:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 3763,
+      "symbol": "AUDUSD",
+      "timeframe": "H4",
+      "unique_valid_timestamps": 3639
+    },
+    {
+      "first_source_open_utc": "2023-07-17T00:00:00Z",
+      "last_source_open_utc": "2026-11-10T00:00:00Z",
+      "source_file_count": 3,
+      "source_rows_including_overlap": 881,
+      "symbol": "AUDUSD",
+      "timeframe": "D1",
+      "unique_valid_timestamps": 861
+    }
+  ],
+  "d1_evaluation_warmup": {
+    "reason": "No se definió una nueva ventana de evaluación; los segmentos D1 de cadencia estricta tienen máximo 5 barras, por lo que no se afirma warmup continuo de 200/692.",
+    "status": "PENDING_CALENDAR_AND_FROZEN_EVALUATION_RANGE",
+    "verified_d1_bars_before_evaluation_start": null
+  },
+  "generated_utc": "2026-11-15T17:39:16.638441Z",
+  "llm_calls": 0,
+  "mt5_history_reads_this_phase": 0,
+  "mt5_readonly_metadata_and_daily_deal_validation": "Executed in the separate REAL read-only validator; no copy_rates_* price-bar call was made.",
+  "new_phase2_2_2d_backfill": {
+    "campaigns": 0,
+    "provider_calls": 0,
+    "reason": "Los CSV ya permiten auditar cobertura física. Sin calendario oficial fechado, descargar barras adicionales no permite clasificar los 1.850 intervalos desconocidos ni declarar ventanas MTF válidas; no se hizo una petición redundante.",
+    "unique_price_bars_added": 0
+  },
+  "orders_sent": 0,
+  "previously_audited_sources": {
+    "backfill_chunks": 98,
+    "backfill_unique_rows": 18175,
+    "source_files": 47,
+    "source_integrity": "PASS",
+    "source_rows_including_overlaps": 540143
+  },
+  "schema_version": 1,
+  "source_files": 45,
+  "source_manifest_file_sha256": "4bdeb517e485a595a3aae6323cbff5d0c6e27938830974c09ce973d100d55b5b",
+  "source_manifest_sha256": "8d3ec0042ae2c51919fdd2d4849c0548f0f3781541c3fd1e75b7ee3296342f30",
+  "source_run_id": "phase222b-local-20261115",
+  "status": "NO_ADDITIONAL_BACKFILL_NEEDED_UNDER_UNRESOLVED_CALENDAR_GATE"
+}

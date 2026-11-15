@@ -1,0 +1,120 @@
+{
+  "checks": {
+    "backtest": "BACKTEST_BLOCKED",
+    "broker_calendar": "PENDING_HISTORICAL_DATED_EVIDENCE",
+    "frozen_dataset": "PASS",
+    "historical_reconciliation": "1850 records; 0 resolved; all UNKNOWN",
+    "llm_calls": 0,
+    "lookahead_checks": 375,
+    "lookahead_suite_status": "PASS",
+    "mt5_price_history_requests": 0,
+    "mt5_real_readonly_safety": "PASS",
+    "offline_suites": "PASS",
+    "orders_sent": 0,
+    "privacy_scan": "PASS",
+    "scan": "BLOCKED_NO_VERIFIED_MTF_WINDOWS",
+    "source_integrity": "PASS",
+    "static_safety_scan": "PASS",
+    "tests_skipped": 0,
+    "tradeapi_disabled": true,
+    "unittest_cases": 124,
+    "verified_mtf_windows": 0
+  },
+  "economic_backtests_run": 0,
+  "evidence_reports": [
+    "reports/phase2_2_2d/preflight.json",
+    "reports/phase2_2_2d/source_and_run_integrity.json",
+    "reports/phase2_2_2d/broker_calendar_evidence.json",
+    "reports/phase2_2_2d/broker_session_reconciliation.json",
+    "reports/phase2_2_2d/mtf_warmup_and_causality.json",
+    "reports/phase2_2_2d/coverage_and_optional_backfill.json",
+    "reports/phase2_2_2d/scan_producer_validation.json",
+    "reports/phase2_2_2d/exploratory_costs_and_backtest.json",
+    "reports/phase2_2_2d/offline_validation_execution.json",
+    "reports/phase2_2_2d/validation_summary.json",
+    "reports/phase2_2_2d/remote_handoff_manifest.json",
+    "docs/FASE2_2_2D_RESULTADOS.md",
+    "docs/FASE2_2_2D_HANDOFF_REMOTO.md",
+    "docs/FASE2_2_2D_CALENDARIO_INPUT.md"
+  ],
+  "generated_utc": "2026-11-15T17:39:16.638441Z",
+  "independent_mt5_reads": {
+    "account_type": "REAL",
+    "daily_deal_history_read": "PASS in the separate validator; read-only",
+    "market_bar_history_calls_this_phase": 0,
+    "new_backfill_campaigns": 0,
+    "orders_sent": 0,
+    "readonly_validation": "PASS",
+    "tradeapi_disabled": true
+  },
+  "llm_calls": 0,
+  "privacy_scan": {
+    "files_scanned": [
+      "reports/phase2_2_2d/preflight.json",
+      "reports/phase2_2_2d/source_and_run_integrity.json",
+      "reports/phase2_2_2d/broker_calendar_evidence.json",
+      "reports/phase2_2_2d/broker_session_reconciliation.json",
+      "reports/phase2_2_2d/mtf_warmup_and_causality.json",
+      "reports/phase2_2_2d/coverage_and_optional_backfill.json",
+      "reports/phase2_2_2d/scan_producer_validation.json",
+      "reports/phase2_2_2d/exploratory_costs_and_backtest.json",
+      "reports/phase2_2_2d/offline_validation_execution.json",
+      "reports/phase2_2_2d/validation_summary.json",
+      "reports/phase2_2_2d/remote_handoff_manifest.json",
+      "docs/FASE2_2_2D_RESULTADOS.md",
+      "docs/FASE2_2_2D_HANDOFF_REMOTO.md",
+      "docs/FASE2_2_2D_CALENDARIO_INPUT.md"
+    ],
+    "findings": [],
+    "status": "PASS"
+  },
+  "repository": {
+    "base_head": "1bcf5114ade42521d5b706d0200ac9af4c283791",
+    "branch": "codex/phase2-2-2d-local-intensive",
+    "commit_created": false,
+    "head": "1bcf5114ade42521d5b706d0200ac9af4c283791",
+    "merge_performed": false,
+    "pull_request_created": false,
+    "push_performed": false
+  },
+  "schema_version": 1,
+  "security_static_scan": {
+    "files_scanned": [
+      "scripts/validate_mt5_real_readonly.py",
+      "src/phase2_2_2d_sessions.py",
+      "src/verified_history_scan.py",
+      "scripts/scan_from_verified_history.py"
+    ],
+    "forbidden_execution_calls": [],
+    "read_only_allowlist": [
+      "account_info",
+      "copy_rates_from_pos",
+      "copy_rates_range",
+      "history_deals_get",
+      "order_calc_margin",
+      "order_calc_profit",
+      "orders_get",
+      "positions_get",
+      "symbol_info",
+      "symbol_info_tick"
+    ],
+    "read_only_allowlist_status": "PASS",
+    "safety_gate_methods": [
+      "terminal_info"
+    ],
+    "status": "PASS",
+    "terminal_disconnect_cleanup_allowed": "api.shutdown() is called only in the validator finally block to close its Python API session."
+  },
+  "stages": {
+    "0_preflight_and_branch": "PASS",
+    "1_broker_calendar_evidence": "PARTIAL_CALENDAR_UNKNOWN",
+    "2_sessions_warmup_mtf": "PARTIAL_CALENDAR_UNKNOWN",
+    "3_coverage_and_optional_recovery": "PASS_NO_NEW_CAMPAIGN_REQUIRED",
+    "4_causal_scan_producer": "BLOCKED_NO_VERIFIED_MTF_WINDOWS",
+    "5_exploratory_costs_and_backtest": "BACKTEST_BLOCKED",
+    "6_consolidated_validation": "PASS",
+    "7_remote_handoff": "READY"
+  },
+  "status": "PHASE2_2_2D_PARTIAL_CALENDAR_UNKNOWN",
+  "status_derivation": "If tests, data integrity, static safety or privacy fail => BLOCKED_INTEGRITY_OR_SAFETY; if integrity passes but the historical official calendar is unknown => PARTIAL_CALENDAR_UNKNOWN; a complete status requires dated calendar plus verified MTF windows and a generated scan."
+}

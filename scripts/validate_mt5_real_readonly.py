@@ -575,6 +575,13 @@ def run_validation(api: Any, *, refresh_history: bool = True) -> dict[str, Any]:
             return report
         report["account"]["type"] = "REAL"
         report["account"]["connection"] = "PASS"
+        # Retain broker identity only in the private execution report so a
+        # matching official session specification can be researched. The
+        # public projection below is an explicit allowlist and never exposes it.
+        report["private_broker_identity"] = {
+            key: str(_attr(account, key, "") or "")
+            for key in ("company", "server")
+        }
         account_currency = str(_attr(account, "currency", "")).upper()
         if len(account_currency) != 3:
             report["safe_errors"].append("ACCOUNT_CURRENCY_UNAVAILABLE")

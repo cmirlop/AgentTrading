@@ -35,7 +35,12 @@ class FakeAPI:
 
     def account_info(self):
         self.calls.append("account_info")
-        return SimpleNamespace(trade_mode=self.trade_mode, currency="USD")
+        return SimpleNamespace(
+            trade_mode=self.trade_mode,
+            currency="USD",
+            company="Example Broker Ltd",
+            server="private-live-server-01",
+        )
 
     def shutdown(self):
         self.calls.append("shutdown")
@@ -55,7 +60,24 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
         result = validator.run_validation(api)
         self.assertEqual(result["status"], "MT5_REAL_READ_ONLY_FAIL")
         self.assertEqual(result["account"]["type"], "NON_REAL_OR_UNVERIFIED")
+        self.assertNotIn("private_broker_identity", result)
         self.assertEqual(api.calls, ["initialize", "terminal_info", "terminal_info", "account_info", "terminal_info", "shutdown"])
+
+    def test_broker_identity_is_private_and_only_captured_after_real_readonly_gate(self):
+        blocked = FakeAPI(disabled=False)
+        blocked_result = validator.run_validation(blocked)
+        self.assertNotIn("private_broker_identity", blocked_result)
+        self.assertNotIn("account_info", blocked.calls)
+
+        allowed = FakeAPI(disabled=True)
+        allowed_result = validator.run_validation(allowed)
+        self.assertEqual(
+            allowed_result["private_broker_identity"],
+            {"company": "Example Broker Ltd", "server": "private-live-server-01"},
+        )
+        public_text = json.dumps(validator._public_projection(allowed_result), sort_keys=True)
+        self.assertNotIn("Example Broker Ltd", public_text)
+        self.assertNotIn("private-live-server-01", public_text)
 
     def test_dynamic_read_method_is_rejected(self):
         api = FakeAPI(disabled=True)
@@ -67,6 +89,10 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
         private = {
             "status": "MT5_REAL_READ_ONLY_PENDING",
             "generated_utc": "2026-11-09T00:00:00+00:00",
+            "private_broker_identity": {
+                "company": "Example Broker Ltd",
+                "server": "private-live-server-01",
+            },
             "account": {
                 "type": "REAL", "connection": "PASS", "read_only_safety": "PASS",
                 "tradeapi_disabled": True, "login": 12345678, "server": "private-broker",
@@ -77,7 +103,11 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
             "safe_errors": [],
         }
         public_text = json.dumps(validator._public_projection(private), sort_keys=True)
-        for secret in ("12345678", "private-broker", "50000.0", "49900.0", '"login"', '"balance"', '"equity"'):
+        for secret in (
+            "12345678", "private-broker", "private-live-server-01", "Example Broker Ltd",
+            "50000.0", "49900.0", '"login"', '"balance"', '"equity"',
+            '"private_broker_identity"',
+        ):
             self.assertNotIn(secret, public_text)
         self.assertIn('"account_type": "REAL"', public_text)
         self.assertIn('"orders_sent_by_process": 0', public_text)

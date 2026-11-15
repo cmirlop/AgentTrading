@@ -1,0 +1,99 @@
+{
+  "checks_run": 375,
+  "generated_utc": "2026-11-15T17:39:03.544267Z",
+  "interpreter": "project_virtual_environment",
+  "python_version": "3.13.14",
+  "repository": {
+    "branch": "codex/phase2-2-2d-local-intensive",
+    "head": "1bcf5114ade42521d5b706d0200ac9af4c283791"
+  },
+  "schema_version": 1,
+  "scope": {
+    "historical_backtests": 0,
+    "llm_calls": 0,
+    "mt5_connections": 0,
+    "mt5_history_reads": 0,
+    "orders_sent": 0
+  },
+  "status": "PASS",
+  "suites": [
+    {
+      "checks_run": 0,
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_phase2_2_2*.py"
+      ],
+      "elapsed_seconds": 89.143,
+      "exit_code": 0,
+      "name": "phase2_2_2_abcd_offline",
+      "started_utc": "2026-11-15T17:36:41.743605Z",
+      "status": "PASS",
+      "tests_failed": 0,
+      "tests_run": 86,
+      "tests_skipped": 0
+    },
+    {
+      "checks_run": 0,
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_phase1_backtest.py"
+      ],
+      "elapsed_seconds": 15.774,
+      "exit_code": 0,
+      "name": "phase1_historical_simulator",
+      "started_utc": "2026-11-15T17:38:10.886894Z",
+      "status": "PASS",
+      "tests_failed": 0,
+      "tests_run": 16,
+      "tests_skipped": 0
+    },
+    {
+      "checks_run": 0,
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "tests.test_mt5_real_readonly",
+        "tests.test_phase1_mt5_safety"
+      ],
+      "elapsed_seconds": 18.153,
+      "exit_code": 0,
+      "name": "phase1_mt5_readonly_safety",
+      "started_utc": "2026-11-15T17:38:26.661286Z",
+      "status": "PASS",
+      "tests_failed": 0,
+      "tests_run": 22,
+      "tests_skipped": 0
+    },
+    {
+      "checks_run": 375,
+      "command": [
+        "python",
+        "test_no_lookahead.py"
+      ],
+      "elapsed_seconds": 18.73,
+      "exit_code": 0,
+      "name": "no_lookahead",
+      "started_utc": "2026-11-15T17:38:44.814467Z",
+      "status": "PASS",
+      "tests_failed": 0,
+      "tests_run": 0,
+      "tests_skipped": 0
+    }
+  ],
+  "tests_failed": 0,
+  "tests_run": 124,
+  "tests_skipped": 0
+}

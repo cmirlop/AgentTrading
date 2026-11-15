@@ -1,0 +1,173 @@
+{
+  "blocker": "Las páginas oficiales halladas son genéricas y no declaran fechas efectivas 2023–2026, calendario de festivos ni los límites D1/H4/H1 para cada símbolo. El SDK local no expone horario semanal de sesión.",
+  "current_generic_policy": {
+    "account_specific_calendar_verified": false,
+    "daily_chart_boundary": "FAQ indica cierre diario a las 17:00 hora de Nueva York; no verificado históricamente para estas barras.",
+    "forex_hours_server_time": "00:01–23:59; viernes hasta 23:57, según la página pública vigente.",
+    "historical_effective_dates": null,
+    "official_holiday_exceptions_2023_2026": null,
+    "server_timezone": "GMT+2/GMT+3 por DST, según la página pública vigente."
+  },
+  "evidence_sources": [
+    {
+      "accessed_utc": "2026-11-15T16:56:35.787654+00:00",
+      "effective_from_utc": null,
+      "effective_to_utc": null,
+      "provenance_level": "OFFICIAL_PUBLIC_REFERENCE",
+      "sha256": "543058b5fca3c0045d525dbf2850c7b985187ab22eec2cc871fec3d2d2fdfc8a",
+      "source_id": "ic_trading_hours",
+      "title": "Forex Trading Hours | Forex Market Opening Times | IC",
+      "url": "https://www.ic.com/en/trading-pricing/trading-hours",
+      "validity": "Política genérica vigente; la página no da fecha de entrada en vigor ni calendario histórico de festivos."
+    },
+    {
+      "accessed_utc": "2026-11-15T16:56:35.787654+00:00",
+      "effective_from_utc": null,
+      "effective_to_utc": null,
+      "provenance_level": "OFFICIAL_PUBLIC_REFERENCE",
+      "sha256": "7d331044b9a66801a7a6029621d28eb6b27544e6f6932aa56eb4a4e3a90309b9",
+      "source_id": "ic_help_centre_dst",
+      "title": "Help Centre | Trading FAQs & Support | IC",
+      "url": "https://www.ic.com/en/help-resources/help-centre",
+      "validity": "Publica cambios DST hasta 2022 y una regla general posterior; no aporta historial con vigencia ni excepciones de 2023–2026."
+    },
+    {
+      "accessed_utc": "2026-11-15T16:56:35.787654+00:00",
+      "effective_from_utc": null,
+      "effective_to_utc": null,
+      "provenance_level": "OFFICIAL_PUBLIC_REFERENCE",
+      "sha256": "9a9e47f522b97f6a5ee56990b780fbdd53e2ab3ede4cd5279344a1e1eef54fa5",
+      "source_id": "ic_trading_conditions_entity",
+      "title": "Trading Conditions | IC",
+      "url": "https://www.ic.com/en/trading-pricing/trading-conditions",
+      "validity": "Página legal pública; no verifica la identidad de cuenta ni sus horarios históricos."
+    },
+    {
+      "accessed_utc": "2026-11-15T16:56:35.787654+00:00",
+      "effective_from_utc": null,
+      "effective_to_utc": null,
+      "provenance_level": "OFFICIAL_PUBLIC_REFERENCE",
+      "sha256": "1e9b6740045da883fb7a4542c45ba9d255ad78596decb555e05772d02388c605",
+      "source_id": "mql5_python_symbol_info",
+      "title": "symbol_info - Python Integration - MQL5 Reference",
+      "url": "https://www.mql5.com/en/docs/python_metatrader5/mt5symbolinfo_py",
+      "validity": "Referencia API; enumera propiedades de símbolo disponibles, no un calendario semanal completo."
+    },
+    {
+      "accessed_utc": "2026-11-15T16:56:35.787654+00:00",
+      "effective_from_utc": null,
+      "effective_to_utc": null,
+      "provenance_level": "OFFICIAL_PUBLIC_REFERENCE",
+      "sha256": "e055d0959f292cdbdd63ac7a38374f492759dbf0e48253733eecdc767b88d0c3",
+      "source_id": "mql5_session_open",
+      "title": "SessionOpen - CSymbolInfo - MQL5 Reference",
+      "url": "https://www.mql5.com/en/docs/standardlibrary/tradeclasses/csymbolinfo/csymbolinfosessionopen",
+      "validity": "La propiedad SessionOpen documenta un precio de sesión, no horas de apertura/cierre."
+    }
+  ],
+  "generated_utc": "2026-11-15T17:39:16.638441Z",
+  "historical_coverage_utc": "2023-07-17T00:00:00Z..2026-11-11T20:15:00Z",
+  "historical_session_calendar": "UNKNOWN",
+  "next_required_evidence": "docs/FASE2_2_2D_CALENDARIO_INPUT.md",
+  "official_historical_gap_records_resolved": 0,
+  "prior_calendar_review_records_resolved": 0,
+  "prior_recovery_candidates_resolved": 0,
+  "prior_report_sha256": "5ad69a17cc7579712e7d225ea5a5ba981d2f307c780e6347bc6d0ea6949454c2",
+  "provider_observed": {
+    "account_type": "REAL",
+    "daily_deals_and_risk_control": {
+      "daily_loss_control": "PASS",
+      "decision": "BELOW_LIMIT_ALLOWING_PROPOSALS",
+      "portfolio_exposure": "PASS",
+      "portfolio_limits": {
+        "AUDUSD": "BLOCKED_BY_CONFIGURED_LIMIT",
+        "EURUSD": "BLOCKED_BY_CONFIGURED_LIMIT",
+        "USDCAD": "BLOCKED_BY_CONFIGURED_LIMIT"
+      },
+      "status": "PASS"
+    },
+    "llm_calls": 0,
+    "market_history_bar_reads_this_phase": 0,
+    "orders_sent": 0,
+    "quote_quality": {
+      "AUDUSD": {
+        "quality": "STALE_AND_WIDE",
+        "spread_points_observed": 58.0,
+        "usable_for_current_risk": false
+      },
+      "EURUSD": {
+        "quality": "STALE",
+        "spread_points_observed": 18.0,
+        "usable_for_current_risk": false
+      },
+      "USDCAD": {
+        "quality": "STALE_AND_WIDE",
+        "spread_points_observed": 52.0,
+        "usable_for_current_risk": false
+      }
+    },
+    "read_only_safety": "PASS",
+    "risk_calculation": "PASS",
+    "risk_comparison_by_symbol_direction": {
+      "AUDUSD": {
+        "BUY": {
+          "broker_calculation_comparison": "PASS",
+          "hypothetical_margin_calculation_status": "PASS",
+          "position_sizing_status": "VALID",
+          "relative_difference_percent": 0.033181
+        },
+        "SELL": {
+          "broker_calculation_comparison": "PASS",
+          "hypothetical_margin_calculation_status": "PASS",
+          "position_sizing_status": "VALID",
+          "relative_difference_percent": 0.033181
+        }
+      },
+      "EURUSD": {
+        "BUY": {
+          "broker_calculation_comparison": "PASS",
+          "hypothetical_margin_calculation_status": "PASS",
+          "position_sizing_status": "VALID",
+          "relative_difference_percent": 0.033181
+        },
+        "SELL": {
+          "broker_calculation_comparison": "PASS",
+          "hypothetical_margin_calculation_status": "PASS",
+          "position_sizing_status": "VALID",
+          "relative_difference_percent": 0.033181
+        }
+      },
+      "USDCAD": {
+        "BUY": {
+          "broker_calculation_comparison": "PASS",
+          "hypothetical_margin_calculation_status": "PASS",
+          "position_sizing_status": "VALID",
+          "relative_difference_percent": 0.010235
+        },
+        "SELL": {
+          "broker_calculation_comparison": "PASS",
+          "hypothetical_margin_calculation_status": "PASS",
+          "position_sizing_status": "VALID",
+          "relative_difference_percent": 0.010235
+        }
+      }
+    },
+    "symbol_metadata": {
+      "AUDUSD": {
+        "metadata_valid": true,
+        "status": "PASS"
+      },
+      "EURUSD": {
+        "metadata_valid": true,
+        "status": "PASS"
+      },
+      "USDCAD": {
+        "metadata_valid": true,
+        "status": "PASS"
+      }
+    },
+    "tradeapi_disabled": true
+  },
+  "schema_version": 1,
+  "status": "PARTIAL_OFFICIAL_CURRENT_SCHEDULE_HISTORICAL_COVERAGE_UNKNOWN"
+}

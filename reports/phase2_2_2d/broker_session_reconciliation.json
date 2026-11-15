@@ -1,0 +1,162 @@
+{
+  "by_record_type": {
+    "CALENDAR_REVIEW": {
+      "BROKER_SESSION_OPEN_FEED_UNVERIFIED": 0,
+      "OBSERVED_NO_QUOTE_UNCONFIRMED": 0,
+      "UNKNOWN": 1776,
+      "VERIFIED_BROKER_CLOSED": 0,
+      "VERIFIED_BROKER_OPEN_NO_BAR": 0
+    },
+    "RECOVERY_CANDIDATE": {
+      "BROKER_SESSION_OPEN_FEED_UNVERIFIED": 0,
+      "OBSERVED_NO_QUOTE_UNCONFIRMED": 0,
+      "UNKNOWN": 74,
+      "VERIFIED_BROKER_CLOSED": 0,
+      "VERIFIED_BROKER_OPEN_NO_BAR": 0
+    }
+  },
+  "by_symbol_timeframe": {
+    "AUDUSD": {
+      "D1": {
+        "open_feed_unverified": 0,
+        "records": 177,
+        "unknown": 177,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "H1": {
+        "open_feed_unverified": 0,
+        "records": 117,
+        "unknown": 117,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "H4": {
+        "open_feed_unverified": 0,
+        "records": 126,
+        "unknown": 126,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "M15": {
+        "open_feed_unverified": 0,
+        "records": 115,
+        "unknown": 115,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "M5": {
+        "open_feed_unverified": 0,
+        "records": 82,
+        "unknown": 82,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      }
+    },
+    "EURUSD": {
+      "D1": {
+        "open_feed_unverified": 0,
+        "records": 177,
+        "unknown": 177,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "H1": {
+        "open_feed_unverified": 0,
+        "records": 117,
+        "unknown": 117,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "H4": {
+        "open_feed_unverified": 0,
+        "records": 126,
+        "unknown": 126,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "M15": {
+        "open_feed_unverified": 0,
+        "records": 115,
+        "unknown": 115,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "M5": {
+        "open_feed_unverified": 0,
+        "records": 81,
+        "unknown": 81,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      }
+    },
+    "USDCAD": {
+      "D1": {
+        "open_feed_unverified": 0,
+        "records": 177,
+        "unknown": 177,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "H1": {
+        "open_feed_unverified": 0,
+        "records": 117,
+        "unknown": 117,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "H4": {
+        "open_feed_unverified": 0,
+        "records": 126,
+        "unknown": 126,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "M15": {
+        "open_feed_unverified": 0,
+        "records": 116,
+        "unknown": 116,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      },
+      "M5": {
+        "open_feed_unverified": 0,
+        "records": 81,
+        "unknown": 81,
+        "verified_closed": 0,
+        "verified_open_no_bar": 0
+      }
+    }
+  },
+  "classification_counts": {
+    "BROKER_SESSION_OPEN_FEED_UNVERIFIED": 0,
+    "OBSERVED_NO_QUOTE_UNCONFIRMED": 0,
+    "UNKNOWN": 1850,
+    "VERIFIED_BROKER_CLOSED": 0,
+    "VERIFIED_BROKER_OPEN_NO_BAR": 0
+  },
+  "generated_utc": "2026-11-15T16:57:20.076405+00:00",
+  "input_record_counts": {
+    "calendar_review_group_records": 1776,
+    "recovery_candidate_records": 74
+  },
+  "pending_unknown_records": 1850,
+  "provenance": {
+    "official_current_policy_sha256": "5ad69a17cc7579712e7d225ea5a5ba981d2f307c780e6347bc6d0ea6949454c2",
+    "official_historical_calendar_source_applied": false,
+    "prior_intervals_sha256": "59fbdfb7da17ba7b7ddeccf00538ad96aa857fe0f8053e5c847a505400d79e9a",
+    "prior_public_report_sha256": "f7eb158f91fc8df575fec9ea2dfe8b7325f1b26adfa64bbf361400820db069ab",
+    "private_reconciliation_evidence": {
+      "run_id": "phase2-2-2d-local-20261115",
+      "sha256": "9c3fa6fb812a649256df9212a269d51f0d6efdd66deb2e1e8b8ee0712666a9a0"
+    },
+    "private_reconciliation_sha256": "9c3fa6fb812a649256df9212a269d51f0d6efdd66deb2e1e8b8ee0712666a9a0"
+  },
+  "record_count": 1850,
+  "record_semantics": "Classified interval records; records can overlap in cadence slots and are not unique market gaps.",
+  "resolved_records": 0,
+  "rule": "No missing bar was called a verified close, feed gap, or open-session missing bar based on a weekday, weekend, DST, holiday, or absent quote inference.",
+  "schema_version": 1,
+  "source_phase": "phase2_2_2c/gap_classification.json",
+  "status": "PARTIAL_CALENDAR_UNKNOWN"
+}

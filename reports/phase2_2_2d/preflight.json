@@ -1,0 +1,112 @@
+{
+  "baseline_tests": {
+    "mt5_readonly_safety_tests": {
+      "status": "PASS",
+      "tests_run": 22
+    },
+    "no_lookahead_checks": {
+      "checks_run": 375,
+      "status": "PASS"
+    },
+    "phase1_backtest_suite": {
+      "status": "PASS",
+      "tests_run": 16
+    },
+    "phase2_2_2_suite": {
+      "status": "PASS",
+      "tests_run": 61
+    }
+  },
+  "critical_checks": {
+    "actual_chunk_files_match_manifest": true,
+    "baseline_canonical_sha_matches_frozen": true,
+    "chunk_hashes_match_manifest": true,
+    "manifest_chunk_entries_98": true,
+    "origin_main_matches_reference": true,
+    "phase2_2_2b_status_not_claimed_complete": true,
+    "phase2_2_2c_status_not_claimed_complete": true,
+    "run_manifest_present": true,
+    "source_count_47": true,
+    "source_hashes_match_phase2_2_2c": true
+  },
+  "environment": {
+    "llm_calls": 0,
+    "metatrader5_sdk": "INSTALLED",
+    "numpy": "2.5.3",
+    "ollama": "NOT_CHECKED_NOT_IN_SCOPE",
+    "pandas": "3.0.6",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "pydantic": "2.13.5",
+    "python_executable": "VENV_PYTHON",
+    "python_version": "3.13.14",
+    "terminal_process": "PRESENT"
+  },
+  "generated_utc": "2026-11-15T16:34:34.042037+00:00",
+  "local_evidence": {
+    "chunk_hash_map_sha256": "853b8def76d61338b20a2927d51fe449a22f5bbc05ecc26d8be6e3a7170449a2",
+    "frozen_dataset": {
+      "canonical_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+      "expected_canonical_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+      "path": "data/backtest/technical_candidate_scan.csv",
+      "raw_sha256": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0",
+      "unchanged_at_preflight": true
+    },
+    "frozen_plan_sha256": "ca933ec568cb5aa02ab1a2dd3fb371baf518106e7b084b9a8ecfd3de994a2713",
+    "relevant_code_sha256": {
+      "config/backtest_config.py": "07c458016ff0d3099f7d46a92eeaba6370ec838e42606c973f0f51e5c9cddd0f",
+      "config/backtest_cost_config.py": "cd45d41ad742a4104299a894724f0720ce2a921c28c12a10101ee90d12bcbbde",
+      "config/market_config.py": "7fcfb008665eaed3e8abc9e798927965022df8daa5006dc0e61431a61f3ad313",
+      "run_portfolio_backtest.py": "0747be87d5a8dce872f29b4f5cea3726e5e57f4a86606a91cd70d4b03197e4d1",
+      "run_stateful_backtest.py": "facf85fdc97a7802563508972205b0a1804d627da5aa2458dbe7222c098c5779",
+      "scan_backtest_candidates.py": "24ba3b84463c3c290916bbc14d5d069f83dda1e9c6b2ac282003db70907339d8",
+      "scripts/validate_mt5_real_readonly.py": "12c5a8f825ab0f82a1942f7d8d504f20e62f0cdd8cf7ba2b2e357545aea142ea",
+      "src/historical_state.py": "440a43be56d41015b022ea59849538c274ec90f2a4c6f1c608289acfce09110b",
+      "src/history_data_integrity.py": "ea756c4882fe8b2f907ab0c7d2d97c52ca837168bb92a205eb38f3e5e00d2e11",
+      "src/indicators.py": "94cce1e05929df444a4bd7a7f74f051759be748e27058827f2fc0fef3c5461cf",
+      "src/market_history_backfill.py": "97f57e085f356a40127ebbdbcf98f279ba470263e428162db8ee619673ab060f",
+      "src/phase2_2_2c_analysis.py": "3f6232da6a2c67f09f330aa1d29c995751182123d8b9232cd75b247c60153fdb",
+      "src/session_gate.py": "c037ca85cbf8d74a9215bc44631dd90a3c05461ef0ad7a728a4b67009984bd4c",
+      "src/technical_evaluator.py": "989960c0d6fda0bcd279d8f27ee8c2afa1a3cff8c52d850b70352c28ba3fd001",
+      "src/warmup_audit.py": "8164ed184dbee27cde6144bd51be2848b82c56c2d4248b87c0fd3e41dd072e3b"
+    },
+    "run_chunk_count": 98,
+    "run_id": "phase222b-local-20261115",
+    "run_manifest_sha256": "1ab1fb27c55f6784dd0a47c180d14c25be112c3956ac3fca155603e8f3382965",
+    "source_count": 47,
+    "source_hash_map_sha256": "10552582a18b8d9820556af3c7d8aaf1092ce007ecb1bd6c509b5d300f8eb398",
+    "source_hashes_match_previous": true,
+    "source_rows_audited_previous": 540143,
+    "verified_chunk_count": 98
+  },
+  "notes": [
+    "Stage 2.2.2b/2.2.2c reports remain historical evidence; neither resolves broker session calendar.",
+    "Prior 47-source and 98-chunk local evidence is verified read-only; raw backfill run remains ignored/private.",
+    "No data source or frozen dataset was rewritten."
+  ],
+  "previous_phase_audit": {
+    "calendar_still_unknown": true,
+    "phase2_2_2b_status": "PHASE2_2_2B_COMPLETE_WITH_PENDING_GAPS",
+    "phase2_2_2c_status": "PHASE2_2_2C_PARTIAL_CALENDAR_UNKNOWN"
+  },
+  "repository": {
+    "branch": "codex/phase2-2-2d-local-intensive",
+    "commit_created": false,
+    "head": "1bcf5114ade42521d5b706d0200ac9af4c283791",
+    "merge_performed": false,
+    "origin_main": "1bcf5114ade42521d5b706d0200ac9af4c283791",
+    "preflight_change_count": 2,
+    "push_performed": false,
+    "reference_main": "1bcf5114ade42521d5b706d0200ac9af4c283791",
+    "working_tree_dirty": true
+  },
+  "safety": {
+    "frozen_dataset_modified": false,
+    "llm_calls": 0,
+    "mt5_price_history_reads_before_preflight": 0,
+    "orders_sent": 0,
+    "source_files_modified": false,
+    "trades_executed": 0
+  },
+  "schema_version": 1,
+  "status": "PASS"
+}

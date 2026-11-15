@@ -1,0 +1,81 @@
+{
+  "broker_verified_mtf_windows": 0,
+  "contract_columns": [
+    "symbol",
+    "analysis_time",
+    "session",
+    "bias",
+    "overall_score",
+    "alignment",
+    "setup_quality",
+    "candidate_65",
+    "m5_score",
+    "m15_score",
+    "h1_score",
+    "h4_score",
+    "d1_score"
+  ],
+  "frozen_scan_used_as_source": false,
+  "full_scan": "NOT_RUN",
+  "generated_utc": "2026-11-15T17:39:16.638441Z",
+  "lineage_sidecar": "one source hash per symbol/timeframe/bar, plus UTC decision and MTF window identifier",
+  "llm_calls": 0,
+  "orders_sent": 0,
+  "producer_code": "PRESENT",
+  "same_data_adapter_parity": {
+    "full_candidate_scan_parity": "NOT_RUN",
+    "reason": "No calendar-verified MTF windows exist; different provider feeds are not treated as parity samples.",
+    "scope": "prepare_symbol_history_from_frames vs existing prepare_symbol_history for the same local EURUSD CSVs, all timeframes; frame equality.",
+    "status": "PASS"
+  },
+  "scan_output_created": false,
+  "schema_version": 1,
+  "source_inventory": {
+    "all_pairs_have_source": true,
+    "manifest_sha256": "8d3ec0042ae2c51919fdd2d4849c0548f0f3781541c3fd1e75b7ee3296342f30",
+    "run_id": "phase222b-local-20261115",
+    "source_count": 45,
+    "symbol_timeframe_pairs": 15
+  },
+  "static_safety_scan": {
+    "files_scanned": [
+      "scripts/validate_mt5_real_readonly.py",
+      "src/phase2_2_2d_sessions.py",
+      "src/verified_history_scan.py",
+      "scripts/scan_from_verified_history.py"
+    ],
+    "forbidden_execution_calls": [],
+    "read_only_allowlist": [
+      "account_info",
+      "copy_rates_from_pos",
+      "copy_rates_range",
+      "history_deals_get",
+      "order_calc_margin",
+      "order_calc_profit",
+      "orders_get",
+      "positions_get",
+      "symbol_info",
+      "symbol_info_tick"
+    ],
+    "read_only_allowlist_status": "PASS",
+    "safety_gate_methods": [
+      "terminal_info"
+    ],
+    "status": "PASS",
+    "terminal_disconnect_cleanup_allowed": "api.shutdown() is called only in the validator finally block to close its Python API session."
+  },
+  "status": "BLOCKED_NO_VERIFIED_MTF_WINDOWS",
+  "synthetic_tests": {
+    "combined_phase2_2_2d": 25,
+    "coverage": [
+      "closed vs open gaps and explicit Christmas/New Year exceptions",
+      "DST ambiguous/nonexistent local time and H4/D1 boundaries",
+      "199/200/691/692 warmup and causal closes",
+      "source hashes, foreign run-id, symlink, duplicate spread and OHLC conflict",
+      "partial/open candle exclusion and unknown-calendar early block"
+    ],
+    "session_calendar_and_dst": 15,
+    "verified_history_scan": 10
+  },
+  "test_status": "PASS"
+}
