@@ -19,3 +19,6 @@ data/events/*.sqlite3-shm
 data/events/*.sqlite3-wal
 /reports/private/
 
+# Real broker backfill chunks are local evidence and are never committed.
+/data/market_history/backfill_runs/
+

@@ -1,0 +1,62 @@
+{
+  "completed_utc": "2026-11-15T13:51:55.916114+00:00",
+  "dry_run": {
+    "checks": {
+      "bar_cap_with_overlap": true,
+      "mt5_not_imported": true,
+      "plan_download_eligible": true,
+      "process_succeeded": true,
+      "request_count_within_limit": true,
+      "status_is_dry_run": true,
+      "zero_mt5_connections": true,
+      "zero_orders": true,
+      "zero_provider_calls": true
+    },
+    "chunk_count": 98,
+    "provider_calls": 0,
+    "status": "PASS",
+    "stdout_json_valid": true
+  },
+  "environment": {
+    "mt5_account_type": "NOT_CHECKED_OFFLINE_PREFLIGHT",
+    "mt5_sdk_available": true,
+    "mt5_sdk_version": "5.0.6231",
+    "mt5_terminal_connection": "NOT_CHECKED_OFFLINE_PREFLIGHT",
+    "operating_system": "Windows-10-10.0.19045-SP0",
+    "python_version": "3.13.14",
+    "tradeapi_disabled": "NOT_CHECKED_OFFLINE_PREFLIGHT"
+  },
+  "frozen_dataset_hashes": {
+    "canonical_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
+    "raw_sha256": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0"
+  },
+  "frozen_plan": "reports/phase2_2_2b/frozen_backfill_plan.json",
+  "generated_utc": "2026-11-15T13:51:55.857219+00:00",
+  "git": {
+    "branch": "codex/phase2-2-2b-local-real-history-audit",
+    "fetch_completed_before_preflight": true,
+    "head": "a36c2e3236deb877ca9664ca3ca67580eaba48e7",
+    "working_tree_dirty_at_preflight": true
+  },
+  "initial_gap_audit": "reports/phase2_2_2b/initial_gap_audit.json",
+  "live_mt5_connection_attempted": false,
+  "llm_provider_calls": 0,
+  "market_data_request_count": 98,
+  "market_data_request_limit": 150,
+  "orders_sent": 0,
+  "planned_run_id": "phase222b-local-20261115",
+  "preflight_checks": {
+    "all_snapshots_included": true,
+    "frozen_dataset_canonical_hash_matches": true,
+    "no_mt5_import_in_preflight_process": true,
+    "no_price_overlap_conflicts": true,
+    "original_sources_unchanged": true,
+    "plan_within_request_budget": true,
+    "source_integrity_pass": true
+  },
+  "schema_version": 1,
+  "source_inventory": "reports/phase2_2_2b/source_inventory.json",
+  "started_utc": "2026-11-15T13:51:25.326711+00:00",
+  "status": "PHASE2_2_2B_OFFLINE_PREFLIGHT_PASS"
+}

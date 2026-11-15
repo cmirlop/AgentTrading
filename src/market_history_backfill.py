@@ -8,7 +8,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 from scripts.validate_mt5_real_readonly import (
     READ_ONLY_METHODS,
@@ -37,6 +37,7 @@ from src.history_data_integrity import (
 
 MAX_BARS_PER_REQUEST = 1000
 OVERLAP_BARS_EACH_SIDE = 2
+MAX_PROVIDER_CALLS = 150
 FORBIDDEN_MT5_METHODS = frozenset({"order_send", "order_check", "symbol_select", "login"})
 CSV_FIELDS = REQUIRED_COLUMNS
 
@@ -60,7 +61,7 @@ def plan_chunks(
     timeframes: dict[str, int] = TIMEFRAMES_SECONDS,
 ) -> list[dict[str, Any]]:
     """Split missing bar-open ranges into bounded requests with context overlap."""
-    if max_bars_per_request < 5 or overlap_bars_each_side < 1:
+    if max_bars_per_request < 5 or max_bars_per_request > MAX_BARS_PER_REQUEST or overlap_bars_each_side < 1:
         raise ValueError("CHUNK_LIMIT_OR_OVERLAP_INVALID")
     core_capacity = max_bars_per_request - 2 * overlap_bars_each_side
     allowed_symbols = set(symbols)
@@ -124,7 +125,7 @@ def verify_real_readonly_account(api: Any) -> dict[str, Any]:
 
 
 def safe_copy_rates_range(api: Any, chunk: dict[str, Any], timeframe_value: Any) -> Any:
-    """Use the shared MT5 read allowlist; gate state is checked before/after."""
+    """Read one range only when REAL and external Python trading is blocked."""
     if "copy_rates_range" not in READ_ONLY_METHODS:
         raise SafetyGateError("COPY_RATES_RANGE_NOT_ALLOWLISTED")
     if any(method in READ_ONLY_METHODS for method in FORBIDDEN_MT5_METHODS):
@@ -133,7 +134,16 @@ def safe_copy_rates_range(api: Any, chunk: dict[str, Any], timeframe_value: Any)
     end = _iso_time(chunk["request_end_utc"])
     if end <= start:
         raise ValueError("REQUEST_RANGE_INVALID")
-    return _read(api, "copy_rates_range", chunk["symbol"], timeframe_value, start, end)
+    verify_real_readonly_account(api)
+    try:
+        result = _read(api, "copy_rates_range", chunk["symbol"], timeframe_value, start, end)
+    except Exception:
+        # A failed range read still gets the REAL/read-only check before the
+        # caller records the failure or attempts any later chunk.
+        verify_real_readonly_account(api)
+        raise
+    verify_real_readonly_account(api)
+    return result
 
 
 def _record_to_mapping(record: Any) -> dict[str, Any]:
@@ -242,9 +252,12 @@ def _serialize_csv(bars: list[dict[str, Any]]) -> bytes:
 
 
 def _plan_snapshot(plan: dict[str, Any]) -> dict[str, Any]:
-    if plan.get("schema_version") != 2 or plan.get("canonicalization_policy") != CANONICAL_HASH_POLICY:
+    schema_version = plan.get("schema_version")
+    if schema_version not in {2, 3} or plan.get("canonicalization_policy") != CANONICAL_HASH_POLICY:
         raise RuntimeError("BACKFILL_PLAN_SCHEMA_UNSUPPORTED")
     required = {"symbols", "timeframes_seconds", "source_file_hashes", "backfill_intervals", "chunk_policy"}
+    if schema_version == 3:
+        required.add("source_snapshot_dirs")
     if not required.issubset(plan):
         raise RuntimeError("BACKFILL_PLAN_SCHEMA_UNSUPPORTED")
     return {key: plan[key] for key in sorted(required)}
@@ -275,11 +288,13 @@ def _plan_fingerprint(plan: dict[str, Any]) -> str:
         overlap_bars_each_side=snapshot["chunk_policy"]["overlap_bars_each_side"],
     )
     payload = {
-        "schema_version": 2,
+        "schema_version": plan["schema_version"],
         "canonicalization_policy": CANONICAL_HASH_POLICY,
         "chunks": chunks,
         "source_canonical_sha256": _canonical_hash_view(snapshot["source_file_hashes"]),
     }
+    if plan["schema_version"] == 3:
+        payload["source_snapshot_dirs"] = snapshot["source_snapshot_dirs"]
     return sha256_bytes(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8"))
 
 
@@ -299,7 +314,7 @@ def _load_or_create_manifest(
             manifest = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             raise RuntimeError("BACKFILL_MANIFEST_CORRUPT") from None
-        if manifest.get("schema_version") != 2:
+        if manifest.get("schema_version") != plan.get("schema_version"):
             raise RuntimeError("BACKFILL_MANIFEST_SCHEMA_UNSUPPORTED")
         if manifest.get("run_id") != run_id or manifest.get("plan_sha256") != fingerprint or manifest.get("plan_snapshot") != snapshot:
             raise RuntimeError("BACKFILL_RESUME_PROVENANCE_MISMATCH")
@@ -310,7 +325,7 @@ def _load_or_create_manifest(
             raise RuntimeError("BACKFILL_MANIFEST_PLAN_CHUNKS_MISMATCH")
         return manifest
     return {
-        "schema_version": 2,
+        "schema_version": plan.get("schema_version"),
         "run_id": run_id,
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "status": "IN_PROGRESS",
@@ -329,13 +344,42 @@ def _load_or_create_manifest(
     }
 
 
+def _discover_source_snapshot_dirs(root: Path) -> list[str]:
+    base = root / "data/market_history/mt5_real_readonly"
+    if not base.exists():
+        return []
+    if base.is_symlink():
+        raise RuntimeError("BACKFILL_SOURCE_SYMLINK_REJECTED")
+    paths = [path for path in base.iterdir() if path.is_dir()]
+    if any(path.is_symlink() for path in paths):
+        raise RuntimeError("BACKFILL_SOURCE_SYMLINK_REJECTED")
+    return sorted(path.relative_to(root).as_posix() for path in paths)
+
+
+def _snapshot_dirs_for_plan(plan: dict[str, Any]) -> list[str]:
+    if plan.get("schema_version") == 3:
+        return list(plan.get("source_snapshot_dirs", []))
+    # Schema 2 plans predate complete snapshot inventories. Preserve their exact
+    # source selection for old runs instead of adding newer snapshots to them.
+    dirs = {
+        str(Path(path).parent).replace("\\", "/")
+        for path in plan.get("source_file_hashes", {})
+        if str(path).startswith("data/market_history/mt5_real_readonly/")
+        and str(path).endswith(".csv")
+    }
+    return sorted(dirs)
+
+
 def _source_hashes(
     root: Path,
     *,
     symbols: Iterable[str] = SYMBOLS,
     timeframes: dict[str, int] = TIMEFRAMES_SECONDS,
+    snapshot_dirs: Iterable[str] | None = None,
+    include_snapshot_manifests: bool = False,
+    require_exact_snapshot_inventory: bool = False,
 ) -> dict[str, dict[str, str]]:
-    sources = []
+    sources: list[Path] = []
     expected_old = {
         root / "data/market" / symbol / f"{timeframe}.csv"
         for symbol in symbols for timeframe in timeframes
@@ -345,19 +389,31 @@ def _source_hashes(
         for symbol in symbols
         for path in (root / "data/market" / symbol).glob("*.csv")
     }
-    snapshot_root = root / "data/market_history/mt5_real_readonly/20261109T202112.171333Z"
-    expected_recent = {snapshot_root / f"{symbol}_{timeframe}.csv" for symbol in symbols for timeframe in timeframes}
-    actual_recent = {
-        path
-        for symbol in symbols
-        for path in snapshot_root.glob(f"{symbol}_*.csv")
-    }
-    if actual_old - expected_old or actual_recent - expected_recent:
+    expected_snapshot_names = {f"{symbol}_{timeframe}.csv" for symbol in symbols for timeframe in timeframes}
+    discovered = _discover_source_snapshot_dirs(root)
+    selected = discovered if snapshot_dirs is None else sorted(set(snapshot_dirs))
+    if require_exact_snapshot_inventory and set(selected) != set(discovered):
+        raise RuntimeError("BACKFILL_SOURCE_SNAPSHOT_INVENTORY_CHANGED")
+    snapshot_roots: list[Path] = []
+    for relative in selected:
+        candidate = root / relative
+        if candidate.is_symlink() or candidate.resolve().parent != (root / "data/market_history/mt5_real_readonly").resolve():
+            raise RuntimeError("BACKFILL_SOURCE_PATH_INVALID")
+        if not candidate.is_dir():
+            raise RuntimeError("BACKFILL_SOURCE_MISSING")
+        snapshot_roots.append(candidate)
+        actual_names = {path.name for path in candidate.glob("*.csv")}
+        if actual_names != expected_snapshot_names:
+            raise RuntimeError("BACKFILL_SOURCE_INVENTORY_MISMATCH")
+    if actual_old - expected_old:
         raise RuntimeError("BACKFILL_SOURCE_INVENTORY_MISMATCH")
     for symbol in symbols:
         for timeframe in timeframes:
             sources.append(root / "data/market" / symbol / f"{timeframe}.csv")
-            sources.append(snapshot_root / f"{symbol}_{timeframe}.csv")
+            for snapshot_root in snapshot_roots:
+                sources.append(snapshot_root / f"{symbol}_{timeframe}.csv")
+    if include_snapshot_manifests:
+        sources.extend(snapshot_root / "manifest.json" for snapshot_root in snapshot_roots)
     result: dict[str, dict[str, str]] = {}
     for path in sources:
         ensure_no_symlink_path(root.resolve(), path)
@@ -367,8 +423,16 @@ def _source_hashes(
     return result
 
 
-def _source_bar_index(root: Path, symbol: str, timeframe: str) -> dict[datetime, list[dict[str, Any]]]:
-    paths = [root / "data/market" / symbol / f"{timeframe}.csv", root / "data/market_history/mt5_real_readonly/20261109T202112.171333Z" / f"{symbol}_{timeframe}.csv"]
+def _source_bar_index(
+    root: Path,
+    symbol: str,
+    timeframe: str,
+    *,
+    snapshot_dirs: Iterable[str] | None = None,
+) -> dict[datetime, list[dict[str, Any]]]:
+    selected = _discover_source_snapshot_dirs(root) if snapshot_dirs is None else list(snapshot_dirs)
+    paths = [root / "data/market" / symbol / f"{timeframe}.csv"]
+    paths.extend(root / relative / f"{symbol}_{timeframe}.csv" for relative in selected)
     index: dict[datetime, list[dict[str, Any]]] = {}
     for path in paths:
         with path.open("r", newline="", encoding="utf-8-sig") as handle:
@@ -432,7 +496,8 @@ def validate_backfill_run(
             result["errors"].append("BACKFILL_MANIFEST_MISSING")
             return result
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if manifest.get("schema_version") != 2 or manifest.get("canonicalization_policy") != CANONICAL_HASH_POLICY:
+        manifest_schema = manifest.get("schema_version")
+        if manifest_schema not in {2, 3} or manifest.get("canonicalization_policy") != CANONICAL_HASH_POLICY:
             result["errors"].append("BACKFILL_MANIFEST_SCHEMA_UNSUPPORTED")
             return result
         if manifest.get("run_id") != run_id:
@@ -442,7 +507,7 @@ def validate_backfill_run(
         if not isinstance(snapshot, dict):
             result["errors"].append("BACKFILL_PLAN_SNAPSHOT_MISSING")
             return result
-        plan = {"schema_version": 2, "canonicalization_policy": CANONICAL_HASH_POLICY, **snapshot}
+        plan = {"schema_version": manifest_schema, "canonicalization_policy": CANONICAL_HASH_POLICY, **snapshot}
         expected_fingerprint = _plan_fingerprint(plan)
         result["plan_sha256"] = expected_fingerprint
         if manifest.get("plan_sha256") != expected_fingerprint:
@@ -451,7 +516,15 @@ def validate_backfill_run(
 
         symbols = snapshot["symbols"]
         timeframes = snapshot["timeframes_seconds"]
-        source_hashes_now = _source_hashes(root, symbols=symbols, timeframes=timeframes)
+        snapshot_dirs = _snapshot_dirs_for_plan(plan)
+        source_hashes_now = _source_hashes(
+            root,
+            symbols=symbols,
+            timeframes=timeframes,
+            snapshot_dirs=snapshot_dirs,
+            include_snapshot_manifests=manifest_schema == 3,
+            require_exact_snapshot_inventory=manifest_schema == 3,
+        )
         if not _hashes_match_portably(snapshot["source_file_hashes"], source_hashes_now):
             result["errors"].append("BACKFILL_ORIGINAL_SOURCE_HASH_MISMATCH")
             return result
@@ -596,7 +669,7 @@ def validate_backfill_run(
 
             key = (chunk["symbol"], chunk["timeframe"])
             if key not in originals:
-                originals[key] = _source_bar_index(root, *key)
+                originals[key] = _source_bar_index(root, *key, snapshot_dirs=snapshot_dirs)
             target = included.setdefault(key, {})
             conflicts_before_chunk = len(result["source_conflicts"])
             for record in parsed["_records"]:
@@ -674,21 +747,18 @@ def execute_backfill_plan(
     root: Path,
     run_id: str,
     as_of_utc: datetime,
+    progress_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Execute only an explicit plan; completed, hash-verified chunks resume safely."""
     validate_run_id(run_id)
     if as_of_utc.tzinfo is None or as_of_utc.utcoffset() is None:
         raise ValueError("AS_OF_TIMESTAMP_MUST_BE_TIMEZONE_AWARE")
     snapshot = _plan_snapshot(plan)
+    if plan.get("status") != "HISTORY_BACKFILL_PREPARED" or plan.get("download_command_executed_in_this_phase") is not False:
+        raise RuntimeError("BACKFILL_PLAN_NOT_READY")
     symbols = snapshot["symbols"]
     timeframes = snapshot["timeframes_seconds"]
-    source_hashes_before = _source_hashes(root, symbols=symbols, timeframes=timeframes)
-    if not _hashes_match_portably(snapshot["source_file_hashes"], source_hashes_before):
-        raise RuntimeError("BACKFILL_PLAN_SOURCE_CHANGED_RERUN_AUDIT")
-    backfill_run_paths(root, run_id, create=False)
-    verify_real_readonly_account(api)
-    paths = backfill_run_paths(root, run_id, create=True)
-    output_root, chunks_dir, manifest_path = paths["run_root"], paths["chunks"], paths["manifest"]
+    snapshot_dirs = _snapshot_dirs_for_plan(plan)
     chunks = plan_chunks(
         plan.get("backfill_intervals", []),
         symbols=symbols,
@@ -696,6 +766,22 @@ def execute_backfill_plan(
         max_bars_per_request=snapshot["chunk_policy"]["max_bars_per_request"],
         overlap_bars_each_side=snapshot["chunk_policy"]["overlap_bars_each_side"],
     )
+    if len(chunks) > MAX_PROVIDER_CALLS:
+        raise RuntimeError("BACKFILL_PROVIDER_CALL_BUDGET_EXCEEDED")
+    source_hashes_before = _source_hashes(
+        root,
+        symbols=symbols,
+        timeframes=timeframes,
+        snapshot_dirs=snapshot_dirs,
+        include_snapshot_manifests=plan.get("schema_version") == 3,
+        require_exact_snapshot_inventory=plan.get("schema_version") == 3,
+    )
+    if not _hashes_match_portably(snapshot["source_file_hashes"], source_hashes_before):
+        raise RuntimeError("BACKFILL_PLAN_SOURCE_CHANGED_RERUN_AUDIT")
+    backfill_run_paths(root, run_id, create=False)
+    verify_real_readonly_account(api)
+    paths = backfill_run_paths(root, run_id, create=True)
+    output_root, chunks_dir, manifest_path = paths["run_root"], paths["chunks"], paths["manifest"]
     manifest = _load_or_create_manifest(
         manifest_path,
         run_id=run_id,
@@ -719,7 +805,7 @@ def execute_backfill_plan(
     total_bars = 0
     provider_calls = 0
     source_indices: dict[tuple[str, str], dict[datetime, list[dict[str, Any]]]] = {}
-    for chunk in chunks:
+    for chunk_index, chunk in enumerate(chunks, start=1):
         chunk_id = chunk["chunk_id"]
         existing = manifest["chunks"].get(chunk_id)
         filename = f"{chunk_id}.csv"
@@ -732,6 +818,14 @@ def execute_backfill_plan(
             actual_hashes = content_hashes(destination.read_bytes())
             if actual_hashes["canonical_sha256"] != existing.get("canonical_sha256"):
                 raise RuntimeError("BACKFILL_COMPLETED_CHUNK_HASH_MISMATCH")
+            if progress_callback:
+                progress_callback({
+                    "event": "REQUEST_SKIPPED_ALREADY_COMPLETE",
+                    "request_index": chunk_index,
+                    "request_total": len(chunks),
+                    "symbol": chunk["symbol"],
+                    "timeframe": chunk["timeframe"],
+                })
             continue
         if destination.exists() and (not existing or existing.get("status") == "REQUESTING"):
             # Recover the atomic-file-before-manifest interruption point.
@@ -743,7 +837,7 @@ def execute_backfill_plan(
             raw_bytes = destination.read_bytes()
             source_key = (chunk["symbol"], chunk["timeframe"])
             if source_key not in source_indices:
-                source_indices[source_key] = _source_bar_index(root, *source_key)
+                source_indices[source_key] = _source_bar_index(root, *source_key, snapshot_dirs=snapshot_dirs)
             conflicts = _detect_source_conflicts(chunk, validation["bars"], source_indices[source_key])
             recovered_entry = {
                 "status": "COMPLETED_WITH_CONFLICTS" if conflicts else "RECOVERED_ATOMIC_CHUNK_FILE",
@@ -762,6 +856,15 @@ def execute_backfill_plan(
             manifest["chunks"][chunk_id] = recovered_entry
             manifest["conflicts"].extend(conflicts)
             _atomic_write_json(manifest_path, manifest, authorized_root=output_root)
+            if progress_callback:
+                progress_callback({
+                    "event": "REQUEST_RECOVERED_LOCAL_CHUNK",
+                    "request_index": chunk_index,
+                    "request_total": len(chunks),
+                    "symbol": chunk["symbol"],
+                    "timeframe": chunk["timeframe"],
+                    "bars": len(validation["bars"]),
+                })
             continue
         if destination.exists():
             raise RuntimeError("BACKFILL_OUTPUT_WOULD_OVERWRITE_EXISTING_VERSION")
@@ -784,6 +887,14 @@ def execute_backfill_plan(
         }
         _atomic_write_json(manifest_path, manifest, authorized_root=output_root)
         try:
+            if progress_callback:
+                progress_callback({
+                    "event": "REQUEST_STARTED",
+                    "request_index": chunk_index,
+                    "request_total": len(chunks),
+                    "symbol": chunk["symbol"],
+                    "timeframe": chunk["timeframe"],
+                })
             provider_calls += 1
             raw_rates = safe_copy_rates_range(api, chunk, timeframe_value)
             if raw_rates is None:
@@ -798,7 +909,7 @@ def execute_backfill_plan(
                 raise RuntimeError("MT5_HISTORY_RETURNED_BAR_OUTSIDE_REQUEST_RANGE")
             source_key = (chunk["symbol"], chunk["timeframe"])
             if source_key not in source_indices:
-                source_indices[source_key] = _source_bar_index(root, *source_key)
+                source_indices[source_key] = _source_bar_index(root, *source_key, snapshot_dirs=snapshot_dirs)
             conflicts = _detect_source_conflicts(chunk, bars, source_indices[source_key])
             csv_bytes = _serialize_csv(bars)
             _atomic_write_bytes(destination, csv_bytes, authorized_root=output_root, overwrite=False)
@@ -826,19 +937,46 @@ def execute_backfill_plan(
             manifest["conflicts"].extend(conflicts)
             total_bars += len(bars)
             _atomic_write_json(manifest_path, manifest, authorized_root=output_root)
+            if progress_callback:
+                progress_callback({
+                    "event": "REQUEST_FINISHED",
+                    "request_index": chunk_index,
+                    "request_total": len(chunks),
+                    "symbol": chunk["symbol"],
+                    "timeframe": chunk["timeframe"],
+                    "bars": len(bars),
+                    "empty_response": len(bars) == 0,
+                })
         except Exception as exc:
+            safe_error_code = _safe_error_code(exc)
             manifest["chunks"][chunk_id] = {
                 **manifest["chunks"][chunk_id],
                 "status": "FAILED",
-                "error_code": _safe_error_code(exc),
+                "error_code": safe_error_code,
                 "provider_call_count": call_count_for_chunk,
                 "attempts": attempt_number,
             }
             manifest["status"] = "INCOMPLETE"
             _atomic_write_json(manifest_path, manifest, authorized_root=output_root)
+            if progress_callback:
+                progress_callback({
+                    "event": "REQUEST_FAILED",
+                    "request_index": chunk_index,
+                    "request_total": len(chunks),
+                    "symbol": chunk["symbol"],
+                    "timeframe": chunk["timeframe"],
+                    "error_code": safe_error_code,
+                })
             raise
 
-    source_hashes_after = _source_hashes(root, symbols=symbols, timeframes=timeframes)
+    source_hashes_after = _source_hashes(
+        root,
+        symbols=symbols,
+        timeframes=timeframes,
+        snapshot_dirs=snapshot_dirs,
+        include_snapshot_manifests=plan.get("schema_version") == 3,
+        require_exact_snapshot_inventory=plan.get("schema_version") == 3,
+    )
     unchanged = source_hashes_before == source_hashes_after
     if not unchanged:
         manifest["status"] = "FAIL_SOURCE_MODIFIED"

@@ -375,6 +375,27 @@ def _public_source(source: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in source.items() if key != "_records"}
 
 
+def _discover_snapshot_roots(root: Path) -> list[Path]:
+    """Find every local broker snapshot, ordered by its manifest timestamp."""
+    base = root / "data/market_history/mt5_real_readonly"
+    if not base.exists():
+        return []
+    if base.is_symlink():
+        raise ValueError("SNAPSHOT_ROOT_SYMLINK_REJECTED")
+    snapshots = [path for path in base.iterdir() if path.is_dir()]
+    if any(path.is_symlink() for path in snapshots):
+        raise ValueError("SNAPSHOT_DIRECTORY_SYMLINK_REJECTED")
+
+    def order(path: Path) -> tuple[datetime, str]:
+        try:
+            generated = json.loads((path / "manifest.json").read_text(encoding="utf-8")).get("generated_utc")
+            return parse_utc_timestamp(str(generated)), path.name
+        except (OSError, ValueError, TypeError):
+            return datetime.min.replace(tzinfo=timezone.utc), path.name
+
+    return sorted(snapshots, key=order)
+
+
 def _merge_record_variants(
     old: list[dict[str, Any]],
     recent: list[dict[str, Any]],
@@ -405,16 +426,74 @@ def audit_market_history(
     backfill_run: str | None = None,
     symbols: tuple[str, ...] = SYMBOLS,
     timeframes_seconds: dict[str, int] = TIMEFRAMES_SECONDS,
+    snapshot_dirs: tuple[str, ...] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    """Audit original sources and, optionally, one explicitly selected backfill run."""
+    """Audit all selected frozen sources and, optionally, one backfill run."""
     if as_of_utc.tzinfo is None or as_of_utc.utcoffset() is None:
         raise ValueError("AS_OF_TIMESTAMP_MUST_BE_TIMEZONE_AWARE")
     as_of_utc = as_of_utc.astimezone(timezone.utc)
-    snapshot = root / "data/market_history/mt5_real_readonly/20261109T202112.171333Z"
+    discovered_snapshots = _discover_snapshot_roots(root)
+    if snapshot_dirs is None:
+        snapshot_roots = discovered_snapshots
+    else:
+        snapshot_base = (root / "data/market_history/mt5_real_readonly").resolve()
+        snapshot_roots = []
+        for relative in snapshot_dirs:
+            path = (root / relative).resolve()
+            if path.parent != snapshot_base or not path.is_dir() or path.is_symlink():
+                raise ValueError("SNAPSHOT_SELECTION_PATH_INVALID")
+            snapshot_roots.append(path)
+        if {path.name for path in snapshot_roots} != {path.name for path in discovered_snapshots}:
+            raise ValueError("SNAPSHOT_SELECTION_INVENTORY_CHANGED")
+        snapshot_roots.sort(key=lambda path: next(i for i, item in enumerate(discovered_snapshots) if item.name == path.name))
+    snapshot = snapshot_roots[-1] if snapshot_roots else root / "data/market_history/mt5_real_readonly/UNAVAILABLE"
     old_root = root / "data/market"
-    manifest_path = snapshot / "manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else {}
-    manifest_digest = sha256_bytes(manifest_path.read_bytes()) if manifest_path.is_file() else None
+    snapshot_manifests: dict[str, dict[str, Any]] = {}
+    snapshot_manifest_digests: dict[str, str | None] = {}
+    snapshot_manifest_errors: list[str] = []
+    expected_snapshot_names = {f"{symbol}_{timeframe}.csv" for symbol in symbols for timeframe in timeframes_seconds}
+    snapshot_file_inventory: list[dict[str, Any]] = []
+    for snapshot_root in snapshot_roots:
+        relative_root = snapshot_root.relative_to(root).as_posix()
+        manifest_path = snapshot_root / "manifest.json"
+        try:
+            if manifest_path.is_symlink():
+                raise ValueError("SNAPSHOT_MANIFEST_SYMLINK_REJECTED")
+            raw_manifest = manifest_path.read_bytes()
+            parsed_manifest = json.loads(raw_manifest)
+            if not isinstance(parsed_manifest, dict) or not isinstance(parsed_manifest.get("symbols"), dict):
+                raise ValueError("SNAPSHOT_MANIFEST_SCHEMA_INVALID")
+            snapshot_manifests[relative_root] = parsed_manifest
+            snapshot_manifest_digests[relative_root] = sha256_bytes(raw_manifest)
+        except (OSError, ValueError, TypeError):
+            snapshot_manifests[relative_root] = {}
+            snapshot_manifest_digests[relative_root] = None
+            snapshot_manifest_errors.append(f"SNAPSHOT_MANIFEST_INVALID:{relative_root}/manifest.json")
+        actual_names = {path.name for path in snapshot_root.glob("*.csv")}
+        if any(path.is_symlink() for path in snapshot_root.iterdir()):
+            snapshot_manifest_errors.append(f"SNAPSHOT_ENTRY_SYMLINK:{relative_root}")
+        expected_entries = expected_snapshot_names | {"manifest.json"}
+        actual_entries = {path.name for path in snapshot_root.iterdir()}
+        extra_entries = sorted(actual_entries - expected_entries)
+        if extra_entries:
+            snapshot_manifest_errors.append(f"SNAPSHOT_ENTRIES_UNEXPECTED:{relative_root}")
+        missing = sorted(expected_snapshot_names - actual_names)
+        extra = sorted(actual_names - expected_snapshot_names)
+        if missing:
+            snapshot_manifest_errors.append(f"SNAPSHOT_SOURCE_FILES_MISSING:{relative_root}")
+        if extra:
+            snapshot_manifest_errors.append(f"SNAPSHOT_SOURCE_FILES_UNEXPECTED:{relative_root}")
+        snapshot_file_inventory.append({
+            "directory": relative_root,
+            "manifest_sha256": snapshot_manifest_digests[relative_root],
+            "expected_csv_count": len(expected_snapshot_names),
+            "actual_csv_count": len(actual_names),
+            "missing": [f"{relative_root}/{name}" for name in missing],
+            "extra": [f"{relative_root}/{name}" for name in extra],
+            "unexpected_entries": [f"{relative_root}/{name}" for name in extra_entries],
+            "manifest_generated_utc": snapshot_manifests[relative_root].get("generated_utc"),
+        })
+    manifest = snapshot_manifests.get(snapshot.relative_to(root).as_posix(), {}) if snapshot_roots else {}
 
     gap_entries: dict[str, Any] = {}
     spread_entries: dict[str, Any] = {}
@@ -422,13 +501,25 @@ def audit_market_history(
     all_source_hashes_after: dict[str, str] = {}
     bridge_recovery_candidates: list[dict[str, Any]] = []
     calendar_review_items: list[dict[str, Any]] = []
+    critical_integrity_errors: list[str] = list(snapshot_manifest_errors)
+    for snapshot_root in snapshot_roots:
+        relative_manifest = (snapshot_root / "manifest.json").relative_to(root).as_posix()
+        manifest_digest = snapshot_manifest_digests.get(snapshot_root.relative_to(root).as_posix())
+        if manifest_digest:
+            all_source_hashes_before[relative_manifest] = manifest_digest
     run_validation: dict[str, Any] | None = None
     if backfill_run is not None:
         from src.market_history_backfill import validate_backfill_run
 
         run_validation = validate_backfill_run(root, backfill_run, as_of_utc=as_of_utc)
-    expected_snapshot_files = {f"{symbol}_{timeframe}.csv" for symbol in symbols for timeframe in timeframes_seconds}
-    actual_snapshot_files = {path.name for path in snapshot.glob("*.csv")}
+    expected_snapshot_files = {
+        (snapshot_root / f"{symbol}_{timeframe}.csv").relative_to(root).as_posix()
+        for snapshot_root in snapshot_roots for symbol in symbols for timeframe in timeframes_seconds
+    }
+    actual_snapshot_files = {
+        path.relative_to(root).as_posix()
+        for snapshot_root in snapshot_roots for path in snapshot_root.glob("*.csv")
+    }
     manifest_missing_files = sorted(expected_snapshot_files - actual_snapshot_files)
     extra_snapshot_files = sorted(actual_snapshot_files - expected_snapshot_files)
     expected_old_files = {f"{symbol}/{timeframe}.csv" for symbol in symbols for timeframe in timeframes_seconds}
@@ -439,7 +530,6 @@ def audit_market_history(
     }
     extra_old_files = sorted(actual_old_files - expected_old_files)
     manifest_file_hash_results: dict[str, Any] = {}
-    critical_integrity_errors: list[str] = []
     if manifest_missing_files:
         critical_integrity_errors.append("SNAPSHOT_SOURCE_FILES_MISSING")
     if extra_snapshot_files:
@@ -455,58 +545,120 @@ def audit_market_history(
             old_path = old_root / symbol / f"{timeframe}.csv"
             recent_path = snapshot / f"{symbol}_{timeframe}.csv"
             sources: dict[str, Any] = {}
-            for label, path in (("previous", old_path), ("recent", recent_path)):
+            snapshot_results: dict[str, dict[str, Any]] = {}
+            for label, path in (("previous", old_path),):
                 if not path.is_file():
-                    sources[label] = {"path": path.as_posix(), "status": "MISSING_FILE"}
-                    critical_integrity_errors.append(f"MISSING_SOURCE:{path.as_posix()}")
+                    relative_path = path.relative_to(root).as_posix()
+                    sources[label] = {"path": relative_path, "status": "MISSING_FILE"}
+                    critical_integrity_errors.append(f"MISSING_SOURCE:{relative_path}")
+                    continue
+                if path.is_symlink():
+                    snapshot_results[snapshot_root.name] = {"path": relative_path, "status": "SYMLINK_REJECTED"}
+                    critical_integrity_errors.append(f"SOURCE_SYMLINK_REJECTED:{relative_path}")
                     continue
                 result = _load_csv(path, timeframe, as_of_utc)
                 sources[label] = result
                 relative_path = path.relative_to(root).as_posix()
                 result["path"] = relative_path
+                for record in result.get("_records", []):
+                    record["source"] = relative_path
                 all_source_hashes_before[relative_path] = result["sha256_raw"]
                 combined_source_rows += result["row_count"]
                 if result["ohlc_integrity_status"] != "PASS":
-                    critical_integrity_errors.append(f"OHLC_INTEGRITY:{path.as_posix()}")
+                    critical_integrity_errors.append(f"OHLC_INTEGRITY:{relative_path}")
+
+            for snapshot_root in snapshot_roots:
+                path = snapshot_root / f"{symbol}_{timeframe}.csv"
+                relative_path = path.relative_to(root).as_posix()
+                if not path.is_file():
+                    snapshot_results[snapshot_root.name] = {"path": relative_path, "status": "MISSING_FILE"}
+                    critical_integrity_errors.append(f"MISSING_SOURCE:{relative_path}")
+                    continue
+                if path.is_symlink():
+                    critical_integrity_errors.append(f"SOURCE_SYMLINK_REJECTED:{relative_path}")
+                    continue
+                result = _load_csv(path, timeframe, as_of_utc)
+                result["path"] = relative_path
+                for record in result.get("_records", []):
+                    record["source"] = relative_path
+                snapshot_results[snapshot_root.name] = result
+                if snapshot_root == snapshot:
+                    sources["recent"] = result
+                all_source_hashes_before[relative_path] = result["sha256_raw"]
+                combined_source_rows += result["row_count"]
+                if result["ohlc_integrity_status"] != "PASS":
+                    critical_integrity_errors.append(f"OHLC_INTEGRITY:{relative_path}")
 
             old_result, recent_result = sources.get("previous", {}), sources.get("recent", {})
-            old_records, recent_records = old_result.get("_records", []), recent_result.get("_records", [])
-            recent_hash = _hash_integrity(recent_path, _manifest_hash_entry(manifest, symbol, timeframe)) if recent_path.is_file() else {}
-            manifest_entry = None
-            try:
-                manifest_entry = manifest["symbols"][symbol][timeframe]
-            except (KeyError, TypeError):
-                pass
-            if manifest_entry is not None:
-                recent_hash["row_count_matches_manifest"] = recent_result.get("row_count") == manifest_entry.get("new_bars")
-                recent_hash["latest_closed_matches_manifest"] = recent_result.get("last_utc") == manifest_entry.get("latest_closed_utc")
-                recent_hash["manifest_metadata_matches"] = recent_hash["row_count_matches_manifest"] and recent_hash["latest_closed_matches_manifest"]
-                if not recent_hash["manifest_metadata_matches"]:
-                    recent_hash["status"] = "FAIL_MANIFEST_METADATA_MISMATCH"
-                    critical_integrity_errors.append(f"MANIFEST_METADATA_MISMATCH:{recent_path.as_posix()}")
-            else:
-                recent_hash["status"] = "FAIL_MANIFEST_ENTRY_MISSING"
-                critical_integrity_errors.append(f"MANIFEST_ENTRY_MISSING:{recent_path.as_posix()}")
-            manifest_file_hash_results[f"{symbol}_{timeframe}"] = recent_hash
-            if recent_hash.get("status") == "FAIL_HASH_MISMATCH":
-                critical_integrity_errors.append(f"MANIFEST_HASH_MISMATCH:{recent_path.as_posix()}")
+            old_records = old_result.get("_records", [])
+            recent_records = recent_result.get("_records", [])
+            all_snapshot_records = [
+                record for result in snapshot_results.values() for record in result.get("_records", [])
+            ]
+            recent_hash: dict[str, Any] = {}
+            for snapshot_root in snapshot_roots:
+                path = snapshot_root / f"{symbol}_{timeframe}.csv"
+                relative_path = path.relative_to(root).as_posix()
+                snapshot_key = snapshot_root.relative_to(root).as_posix()
+                result = snapshot_results.get(snapshot_root.name, {})
+                source_manifest = snapshot_manifests.get(snapshot_key, {})
+                try:
+                    manifest_entry = source_manifest["symbols"][symbol][timeframe]
+                except (KeyError, TypeError):
+                    manifest_entry = None
+                current_hash = _hash_integrity(path, manifest_entry.get("sha256") if manifest_entry else None) if path.is_file() else {}
+                if manifest_entry is not None:
+                    file_matches = manifest_entry.get("file") == relative_path
+                    quality_matches = manifest_entry.get("data_quality") == "PASS"
+                    current_hash["row_count_matches_manifest"] = result.get("row_count") == manifest_entry.get("new_bars")
+                    current_hash["latest_closed_matches_manifest"] = result.get("last_utc") == manifest_entry.get("latest_closed_utc")
+                    current_hash["manifest_quality_matches"] = quality_matches
+                    current_hash["manifest_metadata_matches"] = file_matches and quality_matches and current_hash["row_count_matches_manifest"] and current_hash["latest_closed_matches_manifest"]
+                    if not file_matches or not current_hash["manifest_metadata_matches"]:
+                        current_hash["status"] = "FAIL_MANIFEST_METADATA_MISMATCH"
+                        critical_integrity_errors.append(f"MANIFEST_METADATA_MISMATCH:{relative_path}")
+                else:
+                    current_hash["status"] = "FAIL_MANIFEST_ENTRY_MISSING"
+                    critical_integrity_errors.append(f"MANIFEST_ENTRY_MISSING:{snapshot_key}/{symbol}_{timeframe}")
+                manifest_file_hash_results[f"{snapshot_root.name}/{symbol}_{timeframe}"] = current_hash
+                if current_hash.get("status") in {"FAIL_HASH_MISMATCH", "NO_MANIFEST_HASH"}:
+                    critical_integrity_errors.append(f"MANIFEST_HASH_MISMATCH:{relative_path}")
+                if snapshot_root == snapshot:
+                    recent_hash = current_hash
+            if snapshot_roots:
+                manifest_file_hash_results[f"{symbol}_{timeframe}"] = recent_hash
 
             overlap = _compare_overlap(old_records, recent_records)
-            if overlap["price_conflict_count"]:
+            comparable_sources = [("previous", old_records)] + [
+                (name, result.get("_records", [])) for name, result in snapshot_results.items()
+            ]
+            source_overlap_comparisons: list[dict[str, Any]] = []
+            for left_index, (left_name, left_records) in enumerate(comparable_sources):
+                for right_name, right_records in comparable_sources[left_index + 1:]:
+                    compared = _compare_overlap(left_records, right_records)
+                    source_overlap_comparisons.append({
+                        "left_source": left_name,
+                        "right_source": right_name,
+                        **compared,
+                    })
+            source_price_conflict_count = sum(item["price_conflict_count"] for item in source_overlap_comparisons)
+            if source_price_conflict_count:
                 critical_integrity_errors.append(f"OVERLAP_PRICE_CONFLICT:{symbol}:{timeframe}")
             backfill_records = []
             if run_validation is not None:
                 backfill_records = run_validation.get("records_by_symbol_timeframe", {}).get(f"{symbol}|{timeframe}", [])
                 combined_source_rows += len(backfill_records)
-            merged_records = _merge_record_variants(old_records, recent_records, backfill_records)
+            merged_records = _merge_record_variants(old_records, all_snapshot_records, backfill_records)
             combined_gaps = [gap for left, right in zip(merged_records, merged_records[1:]) if left["time"] != right["time"] and (gap := _gap_record(left, right, seconds)) is not None]
 
             bridge = None
-            if old_records and recent_records:
+            snapshot_timed_records = [record for result in snapshot_results.values() for record in result.get("_records", [])]
+            if old_records and snapshot_timed_records:
                 old_last = old_records[-1]["time"]
-                recent_first = recent_records[0]["time"]
+                first_snapshot_record = min(snapshot_timed_records, key=lambda record: record["time"])
+                recent_first = first_snapshot_record["time"]
                 if old_last < recent_first:
-                    bridge = _gap_record(old_records[-1], recent_records[0], seconds)
+                    bridge = _gap_record(old_records[-1], first_snapshot_record, seconds)
                     if bridge is None:
                         bridge = {
                             "status": "CONTINUOUS_NO_MISSING_CADENCE_SLOTS",
@@ -515,7 +667,7 @@ def audit_market_history(
                             "missing_bar_count": 0,
                         }
                 elif recent_first <= old_last:
-                    bridge = {"status": "OVERLAP", **overlap}
+                    bridge = {"status": "OVERLAP", "source_overlap_comparisons": source_overlap_comparisons}
             for gap in combined_gaps:
                 if gap.get("recovery_candidate"):
                     bridge_recovery_candidates.append({
@@ -546,12 +698,17 @@ def audit_market_history(
                 "timeframe_seconds": seconds,
                 "previous_source": _public_source(old_result) if old_result else sources.get("previous"),
                 "recent_source": _public_source(recent_result) if recent_result else sources.get("recent"),
+                "snapshot_sources": {
+                    name: _public_source(result) for name, result in snapshot_results.items()
+                },
                 "transition": {
                     "previous_last_utc": old_result.get("last_utc"),
                     "recent_first_utc": recent_result.get("first_utc"),
+                    "earliest_snapshot_bar_utc": None if not snapshot_timed_records else min(record["time"] for record in snapshot_timed_records).isoformat(),
                     "bridge": bridge,
                     "overlap": overlap,
-                    "source_price_conflicts_preserved": overlap["price_conflict_count"],
+                    "source_overlap_comparisons": source_overlap_comparisons,
+                    "source_price_conflicts_preserved": source_price_conflict_count,
                     "backfill_row_count": len(backfill_records),
                     "backfill_source_conflicts": [
                         conflict for conflict in (run_validation or {}).get("source_conflicts", [])
@@ -573,12 +730,17 @@ def audit_market_history(
             spread_entries[symbol][timeframe] = {
                 "previous_source": old_result.get("spread_audit"),
                 "recent_source": recent_result.get("spread_audit"),
+                "snapshot_sources": {
+                    name: result.get("spread_audit") for name, result in snapshot_results.items()
+                },
                 "combined_timestamp_union": audit_spread_timeline(sorted(union_times, key=lambda item: item[0])),
                 "execution_inference_eligible": False,
                 "execution_inference_reason": "UNVERIFIED_ZERO_SPREADS_OR_BROKER_COST_COVERAGE_INCOMPLETE",
                 "technical_research_eligible": bool(
                     old_result.get("ohlc_integrity_status") == "PASS"
-                    and recent_result.get("ohlc_integrity_status") == "PASS"
+                    and snapshot_results
+                    and all(result.get("ohlc_integrity_status") == "PASS" for result in snapshot_results.values())
+                    and source_price_conflict_count == 0
                     and not any(
                         conflict.get("symbol") == symbol and conflict.get("timeframe") == timeframe
                         for conflict in (run_validation or {}).get("source_conflicts", [])
@@ -601,6 +763,7 @@ def audit_market_history(
         and not extra_snapshot_files
         and not extra_old_files
         and len(actual_snapshot_files) == len(expected_snapshot_files)
+        and bool(snapshot_roots)
     )
     if run_validation is None:
         continuity_status = "HISTORY_CONTINUITY_NOT_AUDITED"
@@ -616,7 +779,20 @@ def audit_market_history(
 
     from src.market_history_backfill import _source_hashes
 
-    portable_source_hashes = _source_hashes(root, symbols=symbols, timeframes=timeframes_seconds)
+    snapshot_relpaths = [path.relative_to(root).as_posix() for path in snapshot_roots]
+    try:
+        portable_source_hashes = _source_hashes(
+            root,
+            symbols=symbols,
+            timeframes=timeframes_seconds,
+            snapshot_dirs=snapshot_relpaths,
+            include_snapshot_manifests=True,
+            require_exact_snapshot_inventory=True,
+        )
+    except (OSError, RuntimeError, ValueError):
+        portable_source_hashes = {}
+        if "SOURCE_HASH_INVENTORY_UNAVAILABLE" not in critical_integrity_errors:
+            critical_integrity_errors.append("SOURCE_HASH_INVENTORY_UNAVAILABLE")
     no_integrity_errors = not critical_integrity_errors
     audit_status = "PASS_WITH_PENDING_GAPS" if no_integrity_errors and originals_unchanged and data_files_match else "FAIL"
     if continuity_status == "HISTORY_CONTINUITY_BLOCKED":
@@ -631,7 +807,8 @@ def audit_market_history(
         "backfill_run": None if run_validation is None else {
             key: value for key, value in run_validation.items() if key != "records_by_symbol_timeframe"
         },
-        "base_snapshot": "data/market_history/mt5_real_readonly/20261109T202112.171333Z",
+        "base_snapshot": snapshot_relpaths[-1] if snapshot_relpaths else None,
+        "selected_snapshots": snapshot_file_inventory,
         "previous_source": "data/market",
         "timeframe_grid_policy": "UTC fixed-duration steps; missing bars are candidate slots, not automatic market-data errors",
         "market_calendar_policy": {
@@ -647,7 +824,7 @@ def audit_market_history(
             "missing": manifest_missing_files,
             "extra": extra_snapshot_files,
             "previous_source_extra_csv_files": extra_old_files,
-            "manifest_sha256": manifest_digest,
+            "manifest_sha256": snapshot_manifest_digests.get(snapshot.relative_to(root).as_posix()) if snapshot_roots else None,
             "manifest_file_hash_validation": manifest_file_hash_results,
         },
         "source_files_unchanged": originals_unchanged,
@@ -659,7 +836,7 @@ def audit_market_history(
             "all_source_rows_audited": combined_source_rows,
             "pending_recovery_intervals": len(bridge_recovery_candidates),
             "calendar_review_intervals": len(calendar_review_items),
-            "price_overlap_conflicts": sum(data[tf]["transition"]["overlap"]["price_conflict_count"] for data in gap_entries.values() for tf in timeframes_seconds),
+            "price_overlap_conflicts": sum(data[tf]["transition"]["source_price_conflicts_preserved"] for data in gap_entries.values() for tf in timeframes_seconds),
             "backfill_rows_in_union": 0 if run_validation is None else run_validation.get("row_count", 0),
             "backfill_integrity_errors": 0 if run_validation is None else len(run_validation.get("errors", [])),
             "backfill_source_conflicts": 0 if run_validation is None else len(run_validation.get("source_conflicts", [])),
@@ -688,13 +865,13 @@ def audit_market_history(
     }
 
     plan = {
-        "schema_version": 2,
+        "schema_version": 3,
         "canonicalization_policy": CANONICAL_HASH_POLICY,
         "symbols": list(symbols),
         "timeframes_seconds": dict(timeframes_seconds),
-        "status": "HISTORY_BACKFILL_PREPARED",
+        "status": "HISTORY_BACKFILL_PREPARED" if no_integrity_errors and originals_unchanged and data_files_match else "HISTORY_BACKFILL_BLOCKED_SOURCE_INTEGRITY",
         "prepared_utc": datetime.now(timezone.utc).isoformat(),
-        "source_audit": "reports/phase2_2_2/history_gap_audit.json",
+        "source_audit": "reports/phase2_2_2b/initial_gap_audit.json",
         "live_download_performed": False,
         "connection_to_mt5": False,
         "orders_sent": 0,
@@ -718,6 +895,10 @@ def audit_market_history(
         "download_command_executed_in_this_phase": False,
         "source_file_hashes": portable_source_hashes,
         "source_file_count": len(portable_source_hashes),
+        "source_snapshot_dirs": snapshot_relpaths,
+        "snapshot_manifest_sha256": {
+            path: snapshot_manifest_digests.get(path) for path in snapshot_relpaths
+        },
     }
     return gaps_report, spread_report, plan
 
@@ -725,7 +906,7 @@ def audit_market_history(
 def _safe_current_spread_snapshot(root: Path) -> dict[str, Any]:
     path = root / "reports/mt5_real_readonly_summary.json"
     if not path.is_file():
-        return {"status": "UNAVAILABLE", "source": path.as_posix(), "values_used_for_historical_inference": False}
+        return {"status": "UNAVAILABLE", "source": path.relative_to(root).as_posix(), "values_used_for_historical_inference": False}
     try:
         source = json.loads(path.read_text(encoding="utf-8"))
         values = {}
@@ -737,8 +918,8 @@ def _safe_current_spread_snapshot(root: Path) -> dict[str, Any]:
             "generated_utc": source.get("generated_utc"),
             "tradeapi_disabled": source.get("read_only_safety", {}).get("tradeapi_disabled"),
             "values_by_symbol": values,
-            "source": path.as_posix(),
+            "source": path.relative_to(root).as_posix(),
             "values_used_for_historical_inference": False,
         }
     except (OSError, ValueError, TypeError):
-        return {"status": "INVALID_PUBLIC_SUMMARY", "source": path.as_posix(), "values_used_for_historical_inference": False}
+        return {"status": "INVALID_PUBLIC_SUMMARY", "source": path.relative_to(root).as_posix(), "values_used_for_historical_inference": False}

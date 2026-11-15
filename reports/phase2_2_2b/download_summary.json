@@ -1,0 +1,136 @@
+{
+  "account_type": "REAL",
+  "bars_returned": 18175,
+  "completed_requests": 98,
+  "empty_responses": 0,
+  "errors": [],
+  "failed_requests": 0,
+  "llm_provider_calls": 0,
+  "maximum_bars_per_request_including_overlaps": 1000,
+  "open_or_future_bars_excluded": 0,
+  "orders_sent": 0,
+  "per_symbol_timeframe": {
+    "AUDUSD": {
+      "D1": {
+        "bar_rows_returned": 22,
+        "first_bar_utc": "2023-12-21T00:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T00:00:00+00:00",
+        "request_count": 6,
+        "unique_timestamps": 22
+      },
+      "H1": {
+        "bar_rows_returned": 16,
+        "first_bar_utc": "2024-12-24T22:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T01:00:00+00:00",
+        "request_count": 4,
+        "unique_timestamps": 16
+      },
+      "H4": {
+        "bar_rows_returned": 16,
+        "first_bar_utc": "2024-12-24T16:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T04:00:00+00:00",
+        "request_count": 4,
+        "unique_timestamps": 16
+      },
+      "M15": {
+        "bar_rows_returned": 1008,
+        "first_bar_utc": "2024-12-24T23:30:00+00:00",
+        "latest_closed_bar_utc": "2026-10-26T12:45:00+00:00",
+        "request_count": 6,
+        "unique_timestamps": 1004
+      },
+      "M5": {
+        "bar_rows_returned": 4994,
+        "first_bar_utc": "2025-12-24T23:50:00+00:00",
+        "latest_closed_bar_utc": "2026-11-04T11:10:00+00:00",
+        "request_count": 12,
+        "unique_timestamps": 4970
+      }
+    },
+    "EURUSD": {
+      "D1": {
+        "bar_rows_returned": 22,
+        "first_bar_utc": "2023-12-21T00:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T00:00:00+00:00",
+        "request_count": 6,
+        "unique_timestamps": 22
+      },
+      "H1": {
+        "bar_rows_returned": 16,
+        "first_bar_utc": "2024-12-24T22:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T01:00:00+00:00",
+        "request_count": 4,
+        "unique_timestamps": 16
+      },
+      "H4": {
+        "bar_rows_returned": 16,
+        "first_bar_utc": "2024-12-24T16:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T04:00:00+00:00",
+        "request_count": 4,
+        "unique_timestamps": 16
+      },
+      "M15": {
+        "bar_rows_returned": 1008,
+        "first_bar_utc": "2024-12-24T23:30:00+00:00",
+        "latest_closed_bar_utc": "2026-10-26T12:45:00+00:00",
+        "request_count": 6,
+        "unique_timestamps": 1004
+      },
+      "M5": {
+        "bar_rows_returned": 4994,
+        "first_bar_utc": "2025-12-24T23:50:00+00:00",
+        "latest_closed_bar_utc": "2026-11-04T11:10:00+00:00",
+        "request_count": 12,
+        "unique_timestamps": 4970
+      }
+    },
+    "USDCAD": {
+      "D1": {
+        "bar_rows_returned": 22,
+        "first_bar_utc": "2023-12-21T00:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T00:00:00+00:00",
+        "request_count": 6,
+        "unique_timestamps": 22
+      },
+      "H1": {
+        "bar_rows_returned": 16,
+        "first_bar_utc": "2024-12-24T22:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T01:00:00+00:00",
+        "request_count": 4,
+        "unique_timestamps": 16
+      },
+      "H4": {
+        "bar_rows_returned": 16,
+        "first_bar_utc": "2024-12-24T16:00:00+00:00",
+        "latest_closed_bar_utc": "2026-01-02T04:00:00+00:00",
+        "request_count": 4,
+        "unique_timestamps": 16
+      },
+      "M15": {
+        "bar_rows_returned": 1011,
+        "first_bar_utc": "2024-12-23T00:00:00+00:00",
+        "latest_closed_bar_utc": "2026-10-26T12:45:00+00:00",
+        "request_count": 7,
+        "unique_timestamps": 1007
+      },
+      "M5": {
+        "bar_rows_returned": 4998,
+        "first_bar_utc": "2025-11-07T23:50:00+00:00",
+        "latest_closed_bar_utc": "2026-11-04T11:10:00+00:00",
+        "request_count": 13,
+        "unique_timestamps": 4974
+      }
+    }
+  },
+  "planned_requests": 98,
+  "read_only_gate_verified_before_and_after_each_completed_read": true,
+  "request_campaign_status": "PASS",
+  "request_limit": 150,
+  "run_id": "phase222b-local-20261115",
+  "schema_version": 1,
+  "source_hashes_unchanged": true,
+  "status": "PASS_WITH_PENDING_GAPS",
+  "terminal_connection_verified": true,
+  "tradeapi_disabled_verified": true,
+  "trades_executed_by_process": 0
+}

@@ -1,0 +1,705 @@
+{
+  "artifacts": [
+    "reports/phase2_2_2b/preflight.json",
+    "reports/phase2_2_2b/source_inventory.json",
+    "reports/phase2_2_2b/initial_gap_audit.json",
+    "reports/phase2_2_2b/frozen_backfill_plan.json",
+    "reports/phase2_2_2b/download_summary.json",
+    "reports/phase2_2_2b/post_backfill_audit.json",
+    "reports/phase2_2_2b/spread_quality_real.json",
+    "reports/phase2_2_2b/dataset_readiness.json",
+    "reports/phase2_2_2b/future_research_manifest.json",
+    "reports/phase2_2_2b/validation_summary.json"
+  ],
+  "baseline_integrity": {
+    "canonical_sha256_after": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "canonical_sha256_before": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "canonical_sha256_expected": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "raw_sha256_after": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0",
+    "raw_sha256_before": "341e8f12595a9e74bac2faeb739b8e7b1bdaa1ccdcbd35b26457354f686b31e0",
+    "unchanged": true
+  },
+  "blockers": [],
+  "critical_checks": {
+    "campaign_and_chunk_integrity_pass": true,
+    "finalizer_unit_tests_pass": true,
+    "frozen_baseline_unchanged": true,
+    "no_price_conflicts": true,
+    "offline_preflight_pass": true,
+    "offline_validation_pass": true,
+    "original_source_hashes_unchanged": true,
+    "post_audit_not_failed": true,
+    "post_backfill_integrity_pass": true,
+    "privacy_scan_pass": true,
+    "raw_backfill_files_git_ignored": true,
+    "read_only_gate_verified_before_and_after_each_read": true,
+    "real_account_and_read_only_gate_pass": true,
+    "static_no_order_method_audit_pass": true,
+    "zero_llm_calls": true,
+    "zero_orders": true
+  },
+  "dataset_readiness": {
+    "backtests_executed": false,
+    "confirmatory_economic_evaluation": {
+      "executed": false,
+      "reasons": [
+        "History continuity and broker calendar remain partial.",
+        "Historical bid/ask spread is not independently verified.",
+        "Broker commission and slippage coverage are not verified."
+      ],
+      "status": "BLOCKED"
+    },
+    "exploratory_cost_sensitivity_backtest": {
+      "executed": false,
+      "requirements": [
+        "Restrict analysis to contiguous verified windows.",
+        "Keep BASE / CONSERVATIVE / STRESS costs as hypotheses until broker costs are verified.",
+        "Keep zero spread as OBSERVED_ZERO_UNVERIFIED, never as zero cost."
+      ],
+      "status": "ELIGIBLE_WITH_CONTIGUOUS_WINDOWS_AND_EXPLICIT_COST_SENSITIVITY"
+    },
+    "generated_utc": "2026-11-15T14:24:10.817321+00:00",
+    "schema_version": 1,
+    "technical_research_without_gaps": {
+      "all_symbol_timeframe_ohlc_and_conflict_checks_pass": true,
+      "restrictions": [
+        "Do not compute indicators across unresolved history gaps.",
+        "Use only OHLC-integrity-pass windows and preserve source provenance."
+      ],
+      "status": "ELIGIBLE_ONLY_WITHIN_CONTIGUOUS_WINDOWS",
+      "whole_dataset_gap_free": false
+    }
+  },
+  "environment": {
+    "mt5_account_type": "NOT_CHECKED_OFFLINE_PREFLIGHT",
+    "mt5_sdk_available": true,
+    "mt5_sdk_version": "5.0.6231",
+    "mt5_terminal_connection": "NOT_CHECKED_OFFLINE_PREFLIGHT",
+    "operating_system": "Windows-10-10.0.19045-SP0",
+    "python_executable": ".venv/Scripts/python.exe",
+    "python_version": "3.13.14",
+    "tradeapi_disabled": "NOT_CHECKED_OFFLINE_PREFLIGHT"
+  },
+  "finalizer_unit_tests": {
+    "command": "python -m unittest -v tests.test_phase2_2_2b_finalizer",
+    "exit_code": 0,
+    "status": "PASS",
+    "tests_failed": 0,
+    "tests_passed": 5,
+    "tests_run": 5,
+    "tests_skipped": 0
+  },
+  "generated_utc": "2026-11-15T14:24:12.548211+00:00",
+  "history_audit": {
+    "added_by_symbol_timeframe": {},
+    "backfill_integrity_errors": 0,
+    "backfill_rows_in_union": 18175,
+    "backfill_source_conflicts": 0,
+    "calendar_by_symbol_timeframe": {
+      "AUDUSD": {
+        "D1": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 171
+          },
+          "interval_count": 171,
+          "known_missing_bar_count": null
+        },
+        "H1": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 113
+          },
+          "interval_count": 113,
+          "known_missing_bar_count": null
+        },
+        "H4": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 122
+          },
+          "interval_count": 122,
+          "known_missing_bar_count": null
+        },
+        "M15": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 111
+          },
+          "interval_count": 111,
+          "known_missing_bar_count": null
+        },
+        "M5": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 76
+          },
+          "interval_count": 76,
+          "known_missing_bar_count": null
+        }
+      },
+      "EURUSD": {
+        "D1": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 171
+          },
+          "interval_count": 171,
+          "known_missing_bar_count": null
+        },
+        "H1": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 113
+          },
+          "interval_count": 113,
+          "known_missing_bar_count": null
+        },
+        "H4": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 122
+          },
+          "interval_count": 122,
+          "known_missing_bar_count": null
+        },
+        "M15": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 111
+          },
+          "interval_count": 111,
+          "known_missing_bar_count": null
+        },
+        "M5": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 75
+          },
+          "interval_count": 75,
+          "known_missing_bar_count": null
+        }
+      },
+      "USDCAD": {
+        "D1": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 171
+          },
+          "interval_count": 171,
+          "known_missing_bar_count": null
+        },
+        "H1": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 113
+          },
+          "interval_count": 113,
+          "known_missing_bar_count": null
+        },
+        "H4": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 122
+          },
+          "interval_count": 122,
+          "known_missing_bar_count": null
+        },
+        "M15": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 111
+          },
+          "interval_count": 111,
+          "known_missing_bar_count": null
+        },
+        "M5": {
+          "classifications": {
+            "PENDING_MARKET_CALENDAR": 74
+          },
+          "interval_count": 74,
+          "known_missing_bar_count": null
+        }
+      }
+    },
+    "calendar_review_intervals": 1776,
+    "continuity_status": "HISTORY_CONTINUITY_PARTIAL",
+    "initial_calendar_review_intervals": 1761,
+    "initial_pending_by_symbol_timeframe": {
+      "AUDUSD": {
+        "D1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 10
+        },
+        "H1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 96
+        },
+        "H4": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 24
+        },
+        "M15": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 5
+          },
+          "interval_count": 5,
+          "known_missing_bar_count": 1752
+        },
+        "M5": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 7256
+        }
+      },
+      "EURUSD": {
+        "D1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 10
+        },
+        "H1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 96
+        },
+        "H4": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 24
+        },
+        "M15": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 5
+          },
+          "interval_count": 5,
+          "known_missing_bar_count": 1752
+        },
+        "M5": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 7256
+        }
+      },
+      "USDCAD": {
+        "D1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 10
+        },
+        "H1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 96
+        },
+        "H4": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 24
+        },
+        "M15": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 1753
+        },
+        "M5": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 7
+          },
+          "interval_count": 7,
+          "known_missing_bar_count": 7833
+        }
+      }
+    },
+    "initial_pending_intervals": 77,
+    "initial_reviewed_missing_cadence_slots": 236313,
+    "initial_status": "PASS_WITH_PENDING_GAPS",
+    "interpretation": "Cadence gaps include uncertain calendar closures and are not a count of confirmed tradable bars.",
+    "missing_cadence_slots_added": 0,
+    "missing_cadence_slots_removed": 17790,
+    "pending_by_symbol_timeframe": {
+      "AUDUSD": {
+        "D1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 10
+        },
+        "H1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 96
+        },
+        "H4": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 24
+        },
+        "M15": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 384
+        },
+        "M5": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 582
+        }
+      },
+      "EURUSD": {
+        "D1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 10
+        },
+        "H1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 96
+        },
+        "H4": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 24
+        },
+        "M15": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 384
+        },
+        "M5": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 582
+        }
+      },
+      "USDCAD": {
+        "D1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 6
+          },
+          "interval_count": 6,
+          "known_missing_bar_count": 10
+        },
+        "H1": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 96
+        },
+        "H4": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 4
+          },
+          "interval_count": 4,
+          "known_missing_bar_count": 24
+        },
+        "M15": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 5
+          },
+          "interval_count": 5,
+          "known_missing_bar_count": 385
+        },
+        "M5": {
+          "classifications": {
+            "EXACT_ALIGNED_MISSING_CADENCE_SLOTS_WITH_SESSION_STATUS_PENDING_VERIFICATION": 7
+          },
+          "interval_count": 7,
+          "known_missing_bar_count": 1159
+        }
+      }
+    },
+    "pending_recovery_intervals": 74,
+    "post_reviewed_missing_cadence_slots": 218523,
+    "price_overlap_conflicts": 0,
+    "removed_by_symbol_timeframe": {
+      "AUDUSD|M15": 984,
+      "AUDUSD|M5": 4946,
+      "EURUSD|M15": 984,
+      "EURUSD|M5": 4946,
+      "USDCAD|M15": 984,
+      "USDCAD|M5": 4946
+    },
+    "source_files_unchanged": true,
+    "status": "PASS_WITH_PENDING_GAPS"
+  },
+  "implementation_fingerprint": {
+    "branch": "codex/phase2-2-2b-local-real-history-audit",
+    "commit": "a36c2e3236deb877ca9664ca3ca67580eaba48e7",
+    "files_sha256": {
+      ".gitignore": "f61066f987210ab4c21160f5d6f22d23523e9dc137a744ae1d8a3e30d6241982",
+      "scripts/audit_market_history.py": "afa9c8af42b9e7fe7b433de48b43617fe33010e136203fa34668c08b656c838a",
+      "scripts/backfill_market_history.py": "694652f7e873dd07eb90154591206b8dcee8775cb8ea7e70285a1b7944e678a5",
+      "scripts/finalize_phase2_2_2b.py": "1dd6cae976a24a27978946a271a4fa6d27f5dee78477e8ab9be2cf90150d8edb",
+      "scripts/validate_mt5_real_readonly.py": "9c9db0ea06dafbb86fca50159b4e3a241fd6fcd103bdcbbebdcf951a4f602182",
+      "scripts/validate_phase2_2_2a.py": "4fbe6e1c1edb8190e59ce6c4397ca5f8b3a5fcc4b12da7f97bf7afa191ae0170",
+      "scripts/validate_phase2_2_2b.py": "bcfd42e123859f9e1acffc5f824ec9fba6ea4a63b44004635e363da543b7c0a9",
+      "src/history_data_integrity.py": "ea756c4882fe8b2f907ab0c7d2d97c52ca837168bb92a205eb38f3e5e00d2e11",
+      "src/market_history_audit.py": "fa74190b408a7a43f2843871020e6394800339b38cb8f68075ff261398501019",
+      "src/market_history_backfill.py": "97f57e085f356a40127ebbdbcf98f279ba470263e428162db8ee619673ab060f",
+      "tests/phase2_2_2a_scenarios.py": "31591b4ffd592f02bd28ba74463f8ab12dd9eeb8b53caa59a51757ddcaed76ab",
+      "tests/test_phase2_2_2.py": "620c2dc463039c270ae11c347b9b1994e1c2a9c7fbc7ddd77d718bcd27907473",
+      "tests/test_phase2_2_2a.py": "6b59a0aef4c467415a0813080edc11a9c8949eeaa0964123e4fd95ceba4204b8",
+      "tests/test_phase2_2_2b_finalizer.py": "8526766555b36d64943317382252811303cf37818edc16c114798ccb574d5aa0"
+    }
+  },
+  "live_campaign": {
+    "account_type": "REAL",
+    "backfill_integrity_errors": 0,
+    "backfill_source_conflicts": 0,
+    "bars_returned_in_chunk_files": 18175,
+    "bars_written_this_run": 18175,
+    "chunk_integrity_status": "PASS",
+    "empty_responses": 0,
+    "errors": [],
+    "evidence": "data/market_history/backfill_runs/phase222b-local-20261115/manifest.json",
+    "llm_provider_calls": 0,
+    "market_data_request_limit": 150,
+    "market_data_requests_completed": 98,
+    "market_data_requests_failed": 0,
+    "maximum_bars_per_request_including_overlaps": 1000,
+    "open_or_future_bars_excluded": 0,
+    "orders_sent": 0,
+    "per_symbol_timeframe": {
+      "AUDUSD": {
+        "D1": {
+          "bar_rows_returned": 22,
+          "first_bar_utc": "2023-12-21T00:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T00:00:00+00:00",
+          "request_count": 6,
+          "unique_timestamps": 22
+        },
+        "H1": {
+          "bar_rows_returned": 16,
+          "first_bar_utc": "2024-12-24T22:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T01:00:00+00:00",
+          "request_count": 4,
+          "unique_timestamps": 16
+        },
+        "H4": {
+          "bar_rows_returned": 16,
+          "first_bar_utc": "2024-12-24T16:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T04:00:00+00:00",
+          "request_count": 4,
+          "unique_timestamps": 16
+        },
+        "M15": {
+          "bar_rows_returned": 1008,
+          "first_bar_utc": "2024-12-24T23:30:00+00:00",
+          "latest_closed_bar_utc": "2026-10-26T12:45:00+00:00",
+          "request_count": 6,
+          "unique_timestamps": 1004
+        },
+        "M5": {
+          "bar_rows_returned": 4994,
+          "first_bar_utc": "2025-12-24T23:50:00+00:00",
+          "latest_closed_bar_utc": "2026-11-04T11:10:00+00:00",
+          "request_count": 12,
+          "unique_timestamps": 4970
+        }
+      },
+      "EURUSD": {
+        "D1": {
+          "bar_rows_returned": 22,
+          "first_bar_utc": "2023-12-21T00:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T00:00:00+00:00",
+          "request_count": 6,
+          "unique_timestamps": 22
+        },
+        "H1": {
+          "bar_rows_returned": 16,
+          "first_bar_utc": "2024-12-24T22:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T01:00:00+00:00",
+          "request_count": 4,
+          "unique_timestamps": 16
+        },
+        "H4": {
+          "bar_rows_returned": 16,
+          "first_bar_utc": "2024-12-24T16:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T04:00:00+00:00",
+          "request_count": 4,
+          "unique_timestamps": 16
+        },
+        "M15": {
+          "bar_rows_returned": 1008,
+          "first_bar_utc": "2024-12-24T23:30:00+00:00",
+          "latest_closed_bar_utc": "2026-10-26T12:45:00+00:00",
+          "request_count": 6,
+          "unique_timestamps": 1004
+        },
+        "M5": {
+          "bar_rows_returned": 4994,
+          "first_bar_utc": "2025-12-24T23:50:00+00:00",
+          "latest_closed_bar_utc": "2026-11-04T11:10:00+00:00",
+          "request_count": 12,
+          "unique_timestamps": 4970
+        }
+      },
+      "USDCAD": {
+        "D1": {
+          "bar_rows_returned": 22,
+          "first_bar_utc": "2023-12-21T00:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T00:00:00+00:00",
+          "request_count": 6,
+          "unique_timestamps": 22
+        },
+        "H1": {
+          "bar_rows_returned": 16,
+          "first_bar_utc": "2024-12-24T22:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T01:00:00+00:00",
+          "request_count": 4,
+          "unique_timestamps": 16
+        },
+        "H4": {
+          "bar_rows_returned": 16,
+          "first_bar_utc": "2024-12-24T16:00:00+00:00",
+          "latest_closed_bar_utc": "2026-01-02T04:00:00+00:00",
+          "request_count": 4,
+          "unique_timestamps": 16
+        },
+        "M15": {
+          "bar_rows_returned": 1011,
+          "first_bar_utc": "2024-12-23T00:00:00+00:00",
+          "latest_closed_bar_utc": "2026-10-26T12:45:00+00:00",
+          "request_count": 7,
+          "unique_timestamps": 1007
+        },
+        "M5": {
+          "bar_rows_returned": 4998,
+          "first_bar_utc": "2025-11-07T23:50:00+00:00",
+          "latest_closed_bar_utc": "2026-11-04T11:10:00+00:00",
+          "request_count": 13,
+          "unique_timestamps": 4974
+        }
+      }
+    },
+    "plan_sha256": "7634f5399579740248f02a1e309156e867b2b4aa8e162adafe7e9880ae8121dd",
+    "planned_market_data_requests": 98,
+    "read_only_gate_verified_before_and_after_each_completed_read": true,
+    "run_id": "phase222b-local-20261115",
+    "source_file_count": 47,
+    "source_hashes_unchanged": true,
+    "status": "PASS",
+    "terminal_connected_verified": true,
+    "tradeapi_disabled_verified": true,
+    "trades_executed_by_process": 0
+  },
+  "offline_validation": {
+    "baseline_unchanged": true,
+    "dry_run_status": "PASS",
+    "evidence": "reports/phase2_2_2b/phase2_2a_validation_final/validation_summary.json",
+    "llm_provider_calls": 0,
+    "orders_sent": 0,
+    "real_mt5_connections_during_offline_validation": 0,
+    "source_files_unchanged": true,
+    "status": "PHASE2_2_2A_COMPLETE",
+    "tests_failed": 0,
+    "tests_passed": 40,
+    "tests_run": 40,
+    "tests_skipped": 0
+  },
+  "preflight": {
+    "max_bars_per_request_including_overlaps": 1000,
+    "overlap_price_conflicts": 0,
+    "plan_artifact_semantics": "Frozen pre-download plan; its zero-call fields describe plan generation. Actual execution is recorded separately in download_summary.json and the run manifest.",
+    "planned_requests": 98,
+    "privacy_status": null,
+    "request_limit": 150,
+    "selected_snapshots": [
+      "data/market_history/mt5_real_readonly/20261109T202112.171333Z",
+      "data/market_history/mt5_real_readonly/20261111T202300.097058Z"
+    ],
+    "source_file_count": 47,
+    "status": "PHASE2_2_2B_OFFLINE_PREFLIGHT_PASS"
+  },
+  "privacy_findings": {
+    "reports/phase2_2_2b/dataset_readiness.json": [],
+    "reports/phase2_2_2b/download_summary.json": [],
+    "reports/phase2_2_2b/frozen_backfill_plan.json": [],
+    "reports/phase2_2_2b/future_research_manifest.json": [],
+    "reports/phase2_2_2b/initial_gap_audit.json": [],
+    "reports/phase2_2_2b/phase2_2a_validation_final/validation_summary.json": [],
+    "reports/phase2_2_2b/post_backfill_audit.json": [],
+    "reports/phase2_2_2b/preflight.json": [],
+    "reports/phase2_2_2b/source_inventory.json": [],
+    "reports/phase2_2_2b/spread_quality_real.json": []
+  },
+  "privacy_scan_scope": "Required public Phase 2.2.2b deliverables and the final isolated Phase 2.2.2a validation summary.",
+  "privacy_status": "PASS",
+  "repository": {
+    "branch": "codex/phase2-2-2b-local-real-history-audit",
+    "commit_created": false,
+    "head": "a36c2e3236deb877ca9664ca3ca67580eaba48e7",
+    "merge_performed": false,
+    "origin_main_at_preflight": "a36c2e3236deb877ca9664ca3ca67580eaba48e7",
+    "pull_request_created": false,
+    "push_performed": false,
+    "working_tree_dirty": true
+  },
+  "safety": {
+    "account_type": "REAL",
+    "forbidden_mt5_methods_present_in_static_audit": false,
+    "llm_provider_calls": 0,
+    "orders_sent": 0,
+    "static_no_order_method_audit_pass": true,
+    "strategy_or_risk_parameters_modified": false,
+    "terminal_connected_verified": true,
+    "tradeapi_disabled_verified": true,
+    "trades_executed_by_process": 0
+  },
+  "schema_version": 1,
+  "source_integrity": {
+    "file_count": 47,
+    "initial_and_post_hash_maps_identical": true,
+    "initial_hashes_before_after_identical": true,
+    "plan_manifest_raw_and_canonical_maps_identical": true,
+    "post_backfill_hashes_before_after_identical": true,
+    "status": "PASS"
+  },
+  "spread_quality": {
+    "commission_verified": false,
+    "evidence": "reports/phase2_2_2b/spread_quality_real.json",
+    "historical_bid_ask_verified": false,
+    "inference_eligible": false,
+    "slippage_verified": false,
+    "source_values_modified": false,
+    "status": "PASS_DIAGNOSTIC_EXECUTION_QUALITY_NOT_CONFIRMATORY",
+    "zero_spread_interpretation": "OBSERVED_ZERO_UNVERIFIED"
+  },
+  "status": "PHASE2_2_2B_COMPLETE_WITH_PENDING_GAPS"
+}

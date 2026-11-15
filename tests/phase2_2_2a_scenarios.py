@@ -6,7 +6,9 @@ import csv
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
+import subprocess
 import tempfile
 from typing import Any
 
@@ -66,7 +68,12 @@ def _write_csv(path: Path, bars: list[dict[str, Any]]) -> bytes:
 def create_synthetic_source_tree(root: Path) -> dict[str, Any]:
     """Create four small pair/timeframe datasets with two recoverable gaps."""
     snapshot = root / RECENT_ROOT
-    manifest: dict[str, Any] = {"schema_version": 1, "symbols": {}}
+    manifest: dict[str, Any] = {
+        "schema_version": 1,
+        "generated_utc": "2026-11-09T20:21:12.171333+00:00",
+        "source": "SYNTHETIC_TEST_DATA",
+        "symbols": {},
+    }
     histories: dict[tuple[str, str], tuple[list[dict[str, Any]], list[dict[str, Any]]]] = {}
 
     large_gap_start = datetime(2025, 1, 6, 10, 0, tzinfo=UTC)
@@ -105,6 +112,8 @@ def create_synthetic_source_tree(root: Path) -> dict[str, Any]:
             _write_csv(old_path, previous)
             recent_bytes = _write_csv(recent_path, recent)
             manifest["symbols"][symbol][timeframe] = {
+                "data_quality": "PASS",
+                "file": recent_path.relative_to(root).as_posix(),
                 "sha256": hashlib.sha256(recent_bytes).hexdigest(),
                 "new_bars": len(recent),
                 "latest_closed_utc": max(bar["time"] for bar in recent).isoformat(),
@@ -181,7 +190,7 @@ def _new_plan(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
         symbols=SYNTHETIC_SYMBOLS,
         timeframes_seconds=SYNTHETIC_TIMEFRAMES,
     )
-    if gaps["status"] != "PASS_WITH_PENDING_GAPS" or plan["schema_version"] != 2:
+    if gaps["status"] != "PASS_WITH_PENDING_GAPS" or plan["schema_version"] != 3:
         raise AssertionError("SYNTHETIC_INITIAL_AUDIT_FAILED")
     if gaps["history_continuity_status"] != "HISTORY_CONTINUITY_NOT_AUDITED":
         raise AssertionError("INITIAL_CONTINUITY_MUST_BE_NOT_AUDITED")
@@ -303,7 +312,14 @@ def run_portability_scenario() -> dict[str, Any]:
         plan_hash = plan["source_file_hashes"]
         for path in list((root / "data/market").rglob("*.csv")) + list((root / "data/market_history").rglob("*.csv")):
             path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
-        actual = _source_hashes(root, symbols=SYNTHETIC_SYMBOLS, timeframes=SYNTHETIC_TIMEFRAMES)
+        actual = _source_hashes(
+            root,
+            symbols=SYNTHETIC_SYMBOLS,
+            timeframes=SYNTHETIC_TIMEFRAMES,
+            snapshot_dirs=plan["source_snapshot_dirs"],
+            include_snapshot_manifests=True,
+            require_exact_snapshot_inventory=True,
+        )
         api = SyntheticMT5()
         manifest = execute_backfill_plan(api, plan, root=root, run_id="portable-plan", as_of_utc=AS_OF)
         paths = root / "data/market_history/backfill_runs/portable-plan/chunks"
@@ -344,16 +360,34 @@ def run_path_safety_scenario() -> dict[str, Any]:
         root = Path(directory)
         runs = root / "data/market_history/backfill_runs"
         runs.mkdir(parents=True)
+        link = runs / "link-run"
         try:
-            (runs / "link-run").symlink_to(Path(outside), target_is_directory=True)
+            link.symlink_to(Path(outside), target_is_directory=True)
+            link_created = True
+        except OSError:
+            link_created = False
+            if os.name == "nt":
+                # Windows may disable symbolic links without Developer Mode.
+                # A directory junction is still a real reparse point and lets
+                # this test exercise the same path escape guard without changing
+                # any machine setting or needing an installation.
+                junction = subprocess.run(
+                    ["cmd", "/c", "mklink", "/J", str(link), str(outside)],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    check=False,
+                )
+                link_created = junction.returncode == 0 and link.exists()
+        if link_created:
             try:
                 from src.history_data_integrity import backfill_run_paths
 
                 backfill_run_paths(root, "link-run", create=True)
             except ValueError as exc:
-                symlink_rejected = str(exc) == "BACKFILL_SYMLINK_PATH_REJECTED"
-        except OSError:
-            symlink_rejected = False
+                symlink_rejected = str(exc) in {
+                    "BACKFILL_SYMLINK_PATH_REJECTED",
+                    "BACKFILL_PATH_OUTSIDE_AUTHORIZED_ROOT",
+                }
         no_external_write = list(Path(outside).iterdir()) == []
     return {
         "valid_run_id": accepted,

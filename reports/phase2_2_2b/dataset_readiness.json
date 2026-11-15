@@ -1,0 +1,32 @@
+{
+  "backtests_executed": false,
+  "confirmatory_economic_evaluation": {
+    "executed": false,
+    "reasons": [
+      "History continuity and broker calendar remain partial.",
+      "Historical bid/ask spread is not independently verified.",
+      "Broker commission and slippage coverage are not verified."
+    ],
+    "status": "BLOCKED"
+  },
+  "exploratory_cost_sensitivity_backtest": {
+    "executed": false,
+    "requirements": [
+      "Restrict analysis to contiguous verified windows.",
+      "Keep BASE / CONSERVATIVE / STRESS costs as hypotheses until broker costs are verified.",
+      "Keep zero spread as OBSERVED_ZERO_UNVERIFIED, never as zero cost."
+    ],
+    "status": "ELIGIBLE_WITH_CONTIGUOUS_WINDOWS_AND_EXPLICIT_COST_SENSITIVITY"
+  },
+  "generated_utc": "2026-11-15T14:24:10.817321+00:00",
+  "schema_version": 1,
+  "technical_research_without_gaps": {
+    "all_symbol_timeframe_ohlc_and_conflict_checks_pass": true,
+    "restrictions": [
+      "Do not compute indicators across unresolved history gaps.",
+      "Use only OHLC-integrity-pass windows and preserve source provenance."
+    ],
+    "status": "ELIGIBLE_ONLY_WITHIN_CONTIGUOUS_WINDOWS",
+    "whole_dataset_gap_free": false
+  }
+}

@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT_DIR = ROOT / "reports" / "phase2_2_2a"
 BASELINE = ROOT / "data" / "backtest" / "technical_candidate_scan.csv"
 BASELINE_SHA256 = "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3"
-FIXED_AS_OF = datetime(2026, 11, 11, tzinfo=timezone.utc)
+FIXED_AS_OF = datetime(2026, 11, 15, tzinfo=timezone.utc)
 TEST_MODULES = ("test_phase2_2_2", "test_phase2_2_2a")
 
 
@@ -39,6 +39,35 @@ def _git(args: list[str]) -> str | None:
 def _sha256(path: Path) -> str | None:
     try:
         return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _display_path(path: str | Path) -> str:
+    """Return a repository-relative path or a basename, never a local absolute path."""
+    candidate = Path(path)
+    try:
+        return candidate.resolve().relative_to(ROOT.resolve()).as_posix()
+    except (OSError, ValueError):
+        return candidate.name
+
+
+def _display_command(command: list[str]) -> list[str]:
+    if not command:
+        return []
+    return [_display_path(command[0]), *command[1:]]
+
+
+def _redact_local_root(text: str) -> str:
+    return text.replace(str(ROOT), "<REPOSITORY>").replace(str(ROOT).replace("/", "\\"), "<REPOSITORY>")
+
+
+def _baseline_hashes(path: Path) -> dict[str, str] | None:
+    """Return raw and portable content hashes for the frozen baseline."""
+    try:
+        from src.history_data_integrity import file_content_hashes
+
+        return file_content_hashes(path)
     except OSError:
         return None
 
@@ -78,7 +107,7 @@ def _run_test_module(module: str) -> dict[str, Any]:
     passed = (count is not None and completed.returncode == 0)
     return {
         "module": module,
-        "command": command,
+        "command": _display_command(command),
         "status": "PASS" if passed else "FAIL",
         "exit_code": completed.returncode,
         "tests_run": count,
@@ -86,7 +115,7 @@ def _run_test_module(module: str) -> dict[str, Any]:
         "tests_failed": failures + errors,
         "tests_skipped": skipped,
         "duration_seconds": round(time.perf_counter() - started, 3),
-        "output_tail": output[-6000:],
+        "output_tail": _redact_local_root(output[-6000:]),
     }
 
 
@@ -132,7 +161,7 @@ def main() -> int:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     start_utc = datetime.now(timezone.utc).isoformat()
     source_hashes_before = _source_hashes(ROOT)
-    baseline_before = _sha256(BASELINE)
+    baseline_before = _baseline_hashes(BASELINE)
 
     audit, spreads, plan = audit_market_history(ROOT, as_of_utc=FIXED_AS_OF)
     e2e = run_end_to_end_scenarios()
@@ -143,10 +172,13 @@ def main() -> int:
     # The plan is written only to the new phase's report area, then consumed
     # with --dry-run. Earlier Phase 2.2.2 artifacts remain untouched.
     audit_root = REPORT_DIR / "audits"
-    _write_json(audit_root / "future_mt5_backfill_plan.json", plan)
+    audit_plan_path = audit_root / "future_mt5_backfill_plan.json"
+    if not audit_plan_path.is_absolute():
+        audit_plan_path = ROOT / audit_plan_path
+    _write_json(audit_plan_path, plan)
     dry_command = [
         sys.executable, "scripts/backfill_market_history.py", "--dry-run",
-        "--audit-plan", "reports/phase2_2_2a/audits/future_mt5_backfill_plan.json",
+        "--audit-plan", str(audit_plan_path.relative_to(ROOT)).replace("\\", "/"),
     ]
     dry_started = time.perf_counter()
     dry = subprocess.run(
@@ -166,7 +198,7 @@ def main() -> int:
         "zero_provider_calls": dry_payload.get("provider_calls") == 0,
     }
     dry_report = {
-        "command": dry_command,
+        "command": _display_command(dry_command),
         "status": "PASS" if all(dry_checks.values()) else "FAIL",
         "duration_seconds": round(time.perf_counter() - dry_started, 3),
         "checks": dry_checks,
@@ -175,13 +207,18 @@ def main() -> int:
         "mt5_connections": dry_payload.get("mt5_connections"),
         "orders_sent": dry_payload.get("orders_sent"),
         "provider_calls": dry_payload.get("provider_calls"),
-        "output_tail": dry.stdout[-3000:],
+        "output_tail": _redact_local_root(dry.stdout[-3000:]),
     }
 
     source_hashes_after = _source_hashes(ROOT)
-    baseline_after = _sha256(BASELINE)
+    baseline_after = _baseline_hashes(BASELINE)
     source_integrity_pass = source_hashes_before == source_hashes_after
-    baseline_pass = baseline_before == baseline_after == BASELINE_SHA256
+    baseline_pass = (
+        baseline_before is not None
+        and baseline_after is not None
+        and baseline_before == baseline_after
+        and baseline_before.get("canonical_sha256") == BASELINE_SHA256
+    )
     continuity_audit = {
         "data_provenance": "FROZEN_LOCAL_HISTORICAL_FILES_NO_BACKFILL_RUN",
         "audit_status": audit.get("status"),
@@ -254,7 +291,7 @@ def main() -> int:
         "tests_failed": sum(item.get("tests_failed") or 0 for item in tests),
         "tests_skipped": sum(item.get("tests_skipped") or 0 for item in tests),
         "duration_seconds": round(sum(item["duration_seconds"] for item in tests), 3),
-        "python_executable": sys.executable,
+        "python_executable": _display_path(sys.executable),
         "python_version": sys.version,
     }
     report = {
@@ -278,8 +315,9 @@ def main() -> int:
         "baseline_integrity": {
             "path": str(BASELINE.relative_to(ROOT)).replace("\\", "/"),
             "expected_sha256": BASELINE_SHA256,
-            "before_sha256": baseline_before,
-            "after_sha256": baseline_after,
+            "hash_kind": "canonical_csv_line_endings_lf",
+            "before": baseline_before,
+            "after": baseline_after,
             "status": "PASS" if baseline_pass else "FAIL",
         },
         "source_integrity": {
@@ -310,15 +348,15 @@ def main() -> int:
         "history_backfill_status": "HISTORY_BACKFILL_PREPARED",
         "history_backfill_completed": False,
         "commands_executed": [
-            [sys.executable, "scripts/validate_phase2_2_2a.py"],
+            [_display_path(sys.executable), "scripts/validate_phase2_2_2a.py"],
             *[item["command"] for item in tests],
-            dry_command,
+            _display_command(dry_command),
         ],
         "limitations": [
             "Post-backfill continuity evidence uses synthetic data and a fake MT5 provider; no real recovery was performed.",
             "A real later download and post-download audit still require the user's Windows MT5 REAL read-only terminal and explicit authorization.",
             "Unknown broker trading hours, holidays and feed omissions remain pending until verified against broker data/calendar.",
-            "Manifest schema 1 is explicitly rejected; create a fresh schema 2 audit plan before downloading.",
+            "Manifest schemas older than 3 are explicitly rejected; create a fresh schema 3 audit plan tied to the selected snapshot manifests before downloading.",
         ],
     }
     _write_json(REPORT_DIR / "validation_summary.json", report)
@@ -334,7 +372,7 @@ def main() -> int:
         "real_mt5_connections": 0,
         "llm_provider_calls": 0,
         "orders_sent": 0,
-        "report": "reports/phase2_2_2a/validation_summary.json",
+        "report": (REPORT_DIR / "validation_summary.json").relative_to(ROOT).as_posix(),
     }, indent=2))
     return 0 if status == "PHASE2_2_2A_COMPLETE" else 2
 

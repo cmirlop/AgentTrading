@@ -6,7 +6,9 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -116,12 +118,16 @@ class HistoryGapAuditTests(unittest.TestCase):
         self.assertEqual(result["spread_audit"]["quality_counts"]["MISSING"], 1)
 
     def test_actual_frozen_sources_have_exact_known_bridges_and_remain_unchanged(self) -> None:
-        report, spread, plan = audit_market_history(ROOT, as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
-        self.assertEqual(report["snapshot_file_inventory"]["actual_csv_count"], 15)
+        report, spread, plan = audit_market_history(ROOT, as_of_utc=datetime(2026, 11, 15, tzinfo=UTC))
+        self.assertEqual(report["snapshot_file_inventory"]["actual_csv_count"], 30)
+        self.assertEqual(len(report["selected_snapshots"]), 2)
         self.assertTrue(report["source_files_unchanged"])
         self.assertEqual(report["critical_integrity_errors"], [])
         self.assertEqual(report["counts"]["price_overlap_conflicts"], 0)
         self.assertEqual(plan["status"], "HISTORY_BACKFILL_PREPARED")
+        self.assertEqual(plan["schema_version"], 3)
+        self.assertEqual(len(plan["source_snapshot_dirs"]), 2)
+        self.assertEqual(len(plan["snapshot_manifest_sha256"]), 2)
         self.assertFalse(plan["download_command_executed_in_this_phase"])
         for symbol in ("EURUSD", "USDCAD", "AUDUSD"):
             m5 = report["symbols"][symbol]["M5"]["transition"]["bridge"]
@@ -136,6 +142,10 @@ class HistoryGapAuditTests(unittest.TestCase):
                 source = report["symbols"][symbol][timeframe]
                 self.assertEqual(source["previous_source"]["ohlc_integrity_status"], "PASS")
                 self.assertEqual(source["recent_source"]["ohlc_integrity_status"], "PASS")
+                self.assertEqual(len(source["snapshot_sources"]), 2)
+                comparisons = source["transition"]["source_overlap_comparisons"]
+                self.assertEqual(len(comparisons), 3)
+                self.assertTrue(all(item["price_conflict_count"] == 0 for item in comparisons))
                 self.assertFalse(spread["by_symbol_timeframe"][symbol][timeframe]["execution_inference_eligible"])
 
 
@@ -155,8 +165,8 @@ class SpreadAuditTests(unittest.TestCase):
         self.assertFalse(result["imputation_applied"])
 
     def test_frozen_sources_have_separate_old_new_and_union_statistics(self) -> None:
-        _, spread, _ = audit_market_history(ROOT, as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
-        expected = {"EURUSD": 94.9744, "AUDUSD": 94.9744, "USDCAD": 32.9231}
+        _, spread, _ = audit_market_history(ROOT, as_of_utc=datetime(2026, 11, 15, tzinfo=UTC))
+        expected = {"EURUSD": 94.6667, "AUDUSD": 95.0769, "USDCAD": 27.8974}
         for symbol, zero_percent in expected.items():
             actual = spread["by_symbol_timeframe"][symbol]["M5"]["recent_source"]["zero_percent"]
             self.assertAlmostEqual(actual, zero_percent, places=4)
@@ -177,6 +187,57 @@ class BackfillPlanningTests(unittest.TestCase):
             requested = int((datetime.fromisoformat(chunk["request_end_utc"]) - datetime.fromisoformat(chunk["request_start_utc"])).total_seconds() / 300) + 1
             self.assertLessEqual(requested, 1000)
             self.assertEqual(chunk["overlap_bars_each_side"], 2)
+
+    def test_hard_limits_refuse_more_than_150_requests_or_1000_bars(self) -> None:
+        from src.market_history_backfill import MAX_PROVIDER_CALLS
+
+        start = datetime(2025, 1, 1, tzinfo=UTC)
+        intervals = [{
+            "symbol": "EURUSD",
+            "timeframe": "M5",
+            "interval_id": f"budget-{index}",
+            "missing_start_utc": (start + timedelta(minutes=10 * index)).isoformat(),
+            "missing_end_utc": (start + timedelta(minutes=10 * index)).isoformat(),
+        } for index in range(MAX_PROVIDER_CALLS + 1)]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _write_source_tree(root)
+            plan = _test_plan(root)
+            plan["backfill_intervals"] = intervals
+            api = _FakeApi()
+            with self.assertRaisesRegex(RuntimeError, "BACKFILL_PROVIDER_CALL_BUDGET_EXCEEDED"):
+                execute_backfill_plan(api, plan, root=root, run_id="over-budget", as_of_utc=datetime(2026, 11, 15, tzinfo=UTC))
+            self.assertEqual(api.calls, [])
+        with self.assertRaisesRegex(ValueError, "CHUNK_LIMIT_OR_OVERLAP_INVALID"):
+            plan_chunks(intervals[:1], max_bars_per_request=1001)
+
+    def test_schema_three_plan_fingerprint_covers_snapshot_manifest(self) -> None:
+        from phase2_2_2a_scenarios import AS_OF, SYNTHETIC_SYMBOLS, SYNTHETIC_TIMEFRAMES, create_synthetic_source_tree
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            create_synthetic_source_tree(root)
+            _, _, plan = audit_market_history(
+                root,
+                as_of_utc=AS_OF,
+                symbols=SYNTHETIC_SYMBOLS,
+                timeframes_seconds=SYNTHETIC_TIMEFRAMES,
+            )
+            manifest = root / "data/market_history/mt5_real_readonly/20261109T202112.171333Z/manifest.json"
+            altered = json.loads(manifest.read_text(encoding="utf-8"))
+            altered["generated_utc"] = "2026-11-10T20:21:12.171333+00:00"
+            manifest.write_text(json.dumps(altered), encoding="utf-8")
+            api = _FakeApi()
+            with self.assertRaisesRegex(RuntimeError, "BACKFILL_PLAN_SOURCE_CHANGED_RERUN_AUDIT"):
+                execute_backfill_plan(api, plan, root=root, run_id="manifest-change", as_of_utc=AS_OF)
+            self.assertEqual(api.calls, [])
+
+    def test_public_report_privacy_scan_rejects_account_fields_and_local_paths(self) -> None:
+        from scripts.validate_phase2_2_2b import _privacy_scan
+
+        self.assertTrue(_privacy_scan({"account_number": "hidden"}))
+        self.assertTrue(_privacy_scan({"evidence": "C:\\Users\\private\\report.json"}))
+        self.assertEqual(_privacy_scan({"symbol": "EURUSD", "status": "PASS"}), [])
 
     def test_invalid_symbol_or_unaligned_interval_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
@@ -206,7 +267,10 @@ class BackfillPlanningTests(unittest.TestCase):
             "request_end_utc": "2025-01-01T00:05:00+00:00",
         }
         safe_copy_rates_range(api, chunk, api.TIMEFRAME_M5)
-        self.assertEqual(api.calls, ["terminal_info", "copy_rates_range", "terminal_info"])
+        self.assertEqual(api.calls.count("copy_rates_range"), 1)
+        self.assertEqual(api.calls.count("account_info"), 2)
+        self.assertLess(api.calls.index("account_info"), api.calls.index("copy_rates_range"))
+        self.assertGreater(api.calls.index("account_info", api.calls.index("copy_rates_range")), api.calls.index("copy_rates_range"))
 
     def test_gate_is_rechecked_after_a_failed_mt5_read(self) -> None:
         api = _FakeApi(fail_on_call=1, disable_gate_on_failure=True)
@@ -217,7 +281,20 @@ class BackfillPlanningTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(Exception, "TRADEAPI_DISABLED_NOT_VERIFIED_TRUE"):
             safe_copy_rates_range(api, chunk, api.TIMEFRAME_M5)
-        self.assertEqual(api.calls, ["terminal_info", "copy_rates_range", "terminal_info"])
+        self.assertEqual(api.copy_count, 1)
+        self.assertEqual(api.calls[-1], "terminal_info")
+
+    def test_real_account_gate_is_rechecked_after_market_read(self) -> None:
+        api = _FakeApi(switch_to_non_real_on_copy=True)
+        chunk = {
+            "symbol": "EURUSD", "timeframe": "M5",
+            "request_start_utc": "2025-01-01T00:00:00+00:00",
+            "request_end_utc": "2025-01-01T00:05:00+00:00",
+        }
+        with self.assertRaisesRegex(Exception, "ACCOUNT_NOT_VERIFIED_REAL"):
+            safe_copy_rates_range(api, chunk, api.TIMEFRAME_M5)
+        self.assertEqual(api.copy_count, 1)
+        self.assertEqual(api.trade_mode, 0)
 
     def test_demo_account_is_rejected_before_any_rates_read(self) -> None:
         api = _FakeApi(trade_mode=0)
@@ -288,6 +365,27 @@ class BackfillPlanningTests(unittest.TestCase):
             self.assertEqual(result["status"], "HISTORY_BACKFILL_DOWNLOADED_PENDING_REAUDIT")
             self.assertTrue(result["source_files_unchanged"])
 
+    def test_backfill_progress_reports_safe_request_counts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _write_source_tree(root)
+            plan = _test_plan(root, bars=1)
+            progress: list[dict] = []
+            result = execute_backfill_plan(
+                _FakeApi(),
+                plan,
+                root=root,
+                run_id="progress-test",
+                as_of_utc=datetime(2026, 11, 11, tzinfo=UTC),
+                progress_callback=progress.append,
+            )
+        self.assertEqual(result["provider_calls"], 1)
+        self.assertEqual([item["event"] for item in progress], ["REQUEST_STARTED", "REQUEST_FINISHED"])
+        self.assertEqual(progress[0]["request_index"], 1)
+        self.assertEqual(progress[0]["request_total"], 1)
+        self.assertEqual(progress[1]["bars"], 1)
+        self.assertTrue(all(not ({"account", "balance", "equity", "ticket", "server", "password"} & set(item)) for item in progress))
+
     def test_source_conflict_is_preserved_and_blocks_continuity_claim(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -347,7 +445,9 @@ class PortabilityAndPathSafetyTests(unittest.TestCase):
             _write_source_tree(root)
             plan = _test_plan(root, bars=1)
             for path in list((root / "data/market").rglob("*.csv")) + list((root / "data/market_history").rglob("*.csv")):
-                path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+                # Source fixtures are written with native Windows newlines. Normalize
+                # first so this test creates valid CRLF rather than CRCRLF bytes.
+                path.write_bytes(path.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
             result = execute_backfill_plan(_FakeApi(), plan, root=root, run_id="windows-portable", as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
             chunk = next((root / "data/market_history/backfill_runs/windows-portable/chunks").glob("*.csv"))
             chunk.write_bytes(chunk.read_bytes().replace(b"\n", b"\r\n"))
@@ -369,12 +469,29 @@ class PortabilityAndPathSafetyTests(unittest.TestCase):
             plan = _test_plan(root, bars=1)
             runs = root / "data/market_history/backfill_runs"
             runs.mkdir(parents=True)
+            link = runs / "evil-run"
             try:
-                (runs / "evil-run").symlink_to(Path(outside), target_is_directory=True)
+                link.symlink_to(Path(outside), target_is_directory=True)
             except OSError as exc:
-                self.skipTest(f"symlink unavailable on this platform: {type(exc).__name__}")
+                link_created = False
+                if os.name == "nt":
+                    # Windows can deny symlink creation without Developer Mode.
+                    # A junction provides a temporary reparse-point escape test
+                    # without changing machine settings or permissions.
+                    try:
+                        junction = subprocess.run(
+                            ["cmd", "/c", "mklink", "/J", str(link), str(outside)],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.DEVNULL,
+                            check=False,
+                        )
+                        link_created = junction.returncode == 0 and link.exists()
+                    except OSError:
+                        link_created = False
+                if not link_created:
+                    self.skipTest(f"symlink and junction unavailable on this platform: {type(exc).__name__}")
             api = _FakeApi()
-            with self.assertRaisesRegex(ValueError, "BACKFILL_SYMLINK_PATH_REJECTED"):
+            with self.assertRaisesRegex(ValueError, "BACKFILL_(SYMLINK_PATH_REJECTED|PATH_OUTSIDE_AUTHORIZED_ROOT)"):
                 execute_backfill_plan(api, plan, root=root, run_id="evil-run", as_of_utc=datetime(2026, 11, 11, tzinfo=UTC))
             self.assertEqual(api.calls, [])
             self.assertEqual(list(Path(outside).iterdir()), [])
@@ -398,12 +515,13 @@ class _FakeApi:
     ACCOUNT_TRADE_MODE_REAL = 2
     TIMEFRAME_M5 = 5
 
-    def __init__(self, *, trade_mode: int = 2, fail_on_call: int | None = None, response_time: datetime | None = None, response_close: float = 1.101, disable_gate_on_failure: bool = False):
+    def __init__(self, *, trade_mode: int = 2, fail_on_call: int | None = None, response_time: datetime | None = None, response_close: float = 1.101, disable_gate_on_failure: bool = False, switch_to_non_real_on_copy: bool = False):
         self.trade_mode = trade_mode
         self.fail_on_call = fail_on_call
         self.response_time = response_time
         self.response_close = response_close
         self.disable_gate_on_failure = disable_gate_on_failure
+        self.switch_to_non_real_on_copy = switch_to_non_real_on_copy
         self.calls: list[str] = []
         self.copy_count = 0
         self.tradeapi_disabled = True
@@ -419,6 +537,8 @@ class _FakeApi:
     def copy_rates_range(self, symbol, timeframe, start, end):
         self.calls.append("copy_rates_range")
         self.copy_count += 1
+        if self.switch_to_non_real_on_copy:
+            self.trade_mode = 0
         if self.fail_on_call == self.copy_count:
             if self.disable_gate_on_failure:
                 self.tradeapi_disabled = False
@@ -430,7 +550,9 @@ class _FakeApi:
 
 
 def _write_source_tree(root: Path, *, original_collision: datetime | None = None) -> None:
+    manifest: dict = {"generated_utc": "2026-11-09T20:21:12.171333+00:00", "source": "SYNTHETIC_TEST_DATA", "symbols": {}}
     for symbol in ("EURUSD", "USDCAD", "AUDUSD"):
+        manifest["symbols"][symbol] = {}
         for timeframe in ("M5", "M15", "H1", "H4", "D1"):
             old = root / "data/market" / symbol / f"{timeframe}.csv"
             recent = root / "data/market_history/mt5_real_readonly/20261109T202112.171333Z" / f"{symbol}_{timeframe}.csv"
@@ -442,6 +564,15 @@ def _write_source_tree(root: Path, *, original_collision: datetime | None = None
                 content += f"{original_collision.isoformat()},1.1,1.102,1.099,1.101,100,2,0\n"
             old.write_text(content, encoding="utf-8")
             recent.write_text(header, encoding="utf-8")
+            manifest["symbols"][symbol][timeframe] = {
+                "data_quality": "PASS",
+                "file": recent.relative_to(root).as_posix(),
+                "latest_closed_utc": None,
+                "new_bars": 0,
+                "sha256": hashlib.sha256(recent.read_bytes()).hexdigest(),
+            }
+    manifest_path = root / "data/market_history/mt5_real_readonly/20261109T202112.171333Z/manifest.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
 
 def _test_plan(root: Path, *, start: datetime | None = None, bars: int = 1) -> dict:
