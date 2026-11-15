@@ -1,0 +1,13 @@
+{
+  "ema200_indicator_minimum": 200,
+  "ema200_stabilization_bars": 692,
+  "evaluation_range_status": "EVALUATION_RANGE_PENDING",
+  "new_market_history_requests": 0,
+  "previous_m15_decisions_checked": 159133,
+  "previous_verified_windows": 0,
+  "schema_version": 1,
+  "status": "REAL_MTF_WINDOWS_UNVERIFIED",
+  "strict_utc_baseline_only": true,
+  "verified_session_continuity": false,
+  "warmup_before_evaluation": true
+}

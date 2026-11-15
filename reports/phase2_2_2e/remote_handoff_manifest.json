@@ -1,0 +1,21 @@
+{
+  "base_main_commit": "6d1f0f7e3e696aa3b773bed997b9d813f1eba7dc",
+  "branch": "codex/phase2-2-2e-local-macro-and-backtest-integration",
+  "local_commit": false,
+  "merge": "NOT_PERFORMED",
+  "private_artifacts": "reports/private/phase2_2_2e, excluded from Git",
+  "pull_request": "NOT_CREATED",
+  "push": "NOT_PERFORMED",
+  "remote_tasks": [
+    "Review offline workflow and new adapters.",
+    "Run CI without MetaTrader5 or secrets.",
+    "Keep economics blocked until broker document verification."
+  ],
+  "schema_version": 1,
+  "status": "READY_FOR_REVIEW",
+  "support_questions": [
+    "Exact broker legal entity and historical session document?",
+    "Effective dates, timezone, DST, holidays and H1/H4/D1 boundaries?",
+    "Can source cover 2023-07-17 through 2026-11-11?"
+  ]
+}

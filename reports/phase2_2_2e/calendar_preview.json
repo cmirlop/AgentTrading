@@ -1,0 +1,10 @@
+{
+  "as_of_utc": "2026-11-15T19:10:08.495219Z",
+  "events": [],
+  "legacy_calendar_state_modified": false,
+  "note": "News is excluded; broker sessions are a separate unknown evidence domain.",
+  "schema_version": 1,
+  "source_event_count": 20,
+  "status": "PREVIEW_ONLY_NOT_ACTIVE",
+  "verified_scheduled_preview_count": 0
+}

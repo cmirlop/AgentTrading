@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+import hashlib
 import unittest
+from unittest.mock import patch
 
 from src.phase2_2_2d_sessions import (
     TIMEFRAME_SECONDS,
@@ -9,11 +11,16 @@ from src.phase2_2_2d_sessions import (
     classify_missing_bar_slot,
     evaluate_broker_session_mtf_decision,
     expected_bar_close_utc,
+    select_session_manifest,
     validate_session_manifest,
 )
 
 
 UTC = timezone.utc
+_SYNTHETIC_DOCUMENT_SHA = "541a847e9443bbba10a298cd23e11e5d5db73d6b8af758c72a63e1bfa61e3984"
+_SYNTHETIC_REFERENCE = {
+    "byte_start": 0, "byte_end": 363, "excerpt_sha256": _SYNTHETIC_DOCUMENT_SHA,
+}
 
 
 def manifest(*, timezone_rule=None, boundary_policy=None):
@@ -22,13 +29,23 @@ def manifest(*, timezone_rule=None, boundary_policy=None):
         for day in range(7)
     }
     return {
-        "schema_version": 1,
+        "schema_version": 2,
+        "rule_version_id": "synthetic-test-v1",
         "provider_id": "SYNTHETIC_TEST_ONLY",
         "evidence": {
             "status": "OFFICIAL_BROKER_DOCUMENTED",
             "official_source": True,
-            "source_url": "https://broker.example.test/sessions.pdf",
-            "sha256": "a" * 64,
+            "source_url": "https://broker.example.test/sessions.txt",
+            "sha256": _SYNTHETIC_DOCUMENT_SHA,
+            "document_path": "tests/fixtures/broker_calendar_synthetic.txt",
+            "document_sha256": _SYNTHETIC_DOCUMENT_SHA,
+            "rule_references": {
+                field: [_SYNTHETIC_REFERENCE] for field in (
+                    "symbols", "timeframes", "timezone_rule", "weekly_sessions",
+                    "exceptions", "timeframe_boundary_policy", "effective_range",
+                    "exception_coverage",
+                )
+            },
             "accessed_utc": "2026-01-01T00:00:00Z",
             "effective_from_utc": "2020-01-01T00:00:00Z",
             "effective_to_utc": "2030-01-01T00:00:00Z",
@@ -48,6 +65,14 @@ def manifest(*, timezone_rule=None, boundary_policy=None):
 
 
 class BrokerSessionEvidenceTests(unittest.TestCase):
+    def setUp(self):
+        self.trusted_source = patch(
+            "src.phase2_2_2d_sessions.TRUSTED_BROKER_SOURCE_HOSTS",
+            frozenset({"broker.example.test"}),
+        )
+        self.trusted_source.start()
+        self.addCleanup(self.trusted_source.stop)
+
     def test_missing_manifest_or_unverified_quote_never_proves_closed(self):
         opened = "2025-01-04T12:00:00Z"
         self.assertEqual(classify_missing_bar_slot(None, "EURUSD", "M15", opened), "UNKNOWN")
@@ -62,12 +87,40 @@ class BrokerSessionEvidenceTests(unittest.TestCase):
         self.assertIsNone(validate_session_manifest(good, "EURUSD", "M15", at))
         for change, expected in (
             ({"evidence": {**good["evidence"], "official_source": False}}, "SESSION_OFFICIAL_SOURCE_UNVERIFIED"),
-            ({"evidence": {**good["evidence"], "sha256": "bad"}}, "SESSION_SOURCE_HASH_INVALID"),
+            ({"evidence": {**good["evidence"], "sha256": "bad"}}, "SESSION_DOCUMENT_HASH_MISMATCH"),
             ({"evidence": {**good["evidence"], "effective_from_utc": None}}, "SESSION_EFFECTIVE_START_MISSING"),
             ({"symbols": ["USDCAD"]}, "SESSION_SCOPE_MISMATCH"),
         ):
             candidate = {**good, **change}
             self.assertEqual(validate_session_manifest(candidate, "EURUSD", "M15", at), expected)
+
+    def test_document_bytes_rule_refs_and_trusted_origin_are_required(self):
+        good = manifest()
+        at = "2025-01-06T12:00:00Z"
+        self.assertIsNone(validate_session_manifest(good, "EURUSD", "M15", at))
+        candidate = {**good, "evidence": {**good["evidence"], "document_sha256": "a" * 64}}
+        self.assertEqual(validate_session_manifest(candidate, "EURUSD", "M15", at), "SESSION_DOCUMENT_HASH_MISMATCH")
+        refs = {key: list(value) for key, value in good["evidence"]["rule_references"].items()}
+        refs["weekly_sessions"] = [{**refs["weekly_sessions"][0], "excerpt_sha256": "b" * 64}]
+        candidate = {**good, "evidence": {**good["evidence"], "rule_references": refs}}
+        self.assertEqual(validate_session_manifest(candidate, "EURUSD", "M15", at), "SESSION_RULE_REFERENCE_HASH_MISMATCH")
+        candidate = {**good, "evidence": {**good["evidence"], "source_url": "https://untrusted.example/sessions.txt"}}
+        self.assertEqual(validate_session_manifest(candidate, "EURUSD", "M15", at), "SESSION_SOURCE_HOST_UNTRUSTED")
+
+    def test_multiple_effective_rule_versions_have_no_gap_or_overlap_fallback(self):
+        first = manifest()
+        first["evidence"] = {**first["evidence"], "effective_to_utc": "2025-01-02T00:00:00Z"}
+        second = manifest()
+        second["rule_version_id"] = "synthetic-test-v2"
+        second["evidence"] = {**second["evidence"], "effective_from_utc": "2025-01-01T00:00:00Z"}
+        selected, state = select_session_manifest([first, second], "EURUSD", "M15", "2025-01-06T12:00:00Z")
+        self.assertEqual(state, "VERIFIED_VERSION")
+        self.assertEqual(selected["rule_version_id"], "synthetic-test-v2")
+        selected, state = select_session_manifest([second], "EURUSD", "M15", "2019-01-01T00:00:00Z")
+        self.assertIsNone(selected)
+        self.assertEqual(state, "UNKNOWN_NO_RULE_VERSION_COVERS_INSTANT")
+        selected, state = select_session_manifest([first, second], "EURUSD", "M15", "2025-01-01T00:00:00Z")
+        self.assertEqual(state, "CONFLICT_MULTIPLE_RULE_VERSIONS_COVER_INSTANT")
 
     def test_effective_date_and_exception_coverage_fail_closed(self):
         candidate = manifest()

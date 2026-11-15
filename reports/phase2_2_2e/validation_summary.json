@@ -1,0 +1,24 @@
+{
+  "components": {
+    "backtest": "BACKTEST_NOT_RUN",
+    "broker_calendar": "BROKER_CALENDAR_UNKNOWN",
+    "diff_check": "PASS",
+    "macro": "MACRO_PARTIAL_COVERAGE",
+    "offline_tests": "PASS",
+    "pipeline": "SCAN_BACKTEST_PIPELINE_PARITY_PASS_SYNTHETIC",
+    "preflight": "PASS",
+    "privacy": "PASS",
+    "real_mtf": "REAL_MTF_WINDOWS_UNVERIFIED"
+  },
+  "economic_results": "NOT_RUN",
+  "engineering_prepared_is_not_calendar_certified_or_trading_edge": true,
+  "frozen_dataset_unchanged": true,
+  "llm_provider_calls": 0,
+  "market_history_requests": 0,
+  "mt5_reads": 0,
+  "orders_sent": 0,
+  "records_resolved": 0,
+  "records_unknown": 1850,
+  "schema_version": 1,
+  "status": "PHASE2_2_2E_ENGINEERING_COMPLETE_WITH_DATA_BLOCKERS"
+}

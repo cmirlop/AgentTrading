@@ -1,0 +1,127 @@
+{
+  "github_actions": "NOT_RUN_LOCAL_ONLY",
+  "llm_calls": 0,
+  "lookahead_checks": 375,
+  "market_history_requests": 0,
+  "mt5_calls": 0,
+  "orders_sent": 0,
+  "schema_version": 1,
+  "status": "PASS",
+  "test_commands": [
+    {
+      "command": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_phase2_2_2*.py"
+      ],
+      "duration_seconds": 121.498,
+      "failure_count": 0,
+      "lookahead_checks": 0,
+      "name": "2.2.2a-d offline suite",
+      "return_code": 0,
+      "status": "PASS",
+      "test_count": 91,
+      "timeout_seconds": 300
+    },
+    {
+      "command": [
+        "-m",
+        "unittest",
+        "tests.test_macro_sources"
+      ],
+      "duration_seconds": 0.858,
+      "failure_count": 0,
+      "lookahead_checks": 0,
+      "name": "macro parser and safety",
+      "return_code": 0,
+      "status": "PASS",
+      "test_count": 13,
+      "timeout_seconds": 120
+    },
+    {
+      "command": [
+        "-m",
+        "unittest",
+        "tests.test_verified_dataset_backtests"
+      ],
+      "duration_seconds": 38.664,
+      "failure_count": 0,
+      "lookahead_checks": 0,
+      "name": "verified dataset/backtest parity",
+      "return_code": 0,
+      "status": "PASS",
+      "test_count": 3,
+      "timeout_seconds": 180
+    },
+    {
+      "command": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_phase1_backtest.py"
+      ],
+      "duration_seconds": 0.714,
+      "failure_count": 0,
+      "lookahead_checks": 0,
+      "name": "historical backtest engine",
+      "return_code": 0,
+      "status": "PASS",
+      "test_count": 16,
+      "timeout_seconds": 180
+    },
+    {
+      "command": [
+        "-m",
+        "unittest",
+        "tests.test_mt5_real_readonly",
+        "tests.test_phase1_mt5_safety"
+      ],
+      "duration_seconds": 3.154,
+      "failure_count": 0,
+      "lookahead_checks": 0,
+      "name": "MT5 read-only and order safety",
+      "return_code": 0,
+      "status": "PASS",
+      "test_count": 22,
+      "timeout_seconds": 180
+    },
+    {
+      "command": [
+        "test_no_lookahead.py"
+      ],
+      "duration_seconds": 3.88,
+      "failure_count": 0,
+      "lookahead_checks": 375,
+      "name": "look-ahead",
+      "return_code": 0,
+      "status": "PASS",
+      "test_count": null,
+      "timeout_seconds": 180
+    },
+    {
+      "command": [
+        "-m",
+        "compileall",
+        "-q",
+        "config",
+        "src",
+        "scripts"
+      ],
+      "duration_seconds": 0.169,
+      "failure_count": 0,
+      "lookahead_checks": 0,
+      "name": "Python compile",
+      "return_code": 0,
+      "status": "PASS",
+      "test_count": null,
+      "timeout_seconds": 120
+    }
+  ]
+}

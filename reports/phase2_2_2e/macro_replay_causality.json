@@ -1,0 +1,11 @@
+{
+  "available_as_of_now": 20,
+  "events_seen": 20,
+  "excluded_as_published_or_observed_after_decision": 0,
+  "historical_feed_replay_available": false,
+  "live_rss_does_not_prove_past_availability": true,
+  "news_items_used_as_future_schedule": 0,
+  "scheduled_events_without_exact_time_blocking": 0,
+  "schema_version": 1,
+  "status": "AUDITED"
+}

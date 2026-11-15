@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "registry_status": "RESEARCH_ONLY",
+  "max_live_requests_per_run": 4,
+  "max_bytes_per_feed": 2097152,
+  "timeout_seconds": 10,
+  "sources": [
+    {
+      "source_id": "ECB_PRESS_RSS",
+      "source_type": "NEWS_RELEASE",
+      "format": "RSS_OR_ATOM",
+      "feed_url": "https://www.ecb.europa.eu/rss/press.html",
+      "catalog_url": "https://www.ecb.europa.eu/home/html/rss.en.html",
+      "host": "www.ecb.europa.eu",
+      "currencies": ["EUR"],
+      "live_enabled": true,
+      "terms_status": "CATALOG_REVIEWED_LICENSE_AND_RATE_LIMIT_NOT_SPECIFIED"
+    },
+    {
+      "source_id": "FED_PRESS_RSS",
+      "source_type": "NEWS_RELEASE",
+      "format": "RSS_OR_ATOM",
+      "feed_url": "https://www.federalreserve.gov/feeds/press_all.xml",
+      "catalog_url": "https://www.federalreserve.gov/feeds/feeds.htm",
+      "host": "www.federalreserve.gov",
+      "currencies": ["USD"],
+      "live_enabled": true,
+      "terms_status": "CATALOG_REVIEWED_LICENSE_AND_RATE_LIMIT_NOT_SPECIFIED"
+    },
+    {
+      "source_id": "BANK_OF_CANADA_PRESS_RSS",
+      "source_type": "NEWS_RELEASE",
+      "format": "RSS_OR_ATOM",
+      "feed_url": "https://www.bankofcanada.ca/content_type/press-releases/feed/",
+      "catalog_url": "https://www.bankofcanada.ca/rss-feeds/",
+      "host": "www.bankofcanada.ca",
+      "currencies": ["CAD"],
+      "live_enabled": true,
+      "terms_status": "CATALOG_REVIEWED_LICENSE_AND_RATE_LIMIT_NOT_SPECIFIED"
+    },
+    {
+      "source_id": "RBA_MEDIA_RSS",
+      "source_type": "NEWS_RELEASE",
+      "format": "RSS_OR_ATOM",
+      "feed_url": "https://www.rba.gov.au/rss/rss-cb-media-releases.xml",
+      "catalog_url": "https://www.rba.gov.au/rss/",
+      "host": "www.rba.gov.au",
+      "currencies": ["AUD"],
+      "live_enabled": true,
+      "terms_status": "CATALOG_REVIEWED_LICENSE_AND_RATE_LIMIT_NOT_SPECIFIED"
+    },
+    {
+      "source_id": "BLS_RELEASE_ICS",
+      "source_type": "SCHEDULED_EVENT",
+      "format": "ICS",
+      "feed_url": "https://www.bls.gov/schedule/news_release/bls.ics",
+      "catalog_url": "https://www.bls.gov/schedule/",
+      "host": "www.bls.gov",
+      "currencies": ["USD"],
+      "live_enabled": false,
+      "terms_status": "PUBLIC_SCHEDULE_ENDPOINT_NOT_LIVE_FETCHED_IN_THIS_RUN"
+    }
+  ],
+  "classification": {
+    "policy_rate": {
+      "label": "HIGH_RESEARCH",
+      "basis": "Verified title keyword only; research label, not trading instruction."
+    },
+    "employment_cpi_inflation": {
+      "label": "HIGH_RESEARCH",
+      "basis": "Verified title keyword only; research label, not trading instruction."
+    },
+    "default": {
+      "label": "UNKNOWN",
+      "basis": "No inference from an RSS item or missing feed content."
+    }
+  }
+}

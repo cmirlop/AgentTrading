@@ -1,0 +1,14 @@
+{
+  "contract": "src/verified_research_dataset.py",
+  "explicit_runner": "scripts/run_verified_research_backtest.py",
+  "frozen_scan_fallback_used": false,
+  "hash_and_period_mismatch_rejected": true,
+  "legacy_runner_defaults_changed": false,
+  "partial_bars_excluded": true,
+  "real_scan": "NOT_RUN_BROKER_CALENDAR_UNKNOWN",
+  "same_frames_for_scan_and_backtest": true,
+  "schema_version": 1,
+  "status": "SCAN_BACKTEST_PIPELINE_PARITY_PASS_SYNTHETIC",
+  "synthetic_end_to_end_test": "PASS",
+  "warmup_evaluation_observation_separated": true
+}
