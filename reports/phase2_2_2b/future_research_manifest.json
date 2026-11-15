@@ -1,0 +1,20 @@
+{
+  "allowed_next_use": "Exploratory technical/cost sensitivity on contiguous windows only.",
+  "backfill_run_id": "phase222b-local-20261115",
+  "backfill_run_manifest": "data/market_history/backfill_runs/phase222b-local-20261115/manifest.json",
+  "confirmatory_economics": "BLOCKED_PENDING_VERIFIED_CALENDAR_HISTORICAL_SPREADS_COMMISSION_AND_SLIPPAGE",
+  "generated_utc": "2026-11-15T14:24:10.817353+00:00",
+  "history_continuity_status": "HISTORY_CONTINUITY_PARTIAL",
+  "llm_provider_calls": 0,
+  "next_experiment_executed": false,
+  "schema_version": 1,
+  "selected_snapshots": [
+    "data/market_history/mt5_real_readonly/20261109T202112.171333Z",
+    "data/market_history/mt5_real_readonly/20261111T202300.097058Z"
+  ],
+  "source_plan": "reports/phase2_2_2b/frozen_backfill_plan.json",
+  "source_plan_sha256": "7634f5399579740248f02a1e309156e867b2b4aa8e162adafe7e9880ae8121dd",
+  "status": "PREPARED_NOT_EXECUTED",
+  "strategy_or_risk_parameters_modified": false,
+  "technical_vs_deepseek_comparison": "DEFERRED_TO_A_LATER_AUTHORIZED_PHASE; NO_LLM_CALL_MADE_HERE"
+}
