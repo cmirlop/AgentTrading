@@ -1,0 +1,85 @@
+{
+  "conversion_validation": {
+    "AUDUSD": {
+      "additional_spread_cost": 0.0,
+      "eur_pnl_conversion": "NOT_CALCULATED_WITHOUT_VERIFIED_CONTRACT_AND_CURRENCY_CONVERSION",
+      "lot_volume": 0.1,
+      "point_size": 1e-05,
+      "round_turn_commission_eur": 0.7000000000000001,
+      "slippage_price": 2e-05,
+      "spread_double_counted": false,
+      "spread_embedded_in_bid_ask": true,
+      "spread_points": 5.0,
+      "spread_price": 5e-05
+    },
+    "EURUSD": {
+      "additional_spread_cost": 0.0,
+      "eur_pnl_conversion": "NOT_CALCULATED_WITHOUT_VERIFIED_CONTRACT_AND_CURRENCY_CONVERSION",
+      "lot_volume": 0.1,
+      "point_size": 1e-05,
+      "round_turn_commission_eur": 0.7000000000000001,
+      "slippage_price": 2e-05,
+      "spread_double_counted": false,
+      "spread_embedded_in_bid_ask": true,
+      "spread_points": 5.0,
+      "spread_price": 5e-05
+    },
+    "USDCAD": {
+      "additional_spread_cost": 0.0,
+      "eur_pnl_conversion": "NOT_CALCULATED_WITHOUT_VERIFIED_CONTRACT_AND_CURRENCY_CONVERSION",
+      "lot_volume": 0.1,
+      "point_size": 1e-05,
+      "round_turn_commission_eur": 0.7000000000000001,
+      "slippage_price": 2e-05,
+      "spread_double_counted": false,
+      "spread_embedded_in_bid_ask": true,
+      "spread_points": 5.0,
+      "spread_price": 5e-05
+    }
+  },
+  "cost_inputs_verified_from_broker": false,
+  "net_profit_or_economic_edge_claimed": false,
+  "no_tuning_or_pnl_based_selection": true,
+  "predeclared_spread_floors_points": [
+    0.0,
+    5.0,
+    10.0,
+    20.0
+  ],
+  "reason": "No valid signal/scan reconstruction from the recovered bars was established; zero spreads remain unverified and broker commission/slippage are unavailable.",
+  "scenario_hypotheses_from_config": {
+    "BASE": {
+      "assumptions_unverified": [
+        "commission=0",
+        "slippage=0"
+      ],
+      "commission_eur_per_lot_round_turn": 0.0,
+      "historical_spread_multiplier": 1.0,
+      "slippage_points_per_side": 0.0
+    },
+    "CONSERVATIVE": {
+      "assumptions_unverified": [
+        "spread_multiplier=1.25",
+        "commission=7 EUR/lot",
+        "slippage=1 point/side"
+      ],
+      "commission_eur_per_lot_round_turn": 7.0,
+      "historical_spread_multiplier": 1.25,
+      "slippage_points_per_side": 1.0
+    },
+    "STRESS": {
+      "assumptions_unverified": [
+        "spread_multiplier=2.0",
+        "commission=10 EUR/lot",
+        "slippage=3 points/side"
+      ],
+      "commission_eur_per_lot_round_turn": 10.0,
+      "historical_spread_multiplier": 2.0,
+      "slippage_points_per_side": 3.0
+    }
+  },
+  "scenario_or_floor_backtests_executed": 0,
+  "schema_version": 1,
+  "spread_accounting": "Existing historical_execution uses spread-adjusted bid/ask prices; a separate spread charge must not be deducted again.",
+  "status": "PENDING_NOT_EXECUTED"
+}

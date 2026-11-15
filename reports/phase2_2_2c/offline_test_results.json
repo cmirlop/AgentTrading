@@ -1,0 +1,32 @@
+{
+  "commands": [
+    "python -m unittest discover -s tests -p test_phase2_2_2*.py",
+    "python -m unittest discover -s tests -p test_phase1_backtest.py"
+  ],
+  "exit_code": 0,
+  "status": "PASS",
+  "suites": [
+    {
+      "exit_code": 0,
+      "pattern": "test_phase2_2_2*.py",
+      "status": "PASS",
+      "tests_failed": 0,
+      "tests_passed": 61,
+      "tests_run": 61,
+      "tests_skipped": 0
+    },
+    {
+      "exit_code": 0,
+      "pattern": "test_phase1_backtest.py",
+      "status": "PASS",
+      "tests_failed": 0,
+      "tests_passed": 16,
+      "tests_run": 16,
+      "tests_skipped": 0
+    }
+  ],
+  "tests_failed": 0,
+  "tests_passed": 77,
+  "tests_run": 77,
+  "tests_skipped": 0
+}

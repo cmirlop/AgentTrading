@@ -1,0 +1,12 @@
+{
+  "broker_identity_recorded_in_authorized_run_manifest": false,
+  "decision": "No broker-specific source was present in the retained run manifest or committed evidence. No universal FX schedule was assumed; affected intervals remain indeterminate.",
+  "official_sources": [],
+  "schema_version": 1,
+  "source_policy": {
+    "required": "Official broker symbol-session specification or calendar with URL/path, SHA-256, effective dates, timezone and applied rule.",
+    "used": [],
+    "weekdays_weekends_dst_or_holidays_inferred": false
+  },
+  "status": "UNAVAILABLE_BROKER_IDENTITY_OR_OFFICIAL_SESSION_SPEC"
+}

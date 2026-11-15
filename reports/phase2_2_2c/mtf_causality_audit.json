@@ -1,0 +1,76 @@
+{
+  "decision_count_total": 159133,
+  "decision_time_policy": "Each M15 decision occurs at that bar's close. A timeframe bar is eligible only when its open plus its fixed duration is <= decision_time; otherwise it is excluded.",
+  "feature_ready_total": 0,
+  "freshness_policy": "Latest closed bar may be no more than one full timeframe old; older bars are stale until broker session behavior is verified.",
+  "generated_utc": "2026-11-15T15:56:21.351078+00:00",
+  "lookahead_rejections": 0,
+  "lookahead_test_status": "PASS",
+  "rolling_or_indicators_across_unresolved_gap": false,
+  "schema_version": 1,
+  "session_calendar_known": false,
+  "stabilized_total": 0,
+  "symbols": {
+    "AUDUSD": {
+      "ema200_stabilized_all_mtf_decisions": 0,
+      "feature_ready_window_count": 0,
+      "ineligibility_reason_counts": {
+        "D1_CLOSED_BAR_STALE": 10925,
+        "D1_WARMUP_INSUFFICIENT_200": 53044,
+        "H1_CLOSED_BAR_STALE": 345,
+        "H1_WARMUP_INSUFFICIENT_200": 53044,
+        "H4_CLOSED_BAR_STALE": 1725,
+        "H4_WARMUP_INSUFFICIENT_200": 53044,
+        "M15_WARMUP_INSUFFICIENT_200": 22850,
+        "M5_CLOSED_BAR_STALE": 2,
+        "M5_NO_CLOSED_BAR": 17363,
+        "M5_WARMUP_INSUFFICIENT_200": 5415
+      },
+      "lookahead_rejections": 0,
+      "m15_closed_decisions_examined": 53044,
+      "technical_feature_ready_all_mtf_decisions": 0
+    },
+    "EURUSD": {
+      "ema200_stabilized_all_mtf_decisions": 0,
+      "feature_ready_window_count": 0,
+      "ineligibility_reason_counts": {
+        "D1_CLOSED_BAR_STALE": 10925,
+        "D1_WARMUP_INSUFFICIENT_200": 53045,
+        "H1_CLOSED_BAR_STALE": 345,
+        "H1_WARMUP_INSUFFICIENT_200": 53045,
+        "H4_CLOSED_BAR_STALE": 1725,
+        "H4_WARMUP_INSUFFICIENT_200": 53045,
+        "M15_WARMUP_INSUFFICIENT_200": 22850,
+        "M5_CLOSED_BAR_STALE": 1,
+        "M5_NO_CLOSED_BAR": 17365,
+        "M5_WARMUP_INSUFFICIENT_200": 5414
+      },
+      "lookahead_rejections": 0,
+      "m15_closed_decisions_examined": 53045,
+      "technical_feature_ready_all_mtf_decisions": 0
+    },
+    "USDCAD": {
+      "ema200_stabilized_all_mtf_decisions": 0,
+      "feature_ready_window_count": 0,
+      "ineligibility_reason_counts": {
+        "D1_CLOSED_BAR_STALE": 10924,
+        "D1_WARMUP_INSUFFICIENT_200": 53044,
+        "H1_CLOSED_BAR_STALE": 344,
+        "H1_WARMUP_INSUFFICIENT_200": 53044,
+        "H4_CLOSED_BAR_STALE": 1724,
+        "H4_WARMUP_INSUFFICIENT_200": 53044,
+        "M15_WARMUP_INSUFFICIENT_200": 22849,
+        "M5_CLOSED_BAR_STALE": 1,
+        "M5_NO_CLOSED_BAR": 17363,
+        "M5_WARMUP_INSUFFICIENT_200": 5415
+      },
+      "lookahead_rejections": 0,
+      "m15_closed_decisions_examined": 53044,
+      "technical_feature_ready_all_mtf_decisions": 0
+    }
+  },
+  "warmup_bars": {
+    "ema200_stabilized": 692,
+    "feature_ready": 200
+  }
+}

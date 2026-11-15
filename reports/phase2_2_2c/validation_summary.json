@@ -1,0 +1,102 @@
+{
+  "artifacts": [
+    "reports/phase2_2_2c/source_integrity.json",
+    "reports/phase2_2_2c/broker_calendar_evidence.json",
+    "reports/phase2_2_2c/gap_classification.json",
+    "reports/phase2_2_2c/eligible_windows.json",
+    "reports/phase2_2_2c/mtf_causality_audit.json",
+    "reports/phase2_2_2c/dataset_and_backtest_readiness.json",
+    "reports/phase2_2_2c/cost_sensitivity.json",
+    "reports/phase2_2_2c/next_phase_gates.json"
+  ],
+  "backtest": {
+    "cost_sensitivity": "PENDING_NOT_EXECUTED",
+    "executed": false,
+    "frozen_scan_regression_executed": false,
+    "new_bar_status": "NEW_BAR_BACKTEST_BLOCKED"
+  },
+  "calendar": {
+    "calendar_review_groups": 1776,
+    "indeterminate": 1850,
+    "open_feed_unverified": 0,
+    "recovery_candidates": 74,
+    "verified_closed": 0,
+    "verified_open_missing": 0
+  },
+  "critical_checks": {
+    "47_source_hashes_unchanged": true,
+    "frozen_dataset_unchanged": true,
+    "frozen_plan_matches_local_run": true,
+    "lookahead_test_pass": true,
+    "new_bar_backtest_not_misrepresented": true,
+    "no_mt5_or_llm_calls": true,
+    "privacy_scan_pass": true,
+    "run_manifest_and_all_chunks_verified": true,
+    "zero_price_conflicts": true
+  },
+  "environment": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python_version": "3.13.14"
+  },
+  "generated_utc": "2026-11-15T15:56:21.351126+00:00",
+  "local_run_status": "PRESENT",
+  "offline_tests": {
+    "commands": [
+      "python -m unittest discover -s tests -p test_phase2_2_2*.py",
+      "python -m unittest discover -s tests -p test_phase1_backtest.py"
+    ],
+    "exit_code": 0,
+    "status": "PASS",
+    "suites": [
+      {
+        "exit_code": 0,
+        "pattern": "test_phase2_2_2*.py",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_passed": 61,
+        "tests_run": 61,
+        "tests_skipped": 0
+      },
+      {
+        "exit_code": 0,
+        "pattern": "test_phase1_backtest.py",
+        "status": "PASS",
+        "tests_failed": 0,
+        "tests_passed": 16,
+        "tests_run": 16,
+        "tests_skipped": 0
+      }
+    ],
+    "tests_failed": 0,
+    "tests_passed": 77,
+    "tests_run": 77,
+    "tests_skipped": 0
+  },
+  "repository": {
+    "branch": "codex/phase2-2-2c-calendar-windows-cost-sensitivity",
+    "commit_created": false,
+    "head": "2f4fe82c1bb3e7d5c88d8d302cc0362e7c8a9bbc",
+    "main_at_run": "2f4fe82c1bb3e7d5c88d8d302cc0362e7c8a9bbc",
+    "merge_performed": false,
+    "push_performed": false
+  },
+  "safety": {
+    "llm_provider_calls": 0,
+    "market_data_requests_in_this_phase": 0,
+    "mt5_connections_in_this_phase": 0,
+    "orders_sent": 0,
+    "positions_modified": 0,
+    "private_prices_published": false
+  },
+  "schema_version": 1,
+  "source_integrity_status": "PASS",
+  "status": "PHASE2_2_2C_PARTIAL_CALENDAR_UNKNOWN",
+  "windows": {
+    "ema200_stabilized_mtf_decisions": 0,
+    "execution_eligible_windows": 0,
+    "lookahead_rejections": 0,
+    "m15_decisions_examined": 159133,
+    "technical_feature_ready_mtf_decisions": 0,
+    "technical_only_mtf_windows": 0
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "blocking_reasons": [
+    "Existing portfolio/stateful runners consume a precomputed --scan; no parity-verified scan producer connects the recovered snapshots/chunks to those runners.",
+    "The source dataset is discontinuous under the required fixed-cadence rule and broker calendar evidence is absent.",
+    "A full MTF warmup and closed-bar mapping must be verified before any new-bar signal generation.",
+    "Historical zero spread is not a verified bid/ask quote; broker commission and slippage are not evidenced."
+  ],
+  "confirmatory_economic_evaluation": "BLOCKED",
+  "frozen_scan": {
+    "canonical_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "frozen_scan_regression_executed": false,
+    "path": "data/backtest/technical_candidate_scan.csv",
+    "use_for_new_bar_claim": false
+  },
+  "new_bar_backtest_status": "NEW_BAR_BACKTEST_BLOCKED",
+  "no_backtest_executed_on_recovered_bars": true,
+  "portfolio_runner_input": {
+    "default_scan": "data/backtest/technical_candidate_scan.csv",
+    "input_argument": "--scan",
+    "new_bar_scan_reconstruction_exists": false,
+    "script": "run_portfolio_backtest.py"
+  },
+  "schema_version": 1,
+  "stateful_runner_input": {
+    "default_scan": "data/backtest/technical_candidate_scan.csv",
+    "input_argument": "--scan",
+    "market_history_loader": "src/historical_state.py:prepare_symbol_history reads data/market only",
+    "new_bar_scan_reconstruction_exists": false,
+    "script": "run_stateful_backtest.py"
+  }
+}

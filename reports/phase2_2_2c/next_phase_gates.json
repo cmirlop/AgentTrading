@@ -1,0 +1,38 @@
+{
+  "gates": [
+    {
+      "id": "BROKER_CALENDAR",
+      "requirement": "Official dated broker symbol-session and holiday evidence with URL/path, SHA-256, validity period, timezone and DST rule.",
+      "status": "PENDING"
+    },
+    {
+      "id": "LOCAL_RUN_REPRODUCIBILITY",
+      "requirement": "Keep the private run manifest and all 98 verified chunks available locally.",
+      "status": "PASS"
+    },
+    {
+      "id": "CONTINUOUS_MTF_WARMUP",
+      "requirement": "At least 200 contiguous closed bars per required timeframe for feature readiness; 691 for the existing EMA200 stabilization criterion.",
+      "status": "PENDING"
+    },
+    {
+      "id": "NEW_BAR_SCAN_PIPELINE",
+      "requirement": "Reconstruct a scan from recovered bars with parity checks against existing deterministic technical components, causal timestamps and no gap crossing.",
+      "status": "PENDING"
+    },
+    {
+      "id": "EXECUTION_COST_EVIDENCE",
+      "requirement": "Verified historical bid/ask, commission per lot/round turn, slippage assumptions and account-currency conversion.",
+      "status": "PENDING"
+    },
+    {
+      "id": "EXPLORATORY_BACKTEST",
+      "requirement": "Run only after calendar, MTF pipeline, execution eligibility and cost gates pass; preregister BASE/CONSERVATIVE/STRESS and floors.",
+      "status": "BLOCKED"
+    }
+  ],
+  "merge_to_main_allowed": false,
+  "next_phase_not_started": true,
+  "schema_version": 1,
+  "state": "PHASE2_2_2C_PARTIAL_CALENDAR_UNKNOWN"
+}
