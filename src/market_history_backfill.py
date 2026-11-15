@@ -146,6 +146,26 @@ def safe_copy_rates_range(api: Any, chunk: dict[str, Any], timeframe_value: Any)
     return result
 
 
+def safe_copy_rates_from_pos(api: Any, symbol: str, timeframe_value: Any, start_pos: int, count: int) -> Any:
+    """Read a bounded positional history page under the REAL/read-only gate."""
+    if "copy_rates_from_pos" not in READ_ONLY_METHODS:
+        raise SafetyGateError("COPY_RATES_FROM_POS_NOT_ALLOWLISTED")
+    if any(method in READ_ONLY_METHODS for method in FORBIDDEN_MT5_METHODS):
+        raise SafetyGateError("FORBIDDEN_METHOD_ENTERED_READ_ALLOWLIST")
+    if symbol not in SYMBOLS or not isinstance(start_pos, int) or start_pos < 0:
+        raise ValueError("HISTORY_POSITION_INVALID")
+    if not isinstance(count, int) or count < 1 or count > MAX_BARS_PER_REQUEST:
+        raise ValueError("HISTORY_PAGE_SIZE_INVALID")
+    verify_real_readonly_account(api)
+    try:
+        result = _read(api, "copy_rates_from_pos", symbol, timeframe_value, start_pos, count)
+    except Exception:
+        verify_real_readonly_account(api)
+        raise
+    verify_real_readonly_account(api)
+    return result
+
+
 def _record_to_mapping(record: Any) -> dict[str, Any]:
     if hasattr(record, "_asdict"):
         return dict(record._asdict())

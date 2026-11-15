@@ -47,6 +47,8 @@ READ_ONLY_METHODS = frozenset(
         "symbol_info_tick",
         "copy_rates_from_pos",
         "copy_rates_range",
+        # Diagnostic getter only; used to classify failed history reads.
+        "last_error",
         "order_calc_profit",
         "order_calc_margin",
     }

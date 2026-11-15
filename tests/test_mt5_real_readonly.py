@@ -256,7 +256,7 @@ class MT5RealReadonlySafetyTests(unittest.TestCase):
         self.assertTrue(validator.READ_ONLY_METHODS.issubset({
             "account_info", "positions_get", "orders_get", "history_deals_get",
             "symbol_info", "symbol_info_tick", "copy_rates_from_pos", "copy_rates_range",
-            "order_calc_profit", "order_calc_margin",
+            "order_calc_profit", "order_calc_margin", "last_error",
         }))
 
     def test_private_report_directory_is_ignored_by_git(self):
