@@ -118,7 +118,10 @@ class HistoryGapAuditTests(unittest.TestCase):
         self.assertEqual(result["spread_audit"]["quality_counts"]["MISSING"], 1)
 
     def test_actual_frozen_sources_have_exact_known_bridges_and_remain_unchanged(self) -> None:
-        report, spread, plan = audit_market_history(ROOT, as_of_utc=datetime(2026, 11, 15, tzinfo=UTC))
+        snapshot_path = ROOT / "reports" / "phase2_2_2g" / "validation_summary.json"
+        snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        snapshot_as_of = datetime.fromisoformat(snapshot["as_of_utc"].replace("Z", "+00:00"))
+        report, spread, plan = audit_market_history(ROOT, as_of_utc=snapshot_as_of)
         self.assertEqual(report["snapshot_file_inventory"]["actual_csv_count"], 30)
         self.assertEqual(len(report["selected_snapshots"]), 2)
         self.assertTrue(report["source_files_unchanged"])
@@ -132,12 +135,11 @@ class HistoryGapAuditTests(unittest.TestCase):
         for symbol in ("EURUSD", "USDCAD", "AUDUSD"):
             m5 = report["symbols"][symbol]["M5"]["transition"]["bridge"]
             m15 = report["symbols"][symbol]["M15"]["transition"]["bridge"]
-            self.assertEqual(m5["missing_start_utc"], "2026-10-12T06:40:00+00:00")
-            self.assertEqual(m5["missing_end_utc"], "2026-11-04T11:00:00+00:00")
-            self.assertEqual(m5["missing_bar_count"], 6677)
-            self.assertEqual(m15["missing_start_utc"], "2026-10-12T06:30:00+00:00")
-            self.assertEqual(m15["missing_end_utc"], "2026-10-26T12:15:00+00:00")
-            self.assertEqual(m15["missing_bar_count"], 1368)
+            # The current public 2023+ series extends beyond the older local
+            # MT5 snapshots, so these sources now overlap. Do not reuse the
+            # pre-2.2.2g gap assertions from when data/market ended in October.
+            self.assertEqual(m5["status"], "OVERLAP")
+            self.assertEqual(m15["status"], "OVERLAP")
             for timeframe in ("M5", "M15", "H1", "H4", "D1"):
                 source = report["symbols"][symbol][timeframe]
                 self.assertEqual(source["previous_source"]["ohlc_integrity_status"], "PASS")

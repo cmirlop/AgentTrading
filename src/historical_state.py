@@ -58,6 +58,7 @@ def prepare_symbol_history(
         df["time"] = pd.to_datetime(
             df["time"],
             utc=True,
+            format="mixed",
         )
 
         df = (
@@ -119,9 +120,9 @@ def prepare_symbol_history_from_frames(
         if "time" not in df.columns:
             raise ValueError(f"HISTORY_TIME_COLUMN_MISSING:{timeframe}")
 
-        df["time"] = pd.to_datetime(df["time"], utc=True)
+        df["time"] = pd.to_datetime(df["time"], utc=True, format="mixed")
         if "bar_close" in df.columns:
-            verified_closes = pd.to_datetime(df["bar_close"], utc=True)
+            verified_closes = pd.to_datetime(df["bar_close"], utc=True, format="mixed")
         else:
             verified_closes = None
 
@@ -133,7 +134,7 @@ def prepare_symbol_history_from_frames(
 
         if verified_closes is not None:
             close_map = dict(zip(
-                pd.to_datetime(frames_by_timeframe[timeframe]["time"], utc=True),
+                pd.to_datetime(frames_by_timeframe[timeframe]["time"], utc=True, format="mixed"),
                 verified_closes,
             ))
             df["bar_close"] = df["time"].map(close_map)

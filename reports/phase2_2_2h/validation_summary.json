@@ -1,0 +1,184 @@
+{
+  "aggregate_rows": 1252070,
+  "as_of_utc": "2026-11-17T20:13:49.261352+00:00",
+  "base_sha": "bf5828ef589479e3996b61dec119e9b2bab337a4",
+  "branch": "codex/phase2-2-2h-remote-dataset-ci",
+  "broker_calendar_status": "UNKNOWN_OFFICIAL_SYMBOL_SPECIFIC_HISTORICAL_CALENDAR_NOT_VERIFIED",
+  "ci_status": "CI_PENDING_PR_RUN",
+  "dependencies": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "pydantic": "2.13.4"
+  },
+  "execution_timestamp_utc": "2026-11-18T07:16:58.928762+00:00",
+  "external_calls": 0,
+  "frozen_scan_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "frozen_scan_status": "PASS",
+  "git_worktree_status": "DIRTY_EXPECTED_FOR_ACTIVE_BRANCH",
+  "llm_calls": 0,
+  "manifest_sha256": "483fbacc57e963628ed364a5c3105225332dfc18c250cf160e19426be80d0988",
+  "market_data_downloads": 0,
+  "mt5_calls": 0,
+  "offline_unit_test_count": 185,
+  "offline_unit_test_fail_count": 0,
+  "offline_unit_test_pass_count": 184,
+  "offline_unit_test_skipped_count": 1,
+  "orders_sent": 0,
+  "pending_reasons": [
+    "GitHub Actions must run on the PR and conclude success.",
+    "Official broker calendar and historical execution costs remain unverified.",
+    "No real economic backtest was run."
+  ],
+  "previous_ci_failure": {
+    "cause": "setup-python pip cache could not find requirements.txt or pyproject.toml",
+    "fix": "removed pip cache; offline-test dependencies remain installed explicitly",
+    "status": "FAILED_BEFORE_TESTS",
+    "workflow_run_id": "44248662116"
+  },
+  "python": {
+    "implementation": "CPython",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "version": "3.12.14"
+  },
+  "real_economic_backtest_status": "NOT_RUN_BLOCKED_BY_CALENDAR_AND_COST_EVIDENCE",
+  "scan_backtest_parity_status": "SYNTHETIC_PASS_REAL_DATA_BLOCKED_BY_CALENDAR",
+  "schema_version": 1,
+  "source_count": 15,
+  "source_integrity_status": "SOURCE_INTEGRITY_PASS",
+  "source_lineage_status": "SOURCE_LINEAGE_PASS",
+  "status": "OFFLINE_VALIDATION_COMPLETE_CI_PENDING",
+  "test_results": [
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest discover -s tests -p test_phase2_2_2*.py",
+      "duration_seconds": 98.503,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "phase2_2_2_regressions",
+      "skipped_count": 0,
+      "status": "PASS",
+      "test_count": 91
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest tests.test_mt5_candle_sync",
+      "duration_seconds": 0.902,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "phase2_2_2f_simulated_sync",
+      "skipped_count": 0,
+      "status": "PASS",
+      "test_count": 11
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest tests.test_mt5_history_2023_sync",
+      "duration_seconds": 2.202,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "phase2_2_2g_simulated_sync",
+      "skipped_count": 0,
+      "status": "PASS",
+      "test_count": 16
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest tests.test_macro_sources tests.test_verified_dataset_backtests",
+      "duration_seconds": 6.884,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "macro_and_verified_dataset",
+      "skipped_count": 0,
+      "status": "PASS",
+      "test_count": 16
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest discover -s tests -p test_phase1_backtest.py",
+      "duration_seconds": 0.362,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "phase1_backtest_regression",
+      "skipped_count": 0,
+      "status": "PASS",
+      "test_count": 16
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest tests.test_mt5_real_readonly tests.test_phase1_mt5_safety",
+      "duration_seconds": 1.08,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "mt5_safety_mocks",
+      "skipped_count": 1,
+      "status": "PASS",
+      "test_count": 22
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest tests.test_public_2023_history_audit",
+      "duration_seconds": 3.546,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "public_2023_audit_tests",
+      "skipped_count": 0,
+      "status": "PASS",
+      "test_count": 13
+    },
+    {
+      "checks_passed": 375,
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python test_no_lookahead.py",
+      "duration_seconds": 3.206,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "lookahead",
+      "skipped_count": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m compileall -q config src scripts",
+      "duration_seconds": 0.039,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "compileall",
+      "skipped_count": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python scripts/check_phase2_2_2e_privacy.py",
+      "details": {
+        "backfill_runs_excluded": true,
+        "private_cache_excluded": true,
+        "reports_scanned": 13,
+        "status": "PASS"
+      },
+      "duration_seconds": 0.031,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "privacy",
+      "skipped_count": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python scripts/audit_public_2023_history.py",
+      "duration_seconds": 25.345,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "source_integrity_audit",
+      "skipped_count": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --check HEAD",
+      "duration_seconds": 0.005,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "diff_check",
+      "skipped_count": 0,
+      "status": "PASS"
+    },
+    {
+      "command": "git diff --quiet HEAD -- data/market data/backtest/technical_candidate_scan.csv",
+      "duration_seconds": 0.003,
+      "exit_code": 0,
+      "failed_count": 0,
+      "name": "frozen_data_unchanged",
+      "skipped_count": 0,
+      "status": "PASS"
+    }
+  ],
+  "total_command_duration_seconds": 142.108
+}
