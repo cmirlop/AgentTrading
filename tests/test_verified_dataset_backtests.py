@@ -59,9 +59,9 @@ def synthetic_frames():
             duration = SECONDS[timeframe]
             anchor = DECISION
             if timeframe == "D1":
-                anchor = datetime(2026, 11, 2, 0, 0, tzinfo=UTC)
+                anchor = DECISION.replace(hour=0, minute=0, second=0, microsecond=0)
             elif timeframe == "H4":
-                anchor = datetime(2026, 11, 2, 12, 0, tzinfo=UTC)
+                anchor = DECISION.replace(hour=12, minute=0, second=0, microsecond=0)
             records = []
             for index in range(692):
                 close_time = anchor - timedelta(seconds=duration * (691 - index))
