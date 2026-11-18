@@ -89,14 +89,15 @@ la red restringida, así que no se simuló esa integración.
 
 ## Validación rápida local
 
-- Commit de código probado: `e6682a0`. Python 3.13.14.
-- `python -m unittest tests.test_news_local -q`: PASS, 24 pruebas, 0 fallos, 0 omitidas.
+- HEAD base de la validación: `6f494c1`. Python 3.13.14.
+- `python -m unittest tests.test_news_local -q`: PASS, 26 pruebas, 0 fallos, 0 omitidas.
 - `python -m compileall -q src/news_local scripts/run_news_local_ollama.py`: PASS.
-- Live Ollama: FALLBACK con `OLLAMA_TIMEOUT` tras una inferencia y aproximadamente
-  15 segundos. El preflight local confirmó que `qwen3:4b` ya estaba instalado.
-- Reintento solicitado con timeout de 1800 segundos: FALLBACK, `OLLAMA_INCOMPLETE_RESPONSE
-  tras una sola inferencia de 16343 ms. El servidor llegó al límite de salida configurado
-  (512 tokens); el timeout de 30 minutos no se agotó. No se volvió a intentar.
+- El modelo local `qwen3:4b` estaba instalado. Con timeout de 1800 segundos, se probaron
+  límites de 8192, 16384 y 32768 tokens (una inferencia por etapa). Las tres respuestas
+  fueron JSON parseable, pero quedaron FALLBACK con `LLM_INVALID_SCENARIO_MAPPING; duraron
+  99996, 99975 y 100121 ms. Ninguna agotó el timeout.
+- El límite configurado final es 32768 tokens. El rechazo procede de la validación del
+  escenario, no de un timeout ni de JSON incompleto.
 - CI: sí; `.github/workflows/offline-research-tests.yml` ejecuta explícitamente la suite en
   el job offline habitual para push y PR. No se ha observado una ejecución remota de Actions.
 - El diff YAML contiene solo el nuevo paso, con indentación del bloque `steps` existente;
