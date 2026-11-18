@@ -14,30 +14,46 @@
       "conclusion": "FAILURE_AFTER_TESTS",
       "corrected_in_current_worktree": true,
       "failed_step": "Diff whitespace check",
-      "passed_through": [
-        "phase 2.2.2 regressions",
-        "public audit",
-        "f/g simulated sync",
-        "phase 1 backtest",
-        "MT5 safety mocks",
-        "compileall",
-        "look-ahead",
-        "privacy"
-      ],
       "workflow_run_id": "44257824382"
     },
     {
-      "status": "PENDING_RETRY",
-      "workflow_run_id": null
+      "all_steps_passed": true,
+      "commit": "060498851d7e28d66230deb375e0a2465e7e1006",
+      "conclusion": "SUCCESS",
+      "run_number": 11,
+      "workflow_run_id": "44259115981"
     }
   ],
-  "ci_status": "CI_PENDING_PR_RUN",
+  "ci_environment": {
+    "numpy": "2.5.5",
+    "pandas": "2.3.3",
+    "pydantic": "2.14.3",
+    "python": "3.13.18",
+    "runner": "ubuntu-26.04"
+  },
+  "ci_run_counts": {
+    "failed_steps": 0,
+    "lookahead_checks": 375,
+    "macro_and_verified_dataset": 16,
+    "mt5_safety_run": 22,
+    "mt5_safety_skipped": 1,
+    "phase1_backtest": 16,
+    "phase2_2_2_regressions": 91,
+    "phase2_2_2f": 11,
+    "phase2_2_2g": 16,
+    "public_2023_audit_tests": 13
+  },
+  "ci_status": "PASS",
+  "ci_verified_commit_sha": "060498851d7e28d66230deb375e0a2465e7e1006",
+  "ci_verified_conclusion": "success",
+  "ci_verified_run_id": "44259115981",
+  "ci_verified_run_number": 11,
   "dependencies": {
     "numpy": "2.3.5",
     "pandas": "2.2.3",
     "pydantic": "2.13.4"
   },
-  "execution_timestamp_utc": "2026-11-18T07:26:21.900073+00:00",
+  "execution_timestamp_utc": "2026-11-18T07:32:17.896476+00:00",
   "external_calls": 0,
   "frozen_scan_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
   "frozen_scan_status": "PASS",
@@ -52,7 +68,6 @@
   "offline_unit_test_skipped_count": 1,
   "orders_sent": 0,
   "pending_reasons": [
-    "GitHub Actions must run on the PR and conclude success.",
     "Official broker calendar and historical execution costs remain unverified.",
     "No real economic backtest was run."
   ],
@@ -73,7 +88,7 @@
   "source_count": 15,
   "source_integrity_status": "SOURCE_INTEGRITY_PASS",
   "source_lineage_status": "SOURCE_LINEAGE_PASS",
-  "status": "OFFLINE_VALIDATION_COMPLETE_CI_PENDING",
+  "status": "OFFLINE_VALIDATION_COMPLETE",
   "test_results": [
     {
       "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m unittest discover -s tests -p test_phase2_2_2*.py",
