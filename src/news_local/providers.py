@@ -42,6 +42,7 @@ MAX_PAYLOAD_BYTES = 12_000
 MAX_RESPONSE_BYTES = 32_000
 MAX_EVENTS_TO_MODEL = 12
 MAX_TIMEOUT_SECONDS = 1800.0
+MAX_OUTPUT_TOKENS = 32768
 
 _OPERATIONAL_LANGUAGE = re.compile(
     r"\b(?:buy|sell|long|short|enter|exit|recommend|recommendation|order|trade|position|"
@@ -207,7 +208,7 @@ class LocalOllamaClient:
                 ],
                 "format": LLMScenarioResponse.model_json_schema(),
                 "stream": False,
-                "options": {"temperature": 0, "num_predict": 512},
+                "options": {"temperature": 0, "num_predict": MAX_OUTPUT_TOKENS},
             },
         )
         if response.get("done_reason") == "length":

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import unittest
 from datetime import datetime
+from unittest.mock import patch
 
 from pydantic import ValidationError
 
@@ -18,8 +19,11 @@ from src.news_local.fixtures import SYNTHETIC_LABEL, build_fixture
 from src.news_local.models import NewsAnalysisInput, NewsAnalysisResult
 from src.news_local.providers import (
     LLMScenarioResponse,
+    LocalOllamaClient,
     LocalOllamaError,
+    MAX_OUTPUT_TOKENS,
     NewsSummarizer,
+    OllamaConfiguration,
     _model_user_payload,
     resolve_ollama_configuration,
 )
@@ -58,6 +62,34 @@ class FakeOllama:
 
 
 class NewsLocalContractTests(unittest.TestCase):
+    def test_ollama_generation_uses_output_limit_above_two_thousand(self):
+        class FakeResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+            def read(self, size=-1):
+                return json.dumps(
+                    {"message": {"content": '{"conditional_scenarios":[]}'}}
+                ).encode("utf-8")
+
+        client = LocalOllamaClient(
+            OllamaConfiguration(
+                base_url="http://127.0.0.1:11434",
+                model="qwen3:4b",
+                timeout_seconds=1800.0,
+            )
+        )
+        with patch.object(client._opener, "open", return_value=FakeResponse()) as request:
+            client.generate("{}")
+        body = json.loads(request.call_args.args[0].data.decode("utf-8"))
+        self.assertEqual(body["options"]["num_predict"], MAX_OUTPUT_TOKENS)
+        self.assertEqual(MAX_OUTPUT_TOKENS, 32768)
+        self.assertGreater(body["options"]["num_predict"], 2000)
+        self.assertLessEqual(body["options"]["num_predict"], 32768)
+
     def test_contract_requires_timezone_and_forbids_unknown_fields(self):
         fixture = build_fixture()
         payload = fixture.model_dump(mode="python")
