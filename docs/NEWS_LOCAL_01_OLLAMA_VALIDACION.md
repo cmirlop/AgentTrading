@@ -86,3 +86,22 @@ cliente LLM compartido.
 
 No existe `src/news_intelligence/` en esta copia local. GitHub quedó inaccesible por
 la red restringida, así que no se simuló esa integración.
+
+## Validación rápida local
+
+- Commit de código probado: `e6682a0`. Python 3.13.14.
+- `python -m unittest tests.test_news_local -q`: PASS, 24 pruebas, 0 fallos, 0 omitidas.
+- `python -m compileall -q src/news_local scripts/run_news_local_ollama.py`: PASS.
+- Live Ollama: FALLBACK con `OLLAMA_TIMEOUT` tras una inferencia y aproximadamente
+  15 segundos. El preflight local confirmó que `qwen3:4b` ya estaba instalado.
+- Reintento solicitado con timeout de 1800 segundos: FALLBACK, `OLLAMA_INCOMPLETE_RESPONSE
+  tras una sola inferencia de 16343 ms. El servidor llegó al límite de salida configurado
+  (512 tokens); el timeout de 30 minutos no se agotó. No se volvió a intentar.
+- CI: sí; `.github/workflows/offline-research-tests.yml` ejecuta explícitamente la suite en
+  el job offline habitual para push y PR. No se ha observado una ejecución remota de Actions.
+- El diff YAML contiene solo el nuevo paso, con indentación del bloque `steps` existente;
+  la comprobación estructural pasó y `git diff --check` no reporta errores. No hay un
+  parser YAML instalado y no se ejecutó GitHub Actions.
+
+No se copió contenido de inferencia ni se alteraron la instalación, el modelo o variables
+persistentes de Ollama.

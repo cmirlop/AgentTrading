@@ -253,6 +253,22 @@ class NewsLocalContractTests(unittest.TestCase):
                 {"OLLAMA_HOST": "http://example.invalid:11434"}
             )
 
+    def test_local_timeout_accepts_thirty_minutes_and_rejects_more(self):
+        config = resolve_ollama_configuration(
+            {
+                "OLLAMA_MODEL": "qwen3:4b",
+                "NEWS_LOCAL_OLLAMA_TIMEOUT_SECONDS": "1800",
+            }
+        )
+        self.assertEqual(config.timeout_seconds, 1800.0)
+        with self.assertRaisesRegex(Exception, "OLLAMA_CONFIGURATION_INVALID"):
+            resolve_ollama_configuration(
+                {
+                    "OLLAMA_MODEL": "qwen3:4b",
+                    "NEWS_LOCAL_OLLAMA_TIMEOUT_SECONDS": "1800.1",
+                }
+            )
+
     def test_external_host_is_blocked_before_any_local_client_call(self):
         fake = FakeOllama('{"conditional_scenarios":[]}')
         result = NewsSummarizer(
