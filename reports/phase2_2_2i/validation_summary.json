@@ -1,0 +1,158 @@
+{
+  "actions": {
+    "backtests": 0,
+    "llm_paid_calls": 0,
+    "market_data_downloads": 0,
+    "mt5_calls": 0,
+    "network_calls_during_validation": 0,
+    "orders": 0
+  },
+  "base_sha": "af79c8455cf2d9754759629a39f4e4a2f41e78d4",
+  "branch": "codex/phase2-2-2i-gap-classification",
+  "branch_expected": "codex/phase2-2-2i-gap-classification",
+  "classification_status": "INVENTORY_AND_CLASSIFICATION_COMPLETE",
+  "episode_count": 247,
+  "execution_invariants": {
+    "BACKTESTS": 0,
+    "FROZEN_SCAN_CHANGED": 0,
+    "LLM_PAID_CALLS": 0,
+    "MARKET_CSV_BYTES_CHANGED": 0,
+    "MT5_CALLS": 0,
+    "ORDERS": 0
+  },
+  "gap_count_actual": 3167,
+  "gap_count_expected": 3167,
+  "integrity_recheck_report": "reports/phase2_2_2i/integrity_recheck.json",
+  "limitations": [
+    "No broker legal entity or dated broker calendar is verified; no gap is classified as a verified broker closure.",
+    "Public general-market and holiday sources provide context only.",
+    "Observed weekend-shaped cadence does not prove the broker was closed or the feed complete."
+  ],
+  "official_broker_session_coverage_status": "UNKNOWN",
+  "offline_validation": {
+    "backtests": 0,
+    "commands": [
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "-m",
+          "unittest",
+          "tests.test_phase2_2_2i",
+          "-v"
+        ],
+        "exit_code": 0,
+        "output_tail": "iday_overlap_is_context_only (tests.test_phase2_2_2i.Phase222iTests.test_public_holiday_overlap_is_context_only) ... ok\ntest_real_snapshot_has_exact_3167_stable_gap_ids_and_no_verified_closures (tests.test_phase2_2_2i.Phase222iTests.test_real_snapshot_has_exact_3167_stable_gap_ids_and_no_verified_closures) ... ok\ntest_same_missing_window_forms_descriptive_episode_only (tests.test_phase2_2_2i.Phase222iTests.test_same_missing_window_forms_descriptive_episode_only) ... ok\ntest_schema_rejects_verified_or_mixed_without_exact_evidence (tests.test_phase2_2_2i.Phase222iTests.test_schema_rejects_verified_or_mixed_without_exact_evidence) ... ok\ntest_source_registry_never_trusts_context_as_broker_calendar (tests.test_phase2_2_2i.Phase222iTests.test_source_registry_never_trusts_context_as_broker_calendar) ... ok\ntest_summary_has_required_dimensions_and_no_verified_causes (tests.test_phase2_2_2i.Phase222iTests.test_summary_has_required_dimensions_and_no_verified_causes) ... ok\ntest_weekday_intraday_gap_is_not_called_a_session_close (tests.test_phase2_2_2i.Phase222iTests.test_weekday_intraday_gap_is_not_called_a_session_close) ... ok\ntest_weekend_pattern_is_supported_but_never_verified_broker_closure (tests.test_phase2_2_2i.Phase222iTests.test_weekend_pattern_is_supported_but_never_verified_broker_closure) ... ok\ntest_weekly_episode_with_edge_difference_keeps_the_tail_unverified (tests.test_phase2_2_2i.Phase222iTests.test_weekly_episode_with_edge_difference_keeps_the_tail_unverified) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 5.945s\n\nOK",
+        "status": "PASS",
+        "tests_run": 12
+      },
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "-m",
+          "unittest",
+          "tests.test_phase2_2_2d_sessions",
+          "-v"
+        ],
+        "exit_code": 0,
+        "output_tail": " ... ok\ntest_overlapping_session_windows_and_fixed_utc_misalignment_fail_closed (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_overlapping_session_windows_and_fixed_utc_misalignment_fail_closed) ... ok\ntest_partial_bar_is_excluded_at_decision_boundary (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_partial_bar_is_excluded_at_decision_boundary) ... ok\ntest_strict_mode_preserves_fixed_cadence_baseline (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_strict_mode_preserves_fixed_cadence_baseline) ... ok\ntest_timezone_ambiguous_and_nonexistent_local_times_are_rejected (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_timezone_ambiguous_and_nonexistent_local_times_are_rejected) ... ok\ntest_unknown_boundary_and_partial_session_overlap_are_not_closed (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_unknown_boundary_and_partial_session_overlap_are_not_closed) ... ok\ntest_verified_closed_and_explicit_holiday_exception (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_verified_closed_and_explicit_holiday_exception) ... ok\ntest_verified_open_missing_requires_feed_completeness (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_verified_open_missing_requires_feed_completeness) ... ok\ntest_verified_weekend_closure_bridges_but_intraday_open_gap_splits (tests.test_phase2_2_2d_sessions.BrokerSessionEvidenceTests.test_verified_weekend_closure_bridges_but_intraday_open_gap_splits) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 7.625s\n\nOK",
+        "status": "PASS",
+        "tests_run": 17
+      },
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "-m",
+          "unittest",
+          "tests.test_public_2023_history_audit.Public2023HistoryAuditTests.test_exact_inventory_raw_and_crlf_hash_lineage_and_read_only",
+          "tests.test_public_2023_history_audit.Public2023HistoryAuditTests.test_public_real_data_loader_stays_closed_without_official_calendar",
+          "tests.test_public_2023_history_audit.Public2023HistoryAuditTests.test_manifest_is_portable_across_crlf_only_rewrite"
+        ],
+        "exit_code": 0,
+        "output_tail": "...\n----------------------------------------------------------------------\nRan 3 tests in 0.039s\n\nOK",
+        "status": "PASS",
+        "tests_run": 3
+      },
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "-m",
+          "compileall",
+          "-q",
+          "src/market_gap_classification.py",
+          "src/public_2023_history_audit.py",
+          "scripts/classify_market_gaps_2023.py",
+          "scripts/validate_phase2_2_2i.py",
+          "tests/test_phase2_2_2i.py"
+        ],
+        "exit_code": 0,
+        "output_tail": "",
+        "status": "PASS",
+        "tests_run": 0
+      },
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "scripts/classify_market_gaps_2023.py"
+        ],
+        "exit_code": 0,
+        "output_tail": "{\"episode_count\": 247, \"gap_count\": 3167, \"output_dir\": \"reports/phase2_2_2i\", \"status\": \"PASS\"}",
+        "status": "PASS",
+        "tests_run": 0
+      },
+      {
+        "command": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+          "scripts/classify_market_gaps_2023.py"
+        ],
+        "exit_code": 0,
+        "output_tail": "{\"episode_count\": 247, \"gap_count\": 3167, \"output_dir\": \"reports/phase2_2_2i\", \"status\": \"PASS\"}",
+        "status": "PASS",
+        "tests_run": 0
+      }
+    ],
+    "failure_reason": null,
+    "llm_paid_calls": 0,
+    "mt5_calls": 0,
+    "network_calls": 0,
+    "orders": 0,
+    "python_executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "python_version": "3.12.14",
+    "status": "PASS",
+    "test_count": 32
+  },
+  "output_hashes": {
+    "classification_summary_sha256": "85e16018b8d46ff9c1aa051acf33b62254525045bb1d2ff23e64421644e3766b",
+    "episode_groups_sha256": "4c43e67cd52b9a63dc43200dd2e92a918d0820ca4f8dea1f225cc2a5a97f7c46",
+    "gap_inventory_sha256": "f11e47e8ce65a90bba16ac05c8398761352822ffa2558272c5c9e38dc76a2acc"
+  },
+  "protected_input_sha256": {
+    "config/broker_calendar_trusted_sources.json": "bfecda4d0aa17641b5b35e8caae4d596af9bd3fbb9f84517b7f6987e5933faee",
+    "data/backtest/technical_candidate_scan.csv": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "docs/FASE2_2_2H_HANDOFF_LOCAL.md": "80e97973f4050c6ad2ff3ec2baea991a093accba49a2393440d51888cdbe16bb",
+    "docs/FASE2_2_2H_RESULTADOS.md": "2cab29348dd6df8215426ee0a61c59787f1e31930c0432d8a7ef81d90fd97fb0",
+    "reports/phase2_2_2g/validation_summary.json": "277c2ae58b59e8b523e5a0506d59f0213f3ae338843c75013e875e0c2a796bad",
+    "reports/phase2_2_2h/public_2023_integrity.json": "7f8be1d81494df76677799096bbe433a5fe24b0c9645daab71f4dbec9f2bbffc",
+    "reports/phase2_2_2h/public_2023_source_manifest.json": "4cf4fd7d6c90de54f4539eda8211b9b1a633cd46f90d83fb9c11a1cf5bdeea95",
+    "reports/phase2_2_2h/validation_summary.json": "23d35d46189929c9cc81ada2b9a5eb97521c6fd1c124e003137400930be76c64"
+  },
+  "protected_inputs_unchanged": true,
+  "repository_base_commit_sha": "9a3a04c3923749284cf52edd732bf0bec2e20dfb",
+  "reproducibility": {
+    "output_file_sha256": {
+      "reports/phase2_2_2i/classification_summary.json": "0e8125c9d983bed3c2aa1935f642d6046ff26b4d6ca4a0d46eca1b95b203b50d",
+      "reports/phase2_2_2i/gap_episode_groups.json": "7a9d930f65da6d25bb7228d56bc2fe626ca48b66ed7fbd6072eb71248ff632be",
+      "reports/phase2_2_2i/gap_inventory.json": "4f768bdeb92f0badb28b6f3253b4b3395c857192aa0b5cfb2c955b459ee6dca4",
+      "reports/phase2_2_2i/integrity_recheck.json": "3827520ea101e1e663f36a93070b176333ad60c7947d9ab3df992f04c003d565",
+      "reports/phase2_2_2i/source_evidence_registry.json": "ba72c245c6004fb06a1b67d237994957f985a842ce0a82ccc2a0b4ec8fd7b9a1",
+      "reports/phase2_2_2i/validation_summary.json": "f44a2b359a95aecc1979e7853fc66246aee9cb4a722cbc5675ceef9e534ba1f6"
+    },
+    "same_outputs_on_two_rebuilds": true,
+    "status": "PASS"
+  },
+  "schema_version": 1,
+  "snapshot_as_of_utc": "2026-11-17T20:13:49.261352+00:00",
+  "source_audit_module": "src/public_2023_history_audit.py",
+  "source_audit_schema_version": 1,
+  "source_manifest_sha256": "4edb381ab3cffc83bf407186555ab2f972a379a708f9a856e07a016dffb13157",
+  "status": "PASS"
+}

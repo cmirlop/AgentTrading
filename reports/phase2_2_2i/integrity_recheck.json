@@ -1,0 +1,138 @@
+{
+  "base_sha": "af79c8455cf2d9754759629a39f4e4a2f41e78d4",
+  "branch": "codex/phase2-2-2i-gap-classification",
+  "fresh_audit_gap_count": 3167,
+  "fresh_audit_matches_frozen_series": true,
+  "fresh_audit_status": "SOURCE_INTEGRITY_PASS",
+  "frozen_candidate_scan_hash_semantics": "raw bytes; equals the historical canonical SHA-256 because no line-ending conversion is present",
+  "frozen_candidate_scan_sha256": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+  "historical_reports_modified": false,
+  "manifest_validation": {
+    "actual_files_rehashed": 15,
+    "manifest_sha256": "781e39c5ea61bd09ba5e26eb6460e8d8ff8d43964745291a900cbaab1aea3045",
+    "scope": "data/market only; no MT5 snapshots, private chunks, pre-2023 sources, or frozen candidate scan",
+    "source_count": 15,
+    "source_manifest_sha256": "4edb381ab3cffc83bf407186555ab2f972a379a708f9a856e07a016dffb13157",
+    "status": "PASS"
+  },
+  "original_csvs_modified": false,
+  "protected_input_hashes_after": {
+    "config/broker_calendar_trusted_sources.json": "bfecda4d0aa17641b5b35e8caae4d596af9bd3fbb9f84517b7f6987e5933faee",
+    "data/backtest/technical_candidate_scan.csv": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "docs/FASE2_2_2H_HANDOFF_LOCAL.md": "80e97973f4050c6ad2ff3ec2baea991a093accba49a2393440d51888cdbe16bb",
+    "docs/FASE2_2_2H_RESULTADOS.md": "2cab29348dd6df8215426ee0a61c59787f1e31930c0432d8a7ef81d90fd97fb0",
+    "reports/phase2_2_2g/validation_summary.json": "277c2ae58b59e8b523e5a0506d59f0213f3ae338843c75013e875e0c2a796bad",
+    "reports/phase2_2_2h/public_2023_integrity.json": "7f8be1d81494df76677799096bbe433a5fe24b0c9645daab71f4dbec9f2bbffc",
+    "reports/phase2_2_2h/public_2023_source_manifest.json": "4cf4fd7d6c90de54f4539eda8211b9b1a633cd46f90d83fb9c11a1cf5bdeea95",
+    "reports/phase2_2_2h/validation_summary.json": "23d35d46189929c9cc81ada2b9a5eb97521c6fd1c124e003137400930be76c64"
+  },
+  "protected_input_hashes_before": {
+    "config/broker_calendar_trusted_sources.json": "bfecda4d0aa17641b5b35e8caae4d596af9bd3fbb9f84517b7f6987e5933faee",
+    "data/backtest/technical_candidate_scan.csv": "0ee396b59b515446d92bfd9293e2395e4ebf8dca0de8d86fac2ba3bdffe856c3",
+    "docs/FASE2_2_2H_HANDOFF_LOCAL.md": "80e97973f4050c6ad2ff3ec2baea991a093accba49a2393440d51888cdbe16bb",
+    "docs/FASE2_2_2H_RESULTADOS.md": "2cab29348dd6df8215426ee0a61c59787f1e31930c0432d8a7ef81d90fd97fb0",
+    "reports/phase2_2_2g/validation_summary.json": "277c2ae58b59e8b523e5a0506d59f0213f3ae338843c75013e875e0c2a796bad",
+    "reports/phase2_2_2h/public_2023_integrity.json": "7f8be1d81494df76677799096bbe433a5fe24b0c9645daab71f4dbec9f2bbffc",
+    "reports/phase2_2_2h/public_2023_source_manifest.json": "4cf4fd7d6c90de54f4539eda8211b9b1a633cd46f90d83fb9c11a1cf5bdeea95",
+    "reports/phase2_2_2h/validation_summary.json": "23d35d46189929c9cc81ada2b9a5eb97521c6fd1c124e003137400930be76c64"
+  },
+  "repository_base_commit_sha": "9a3a04c3923749284cf52edd732bf0bec2e20dfb",
+  "snapshot_as_of_utc": "2026-11-17T20:13:49.261352+00:00",
+  "source_audit_module": "src/public_2023_history_audit.py",
+  "source_audit_schema_version": 1,
+  "source_file_hashes": [
+    {
+      "canonical_sha256": "a85f8e7986ce69108f1cbec12717a8c2c2a231e09a3759893edae02073a583ea",
+      "path": "data/market/AUDUSD/D1.csv",
+      "raw_sha256": "a85f8e7986ce69108f1cbec12717a8c2c2a231e09a3759893edae02073a583ea",
+      "row_count": 1005
+    },
+    {
+      "canonical_sha256": "e7f26ccd192e51e0de7ee9cd7d43c0a654260a118a126db3a9203fd1bac09382",
+      "path": "data/market/AUDUSD/H1.csv",
+      "raw_sha256": "e7f26ccd192e51e0de7ee9cd7d43c0a654260a118a126db3a9203fd1bac09382",
+      "row_count": 24140
+    },
+    {
+      "canonical_sha256": "854e3995bbdb33171c9b4f51faa3b49bd1ea07c54cc8037d27f20e2bfb2bc17b",
+      "path": "data/market/AUDUSD/H4.csv",
+      "raw_sha256": "854e3995bbdb33171c9b4f51faa3b49bd1ea07c54cc8037d27f20e2bfb2bc17b",
+      "row_count": 6035
+    },
+    {
+      "canonical_sha256": "a004c4f2a207d6ddee55dc52d1d3990f860f78ad1814dc358ace029c7a76b7e7",
+      "path": "data/market/AUDUSD/M15.csv",
+      "raw_sha256": "a004c4f2a207d6ddee55dc52d1d3990f860f78ad1814dc358ace029c7a76b7e7",
+      "row_count": 96551
+    },
+    {
+      "canonical_sha256": "da06e5f5c0a08f93b5eec1b70e6dc55572ef9b770dc658125c313bf328f15d67",
+      "path": "data/market/AUDUSD/M5.csv",
+      "raw_sha256": "da06e5f5c0a08f93b5eec1b70e6dc55572ef9b770dc658125c313bf328f15d67",
+      "row_count": 289620
+    },
+    {
+      "canonical_sha256": "f29e5732e3e2d51daae15dfa9639e3ffed31e66388a03de90dca026d9896c7b4",
+      "path": "data/market/EURUSD/D1.csv",
+      "raw_sha256": "f29e5732e3e2d51daae15dfa9639e3ffed31e66388a03de90dca026d9896c7b4",
+      "row_count": 1005
+    },
+    {
+      "canonical_sha256": "1084b202157e96338ae1b7d8de81df643d91569a64539bfac0cfb2b158f97566",
+      "path": "data/market/EURUSD/H1.csv",
+      "raw_sha256": "1084b202157e96338ae1b7d8de81df643d91569a64539bfac0cfb2b158f97566",
+      "row_count": 24140
+    },
+    {
+      "canonical_sha256": "4c7f00cc7c1701532b1e5fabb8113c5822602466281c4bcb1976097427e5dca2",
+      "path": "data/market/EURUSD/H4.csv",
+      "raw_sha256": "4c7f00cc7c1701532b1e5fabb8113c5822602466281c4bcb1976097427e5dca2",
+      "row_count": 6035
+    },
+    {
+      "canonical_sha256": "6ec3cf5da1b738e16bad04849350c33b1885fe113f4a3f33e0e40dc533591f9e",
+      "path": "data/market/EURUSD/M15.csv",
+      "raw_sha256": "6ec3cf5da1b738e16bad04849350c33b1885fe113f4a3f33e0e40dc533591f9e",
+      "row_count": 96552
+    },
+    {
+      "canonical_sha256": "d12d775e3466e9768bdcf0aa48cbf871edb8aadf4f7426494fe6d33899ab3a3f",
+      "path": "data/market/EURUSD/M5.csv",
+      "raw_sha256": "d12d775e3466e9768bdcf0aa48cbf871edb8aadf4f7426494fe6d33899ab3a3f",
+      "row_count": 289633
+    },
+    {
+      "canonical_sha256": "1dba8e5e1709fcb5a0cffcf78fcfab46774d9e99fce028fc63d1d1815bb5274b",
+      "path": "data/market/USDCAD/D1.csv",
+      "raw_sha256": "1dba8e5e1709fcb5a0cffcf78fcfab46774d9e99fce028fc63d1d1815bb5274b",
+      "row_count": 1005
+    },
+    {
+      "canonical_sha256": "d1e97b6562d4a5ca6f53b1d92d28adc6b172a0e5ae139413d5e2cb70fa44632b",
+      "path": "data/market/USDCAD/H1.csv",
+      "raw_sha256": "d1e97b6562d4a5ca6f53b1d92d28adc6b172a0e5ae139413d5e2cb70fa44632b",
+      "row_count": 24140
+    },
+    {
+      "canonical_sha256": "477759907c0929ad153690b43989a917859a738aed13cea3de871ecb468d123a",
+      "path": "data/market/USDCAD/H4.csv",
+      "raw_sha256": "477759907c0929ad153690b43989a917859a738aed13cea3de871ecb468d123a",
+      "row_count": 6035
+    },
+    {
+      "canonical_sha256": "ca420f15bc18e2c86d92e1c44bc695259c15d1d05f23e321113bd27360be8232",
+      "path": "data/market/USDCAD/M15.csv",
+      "raw_sha256": "ca420f15bc18e2c86d92e1c44bc695259c15d1d05f23e321113bd27360be8232",
+      "row_count": 96551
+    },
+    {
+      "canonical_sha256": "40083f869f4aa855e0f726119c3f2978a3de127b7ec7e429277fcc6a5c61f1a9",
+      "path": "data/market/USDCAD/M5.csv",
+      "raw_sha256": "40083f869f4aa855e0f726119c3f2978a3de127b7ec7e429277fcc6a5c61f1a9",
+      "row_count": 289623
+    }
+  ],
+  "source_manifest_sha256": "4edb381ab3cffc83bf407186555ab2f972a379a708f9a856e07a016dffb13157",
+  "stored_integrity_report_sha256": "7f8be1d81494df76677799096bbe433a5fe24b0c9645daab71f4dbec9f2bbffc",
+  "stored_manifest_file_sha256": "4cf4fd7d6c90de54f4539eda8211b9b1a633cd46f90d83fb9c11a1cf5bdeea95"
+}
