@@ -43,8 +43,42 @@ jobs:
         run: python scripts/check_phase2_2_2e_privacy.py
       - name: No MT5 module dependency in new offline adapters
         run: |
-          if rg -n "(^|\\s)(import MetaTrader5|from MetaTrader5)" src/macro_sources src/verified_research_dataset.py tests/test_macro_sources.py tests/test_verified_dataset_backtests.py; then
-            exit 1
-          fi
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          paths = [
+              "src/macro_sources",
+              "src/verified_research_dataset.py",
+              "src/public_2023_history_audit.py",
+              "scripts/audit_public_2023_history.py",
+              "scripts/validate_phase2_2_2h.py",
+              "tests/test_macro_sources.py",
+              "tests/test_verified_dataset_backtests.py",
+              "tests/test_public_2023_history_audit.py",
+          ]
+          pattern = re.compile(r"^\s*(?:import\s+MetaTrader5\b|from\s+MetaTrader5\b)")
+          matches = []
+          for entry in paths:
+              path = Path(entry)
+              files = path.rglob("*.py") if path.is_dir() else [path]
+              for file in files:
+                  for number, line in enumerate(file.read_text(encoding="utf-8").splitlines(), 1):
+                      if pattern.search(line):
+                          matches.append(f"{file}:{number}:{line.strip()}")
+          if matches:
+              print("\n".join(matches))
+              sys.exit(1)
+          print("No direct MetaTrader5 imports in offline adapters or tests.")
+          PY
       - name: Diff whitespace check
-        run: git diff --check HEAD^..HEAD
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+            git fetch --no-tags --depth=1 origin "$base"
+          else
+            git fetch --no-tags --depth=1 origin main
+            base="$(git rev-parse FETCH_HEAD)"
+          fi
+          git diff --check "$base..HEAD"

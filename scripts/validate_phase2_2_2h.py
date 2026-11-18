@@ -138,6 +138,24 @@ def main() -> int:
             "cause": "setup-python pip cache could not find requirements.txt or pyproject.toml",
             "fix": "removed pip cache; offline-test dependencies remain installed explicitly",
         },
+        "ci_attempts": [
+            {
+                "workflow_run_id": "44257824382",
+                "commit": "af79c8455cf2d9754759629a39f4e4a2f41e78d4",
+                "conclusion": "FAILURE_AFTER_TESTS",
+                "passed_through": [
+                    "phase 2.2.2 regressions", "public audit", "f/g simulated sync",
+                    "phase 1 backtest", "MT5 safety mocks", "compileall", "look-ahead", "privacy",
+                ],
+                "failed_step": "Diff whitespace check",
+                "causes": [
+                    "runner image did not include rg",
+                    "depth-one checkout did not contain HEAD^",
+                ],
+                "corrected_in_current_worktree": True,
+            },
+            {"workflow_run_id": None, "status": "PENDING_RETRY"},
+        ],
         "pending_reasons": [
             "GitHub Actions must run on the PR and conclude success.",
             "Official broker calendar and historical execution costs remain unverified.",

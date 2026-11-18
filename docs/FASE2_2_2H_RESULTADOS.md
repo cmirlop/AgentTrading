@@ -12,7 +12,7 @@
 | Paridad causal scan/backtest | PASS SINTÉTICO | Pruebas de cinco timeframes, warmup, DST, brecha, barra parcial y fingerprint; véase el informe de validación |
 | Calendario histórico oficial | UNKNOWN | No hay fuente oficial fechada por símbolo configurada; loader real continúa fail-closed |
 | Backtest económico del histórico público | NOT_RUN | Bloqueado por calendario y costes verificables pendientes; no se generaron candidatos ni PnL real |
-| GitHub Actions | PENDING | El run anterior #7 falló en `setup-python` antes de los tests; la reparación se verificará en la PR |
+| GitHub Actions | PENDING_RETRY | El run #9 pasó todos los tests y validaciones hasta el diff check, que falló por depender de `rg` y de `HEAD^` en checkout shallow; ambas causas se corrigieron en esta rama |
 | Llamadas externas / MT5 / órdenes / LLM | 0 | Trabajo realizado con archivos del repositorio, mocks y fixtures sintéticos |
 
 La rama parte del commit `bf5828ef589479e3996b61dec119e9b2bab337a4` (`origin/main` verificado) y se llama `codex/phase2-2-2h-remote-dataset-ci`. El audit usa como `base_sha` el HEAD de ese commit y el corte fijo de fase g `2026-11-17T20:13:49.261352+00:00`; no sustituye ese corte por la fecha actual.
@@ -20,6 +20,7 @@ La rama parte del commit `bf5828ef589479e3996b61dec119e9b2bab337a4` (`origin/mai
 ## Hallazgos e implementación
 
 - El error de Actions se confirmó en el run `44248662116`: `actions/setup-python@v5` pidió cache de pip, pero el repo no contiene `requirements.txt` ni `pyproject.toml`. La corrección mínima elimina `cache: pip`; las dependencias offline que sí se necesitan se instalan explícitamente.
+- En la primera PR, Actions #9 (`44257824382`, commit `af79c84`) confirmó que setup e instalación ya funcionaban y que pasaron regresiones, auditoría, f/g, backtests heredados, look-ahead y privacidad. El workflow falló al final porque la imagen no tiene `rg` y el checkout superficial no contiene `HEAD^`. El nuevo chequeo usa Python estándar para revisar imports y compara whitespace con el SHA base, obtenido explícitamente. La repetición de Actions aún está pendiente.
 - La preparación de timestamps del adaptador histórico fallaba con pandas 2.2.3 al mezclar separadores ISO (`T` y espacio). Se especificó `format="mixed"`, sin cambiar el cálculo de indicadores.
 - Un test de fase 2.2.2 aplicaba un corte antiguo del 15 de noviembre y esperaba los huecos de una captura previa. Ahora usa el `as_of_utc` congelado de fase g y comprueba que las fuentes actuales se solapan con los snapshots MT5 antiguos. No se reescribió ningún histórico.
 - Se añadió una auditoría de streaming, determinista y de solo lectura. Verifica inventario 3×5, cabeceras, fechas UTC, orden, unicidad, rango, barra cerrada, OHLC, volúmenes, spreads, conteos, hashes, último corte y el scan congelado.
@@ -69,7 +70,7 @@ La prueba sintética de paridad usa las cinco temporalidades, más de 200 barras
 - **PASS:** el baseline congelado no cambió; ningún CSV de mercado fue escrito por la herramienta.
 - **PASS SINTÉTICO:** el flujo scan → estado → plan → simulación usa el mismo dataset y fingerprint, con controles temporales.
 - **UNKNOWN:** calendario oficial del bróker fechado por símbolo; los 3.167 saltos permanecen sin clasificar.
-- **PENDING:** el run de GitHub Actions sobre esta rama. La reparación local no se etiqueta como CI verde hasta observar un run con conclusión `success`.
+- **PENDING:** el nuevo run de GitHub Actions tras corregir los dos problemas del run #9. La reparación no se etiqueta como CI verde hasta observar conclusión `success`.
 - **NOT_RUN:** backtest económico real, DeepSeek/Ollama y cualquier conexión o consulta MT5.
 
 La evidencia completa y por fila está en `reports/phase2_2_2h/public_2023_integrity.json`; los hashes y la cobertura del manifiesto están en `reports/phase2_2_2h/public_2023_source_manifest.json`. La síntesis ejecutable está en `reports/phase2_2_2h/validation_summary.json`.
