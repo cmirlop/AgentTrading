@@ -41,7 +41,7 @@ Use only event_id and evidence_id values present in the supplied JSON."""
 MAX_PAYLOAD_BYTES = 12_000
 MAX_RESPONSE_BYTES = 32_000
 MAX_EVENTS_TO_MODEL = 12
-MAX_TIMEOUT_SECONDS = 60.0
+MAX_TIMEOUT_SECONDS = 1800.0
 
 _OPERATIONAL_LANGUAGE = re.compile(
     r"\b(?:buy|sell|long|short|enter|exit|recommend|recommendation|order|trade|position|"
