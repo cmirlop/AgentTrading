@@ -15,7 +15,7 @@
 | GitHub Actions | PENDING_RETRY | El run #9 pasó todos los tests y validaciones hasta el diff check, que falló por depender de `rg` y de `HEAD^` en checkout shallow; ambas causas se corrigieron en esta rama |
 | Llamadas externas / MT5 / órdenes / LLM | 0 | Trabajo realizado con archivos del repositorio, mocks y fixtures sintéticos |
 
-La rama parte del commit `bf5828ef589479e3996b61dec119e9b2bab337a4` (`origin/main` verificado) y se llama `codex/phase2-2-2h-remote-dataset-ci`. El audit usa como `base_sha` el HEAD de ese commit y el corte fijo de fase g `2026-11-17T20:13:49.261352+00:00`; no sustituye ese corte por la fecha actual.
+La rama parte del commit `bf5828ef589479e3996b61dec119e9b2bab337a4` (`origin/main` verificado) y se llama `codex/phase2-2-2h-remote-dataset-ci`. La auditoría incluida registra el commit ejecutado `af79c8455cf2d9754759629a39f4e4a2f41e78d4`; el corte fijo de fase g es `2026-11-17T20:13:49.261352+00:00`, no la fecha actual.
 
 ## Hallazgos e implementación
 

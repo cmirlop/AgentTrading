@@ -1,17 +1,17 @@
 {
   "as_of_utc": "2026-11-17T20:13:49.261352+00:00",
-  "base_sha": "bf5828ef589479e3996b61dec119e9b2bab337a4",
+  "base_sha": "af79c8455cf2d9754759629a39f4e4a2f41e78d4",
   "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
   "dataset_kind": "PUBLIC_2023_PLUS_REPOSITORY_CAPTURE",
   "evidence_class": "PUBLIC_TRACKED_REPOSITORY_FILES_ONLY",
   "manifest_kind": "PUBLIC_2023_PLUS_SOURCE_LINEAGE",
-  "manifest_sha256": "483fbacc57e963628ed364a5c3105225332dfc18c250cf160e19426be80d0988",
+  "manifest_sha256": "781e39c5ea61bd09ba5e26eb6460e8d8ff8d43964745291a900cbaab1aea3045",
   "phase_g_report_path": "reports/phase2_2_2g/validation_summary.json",
   "phase_g_report_sha256": "277c2ae58b59e8b523e5a0506d59f0213f3ae338843c75013e875e0c2a796bad",
   "schema_version": 1,
   "source_manifest": {
     "as_of_utc": "2026-11-17T20:13:49.261352+00:00",
-    "base_sha": "bf5828ef589479e3996b61dec119e9b2bab337a4",
+    "base_sha": "af79c8455cf2d9754759629a39f4e4a2f41e78d4",
     "canonicalization_policy": "CSV_LINE_ENDINGS_LF_V1",
     "dataset_kind": "PUBLIC_2023_PLUS_REPOSITORY_CAPTURE",
     "hash_semantics": {

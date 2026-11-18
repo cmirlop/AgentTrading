@@ -4,7 +4,7 @@
   "aggregate_rows_match": true,
   "as_of_semantics": "fixed phase2_2_2g capture time; candle timestamps are open times",
   "as_of_utc": "2026-11-17T20:13:49.261352+00:00",
-  "base_sha": "bf5828ef589479e3996b61dec119e9b2bab337a4",
+  "base_sha": "af79c8455cf2d9754759629a39f4e4a2f41e78d4",
   "calendar_status": "UNKNOWN_BROKER_CALENDAR_NOT_VERIFIED",
   "continuity_status": "UNKNOWN_NOT_CERTIFIED_BY_REPOSITORY_DATA",
   "discontinuity_count_observed": 3167,
