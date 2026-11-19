@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import re
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from src.news_local.models import (
     ECONOMIC_FIELDS,
+    IMPACT_ORIGIN,
     SUPPORTED_PAIRS,
     ConditionalScenario,
     ConfirmedFact,
+    DriverAssessment,
     EconomicObservation,
     NewsAnalysisInput,
     NewsAnalysisResult,
@@ -36,6 +38,7 @@ BASE_LIMITATIONS = [
     "No live news, market data, or external economic data was consulted.",
     "Qualitative scenarios are not calibrated probabilities; magnitude and timing are unknown.",
 ]
+MAX_EVENT_AGE = timedelta(days=7)
 
 
 def contains_prompt_injection(event: NewsEvent) -> bool:
@@ -57,15 +60,40 @@ def _eligible_events(news_input: NewsAnalysisInput) -> tuple[list[NewsEvent], Co
         if event.first_seen_at_utc > cutoff or event.retrieved_at_utc > cutoff:
             excluded["EVIDENCE_NOT_OBSERVED_BY_CUTOFF"] += 1
             continue
+        if any(revision.observed_at_utc is None for revision in event.source_revision_history):
+            excluded["SOURCE_REVISION_TIME_UNKNOWN"] += 1
+            continue
+        future_revision = next(
+            (
+                reason
+                for revision in event.source_revision_history
+                for value, reason in (
+                    (revision.published_at_utc, "EVENT_NOT_PUBLISHED_BY_CUTOFF"),
+                    (revision.updated_at_utc, "REVISION_AFTER_CUTOFF"),
+                    (revision.observed_at_utc, "EVIDENCE_NOT_OBSERVED_BY_CUTOFF"),
+                )
+                if value is not None and value > cutoff
+            ),
+            None,
+        )
+        if future_revision:
+            excluded[future_revision] += 1
+            continue
         if event.source_kind == "NEWS_RELEASE":
             if event.published_at_utc is None or event.published_at_utc > cutoff:
                 excluded["EVENT_NOT_PUBLISHED_BY_CUTOFF"] += 1
+                continue
+            if cutoff - event.published_at_utc > MAX_EVENT_AGE:
+                excluded["SOURCE_STALE_AT_CUTOFF"] += 1
                 continue
         elif event.scheduled_at_utc is None:
             excluded["SCHEDULE_TIME_MISSING"] += 1
             continue
         elif event.scheduled_at_utc <= cutoff:
             excluded["SCHEDULE_TIME_PASSED_WITHOUT_RELEASE"] += 1
+            continue
+        elif cutoff - event.retrieved_at_utc > MAX_EVENT_AGE:
+            excluded["SOURCE_STALE_AT_CUTOFF"] += 1
             continue
         eligible.append(event)
     return eligible, excluded
@@ -92,8 +120,12 @@ def _revision_depth(event: NewsEvent, by_id: dict[str, NewsEvent]) -> int:
     return depth
 
 
-def _group_events(events: list[NewsEvent]) -> list[list[NewsEvent]]:
-    by_id = {event.event_id: event for event in events}
+def _group_events(
+    events: list[NewsEvent], *, lineage_events: list[NewsEvent] | None = None
+) -> list[list[NewsEvent]]:
+    # Keep known but cutoff-ineligible parents in the link map so a duplicate whose
+    # canonical record arrived late cannot become an independent confirmation.
+    by_id = {event.event_id: event for event in (lineage_events or events)}
     groups: dict[str, list[NewsEvent]] = {}
     for event in events:
         groups.setdefault(_root_id(event, by_id), []).append(event)
@@ -134,42 +166,50 @@ def _fact_for_group(group: list[NewsEvent]) -> ConfirmedFact:
     )
 
 
-def _scenario_for_currency(
+def _scenario_for_driver(
     symbol: str,
-    currency: str,
-    group: list[NewsEvent],
-    chosen: NewsEvent,
+    driver_currency: str,
+    direction: str,
+    supporting_events: list[NewsEvent],
 ) -> ConditionalScenario:
     base, quote = SUPPORTED_PAIRS[symbol]
-    other = quote if currency == base else base
-    if chosen.source_kind == "SCHEDULED_EVENT":
-        condition = (
-            f"If the future release, once available, shifts relative expectations "
-            f"in favor of {currency} over {other}."
-        )
+    counterpart = quote if driver_currency == base else base
+    strengthens = direction == "STRENGTHENS"
+    if strengthens:
+        condition = f"If {driver_currency} relatively strengthens against {counterpart}, all else equal."
     else:
-        condition = (
-            f"If the reported information shifts relative expectations "
-            f"in favor of {currency} over {other}."
-        )
-    if currency == base:
-        effect = (
-            f"That relative shift could support {symbol}; the effect could reverse "
-            f"if expectations favor {other}."
-        )
-    else:
-        effect = (
-            f"That relative shift could weigh on {symbol}; the effect could reverse "
-            f"if expectations favor {other}."
-        )
+        condition = f"If {driver_currency} relatively weakens against {counterpart}, all else equal."
+    pair_rises = (driver_currency == base) == strengthens
+    pair_direction = "UP" if pair_rises else "DOWN"
+    movement = "rise" if pair_rises else "fall"
+    effect = (
+        f"{symbol} could {movement} under this conditional relative scenario; other information "
+        "or repricing may alter or reverse the reaction."
+    )
     return ConditionalScenario(
-        currency=currency,
+        scenario_key=f"{symbol}:{driver_currency}:{direction}",
+        driver_currency=driver_currency,
         pair=symbol,
+        base_currency=base,
+        quote_currency=quote,
+        counterpart_currency=counterpart,
+        driver_direction_condition=direction,
+        pair_direction=pair_direction,
+        impact_origin=IMPACT_ORIGIN,
         condition=condition,
         possible_effect=effect,
         uncertainty_range="QUALITATIVE_WIDE_UNCALIBRATED",
-        event_ids=sorted(event.event_id for event in group),
-        evidence_ids=sorted(event.evidence_id for event in group),
+        event_ids=sorted(event.event_id for event in supporting_events),
+        evidence_ids=sorted({event.evidence_id for event in supporting_events}),
+    )
+
+
+def _supporting_events(
+    events: list[NewsEvent], driver_currency: str
+) -> list[NewsEvent]:
+    return sorted(
+        (event for event in events if driver_currency in event.currencies),
+        key=lambda event: event.event_id,
     )
 
 
@@ -184,12 +224,12 @@ def build_deterministic_result(
     request_count: int = 0,
     duration_ms: int | None = None,
     generated_at_utc: datetime | None = None,
+    driver_hypotheses: dict[str, str] | None = None,
 ) -> NewsAnalysisResult:
     eligible, excluded = _eligible_events(news_input)
-    groups = _group_events(eligible)
+    groups = _group_events(eligible, lineage_events=news_input.events)
     facts: list[ConfirmedFact] = []
     upcoming: list[UpcomingEvent] = []
-    scenarios: list[ConditionalScenario] = []
     event_ids_used: set[str] = set()
     evidence_ids_used: set[str] = set()
 
@@ -212,11 +252,28 @@ def build_deterministic_result(
         else:
             facts.append(_fact_for_group(group))
 
-        group_currencies = sorted({currency for event in group for currency in event.currencies})
-        base, quote = SUPPORTED_PAIRS[news_input.symbol]
-        for currency in group_currencies:
-            if currency in {base, quote}:
-                scenarios.append(_scenario_for_currency(news_input.symbol, currency, group, chosen))
+    base, quote = SUPPORTED_PAIRS[news_input.symbol]
+    hypotheses = driver_hypotheses or {}
+    driver_assessments: list[DriverAssessment] = []
+    scenarios: list[ConditionalScenario] = []
+    for driver in (base, quote):
+        supporting = _supporting_events(eligible, driver)
+        if not supporting:
+            continue
+        driver_assessments.append(
+            DriverAssessment(
+                driver_currency=driver,
+                direction_hypothesis=hypotheses.get(driver, "UNKNOWN"),
+                event_ids=[event.event_id for event in supporting],
+                evidence_ids=sorted({event.evidence_id for event in supporting}),
+            )
+        )
+        # Always retain both counterfactual branches. A model direction is stored
+        # separately as an uncalibrated hypothesis; it never erases the alternative.
+        for direction in ("STRENGTHENS", "WEAKENS"):
+            scenarios.append(
+                _scenario_for_driver(news_input.symbol, driver, direction, supporting)
+            )
 
     notes = [f"{reason}: {count} event(s) excluded." for reason, count in sorted(excluded.items())]
     if len(eligible) == 0:
@@ -240,9 +297,11 @@ def build_deterministic_result(
         evidence_ids_used=sorted(evidence_ids_used),
         confirmed_facts=facts,
         upcoming_events=upcoming,
+        driver_assessments=driver_assessments,
         conditional_scenarios=scenarios,
         uncertainties=[
-            "No empirical price response or calibrated uncertainty range is available."
+            "Driver direction assessments are uncalibrated hypotheses, not observed facts.",
+            "Relative pair scenarios assume all else equal; reactions can differ or reverse.",
         ],
         source_coverage=SourceCoverage(
             eligible_event_count=len(eligible),
@@ -268,33 +327,59 @@ def validate_result_references(
     news_input: NewsAnalysisInput,
     result: NewsAnalysisResult,
 ) -> None:
-    """Re-check every structured citation and numeric observation outside an LLM."""
-    eligible, _ = _eligible_events(news_input)
+    """Re-check event provenance and every derived pair mapping outside an LLM."""
+    if result.symbol != news_input.symbol or result.analysis_as_of_utc != news_input.analysis_as_of_utc:
+        raise ValueError("ANALYSIS_CONTEXT_MISMATCH")
+    eligible, excluded = _eligible_events(news_input)
     eligible_by_id = {event.event_id: event for event in eligible}
-    eligible_event_evidence = {
-        event.event_id: event.evidence_id for event in eligible
-    }
-    for event_id in result.event_ids_used:
-        if event_id not in eligible_by_id:
-            raise ValueError("INVALID_EVENT_REFERENCE")
-    eligible_evidence = set(eligible_event_evidence.values())
-    if any(evidence_id not in eligible_evidence for evidence_id in result.evidence_ids_used):
-        raise ValueError("INVALID_EVIDENCE_REFERENCE")
+    eligible_event_evidence = {event.event_id: event.evidence_id for event in eligible}
+    expected_event_ids = set(eligible_by_id)
+    expected_evidence = set(eligible_event_evidence.values())
+    if set(result.event_ids_used) != expected_event_ids:
+        raise ValueError("EVENT_EVIDENCE_REFERENCE_MISMATCH")
+    if set(result.evidence_ids_used) != expected_evidence:
+        raise ValueError("EVENT_EVIDENCE_REFERENCE_MISMATCH")
     if len(result.event_ids_used) != len(set(result.event_ids_used)):
         raise ValueError("DUPLICATE_EVENT_REFERENCE")
-    expected_global_evidence = {
-        eligible_event_evidence[event_id] for event_id in result.event_ids_used
-    }
-    if set(result.evidence_ids_used) != expected_global_evidence:
-        raise ValueError("EVENT_EVIDENCE_REFERENCE_MISMATCH")
 
+    lineage_groups = _group_events(eligible, lineage_events=news_input.events)
+    if (
+        result.source_coverage.eligible_event_count != len(eligible)
+        or result.source_coverage.excluded_event_count != len(news_input.events) - len(eligible)
+        or result.source_coverage.independent_event_groups != len(lineage_groups)
+    ):
+        raise ValueError("SOURCE_COVERAGE_MISMATCH")
+    expected_notes = [
+        f"{reason}: {count} event(s) excluded." for reason, count in sorted(excluded.items())
+    ]
+    if result.source_coverage.notes != expected_notes:
+        raise ValueError("SOURCE_COVERAGE_MISMATCH")
+
+    # Facts and scheduled events are deterministic summaries of the eligible
+    # source groups. Validate the complete objects, not only their references:
+    # otherwise a caller could attach invented prose or relabel a scheduled
+    # release as an already published fact while retaining valid IDs.
+    expected_facts: list[ConfirmedFact] = []
+    expected_upcoming: list[UpcomingEvent] = []
+    for group in lineage_groups:
+        chosen = _chosen_event(group)
+        if chosen.source_kind == "SCHEDULED_EVENT":
+            if chosen.scheduled_at_utc and chosen.scheduled_at_utc > news_input.analysis_as_of_utc:
+                expected_upcoming.append(
+                    UpcomingEvent(
+                        event_id=chosen.event_id,
+                        title=chosen.title,
+                        scheduled_at_utc=chosen.scheduled_at_utc,
+                        evidence_id=chosen.evidence_id,
+                    )
+                )
+        else:
+            expected_facts.append(_fact_for_group(group))
     for fact in result.confirmed_facts:
-        if not fact.event_ids or not set(fact.event_ids) <= set(eligible_by_id):
+        if not fact.event_ids or not set(fact.event_ids) <= expected_event_ids:
             raise ValueError("INVALID_FACT_EVENT_REFERENCE")
-        if not fact.evidence_ids or not set(fact.evidence_ids) <= eligible_evidence:
-            raise ValueError("INVALID_FACT_EVIDENCE_REFERENCE")
         fact_evidence = {eligible_event_evidence[event_id] for event_id in fact.event_ids}
-        if not set(fact.evidence_ids) <= fact_evidence:
+        if set(fact.evidence_ids) != fact_evidence:
             raise ValueError("INVALID_FACT_EVIDENCE_REFERENCE")
         for observation in fact.observations:
             event = eligible_by_id.get(observation.event_id)
@@ -317,22 +402,33 @@ def validate_result_references(
         ):
             raise ValueError("INVALID_UPCOMING_EVENT")
 
-    for scenario in result.conditional_scenarios:
-        if scenario.pair != news_input.symbol:
-            raise ValueError("INVALID_SCENARIO_PAIR")
-        if scenario.currency not in SUPPORTED_PAIRS[scenario.pair]:
-            raise ValueError("INVALID_SCENARIO_CURRENCY")
-        if not scenario.event_ids or not set(scenario.event_ids) <= set(eligible_by_id):
-            raise ValueError("INVALID_SCENARIO_EVENT_REFERENCE")
-        cited_evidence = {
-            eligible_by_id[event_id].evidence_id for event_id in scenario.event_ids
-        }
-        cited_currencies = {
-            currency
-            for event_id in scenario.event_ids
-            for currency in eligible_by_id[event_id].currencies
-        }
-        if scenario.currency not in cited_currencies:
-            raise ValueError("INVALID_SCENARIO_CURRENCY")
-        if not scenario.evidence_ids or not set(scenario.evidence_ids) <= cited_evidence:
-            raise ValueError("INVALID_SCENARIO_EVIDENCE_REFERENCE")
+    if result.confirmed_facts != expected_facts:
+        raise ValueError("INVALID_CONFIRMED_FACT")
+    if result.upcoming_events != expected_upcoming:
+        raise ValueError("INVALID_UPCOMING_EVENT")
+
+    base, quote = SUPPORTED_PAIRS[news_input.symbol]
+    expected_drivers = [
+        driver for driver in (base, quote) if _supporting_events(eligible, driver)
+    ]
+    actual_drivers = [item.driver_currency for item in result.driver_assessments]
+    if actual_drivers != expected_drivers or len(actual_drivers) != len(set(actual_drivers)):
+        raise ValueError("INVALID_DRIVER_EVIDENCE")
+    expected_scenarios: list[ConditionalScenario] = []
+    for assessment in result.driver_assessments:
+        supporting = _supporting_events(eligible, assessment.driver_currency)
+        expected_ids = [event.event_id for event in supporting]
+        expected_driver_evidence = sorted({event.evidence_id for event in supporting})
+        if (
+            assessment.event_ids != expected_ids
+            or assessment.evidence_ids != expected_driver_evidence
+        ):
+            raise ValueError("INVALID_DRIVER_EVIDENCE")
+        for direction in ("STRENGTHENS", "WEAKENS"):
+            expected_scenarios.append(
+                _scenario_for_driver(
+                    news_input.symbol, assessment.driver_currency, direction, supporting
+                )
+            )
+    if result.conditional_scenarios != expected_scenarios:
+        raise ValueError("INVALID_RELATIVE_MAPPING")

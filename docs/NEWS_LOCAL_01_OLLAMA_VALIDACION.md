@@ -12,10 +12,10 @@ presenta sin resultado ni consenso.
 
 ## Arquitectura
 
-- `models.py` define contratos Pydantic versionados y cerrados ante campos extra.
+- `models.py` define contratos Pydantic versionados y cerrados ante campos extra: entrada 1.0 y resultado NEWS-02 2.0.
 - `analyzer.py` aplica causalidad, agrupa revisiones y duplicados y valida referencias.
 - `providers.py` implementa `NewsSummarizer` y el adaptador local de Ollama.
-- `fixtures.py` contiene seis escenarios sintéticos fijos.
+- `fixtures.py` contiene fixtures sintéticos de publicación, agenda, duplicados, inyección y drivers aislados.
 - `scripts/run_news_local_ollama.py` ofrece una CLI offline por defecto.
 
 El cliente global `src/agents/llm_client.py` se deja intacto porque registra consultas
@@ -26,9 +26,10 @@ la ejecución. La CLI comprueba `/api/tags` y puede realizar como máximo una in
 y, si no existe, `config.agent_config.OLLAMA_MODEL`.
 
 Los textos de fuente se envían como datos JSON no confiables, separados del prompt de
-sistema. Una coincidencia con patrones de inyección bloquea Ollama antes de contactar
-el servidor. Los hechos, valores numéricos y agenda se producen fuera del LLM; su salida
-solo puede proponer escenarios condicionales que después se validan externamente.
+sistema. Se aplica un bloqueo previo a patrones conocidos y aislamiento de rol/datos;
+la seguridad no depende solo de la expresión regular. Python conserva hechos, valores,
+agenda, referencias, pares y efectos relativos. El modelo devuelve exclusivamente una
+hipótesis tipada de dirección del driver (`STRENGTHENS`, `WEAKENS` o `UNKNOWN`).
 
 ## Comandos PowerShell
 
@@ -40,8 +41,8 @@ Desde la raíz del repositorio:
 ./.venv/Scripts/python.exe scripts/run_news_local_ollama.py --mode mock-ollama
 ```
 
-Fixtures: `scheduled`, `published`, `duplicate_revision`, `injection`,
-`unavailable` y `late_first_seen`. Para otro par:
+Fixtures: `scheduled`, `published`, `usd_only`, `eur_only`, `cad_only`, `aud_only`,
+`duplicate_revision`, `injection`, `unavailable` y `late_first_seen`. Para otro par:
 
 ```powershell
 ./.venv/Scripts/python.exe scripts/run_news_local_ollama.py --mode offline --fixture published --symbol USDCAD
@@ -75,17 +76,19 @@ Si live queda pendiente, consulta [OLLAMA_WINDOWS_DIAGNOSTICO.md](OLLAMA_WINDOWS
 Comprueba identidad del proceso, host/puerto y `/api/tags`. No cambies ACL, registro,
 firewall, instalación, servicio ni archivos de modelos para hacer pasar la prueba.
 
-## Handoff para NEWS-01 remoto
+## Puente offline para NEWS-01
 
-Cuando exista `src/news_intelligence/`, un adaptador allí debe mapear sus eventos a
-`NewsAnalysisInput` preservando `even_t_id`, `evidence_id`, `first_seen_at_utc`,
-`retrieved_at_utc`, publicación/programación y relaciones de revisión/duplicado. Invoca
-`NewsSummarizer.summarize()` desde un punto explícito; conserva las referencias y límites
-del resultado. No conectes los escenarios a `MacroAgent`, riesgo u órdenes ni cambies el
-cliente LLM compartido.
+`src/news_local/macro_adapter.py` transforma registros ya normalizados por
+`src/macro_sources/core.py` a `NewsAnalysisInput`. No descarga, escribe archivos ni
+inventa `actual`, `forecast`, `previous` o timestamps. Omite registros con hora de
+publicación/programación no verificada y entrega un informe de exclusiones sin titulares.
+El ID original se conserva como `source_event_id`; los IDs internos se vinculan a la fuente
+y al registro. La llamada pública del laboratorio sigue siendo
+`NewsSummarizer.summarize()`. No conecta escenarios a `MacroAgent`, riesgo u órdenes ni
+altera el cliente LLM compartido.
 
-No existe `src/news_intelligence/` en esta copia local. GitHub quedó inaccesible por
-la red restringida, así que no se simuló esa integración.
+En `main` no existe `src/news_intelligence/`; el adaptador cubre el contrato normalizado
+macro actual y deja pendiente cualquier integración directa futura con NEWS-01.
 
 ## Validación rápida local
 
@@ -97,12 +100,10 @@ la red restringida, así que no se simuló esa integración.
   fueron JSON parseable, pero quedaron FALLBACK con `LLM_INVALID_SCENARIO_MAPPING; duraron
   99996, 99975 y 100121 ms. Ninguna agotó el timeout.
 - El límite configurado final es 32768 tokens. El rechazo procede de la validación del
-  escenario, no de un timeout ni de JSON incompleto.
-- CI: sí; `.github/workflows/offline-research-tests.yml` ejecuta explícitamente la suite en
-  el job offline habitual para push y PR. No se ha observado una ejecución remota de Actions.
-- El diff YAML contiene solo el nuevo paso, con indentación del bloque `steps` existente;
-  la comprobación estructural pasó y `git diff --check` no reporta errores. No hay un
-  parser YAML instalado y no se ejecutó GitHub Actions.
+  escenario, no de un timeout ni de JSON incompleto. La causa exacta de esas tres
+  respuestas no se puede reconstruir porque el contenido del modelo no se registró.
+- Ese resultado es histórico de la validación local NEWS-01. No se repitió una inferencia
+  local en NEWS-02 y no se considera demostración del contrato nuevo.
 
 No se copió contenido de inferencia ni se alteraron la instalación, el modelo o variables
 persistentes de Ollama.
