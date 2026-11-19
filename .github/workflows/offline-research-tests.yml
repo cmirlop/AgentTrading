@@ -10,9 +10,12 @@ permissions:
 
 jobs:
   offline-tests:
-    # Phase 2.2.2i explicitly excludes economic backtests; its dedicated job
-    # below runs only cadence classification, provenance, and session tests.
-    if: github.ref != 'refs/heads/codex/phase2-2-2i-gap-classification' && github.event.pull_request.head.ref != 'codex/phase2-2-2i-gap-classification'
+    # Research-only branches use focused jobs and do not trigger historical backtests.
+    if: >-
+      github.ref != 'refs/heads/codex/phase2-2-2i-gap-classification' &&
+      github.event.pull_request.head.ref != 'codex/phase2-2-2i-gap-classification' &&
+      github.ref != 'refs/heads/codex/news-02-relative-currency-impact' &&
+      github.event.pull_request.head.ref != 'codex/news-02-relative-currency-impact'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -103,5 +106,31 @@ jobs:
         run: python -m pip install "pandas>=2.2,<3" "numpy>=1.26,<3" "pydantic>=2.6,<3"
       - name: Deterministic interval inventory, focused regressions, and read-only integrity checks
         run: python scripts/validate_phase2_2_2i.py
+      - name: Diff whitespace check
+        run: git diff --check origin/main...HEAD
+
+  news-local-validation:
+    if: github.ref == 'refs/heads/codex/news-02-relative-currency-impact' || github.event.pull_request.head.ref == 'codex/news-02-relative-currency-impact'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install NEWS-LOCAL test dependency
+        run: python -m pip install "pydantic>=2.6,<3" "python-dotenv>=1,<2"
+      - name: NEWS-LOCAL-01 and NEWS-02 offline tests
+        run: python -m unittest tests.test_news_local tests.test_news_02 -q
+      - name: Compile NEWS-LOCAL sources and focused tests
+        run: python -m compileall -q src/news_local scripts/run_news_local_ollama.py tests/test_news_local.py tests/test_news_02.py
+      - name: Offline and mock CLI pair matrix
+        run: |
+          for symbol in EURUSD USDCAD AUDUSD; do
+            python scripts/run_news_local_ollama.py --mode offline --fixture usd_only --symbol "$symbol" >/dev/null
+            python scripts/run_news_local_ollama.py --mode mock-ollama --fixture usd_only --symbol "$symbol" >/dev/null
+          done
       - name: Diff whitespace check
         run: git diff --check origin/main...HEAD

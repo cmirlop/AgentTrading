@@ -5,11 +5,15 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from math import isfinite
 from typing import Literal
+from urllib.parse import urlsplit
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
-SCHEMA_VERSION = "1.0"
+INPUT_SCHEMA_VERSION = "1.0"
+RESULT_SCHEMA_VERSION = "2.0"
+SCHEMA_VERSION = INPUT_SCHEMA_VERSION
+IMPACT_ORIGIN = "DIRECT_EVENT+DERIVED_RELATIVE_PAIR_EFFECT"
 SUPPORTED_PAIRS = {
     "EURUSD": ("EUR", "USD"),
     "USDCAD": ("USD", "CAD"),
@@ -29,8 +33,29 @@ def _utc(value: datetime) -> datetime:
     return value.astimezone(timezone.utc)
 
 
+class SourceRevision(StrictModel):
+    revision: int | None = Field(default=None, ge=0)
+    published_at_utc: datetime | None = None
+    updated_at_utc: datetime | None = None
+    observed_at_utc: datetime | None = None
+    source_sha256: str | None = Field(default=None, min_length=64, max_length=64)
+
+    @field_validator("published_at_utc", "updated_at_utc", "observed_at_utc")
+    @classmethod
+    def revision_times_are_aware_utc(cls, value: datetime | None) -> datetime | None:
+        return None if value is None else _utc(value)
+
+    @field_validator("source_sha256")
+    @classmethod
+    def revision_hash_is_sha256(cls, value: str | None) -> str | None:
+        if value is not None and any(char not in "0123456789abcdefABCDEF" for char in value):
+            raise ValueError("revision_hash_invalid")
+        return value
+
+
 class NewsEvent(StrictModel):
     event_id: str = Field(min_length=1, max_length=120)
+    source_event_id: str | None = Field(default=None, max_length=240)
     source_id: str = Field(min_length=1, max_length=120)
     evidence_id: str = Field(min_length=1, max_length=120)
     source_kind: Literal["SCHEDULED_EVENT", "NEWS_RELEASE"]
@@ -50,6 +75,8 @@ class NewsEvent(StrictModel):
     units: str | None = Field(default=None, max_length=40)
     duplicate_of_event_id: str | None = Field(default=None, max_length=120)
     revision_of_event_id: str | None = Field(default=None, max_length=120)
+    source_revision_count: int | None = Field(default=None, ge=1)
+    source_revision_history: list[SourceRevision] = Field(default_factory=list, max_length=100)
 
     @field_validator(
         "scheduled_at_utc",
@@ -76,6 +103,27 @@ class NewsEvent(StrictModel):
             raise ValueError("economic_value_must_be_finite")
         return value
 
+    @field_validator("source_url")
+    @classmethod
+    def source_url_is_non_executable_reference(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        if any(ord(char) < 32 for char in value):
+            raise ValueError("source_url_invalid")
+        try:
+            parsed = urlsplit(value)
+            _ = parsed.port
+        except ValueError:
+            raise ValueError("source_url_invalid") from None
+        if (
+            parsed.scheme.lower() not in {"http", "https"}
+            or not parsed.hostname
+            or parsed.username is not None
+            or parsed.password is not None
+        ):
+            raise ValueError("source_url_invalid")
+        return value
+
     @model_validator(mode="after")
     def source_kind_has_required_time_and_fields(self) -> "NewsEvent":
         if self.retrieved_at_utc < self.first_seen_at_utc:
@@ -87,13 +135,24 @@ class NewsEvent(StrictModel):
                 raise ValueError("scheduled_event_cannot_claim_actual")
         if self.source_kind == "NEWS_RELEASE" and self.published_at_utc is None:
             raise ValueError("news_release_requires_published_at")
+        if self.source_kind == "NEWS_RELEASE" and self.published_at_utc is not None:
+            if (
+                self.first_seen_at_utc < self.published_at_utc
+                or self.retrieved_at_utc < self.published_at_utc
+            ):
+                raise ValueError("news_observed_before_publication")
         if self.duplicate_of_event_id and self.revision_of_event_id:
             raise ValueError("event_cannot_be_duplicate_and_revision")
+        if (
+            self.source_revision_count is not None
+            and self.source_revision_count != len(self.source_revision_history)
+        ):
+            raise ValueError("source_revision_count_mismatch")
         return self
 
 
 class NewsAnalysisInput(StrictModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
+    schema_version: Literal["1.0"] = INPUT_SCHEMA_VERSION
     analysis_as_of_utc: datetime
     symbol: Literal["EURUSD", "USDCAD", "AUDUSD"]
     events: list[NewsEvent] = Field(default_factory=list, max_length=100)
@@ -160,11 +219,27 @@ class UpcomingEvent(StrictModel):
 
 
 class ConditionalScenario(StrictModel):
-    currency: Literal["EUR", "USD", "CAD", "AUD"]
+    scenario_key: str = Field(min_length=8, max_length=80)
+    driver_currency: Literal["EUR", "USD", "CAD", "AUD"]
     pair: Literal["EURUSD", "USDCAD", "AUDUSD"]
+    base_currency: Literal["EUR", "USD", "AUD"]
+    quote_currency: Literal["USD", "CAD"]
+    counterpart_currency: Literal["EUR", "USD", "CAD", "AUD"]
+    driver_direction_condition: Literal["STRENGTHENS", "WEAKENS"]
+    pair_direction: Literal["UP", "DOWN"]
+    impact_origin: Literal["DIRECT_EVENT+DERIVED_RELATIVE_PAIR_EFFECT"] = IMPACT_ORIGIN
     condition: str = Field(min_length=8, max_length=320)
     possible_effect: str = Field(min_length=8, max_length=320)
     uncertainty_range: Literal["QUALITATIVE_WIDE_UNCALIBRATED"] = "QUALITATIVE_WIDE_UNCALIBRATED"
+    event_ids: list[str] = Field(min_length=1)
+    evidence_ids: list[str] = Field(min_length=1)
+
+
+class DriverAssessment(StrictModel):
+    """An explicitly uncalibrated driver hypothesis; pair effects are derived in Python."""
+
+    driver_currency: Literal["EUR", "USD", "CAD", "AUD"]
+    direction_hypothesis: Literal["STRENGTHENS", "WEAKENS", "UNKNOWN"]
     event_ids: list[str] = Field(min_length=1)
     evidence_ids: list[str] = Field(min_length=1)
 
@@ -184,7 +259,7 @@ class ExecutionMetadata(StrictModel):
 
 
 class NewsAnalysisResult(StrictModel):
-    schema_version: Literal["1.0"] = SCHEMA_VERSION
+    schema_version: Literal["2.0"] = RESULT_SCHEMA_VERSION
     status: Literal["PASS", "FALLBACK", "BLOCKED", "PENDING"]
     mode: Literal["MOCK", "LOCAL_OLLAMA", "DETERMINISTIC"]
     provider: Literal["mock", "ollama", "deterministic"]
@@ -195,6 +270,7 @@ class NewsAnalysisResult(StrictModel):
     evidence_ids_used: list[str] = Field(default_factory=list)
     confirmed_facts: list[ConfirmedFact] = Field(default_factory=list)
     upcoming_events: list[UpcomingEvent] = Field(default_factory=list)
+    driver_assessments: list[DriverAssessment] = Field(default_factory=list)
     conditional_scenarios: list[ConditionalScenario] = Field(default_factory=list)
     uncertainties: list[str] = Field(default_factory=list)
     source_coverage: SourceCoverage

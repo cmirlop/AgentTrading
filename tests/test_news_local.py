@@ -32,10 +32,14 @@ from src.news_local.providers import (
 def _valid_mock_payload(news_input: NewsAnalysisInput) -> dict:
     base = build_deterministic_result(news_input)
     return {
-        "conditional_scenarios": [
-            scenario.model_dump(mode="json")
-            for scenario in base.conditional_scenarios
-        ]
+        "schema_version": "2.0",
+        "driver_assessments": [
+            {
+                "driver_currency": item.driver_currency,
+                "direction_hypothesis": "UNKNOWN",
+            }
+            for item in base.driver_assessments
+        ],
     }
 
 
@@ -89,6 +93,8 @@ class NewsLocalContractTests(unittest.TestCase):
         self.assertEqual(MAX_OUTPUT_TOKENS, 32768)
         self.assertGreater(body["options"]["num_predict"], 2000)
         self.assertLessEqual(body["options"]["num_predict"], 32768)
+        self.assertNotIn("think", body)
+        self.assertNotIn("think", body["options"])
 
     def test_contract_requires_timezone_and_forbids_unknown_fields(self):
         fixture = build_fixture()
@@ -106,6 +112,10 @@ class NewsLocalContractTests(unittest.TestCase):
         for name in (
             "scheduled",
             "published",
+            "usd_only",
+            "eur_only",
+            "cad_only",
+            "aud_only",
             "duplicate_revision",
             "injection",
             "unavailable",
@@ -158,25 +168,36 @@ class NewsLocalContractTests(unittest.TestCase):
 
     def test_currency_to_pair_mapping_is_conditional_and_qualitative(self):
         expected = {
-            "EURUSD": "weigh on EURUSD",
-            "USDCAD": "support USDCAD",
-            "AUDUSD": "weigh on AUDUSD",
+            "EURUSD": {"STRENGTHENS": "DOWN", "WEAKENS": "UP"},
+            "USDCAD": {"STRENGTHENS": "UP", "WEAKENS": "DOWN"},
+            "AUDUSD": {"STRENGTHENS": "DOWN", "WEAKENS": "UP"},
         }
-        for symbol, phrase in expected.items():
+        for symbol, directions in expected.items():
             with self.subTest(symbol=symbol):
                 result = build_deterministic_result(build_fixture("published", symbol))
                 usd_scenarios = [
                     scenario
                     for scenario in result.conditional_scenarios
-                    if scenario.currency == "USD"
+                    if scenario.driver_currency == "USD"
                 ]
-                self.assertEqual(len(usd_scenarios), 1)
-                self.assertIn(phrase, usd_scenarios[0].possible_effect)
-                self.assertIn("If", usd_scenarios[0].condition)
-                self.assertEqual(
-                    usd_scenarios[0].uncertainty_range,
-                    "QUALITATIVE_WIDE_UNCALIBRATED",
-                )
+                self.assertEqual(len(usd_scenarios), 2)
+                expected_counterpart = {"EURUSD": "EUR", "USDCAD": "CAD", "AUDUSD": "AUD"}[symbol]
+                for scenario in usd_scenarios:
+                    self.assertEqual(
+                        scenario.pair_direction,
+                        directions[scenario.driver_direction_condition],
+                    )
+                    self.assertIn("If USD relatively", scenario.condition)
+                    self.assertIn("could", scenario.possible_effect)
+                    self.assertEqual(scenario.counterpart_currency, expected_counterpart)
+                    self.assertEqual(
+                        scenario.impact_origin,
+                        "DIRECT_EVENT+DERIVED_RELATIVE_PAIR_EFFECT",
+                    )
+                    self.assertEqual(
+                        scenario.uncertainty_range,
+                        "QUALITATIVE_WIDE_UNCALIBRATED",
+                    )
 
     def test_duplicate_summary_is_byte_for_byte_repeatable(self):
         news_input = build_fixture("published")
@@ -251,28 +272,27 @@ class NewsLocalContractTests(unittest.TestCase):
             json.dumps(_valid_mock_payload(news_input))
         )
 
-    def test_mock_mode_falls_back_on_invalid_citation(self):
+    def test_mock_mode_rejects_driver_not_backed_by_evidence(self):
         news_input = build_fixture("published")
         invalid = _valid_mock_payload(news_input)
-        invalid["conditional_scenarios"][0]["event_ids"] = ["FABRICATED-EVENT"]
+        invalid["driver_assessments"][0]["driver_currency"] = "EUR"
         result = NewsSummarizer().summarize(
             news_input, mode="mock-ollama", mock_response=invalid
         )
         self.assertEqual(result.status, "FALLBACK")
-        self.assertEqual(result.execution.error_code, "MOCK_RESPONSE_REJECTED")
+        self.assertEqual(result.execution.error_code, "INVALID_DRIVER_EVIDENCE")
         self.assertTrue(result.conditional_scenarios)
 
-    def test_mock_mode_rejects_operational_and_numeric_scenarios(self):
+    def test_mock_mode_rejects_extra_operational_or_numeric_output(self):
         news_input = build_fixture("published")
         invalid = _valid_mock_payload(news_input)
-        invalid["conditional_scenarios"][0]["possible_effect"] = (
-            "Could support EURUSD with 90 percent confidence; buy now."
-        )
+        invalid["probability"] = 0.9
+        invalid["recommendation"] = "BUY"
         result = NewsSummarizer().summarize(
             news_input, mode="mock-ollama", mock_response=invalid
         )
         self.assertEqual(result.status, "FALLBACK")
-        self.assertEqual(result.execution.error_code, "MOCK_RESPONSE_REJECTED")
+        self.assertEqual(result.execution.error_code, "LLM_RESPONSE_SCHEMA_INVALID")
 
     def test_loopback_configuration_and_model_environment_precedence(self):
         config = resolve_ollama_configuration(
@@ -328,7 +348,9 @@ class NewsLocalContractTests(unittest.TestCase):
         self.assertEqual(fake.inference_calls, 1)
         self.assertEqual(result.execution.request_count, 1)
         self.assertEqual(result.provider, "ollama")
-        self.assertEqual(json.loads(fake.payloads[0])["symbol"], "EURUSD")
+        request_payload = json.loads(fake.payloads[0])
+        self.assertEqual(request_payload["pair"]["symbol"], "EURUSD")
+        self.assertEqual(request_payload["allowed_driver_currencies"], ["USD"])
 
     def test_unavailable_model_is_pending_and_never_infers(self):
         fake = FakeOllama('{"conditional_scenarios":[]}', installed=False)

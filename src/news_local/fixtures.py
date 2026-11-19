@@ -32,6 +32,7 @@ def _release(
     duplicate_of_event_id: str | None = None,
     revision_of_event_id: str | None = None,
     summary: str | None = None,
+    currencies: list[str] | None = None,
 ) -> dict:
     return {
         "event_id": event_id,
@@ -40,7 +41,7 @@ def _release(
         "source_kind": source_kind,
         "title": title,
         "summary": summary,
-        "currencies": ["USD"],
+        "currencies": currencies or ["USD"],
         "source_url": None,
         "scheduled_at_utc": None,
         "published_at_utc": published_at_utc or _time(-25),
@@ -60,7 +61,23 @@ def _release(
 def build_fixture(name: str = "published", symbol: str = "EURUSD") -> NewsAnalysisInput:
     """Create one immutable synthetic scenario at a fixed UTC cut-off."""
     events: list[dict]
-    if name == "scheduled":
+    driver_fixture = {
+        "usd_only": "USD",
+        "eur_only": "EUR",
+        "cad_only": "CAD",
+        "aud_only": "AUD",
+    }.get(name)
+    if driver_fixture:
+        events = [
+            _release(
+                event_id=f"SYNTH-{driver_fixture}-ONLY",
+                source_id=f"SYNTH-SOURCE-{driver_fixture}",
+                evidence_id=f"SYNTH-EVIDENCE-{driver_fixture}",
+                title=f"Synthetic {driver_fixture} macro observation",
+                currencies=[driver_fixture],
+            )
+        ]
+    elif name == "scheduled":
         events = [
             {
                 "event_id": "SYNTH-SCHEDULED-CPI",

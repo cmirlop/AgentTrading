@@ -20,6 +20,10 @@ from src.news_local.providers import NewsSummarizer
 FIXTURE_NAMES = (
     "scheduled",
     "published",
+    "usd_only",
+    "eur_only",
+    "cad_only",
+    "aud_only",
     "duplicate_revision",
     "injection",
     "unavailable",
