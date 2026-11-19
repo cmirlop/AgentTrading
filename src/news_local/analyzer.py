@@ -35,7 +35,7 @@ INJECTION_PATTERN = re.compile(
 
 BASE_LIMITATIONS = [
     "Informational only; no trading recommendation, order, or operational signal.",
-    "No live news, market data, or external economic data was consulted.",
+    "Analysis is limited to supplied records; the summarizer does not fetch live feeds or market data, and missing sources do not prove that no events occurred.",
     "Qualitative scenarios are not calibrated probabilities; magnitude and timing are unknown.",
 ]
 MAX_EVENT_AGE = timedelta(days=7)
@@ -157,8 +157,13 @@ def _fact_for_group(group: list[NewsEvent]) -> ConfirmedFact:
         for field in ("actual", "forecast", "previous")
         if field in ECONOMIC_FIELDS and getattr(chosen, field) is not None
     ]
+    description = (
+        "A published event and its typed economic observations were observed by the analysis cut-off."
+        if observations
+        else "A published source event was observed by the analysis cut-off; no numeric economic result was supplied."
+    )
     return ConfirmedFact(
-        description="A published event and its typed economic fields were observed by the analysis cut-off.",
+        description=description,
         event_ids=sorted(event.event_id for event in group),
         evidence_ids=sorted(event.evidence_id for event in group),
         observations=observations,

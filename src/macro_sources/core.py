@@ -2,18 +2,23 @@ from __future__ import annotations
 
 from datetime import date, datetime, timezone
 from email.utils import parsedate_to_datetime
+import errno
 import hashlib
 import html
 import ipaddress
 import json
+import os
 from pathlib import Path
 import re
 import socket
 import ssl
+import threading
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
 from typing import Any, Callable
+from contextlib import contextmanager
 from xml.etree import ElementTree
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -41,6 +46,90 @@ _DOCTYPE = re.compile(br"<!\s*(DOCTYPE|ENTITY)\b", re.I)
 
 class MacroSourceError(ValueError):
     pass
+
+
+_CACHE_LOCKS_GUARD = threading.Lock()
+_CACHE_LOCKS: dict[str, threading.Lock] = {}
+
+
+@contextmanager
+def _macro_cache_lock(lock_path: Path, *, timeout_seconds: float = 45.0):
+    """Serialize cache read/fetch/write across threads and processes."""
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    lock_key = str(lock_path.resolve())
+    with _CACHE_LOCKS_GUARD:
+        local_lock = _CACHE_LOCKS.setdefault(lock_key, threading.Lock())
+    if not local_lock.acquire(timeout=timeout_seconds):
+        raise MacroSourceError("SOURCE_CACHE_LOCK_TIMEOUT")
+    file_handle = None
+    os_locked = False
+    deadline = time.monotonic() + timeout_seconds
+    try:
+        file_handle = lock_path.open("a+b")
+        file_handle.seek(0, os.SEEK_END)
+        if file_handle.tell() == 0:
+            file_handle.write(b"\0")
+            file_handle.flush()
+        while True:
+            try:
+                if os.name == "nt":
+                    import msvcrt
+
+                    file_handle.seek(0)
+                    msvcrt.locking(file_handle.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+
+                    fcntl.flock(file_handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                os_locked = True
+                break
+            except (BlockingIOError, OSError):
+                if time.monotonic() >= deadline:
+                    raise MacroSourceError("SOURCE_CACHE_LOCK_TIMEOUT") from None
+                time.sleep(0.05)
+        yield
+    finally:
+        if file_handle is not None:
+            if os_locked:
+                try:
+                    if os.name == "nt":
+                        import msvcrt
+
+                        file_handle.seek(0)
+                        msvcrt.locking(file_handle.fileno(), msvcrt.LK_UNLCK, 1)
+                    else:
+                        import fcntl
+
+                        fcntl.flock(file_handle.fileno(), fcntl.LOCK_UN)
+                except OSError:
+                    pass
+            file_handle.close()
+        local_lock.release()
+
+
+def _safe_network_error_code(exc: BaseException) -> str:
+    """Return a bounded transport diagnosis without serializing host/error text."""
+    reason = exc.reason if isinstance(exc, urllib.error.URLError) else exc
+    if isinstance(reason, ssl.SSLError):
+        return "TLS_ERROR"
+    if isinstance(reason, (TimeoutError, socket.timeout)):
+        return "TIMEOUT_NO_RETRY"
+    if isinstance(reason, socket.gaierror):
+        return "DNS_LOOKUP_FAILED"
+    if isinstance(reason, ConnectionRefusedError):
+        return "TCP_CONNECTION_REFUSED"
+    if isinstance(reason, ConnectionResetError):
+        return "TCP_CONNECTION_RESET"
+    if isinstance(reason, OSError):
+        if reason.errno == errno.ECONNREFUSED:
+            return "TCP_CONNECTION_REFUSED"
+        if reason.errno == errno.ECONNRESET:
+            return "TCP_CONNECTION_RESET"
+        if reason.errno == errno.ETIMEDOUT:
+            return "TIMEOUT_NO_RETRY"
+    if isinstance(exc, urllib.error.URLError):
+        return "URL_ERROR_UNCLASSIFIED"
+    return "NETWORK_ERROR_UNCLASSIFIED"
 
 
 def _utc_iso(value: datetime | None) -> str | None:
@@ -416,9 +505,9 @@ def _atomic_write(path: Path, data: bytes) -> None:
     temp.replace(path)
 
 
-def fetch_live_sources(root: Path, registry: dict[str, Any], *, request_limit: int = MAX_LIVE_REQUESTS,
-                       now: datetime | None = None,
-                       progress: Callable[[str], None] | None = None) -> dict[str, Any]:
+def _fetch_live_sources_locked(root: Path, registry: dict[str, Any], *, request_limit: int = MAX_LIVE_REQUESTS,
+                               now: datetime | None = None,
+                               progress: Callable[[str], None] | None = None) -> dict[str, Any]:
     if isinstance(request_limit, bool) or not isinstance(request_limit, int) or not 0 <= request_limit <= MAX_LIVE_REQUESTS:
         raise MacroSourceError("LIVE_REQUEST_LIMIT_EXCEEDED")
     now = now or datetime.now(timezone.utc)
@@ -542,10 +631,26 @@ def fetch_live_sources(root: Path, registry: dict[str, Any], *, request_limit: i
                 "error": str(exc), "events": [],
             })
         except (OSError, ssl.SSLError, urllib.error.URLError) as exc:
-            results.append({"source_id": source["source_id"], "status": "UNAVAILABLE", "error": type(exc).__name__, "events": []})
+            results.append({
+                "source_id": source["source_id"], "status": "UNAVAILABLE",
+                "error": _safe_network_error_code(exc), "events": [],
+            })
     return {
         "status": "PARTIAL" if any(item.get("status") not in {"FETCH_OK", "CACHE_HIT"} for item in results) else "FETCH_OK",
         "requests_made": requests_made, "request_limit": request_limit,
         "origin_requests": len(origins_seen), "automatic_retry_count": 0,
         "sources": results,
     }
+
+
+def fetch_live_sources(root: Path, registry: dict[str, Any], *, request_limit: int = MAX_LIVE_REQUESTS,
+                       now: datetime | None = None,
+                       progress: Callable[[str], None] | None = None) -> dict[str, Any]:
+    """Fetch feeds with the cache transaction serialized across threads/processes."""
+    if isinstance(request_limit, bool) or not isinstance(request_limit, int) or not 0 <= request_limit <= MAX_LIVE_REQUESTS:
+        raise MacroSourceError("LIVE_REQUEST_LIMIT_EXCEEDED")
+    cache_dir = root / "reports" / "private" / "phase2_2_2e" / "macro_cache"
+    with _macro_cache_lock(cache_dir / ".fetch.lock"):
+        return _fetch_live_sources_locked(
+            root, registry, request_limit=request_limit, now=now, progress=progress
+        )
