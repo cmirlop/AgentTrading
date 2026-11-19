@@ -9,6 +9,18 @@ from src.news_local.models import NewsAnalysisInput
 
 SYNTHETIC_LABEL = "SYNTHETIC_FIXTURE_NOT_LIVE_NEWS"
 FIXED_AS_OF = datetime(2026, 1, 15, 13, 25, tzinfo=timezone.utc)
+FIXTURE_NAMES = (
+    "usd_only",
+    "eur_only",
+    "cad_only",
+    "aud_only",
+    "scheduled",
+    "published",
+    "duplicate_revision",
+    "injection",
+    "unavailable",
+    "late_first_seen",
+)
 
 
 def _time(minutes: int = 0, seconds: int = 0) -> datetime:

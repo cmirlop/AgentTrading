@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0",
+  "state": "NEWS03_PARTIAL",
+  "session_started_utc": "2026-11-19T18:59:43Z",
+  "session_elapsed_seconds_at_report": 1355,
+  "base_commit": "82f33e8ed3561365c98f298cd61162d2a9554dff",
+  "base_branch": "main",
+  "work_branch": "codex/news-03-local-integration",
+  "origin_main_updated": false,
+  "checks": {
+    "news_02_baseline": {
+      "status": "PASS",
+      "command": "python -m unittest tests.test_news_local tests.test_news_02 -q",
+      "tests": 62
+    },
+    "focused_final_tests": {
+      "status": "PASS",
+      "command": "python -m unittest tests.test_news_local tests.test_news_02 tests.test_news_research -q",
+      "tests": 69
+    },
+    "compile": "PASS",
+    "git_diff_check": "PASS",
+    "github_actions": "PENDING_REMOTE_RUN",
+    "dry_run_no_mt5_or_orders": "PASS"
+  },
+  "ollama_live": {
+    "status": "PASS",
+    "synthetic_fixture": true,
+    "provider": "ollama",
+    "model": "qwen3:4b",
+    "schema_version": "2.0",
+    "generation_requests": 1,
+    "duration_ms": 106434,
+    "json_valid": true,
+    "error_code": null,
+    "num_predict": 32768,
+    "driver_currencies": [
+      "USD"
+    ],
+    "eurusd_conditional_scenarios": {
+      "usd_strengthens": "DOWN",
+      "usd_weakens": "UP"
+    },
+    "additional_live_inferences_this_session": 0
+  },
+  "source_collection": {
+    "status": "PARTIAL",
+    "requests_made": 4,
+    "request_limit": 4,
+    "automatic_retries": 0,
+    "sources": [
+      {
+        "source_id": "FED_PRESS_RSS",
+        "status": "FETCH_OK",
+        "http_status": 200,
+        "feed_event_count": 20,
+        "sha256": "e06ed627f6fa071162b75adb70e830b2f5c343a52b30aa0e345055023dd3aaf5"
+      },
+      {
+        "source_id": "BANK_OF_CANADA_PRESS_RSS",
+        "status": "FETCH_OK",
+        "http_status": 200,
+        "feed_event_count": 1,
+        "sha256": "314e84b247a44d4bbb8f22a8ed6c910565a695050a9d8c56e47dda6e434cd4d0"
+      },
+      {
+        "source_id": "ECB_PRESS_RSS",
+        "status": "UNAVAILABLE",
+        "safe_error_code": "URLError"
+      },
+      {
+        "source_id": "RBA_MEDIA_RSS",
+        "status": "UNAVAILABLE",
+        "safe_error_code": "URLError"
+      },
+      {
+        "source_id": "BLS_RELEASE_ICS",
+        "status": "NOT_FETCHED_BY_POLICY",
+        "reason": "inactive_in_registry"
+      }
+    ],
+    "source_adapter_accepted": 20,
+    "source_adapter_excluded": 4,
+    "news_02_eligible_events": 3,
+    "news_02_excluded_events": 17,
+    "news_02_exclusion_reason": "SOURCE_STALE_AT_CUTOFF",
+    "snapshot_stored_in_gitignored_private_directory": true,
+    "snapshot_replay": {
+      "status": "PARTIAL",
+      "provider": "deterministic",
+      "network_requests": 0,
+      "cutoff_preserved": true
+    }
+  },
+  "offline_scenario_matrix": {
+    "status": "PASS",
+    "fixtures": [
+      "USD/EURUSD",
+      "USD/USDCAD",
+      "USD/AUDUSD",
+      "EUR/EURUSD",
+      "CAD/USDCAD",
+      "AUD/AUDUSD",
+      "future_schedule",
+      "stale_publication",
+      "duplicate_and_revision",
+      "prompt_injection",
+      "invalid_evidence_and_direction_fallback"
+    ],
+    "deterministic_replay_structurally_identical": true
+  },
+  "security": {
+    "private_reports_gitignored": true,
+    "trading_or_risk_configuration_changed": false,
+    "think_configuration_changed": false,
+    "model_changed": false,
+    "token_limit_changed": false,
+    "deepseek_calls": 0,
+    "mt5_connections": 0,
+    "orders_sent": 0,
+    "commit_push_merge": false
+  },
+  "changed_files": [
+    ".github/workflows/offline-research-tests.yml",
+    "src/news_local/fixtures.py",
+    "src/news_local/research.py",
+    "scripts/run_news_research.py",
+    "tests/test_news_research.py",
+    "docs/NEWS_03_RESULTADOS_LOCAL.md",
+    "docs/NEWS_03_CONTINUACION_REMOTA.md",
+    "reports/news_03/validation_summary.json"
+  ],
+  "pending": [
+    "Investigate ECB and RBA URLError from the local Windows network.",
+    "Review provider terms and rate limits before increasing collection frequency.",
+    "Run the focused GitHub Actions job remotely.",
+    "Run an explicitly authorized local Ollama analysis on a saved real-source snapshot if desired."
+  ],
+  "manual_action_required_to_close": false,
+  "predictive_performance_or_profitability_validated": false
+}
