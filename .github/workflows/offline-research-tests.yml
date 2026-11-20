@@ -121,10 +121,10 @@ jobs:
           python-version: "3.13"
       - name: Install NEWS-LOCAL test dependency
         run: python -m pip install "pydantic>=2.6,<3" "python-dotenv>=1,<2"
-      - name: NEWS-LOCAL-01, NEWS-02, and NEWS-03 offline tests
-        run: python -m unittest tests.test_news_local tests.test_news_02 tests.test_news_research -q
+      - name: NEWS-LOCAL-01, NEWS-02, and NEWS-04 offline tests
+        run: python -m unittest tests.test_news_local tests.test_news_02 tests.test_news_research tests.test_macro_sources tests.test_news_04_macro_contract -q
       - name: Compile NEWS-LOCAL sources and focused tests
-        run: python -m compileall -q src/news_local src/macro_sources/core.py scripts/run_news_local_ollama.py scripts/run_news_research.py tests/test_news_local.py tests/test_news_02.py tests/test_news_research.py
+        run: python -m compileall -q src/news_local src/macro_sources/core.py scripts/run_news_local_ollama.py scripts/run_news_research.py tests/test_news_local.py tests/test_news_02.py tests/test_news_research.py tests/test_macro_sources.py tests/test_news_04_macro_contract.py
       - name: Offline and mock CLI pair matrix
         run: |
           for symbol in EURUSD USDCAD AUDUSD; do

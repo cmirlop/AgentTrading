@@ -5,7 +5,11 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+import time
 import unittest
+import socket
+import ssl
+from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import Mock, patch
 import urllib.error
 
@@ -20,6 +24,7 @@ from src.macro_sources.core import (
     parse_rss_atom,
     safe_calendar_preview,
     event_is_available_as_of,
+    _safe_network_error_code,
 )
 
 
@@ -145,6 +150,57 @@ class MacroParsingTests(unittest.TestCase):
 
 
 class MacroFetchSafetyTests(unittest.TestCase):
+    def test_concurrent_fetches_serialize_cache_and_make_one_request(self):
+        payload = b"<rss><channel><item><guid>one</guid><title>Policy statement</title><pubDate>Sun, 15 Nov 2026 11:00:00 GMT</pubDate></item></channel></rss>"
+        response = Mock()
+        response.__enter__ = Mock(return_value=response)
+        response.__exit__ = Mock(return_value=False)
+        response.status = 200
+        response.headers = {"ETag": '"one"'}
+        response.read.side_effect = lambda size: (time.sleep(0.08), payload)[1]
+        opener = Mock()
+        opener.open.return_value = response
+        with tempfile.TemporaryDirectory() as folder, patch("src.macro_sources.core._assert_public_dns"), patch(
+            "src.macro_sources.core.urllib.request.build_opener", return_value=opener
+        ):
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                futures = [
+                    pool.submit(fetch_live_sources, Path(folder), {"sources": [source()]}, request_limit=1, now=NOW)
+                    for _ in range(2)
+                ]
+                results = [future.result(timeout=5) for future in futures]
+            self.assertEqual(sum(result["requests_made"] for result in results), 1)
+            self.assertEqual(opener.open.call_count, 1)
+            self.assertEqual(
+                {result["sources"][0].get("fetch_status") for result in results},
+                {"FETCHED", "CACHE_HIT"},
+            )
+            cache_root = Path(folder) / "reports" / "private" / "phase2_2_2e" / "macro_cache"
+            self.assertEqual((cache_root / "fed_press_rss.feed").read_bytes(), payload)
+
+    def test_transport_errors_are_classified_without_leaking_error_text(self):
+        cases = (
+            (urllib.error.URLError(socket.gaierror(-2, "private-dns-detail")), "DNS_LOOKUP_FAILED"),
+            (urllib.error.URLError(ssl.SSLError("private-certificate-detail")), "TLS_ERROR"),
+            (urllib.error.URLError(TimeoutError("private-timeout-detail")), "TIMEOUT_NO_RETRY"),
+            (urllib.error.URLError(ConnectionRefusedError("private-address-detail")), "TCP_CONNECTION_REFUSED"),
+            (urllib.error.URLError("private-proxy-detail"), "URL_ERROR_UNCLASSIFIED"),
+        )
+        for exc, expected in cases:
+            with self.subTest(expected=expected), tempfile.TemporaryDirectory() as folder:
+                opener = Mock()
+                opener.open.side_effect = exc
+                with patch("src.macro_sources.core._assert_public_dns"), patch(
+                    "src.macro_sources.core.urllib.request.build_opener", return_value=opener
+                ):
+                    result = fetch_live_sources(
+                        Path(folder), {"sources": [source()]}, request_limit=1, now=NOW
+                    )
+                self.assertEqual(result["sources"][0]["error"], expected)
+                self.assertNotIn("private-", result["sources"][0]["error"])
+                self.assertEqual(result["requests_made"], 1)
+                self.assertEqual(result["automatic_retry_count"], 0)
+
     def test_redirects_are_rejected(self):
         handler = _NoRedirect()
         with self.assertRaisesRegex(MacroSourceError, "REDIRECT_REJECTED"):

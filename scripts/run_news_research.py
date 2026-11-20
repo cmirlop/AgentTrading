@@ -77,6 +77,9 @@ def main(argv: list[str] | None = None) -> int:
         "driver_currencies": report["driver_currencies"],
         "conditional_pair_directions": report["conditional_pair_directions"],
         "snapshot_path": report["snapshot_path"],
+        "snapshot_sha256": report["snapshot_sha256"],
+        "snapshot_integrity": report["snapshot_integrity"],
+        "snapshot_source_payloads": report["snapshot_source_payloads"],
         "output_path": report["output_path"],
         "execution": analysis["execution"],
     }

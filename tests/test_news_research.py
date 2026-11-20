@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
 from pathlib import Path
 
@@ -34,15 +35,20 @@ def _registry(source_id="FED_PRESS_RSS", currency="USD") -> dict:
     }
 
 
-def _synthetic_fetch(now=FIXED_AS_OF, source_id="FED_PRESS_RSS", currency="USD") -> dict:
+def _synthetic_payload(source_id="FED_PRESS_RSS", currency="USD") -> bytes:
     source = _registry(source_id, currency)["sources"][0]
     host = source["host"]
-    payload = (
+    return (
         b"<rss><channel><item><guid>news03-source-release</guid>"
         + f"<title>Synthetic {currency} policy release</title>".encode()
         + f"<link>https://{host}/synthetic-release.htm</link>".encode()
         + b"<pubDate>Thu, 15 Jan 2026 13:10:00 GMT</pubDate></item></channel></rss>"
     )
+
+
+def _synthetic_fetch(now=FIXED_AS_OF, source_id="FED_PRESS_RSS", currency="USD") -> dict:
+    source = _registry(source_id, currency)["sources"][0]
+    payload = _synthetic_payload(source_id, currency)
     normalized = normalize_feed(payload, source, now)
     normalized["fetch_status"] = "FETCHED"
     return {
@@ -144,6 +150,9 @@ class ResearchPipelineTests(unittest.TestCase):
         self.assertTrue(report["snapshot_path"].startswith("reports/private/news_local/"))
         self.assertTrue(report["output_path"].startswith("reports/private/news_local/"))
         self.assertEqual(stored["sources"][0]["events"][0]["title"], "Synthetic USD policy release")
+        self.assertEqual(stored["schema_version"], "2.0")
+        self.assertEqual(report["snapshot_integrity"]["status"], "HASH_VERIFIED")
+        self.assertEqual(len(report["snapshot_sha256"]), 64)
         self.assertEqual(report["status"], "PASS")
         self.assertEqual(report["event_count_received"], 1)
         self.assertEqual(report["eligible_event_count"], 1)
@@ -158,6 +167,11 @@ class ResearchPipelineTests(unittest.TestCase):
             for observation in fact["observations"]
         ]
         self.assertEqual(observations, [])
+        self.assertIn("no numeric economic result", report["analysis"]["confirmed_facts"][0]["description"])
+        self.assertNotIn(
+            "No live news, market data, or external economic data was consulted.",
+            report["analysis"]["limitations"],
+        )
 
     def test_snapshot_replay_is_offline_and_keeps_original_cutoff(self):
         fetch = _synthetic_fetch()
@@ -187,10 +201,119 @@ class ResearchPipelineTests(unittest.TestCase):
                 source_registry=_registry(),
                 now=FIXED_AS_OF + timedelta(days=1),
             )
-        self.assertEqual(replay["status"], "PASS")
+        self.assertEqual(replay["status"], "PARTIAL")
         self.assertEqual(replay["source_fetch"]["requests_made"], 0)
+        self.assertEqual(replay["snapshot_source_payloads"]["status"], "PARTIAL")
         self.assertEqual(replay["analysis_as_of_utc"], "2026-01-15T13:25:00Z")
         self.assertEqual(replay["analysis"]["event_ids_used"], collected["analysis"]["event_ids_used"])
+
+    def test_snapshot_integrity_rejects_edited_event_payload(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            collected = run_research(
+                root=root,
+                mode="collect",
+                now=FIXED_AS_OF,
+                fetcher=lambda *args, **kwargs: _synthetic_fetch(),
+                source_registry=_registry(),
+            )
+            snapshot_path = root / collected["snapshot_path"]
+            stored = json.loads(snapshot_path.read_text(encoding="utf-8"))
+            stored["sources"][0]["events"][0]["title"] = "Tampered event"
+            snapshot_path.write_text(json.dumps(stored), encoding="utf-8")
+            with self.assertRaisesRegex(NewsResearchError, "SNAPSHOT_INTEGRITY_INVALID"):
+                run_research(
+                    root=root,
+                    mode="offline",
+                    snapshot=collected["snapshot_path"],
+                    source_registry=_registry(),
+                    now=FIXED_AS_OF,
+                )
+
+    def test_legacy_snapshot_replays_but_is_never_reported_as_fully_verified(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            collected = run_research(
+                root=root,
+                mode="collect",
+                now=FIXED_AS_OF,
+                fetcher=lambda *args, **kwargs: _synthetic_fetch(),
+                source_registry=_registry(),
+            )
+            snapshot_path = root / collected["snapshot_path"]
+            stored = json.loads(snapshot_path.read_text(encoding="utf-8"))
+            stored["schema_version"] = "1.0"
+            stored.pop("integrity")
+            snapshot_path.write_text(json.dumps(stored), encoding="utf-8")
+            replay = run_research(
+                root=root,
+                mode="offline",
+                snapshot=collected["snapshot_path"],
+                output="reports/private/news_local/legacy_replay.json",
+                source_registry=_registry(),
+                now=FIXED_AS_OF,
+            )
+        self.assertEqual(replay["status"], "PARTIAL")
+        self.assertEqual(replay["analysis"]["status"], "PASS")
+        self.assertEqual(replay["snapshot_integrity"]["status"], "LEGACY_UNVERIFIED")
+
+    def test_future_analysis_cutoff_after_snapshot_collection_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            collected = run_research(
+                root=root,
+                mode="collect",
+                now=FIXED_AS_OF,
+                fetcher=lambda *args, **kwargs: _synthetic_fetch(),
+                source_registry=_registry(),
+            )
+            with self.assertRaisesRegex(NewsResearchError, "ANALYSIS_CUTOFF_AFTER_COLLECTION"):
+                run_research(
+                    root=root,
+                    mode="offline",
+                    snapshot=collected["snapshot_path"],
+                    source_registry=_registry(),
+                    as_of_utc=FIXED_AS_OF + timedelta(minutes=1),
+                )
+
+    def test_duplicate_json_keys_are_rejected_on_snapshot_load(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            snapshot_path = root / "reports/private/news_local/duplicate.json"
+            snapshot_path.parent.mkdir(parents=True)
+            snapshot_path.write_text('{"schema_version":"2.0","schema_version":"2.0"}', encoding="utf-8")
+            with self.assertRaisesRegex(NewsResearchError, "SNAPSHOT_DUPLICATE_KEY"):
+                run_research(
+                    root=root,
+                    mode="offline",
+                    snapshot="reports/private/news_local/duplicate.json",
+                    source_registry=_registry(),
+                    now=FIXED_AS_OF,
+                )
+
+    def test_local_mode_rejects_snapshot_without_source_bytes_before_inference(self):
+        class ForbiddenSummarizer:
+            def summarize(self, *args, **kwargs):
+                raise AssertionError("local inference must not start for unverifiable source bytes")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            collected = run_research(
+                root=root,
+                mode="collect",
+                now=FIXED_AS_OF,
+                fetcher=lambda *args, **kwargs: _synthetic_fetch(),
+                source_registry=_registry(),
+            )
+            with self.assertRaisesRegex(NewsResearchError, "SNAPSHOT_PROVENANCE_UNVERIFIED"):
+                run_research(
+                    root=root,
+                    mode="local",
+                    snapshot=collected["snapshot_path"],
+                    source_registry=_registry(),
+                    summarizer=ForbiddenSummarizer(),
+                    now=FIXED_AS_OF,
+                )
 
     def test_inaccessible_source_is_partial_not_confirmed_empty(self):
         def unavailable_fetcher(root, registry, *, request_limit, now):
@@ -257,6 +380,31 @@ class ResearchPipelineTests(unittest.TestCase):
                     now=FIXED_AS_OF,
                 )
             self.assertEqual(destination.read_text(encoding="utf-8"), "existing local content\n")
+
+    def test_concurrent_writers_cannot_replace_each_others_result(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+
+            def write_result():
+                try:
+                    run_research(
+                        root=root,
+                        mode="offline",
+                        fixture="usd_only",
+                        output="reports/private/news_local/race.json",
+                        now=FIXED_AS_OF,
+                    )
+                    return "WRITTEN"
+                except NewsResearchError as exc:
+                    return exc.code
+
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                outcomes = list(pool.map(lambda _: write_result(), range(2)))
+            self.assertCountEqual(outcomes, ["WRITTEN", "OUTPUT_ALREADY_EXISTS"])
+            saved = json.loads(
+                (root / "reports/private/news_local/race.json").read_text(encoding="utf-8")
+            )
+        self.assertEqual(saved["analysis"]["schema_version"], "2.0")
 
 
 if __name__ == "__main__":
